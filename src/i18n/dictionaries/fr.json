@@ -1,0 +1,551 @@
+{
+  "meta": {
+    "title": "IMF — Immobilière Mseddi Frères | Promoteur immobilier à Sfax et Tunis",
+    "description": "Promoteur immobilier depuis plus de 15 ans à Sfax et Tunis. Résidences de haut standing, plan de disponibilité en ligne, simulateur de crédit et espace client sécurisé."
+  },
+  "brand": {
+    "name": "IMF",
+    "legal": "Immobilière Mseddi Frères",
+    "tagline": "Construire ce qui dure"
+  },
+  "nav": {
+    "home": "Accueil",
+    "group": "Le groupe",
+    "projects": "Nos projets",
+    "ongoing": "Projets en cours",
+    "delivered": "Projets livrés",
+    "news": "Actualités",
+    "contact": "Contact",
+    "clientArea": "Espace client",
+    "quote": "Demander un devis",
+    "menu": "Menu",
+    "close": "Fermer"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Promoteur immobilier agréé — Sfax & Tunis",
+      "title1": "L’immobilier",
+      "title2": "qui traverse le temps",
+      "subtitle": "Depuis plus de quinze ans, IMF conçoit, construit et livre des résidences pensées pour durer : matériaux choisis, finitions maîtrisées, engagements tenus.",
+      "cta1": "Découvrir nos projets",
+      "cta2": "Plan de disponibilité",
+      "scroll": "Faire défiler"
+    },
+    "stats": {
+      "years": "années d’expérience",
+      "projects": "programmes réalisés",
+      "units": "logements construits",
+      "cities": "villes : Sfax & Tunis"
+    },
+    "intro": {
+      "eyebrow": "Le groupe",
+      "title": "Une entreprise familiale, une exigence d’ingénieur",
+      "body1": "Immobilière Mseddi Frères est un promoteur immobilier implanté à Sfax, actif aujourd’hui sur le Grand Tunis. Nous maîtrisons la chaîne complète : recherche foncière, conception avec nos architectes, exécution, commercialisation et service après-vente.",
+      "body2": "Cette intégration est ce qui nous permet de tenir nos délais et nos niveaux de finition — de la menuiserie aluminium à rupture de pont thermique jusqu’aux dressings sur mesure.",
+      "cta": "En savoir plus sur IMF"
+    },
+    "featured": {
+      "eyebrow": "En commercialisation",
+      "title": "Projets en cours",
+      "subtitle": "Réservez votre appartement en consultant la disponibilité en temps réel, plan par plan, étage par étage.",
+      "all": "Voir tous les projets"
+    },
+    "delivered": {
+      "eyebrow": "Notre référence",
+      "title": "Programmes livrés",
+      "subtitle": "Chaque immeuble livré est notre meilleur argument commercial.",
+      "all": "Voir les projets livrés"
+    },
+    "why": {
+      "eyebrow": "Pourquoi IMF",
+      "title": "Ce qui nous distingue",
+      "items": [
+        {
+          "title": "Disponibilité en temps réel",
+          "body": "Chaque appartement affiche son statut — libre, réservé ou vendu — avec sa typologie et sa surface vendable exacte. Plus d’allers-retours pour savoir ce qui reste."
+        },
+        {
+          "title": "Finitions livrées, pas promises",
+          "body": "Cuisines et dressings sur mesure, menuiserie aluminium, robinetterie haut de gamme, chauffage central : ce que vous voyez dans nos immeubles livrés est ce que vous recevrez."
+        },
+        {
+          "title": "Accompagnement du financement",
+          "body": "Simulateur de crédit en ligne, montage du dossier bancaire, programmes éligibles FOPROLOS : nous vous accompagnons jusqu’à la signature."
+        },
+        {
+          "title": "Espace client sécurisé",
+          "body": "Votre échéancier, vos documents contractuels et l’avancement du chantier, accessibles à tout moment depuis votre compte."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Parlons de votre projet",
+      "body": "Notre équipe commerciale vous répond sous 24 heures ouvrées.",
+      "button": "Nous contacter",
+      "call": "Appeler le service commercial"
+    }
+  },
+  "group": {
+    "eyebrow": "Le groupe",
+    "title": "Immobilière Mseddi Frères",
+    "lead": "Promoteur immobilier familial basé à Sfax, IMF conçoit et réalise des programmes résidentiels et des équipements depuis plus de quinze ans, à Sfax comme dans le Grand Tunis.",
+    "storyTitle": "Notre histoire",
+    "story1": "IMF est née d’une conviction simple : un immeuble se juge dix ans après sa livraison, pas le jour de la remise des clés. C’est pourquoi nous avons construit l’entreprise autour de l’exécution — nos propres équipes, nos propres fournisseurs, nos propres contrôles.",
+    "story2": "Des premières résidences Diar Al Andalous au Complexe Marassim, puis à la Résidence Zéphyr et au lotissement Diar Al Yassamine, chaque programme a élevé le niveau d’exigence du suivant. Avec la Résidence La Gloire à El Aouina, IMF franchit une nouvelle étape et s’installe durablement dans le Grand Tunis.",
+    "valuesTitle": "Nos engagements",
+    "values": [
+      {
+        "title": "Qualité d’exécution",
+        "body": "Un cahier des charges de finition identique pour tous nos programmes, sans variable d’ajustement."
+      },
+      {
+        "title": "Transparence",
+        "body": "Surfaces vendables réelles, statuts de disponibilité à jour, échéanciers clairs, aucun frais caché."
+      },
+      {
+        "title": "Respect des délais",
+        "body": "Un planning de chantier communiqué et suivi, avec un avancement visible dans votre espace client."
+      },
+      {
+        "title": "Service après-vente",
+        "body": "L’accompagnement ne s’arrête pas à la remise des clés : garanties, interventions, suivi."
+      }
+    ],
+    "expertiseTitle": "Nos métiers",
+    "expertise": [
+      {
+        "title": "Promotion résidentielle",
+        "body": "Immeubles de standing, lotissements, logements éligibles FOPROLOS."
+      },
+      {
+        "title": "Équipements",
+        "body": "Salles de réception, restaurants et complexes événementiels."
+      },
+      {
+        "title": "Commercialisation",
+        "body": "Vente directe, accompagnement bancaire, suivi client digitalisé."
+      }
+    ],
+    "figuresTitle": "IMF en chiffres",
+    "ctaTitle": "Une question sur nos programmes ?",
+    "ctaBody": "Notre service commercial est à votre disposition du lundi au samedi."
+  },
+  "projects": {
+    "title": "Nos projets",
+    "subtitle": "Programmes en cours de commercialisation et réalisations livrées, à Sfax et à Tunis.",
+    "filters": {
+      "all": "Tous",
+      "status": "Statut",
+      "city": "Ville",
+      "typology": "Typologie",
+      "search": "Rechercher un projet…",
+      "reset": "Réinitialiser",
+      "results": "projet(s)",
+      "noResult": "Aucun projet ne correspond à ces critères.",
+      "foprolos": "Éligible FOPROLOS"
+    },
+    "status": {
+      "ongoing": "En cours",
+      "delivered": "Livré",
+      "upcoming": "À venir"
+    },
+    "sold": "Ventes terminées",
+    "available": "disponibles",
+    "view": "Découvrir",
+    "lots": "lots",
+    "from": "à partir de"
+  },
+  "project": {
+    "overview": "Le programme",
+    "gallery": "Galerie",
+    "availability": "Disponibilité",
+    "simulator": "Financement",
+    "location": "Localisation",
+    "specs": "Fiche technique",
+    "highlights": "Points forts",
+    "amenities": "Prestations",
+    "progress": "Avancement du chantier",
+    "backToProjects": "Tous les projets",
+    "openMap": "Ouvrir dans Google Maps",
+    "requestInfo": "Demander une information",
+    "bookVisit": "Prendre rendez-vous",
+    "downloadPlan": "Télécharger le plan",
+    "video": "Vidéo",
+    "next": "Projet suivant",
+    "photos": "photos"
+  },
+  "availability": {
+    "title": "Plan de disponibilité",
+    "subtitle": "Sélectionnez un bloc et un étage, puis cliquez sur un appartement pour voir sa fiche.",
+    "block": "Bloc",
+    "floor": "Étage",
+    "allFloors": "Tous les étages",
+    "typology": "Typologie",
+    "legend": {
+      "available": "Disponible",
+      "reserved": "Réservé",
+      "sold": "Vendu"
+    },
+    "table": {
+      "code": "Appartement",
+      "typology": "Type",
+      "gross": "Surface hors œuvre",
+      "sellable": "Surface vendable",
+      "garden": "Jardin",
+      "terrace": "Terrasse",
+      "price": "Prix",
+      "status": "Statut"
+    },
+    "empty": "Aucun appartement pour cette sélection.",
+    "selected": "Appartement sélectionné",
+    "request": "Réserver cet appartement",
+    "onRequest": "Prix sur demande",
+    "stats": {
+      "available": "disponibles",
+      "reserved": "réservés",
+      "sold": "vendus",
+      "total": "appartements"
+    },
+    "note": "Surfaces issues des dossiers de vente officiels. Les plans et surfaces sont donnés à titre indicatif.",
+    "gridView": "Vue plan",
+    "listView": "Vue liste",
+    "soonTitle": "Disponibilité bientôt en ligne",
+    "soonBody": "Le plan interactif de ce programme sera publié dès l’ouverture de la commercialisation."
+  },
+  "simulator": {
+    "title": "Simulateur de crédit",
+    "subtitle": "Estimez votre mensualité en quelques secondes. Simulation indicative, sans valeur contractuelle.",
+    "price": "Prix du bien (TND)",
+    "contribution": "Apport personnel (TND)",
+    "rate": "Taux annuel (%)",
+    "duration": "Durée (années)",
+    "loan": "Montant emprunté",
+    "monthly": "Mensualité estimée",
+    "totalInterest": "Coût total du crédit",
+    "totalCost": "Total remboursé",
+    "years": "ans",
+    "disclaimer": "Cette simulation est fournie à titre indicatif et ne constitue pas une offre de crédit. Les conditions définitives dépendent de votre établissement bancaire.",
+    "askAdvice": "Être rappelé par un conseiller",
+    "schedule": "Aperçu de l’échéancier",
+    "year": "Année",
+    "principal": "Capital remboursé",
+    "interest": "Intérêts",
+    "remaining": "Capital restant dû"
+  },
+  "news": {
+    "title": "Actualités",
+    "subtitle": "Lancements, avancements de chantier et informations pratiques.",
+    "readMore": "Lire la suite",
+    "back": "Toutes les actualités",
+    "empty": "Aucune actualité pour le moment."
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Une question, une visite, une demande de devis : notre équipe vous répond.",
+    "formTitle": "Demande d’information",
+    "form": {
+      "name": "Nom et prénom",
+      "email": "Adresse e-mail",
+      "phone": "Téléphone",
+      "project": "Projet concerné",
+      "lot": "Appartement",
+      "budget": "Budget indicatif",
+      "message": "Votre message",
+      "submit": "Envoyer ma demande",
+      "sending": "Envoi en cours…",
+      "success": "Merci, votre demande a bien été enregistrée. Notre équipe vous recontacte sous 24 heures ouvrées.",
+      "error": "Une erreur est survenue. Merci de réessayer ou de nous appeler directement.",
+      "choose": "— Choisir —",
+      "required": "Merci de renseigner votre nom, votre téléphone et votre message.",
+      "consent": "En envoyant ce formulaire, vous acceptez d’être recontacté par IMF au sujet de votre demande."
+    },
+    "info": {
+      "office": "Siège social",
+      "address": "Adresse",
+      "phone": "Téléphone",
+      "email": "E-mail",
+      "hours": "Horaires",
+      "hoursValue": "Lundi – Vendredi : 8h30 – 17h30 · Samedi : 9h – 13h",
+      "commercial": "Service commercial",
+      "technical": "Service technique"
+    }
+  },
+  "auth": {
+    "clientTitle": "Espace client",
+    "clientSubtitle": "Accédez à votre dossier, votre échéancier et l’avancement de votre chantier.",
+    "adminTitle": "Administration",
+    "adminSubtitle": "Gestion des projets, des lots et des demandes.",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "signingIn": "Connexion…",
+    "invalid": "Identifiants incorrects.",
+    "logout": "Se déconnecter",
+    "forgot": "Mot de passe oublié ? Contactez le service commercial.",
+    "demoTitle": "Compte de démonstration",
+    "demoClient": "Client : client@demo.tn / demo2026",
+    "demoAdmin": "Admin : admin@imf-tunisie.com.tn / imf2026",
+    "backToSite": "Retour au site"
+  },
+  "client": {
+    "welcome": "Bonjour",
+    "dashboard": "Tableau de bord",
+    "myLot": "Mon appartement",
+    "payments": "Échéancier",
+    "documents": "Documents",
+    "progress": "Chantier",
+    "messages": "Messages",
+    "noLot": "Aucun appartement n’est encore rattaché à votre compte. Contactez le service commercial.",
+    "summary": {
+      "paid": "Déjà réglé",
+      "remaining": "Reste à payer",
+      "total": "Montant total",
+      "nextDue": "Prochaine échéance",
+      "progress": "Avancement global"
+    },
+    "paymentsTable": {
+      "label": "Échéance",
+      "due": "Date",
+      "amount": "Montant",
+      "status": "Statut",
+      "paid": "Réglée",
+      "pending": "À venir",
+      "late": "En retard"
+    },
+    "documentsTable": {
+      "label": "Document",
+      "kind": "Type",
+      "date": "Date",
+      "action": "Télécharger"
+    },
+    "kinds": {
+      "contract": "Contrat",
+      "plan": "Plan",
+      "invoice": "Facture",
+      "receipt": "Reçu",
+      "other": "Autre"
+    },
+    "messagesEmpty": "Aucun message pour le moment.",
+    "send": "Envoyer",
+    "writeMessage": "Écrire un message au service commercial…",
+    "you": "Vous",
+    "team": "Service commercial IMF"
+  },
+  "admin": {
+    "title": "Administration IMF",
+    "dashboard": "Tableau de bord",
+    "projects": "Projets",
+    "lots": "Lots & disponibilité",
+    "leads": "Demandes",
+    "clients": "Clients",
+    "news": "Actualités",
+    "stats": {
+      "projects": "projets",
+      "lots": "lots",
+      "available": "disponibles",
+      "leads": "demandes",
+      "newLeads": "nouvelles demandes"
+    },
+    "lotsTitle": "Gestion de la disponibilité",
+    "lotsSubtitle": "Modifiez le statut d’un appartement : la mise à jour est immédiate sur le site public.",
+    "selectProject": "Projet",
+    "demoTools": "Outils de présentation",
+    "applyDemo": "Appliquer un jeu de statuts de démonstration",
+    "resetDemo": "Tout remettre en « disponible »",
+    "demoHint": "Utile pour les présentations client. N’affecte que les statuts de disponibilité.",
+    "leadsTitle": "Demandes reçues",
+    "leadsEmpty": "Aucune demande pour le moment.",
+    "leadStatus": {
+      "new": "Nouvelle",
+      "contacted": "Contactée",
+      "closed": "Clôturée"
+    },
+    "markContacted": "Marquer contactée",
+    "markClosed": "Clôturer",
+    "clientsTitle": "Comptes clients",
+    "clientsEmpty": "Aucun client enregistré.",
+    "saved": "Modification enregistrée.",
+    "table": {
+      "date": "Date",
+      "name": "Nom",
+      "contact": "Contact",
+      "project": "Projet",
+      "message": "Message",
+      "status": "Statut",
+      "actions": "Actions",
+      "lot": "Lot"
+    }
+  },
+  "footer": {
+    "about": "Promoteur immobilier agréé, IMF conçoit et réalise des programmes résidentiels et des équipements à Sfax et dans le Grand Tunis.",
+    "navigation": "Navigation",
+    "projectsCol": "Projets",
+    "contactCol": "Contact",
+    "legal": "Mentions légales",
+    "privacy": "Politique de confidentialité",
+    "rights": "Tous droits réservés.",
+    "madeBy": "Site réalisé par SoluMove Technologies",
+    "vat": "MF",
+    "rc": "RC"
+  },
+  "amenities": {
+    "patio": "Patio paysager",
+    "parking": "Parking sous-sol",
+    "lift": "Ascenseur",
+    "security": "Contrôle d’accès",
+    "garden": "Jardins privatifs",
+    "terrace": "Terrasses",
+    "kitchen": "Cuisine équipée",
+    "aluminium": "Menuiserie aluminium",
+    "heating": "Chauffage central"
+  },
+  "common": {
+    "loading": "Chargement…",
+    "close": "Fermer",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "all": "Tous",
+    "of": "sur",
+    "backHome": "Retour à l’accueil",
+    "notFoundTitle": "Page introuvable",
+    "notFoundBody": "La page que vous cherchez n’existe pas ou a été déplacée."
+  },
+  "apartment": {
+    "eyebrow": "Fiche appartement",
+    "backToProject": "Retour au programme",
+    "plan": "Plan de l’appartement",
+    "tour360": "Visite virtuelle 360°",
+    "maquette": "Maquette 3D",
+    "specs": "Caractéristiques",
+    "financing": "Financement",
+    "similar": "Appartements similaires",
+    "reserve": "Réserver cet appartement",
+    "ask": "Poser une question",
+    "ref": "Référence",
+    "notFound": "Cet appartement n’existe pas.",
+    "composition": "Composition",
+    "rooms": "pièces",
+    "sold": "Cet appartement est vendu",
+    "soldBody": "Consultez les autres appartements disponibles du programme.",
+    "share": "Partager"
+  },
+  "maquette": {
+    "title": "Maquette 3D interactive",
+    "subtitle": "Maquette générée à partir des emprises réelles relevées sur les plans de vente. Faites tourner l’immeuble, coupez par étage, cliquez sur un appartement pour ouvrir sa fiche.",
+    "hint": "Glisser pour tourner · molette pour zoomer · cliquer sur un appartement",
+    "reset": "Recentrer",
+    "loading": "Chargement de la maquette…",
+    "select": "Appartement sélectionné",
+    "allFloors": "Tout",
+    "floor": "Étage",
+    "realistic": "Réaliste",
+    "commercial": "Commercial"
+  },
+  "pano": {
+    "title": "Visite virtuelle 360°",
+    "hint": "Glisser pour regarder autour · molette pour zoomer",
+    "fullscreen": "Plein écran",
+    "exit": "Quitter",
+    "unavailableTitle": "Visite 360° bientôt disponible",
+    "unavailableBody": "Les panoramiques de cette pièce sont en cours de production par le bureau d’études. Contactez-nous pour une visite sur site.",
+    "loading": "Chargement de la vue 360°…"
+  },
+  "plan": {
+    "title": "Plan de vente",
+    "hint": "Molette pour zoomer · glisser pour déplacer",
+    "download": "Télécharger le plan PDF",
+    "missingTitle": "Plan bientôt en ligne",
+    "missingBody": "L’image web de ce plan n’a pas encore été générée. Le PDF d’origine reste téléchargeable.",
+    "zoomIn": "Agrandir",
+    "zoomOut": "Réduire",
+    "reset": "100 %"
+  },
+  "crm": {
+    "title": "CRM commercial",
+    "dashboard": "Tableau de bord",
+    "pipeline": "Pipeline",
+    "contacts": "Contacts",
+    "tasks": "Tâches",
+    "activities": "Activités",
+    "lots": "Lots & disponibilité",
+    "newContact": "Nouveau contact",
+    "addActivity": "Ajouter une activité",
+    "addTask": "Ajouter une tâche",
+    "stages": {
+      "new": "Nouveau",
+      "contacted": "Contacté",
+      "visit": "Visite",
+      "offer": "Offre",
+      "reserved": "Réservé",
+      "sold": "Vendu",
+      "lost": "Perdu"
+    },
+    "sources": {
+      "website": "Site web",
+      "phone": "Téléphone",
+      "walk-in": "Visite showroom",
+      "referral": "Recommandation",
+      "facebook": "Facebook",
+      "salon": "Salon",
+      "other": "Autre"
+    },
+    "types": {
+      "call": "Appel",
+      "email": "E-mail",
+      "visit": "Visite",
+      "meeting": "Rendez-vous",
+      "note": "Note",
+      "whatsapp": "WhatsApp"
+    },
+    "kpi": {
+      "openDeals": "Opportunités ouvertes",
+      "openValue": "Pipeline",
+      "weighted": "Pipeline pondéré",
+      "won": "Ventes conclues",
+      "wonValue": "Chiffre d’affaires",
+      "conversion": "Taux de conversion",
+      "contacts": "Contacts",
+      "overdue": "Tâches en retard"
+    },
+    "table": {
+      "contact": "Contact",
+      "deal": "Opportunité",
+      "stage": "Étape",
+      "value": "Montant",
+      "project": "Projet",
+      "lot": "Lot",
+      "date": "Date",
+      "source": "Source",
+      "owner": "Commercial",
+      "probability": "Probabilité",
+      "close": "Clôture prévue",
+      "actions": "Actions",
+      "type": "Type"
+    },
+    "moveTo": "Déplacer vers",
+    "openContact": "Ouvrir la fiche",
+    "noDeals": "Aucune opportunité à cette étape.",
+    "noContacts": "Aucun contact enregistré.",
+    "noTasks": "Aucune tâche.",
+    "noActivities": "Aucune activité enregistrée.",
+    "todayTasks": "À faire aujourd’hui",
+    "upcoming": "À venir",
+    "overdue": "En retard",
+    "done": "Terminée",
+    "markDone": "Marquer terminée",
+    "reopen": "Rouvrir",
+    "recentActivity": "Dernières activités",
+    "demoBanner": "Ce CRM contient un jeu de données de démonstration (contacts fictifs).",
+    "clearDemo": "Vider les données de démonstration",
+    "writeActivity": "Décrire l’échange…",
+    "taskTitle": "Intitulé de la tâche",
+    "dueDate": "Échéance",
+    "save": "Enregistrer",
+    "budget": "Budget",
+    "tags": "Étiquettes",
+    "city": "Ville",
+    "createdAt": "Créé le",
+    "lastActivity": "Dernière activité",
+    "dealsOf": "Opportunités"
+  }
+}

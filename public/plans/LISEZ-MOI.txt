@@ -1,0 +1,11 @@
+Déposez ici les plans de vente PDF, un fichier par lot, nommé avec sa référence :
+
+  public/plans/la-gloire/A11.pdf
+  public/plans/la-gloire/B02.pdf
+  public/plans/diar-al-yassamine/A511.pdf
+
+puis lancez :  npm run plans
+
+Le script crée le .webp correspondant, qui s'affiche directement dans la fiche
+de l'appartement (zoom, déplacement, plein écran).
+Prérequis : Poppler (pdftoppm) ou ImageMagick.

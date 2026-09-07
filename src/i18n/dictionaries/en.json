@@ -1,0 +1,551 @@
+{
+  "meta": {
+    "title": "IMF — Immobilière Mseddi Frères | Real estate developer in Sfax and Tunis",
+    "description": "Real estate developer for over 15 years in Sfax and Tunis. High-end residences, live availability plan, loan simulator and a secure client area."
+  },
+  "brand": {
+    "name": "IMF",
+    "legal": "Immobilière Mseddi Frères",
+    "tagline": "Building what lasts"
+  },
+  "nav": {
+    "home": "Home",
+    "group": "The group",
+    "projects": "Our projects",
+    "ongoing": "Ongoing projects",
+    "delivered": "Delivered projects",
+    "news": "News",
+    "contact": "Contact",
+    "clientArea": "Client area",
+    "quote": "Request a quote",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Approved real estate developer — Sfax & Tunis",
+      "title1": "Real estate",
+      "title2": "built to outlast",
+      "subtitle": "For more than fifteen years, IMF has designed, built and delivered residences made to last: selected materials, controlled finishes, commitments kept.",
+      "cta1": "Explore our projects",
+      "cta2": "Availability plan",
+      "scroll": "Scroll"
+    },
+    "stats": {
+      "years": "years of experience",
+      "projects": "completed programmes",
+      "units": "homes built",
+      "cities": "cities: Sfax & Tunis"
+    },
+    "intro": {
+      "eyebrow": "The group",
+      "title": "A family company with an engineer’s standards",
+      "body1": "Immobilière Mseddi Frères is a real estate developer based in Sfax and now active in Greater Tunis. We control the full chain: land sourcing, design with our architects, construction, sales and after-sales service.",
+      "body2": "That integration is what lets us hold our deadlines and our finish standards — from thermal-break aluminium joinery to bespoke dressing rooms.",
+      "cta": "More about IMF"
+    },
+    "featured": {
+      "eyebrow": "Now selling",
+      "title": "Ongoing projects",
+      "subtitle": "Reserve your apartment with live availability, plan by plan, floor by floor.",
+      "all": "See all projects"
+    },
+    "delivered": {
+      "eyebrow": "Our track record",
+      "title": "Delivered programmes",
+      "subtitle": "Every delivered building is our strongest argument.",
+      "all": "See delivered projects"
+    },
+    "why": {
+      "eyebrow": "Why IMF",
+      "title": "What sets us apart",
+      "items": [
+        {
+          "title": "Live availability",
+          "body": "Every apartment shows its status — available, reserved or sold — with its unit type and exact sellable area. No more back-and-forth to find out what is left."
+        },
+        {
+          "title": "Finishes delivered, not promised",
+          "body": "Bespoke kitchens and dressing rooms, aluminium joinery, high-end taps, central heating: what you see in our delivered buildings is what you will receive."
+        },
+        {
+          "title": "Financing support",
+          "body": "Online loan simulator, bank file preparation, FOPROLOS-eligible programmes: we support you through to signature."
+        },
+        {
+          "title": "Secure client area",
+          "body": "Your payment schedule, your contract documents and site progress, available at any time from your account."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Let’s talk about your project",
+      "body": "Our sales team replies within 24 working hours.",
+      "button": "Contact us",
+      "call": "Call the sales department"
+    }
+  },
+  "group": {
+    "eyebrow": "The group",
+    "title": "Immobilière Mseddi Frères",
+    "lead": "A family-run developer based in Sfax, IMF has been designing and building residential programmes and venues for over fifteen years, in Sfax and in Greater Tunis.",
+    "storyTitle": "Our story",
+    "story1": "IMF was born of a simple conviction: a building is judged ten years after delivery, not on handover day. That is why we built the company around execution — our own teams, our own suppliers, our own controls.",
+    "story2": "From the first Diar Al Andalous residences to Complexe Marassim, then Résidence Zéphyr and the Diar Al Yassamine development, each programme raised the bar for the next. With Résidence La Gloire in El Aouina, IMF takes a new step and settles durably in Greater Tunis.",
+    "valuesTitle": "Our commitments",
+    "values": [
+      {
+        "title": "Build quality",
+        "body": "One finishing specification across every programme, with no adjustment variable."
+      },
+      {
+        "title": "Transparency",
+        "body": "Real sellable areas, up-to-date availability, clear payment schedules, no hidden fees."
+      },
+      {
+        "title": "Deadlines kept",
+        "body": "A construction schedule that is published and tracked, with progress visible in your client area."
+      },
+      {
+        "title": "After-sales service",
+        "body": "Support does not stop at handover: warranties, interventions, follow-up."
+      }
+    ],
+    "expertiseTitle": "What we do",
+    "expertise": [
+      {
+        "title": "Residential development",
+        "body": "Premium buildings, land developments, FOPROLOS-eligible housing."
+      },
+      {
+        "title": "Venues",
+        "body": "Reception halls, restaurants and event complexes."
+      },
+      {
+        "title": "Sales",
+        "body": "Direct sales, bank support, digital client follow-up."
+      }
+    ],
+    "figuresTitle": "IMF in figures",
+    "ctaTitle": "A question about our programmes?",
+    "ctaBody": "Our sales department is available Monday to Saturday."
+  },
+  "projects": {
+    "title": "Our projects",
+    "subtitle": "Programmes currently selling and completed deliveries, in Sfax and Tunis.",
+    "filters": {
+      "all": "All",
+      "status": "Status",
+      "city": "City",
+      "typology": "Unit type",
+      "search": "Search a project…",
+      "reset": "Reset",
+      "results": "project(s)",
+      "noResult": "No project matches these criteria.",
+      "foprolos": "FOPROLOS eligible"
+    },
+    "status": {
+      "ongoing": "Ongoing",
+      "delivered": "Delivered",
+      "upcoming": "Upcoming"
+    },
+    "sold": "Sold out",
+    "available": "available",
+    "view": "Discover",
+    "lots": "units",
+    "from": "from"
+  },
+  "project": {
+    "overview": "The programme",
+    "gallery": "Gallery",
+    "availability": "Availability",
+    "simulator": "Financing",
+    "location": "Location",
+    "specs": "Specifications",
+    "highlights": "Highlights",
+    "amenities": "Features",
+    "progress": "Construction progress",
+    "backToProjects": "All projects",
+    "openMap": "Open in Google Maps",
+    "requestInfo": "Request information",
+    "bookVisit": "Book an appointment",
+    "downloadPlan": "Download the plan",
+    "video": "Video",
+    "next": "Next project",
+    "photos": "photos"
+  },
+  "availability": {
+    "title": "Availability plan",
+    "subtitle": "Pick a block and a floor, then click an apartment to open its details.",
+    "block": "Block",
+    "floor": "Floor",
+    "allFloors": "All floors",
+    "typology": "Unit type",
+    "legend": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "sold": "Sold"
+    },
+    "table": {
+      "code": "Apartment",
+      "typology": "Type",
+      "gross": "Gross area",
+      "sellable": "Sellable area",
+      "garden": "Garden",
+      "terrace": "Terrace",
+      "price": "Price",
+      "status": "Status"
+    },
+    "empty": "No apartment for this selection.",
+    "selected": "Selected apartment",
+    "request": "Reserve this apartment",
+    "onRequest": "Price on request",
+    "stats": {
+      "available": "available",
+      "reserved": "reserved",
+      "sold": "sold",
+      "total": "apartments"
+    },
+    "note": "Areas taken from the official sales files. Plans and areas are indicative.",
+    "gridView": "Plan view",
+    "listView": "List view",
+    "soonTitle": "Availability coming soon",
+    "soonBody": "The interactive plan for this programme will be published when sales open."
+  },
+  "simulator": {
+    "title": "Loan simulator",
+    "subtitle": "Estimate your monthly payment in seconds. Indicative simulation, not contractual.",
+    "price": "Property price (TND)",
+    "contribution": "Down payment (TND)",
+    "rate": "Annual rate (%)",
+    "duration": "Term (years)",
+    "loan": "Loan amount",
+    "monthly": "Estimated monthly payment",
+    "totalInterest": "Total cost of credit",
+    "totalCost": "Total repaid",
+    "years": "years",
+    "disclaimer": "This simulation is indicative and does not constitute a credit offer. Final terms depend on your bank.",
+    "askAdvice": "Request a call back",
+    "schedule": "Schedule preview",
+    "year": "Year",
+    "principal": "Principal repaid",
+    "interest": "Interest",
+    "remaining": "Outstanding principal"
+  },
+  "news": {
+    "title": "News",
+    "subtitle": "Launches, construction updates and practical information.",
+    "readMore": "Read more",
+    "back": "All news",
+    "empty": "No news yet."
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "A question, a visit, a quote request: our team will get back to you.",
+    "formTitle": "Information request",
+    "form": {
+      "name": "Full name",
+      "email": "Email address",
+      "phone": "Phone",
+      "project": "Project",
+      "lot": "Apartment",
+      "budget": "Indicative budget",
+      "message": "Your message",
+      "submit": "Send my request",
+      "sending": "Sending…",
+      "success": "Thank you, your request has been recorded. Our team will get back to you within 24 working hours.",
+      "error": "Something went wrong. Please try again or call us directly.",
+      "choose": "— Select —",
+      "required": "Please provide your name, phone number and message.",
+      "consent": "By sending this form you agree to be contacted by IMF about your request."
+    },
+    "info": {
+      "office": "Head office",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "hours": "Opening hours",
+      "hoursValue": "Monday – Friday: 8:30 – 17:30 · Saturday: 9:00 – 13:00",
+      "commercial": "Sales department",
+      "technical": "Technical department"
+    }
+  },
+  "auth": {
+    "clientTitle": "Client area",
+    "clientSubtitle": "Access your file, your payment schedule and your site progress.",
+    "adminTitle": "Administration",
+    "adminSubtitle": "Manage projects, units and enquiries.",
+    "email": "Email address",
+    "password": "Password",
+    "submit": "Sign in",
+    "signingIn": "Signing in…",
+    "invalid": "Incorrect credentials.",
+    "logout": "Sign out",
+    "forgot": "Forgot your password? Contact the sales department.",
+    "demoTitle": "Demo accounts",
+    "demoClient": "Client: client@demo.tn / demo2026",
+    "demoAdmin": "Admin: admin@imf-tunisie.com.tn / imf2026",
+    "backToSite": "Back to the site"
+  },
+  "client": {
+    "welcome": "Hello",
+    "dashboard": "Dashboard",
+    "myLot": "My apartment",
+    "payments": "Payment schedule",
+    "documents": "Documents",
+    "progress": "Site progress",
+    "messages": "Messages",
+    "noLot": "No apartment is linked to your account yet. Please contact the sales department.",
+    "summary": {
+      "paid": "Already paid",
+      "remaining": "Remaining",
+      "total": "Total amount",
+      "nextDue": "Next instalment",
+      "progress": "Overall progress"
+    },
+    "paymentsTable": {
+      "label": "Instalment",
+      "due": "Date",
+      "amount": "Amount",
+      "status": "Status",
+      "paid": "Paid",
+      "pending": "Upcoming",
+      "late": "Overdue"
+    },
+    "documentsTable": {
+      "label": "Document",
+      "kind": "Type",
+      "date": "Date",
+      "action": "Download"
+    },
+    "kinds": {
+      "contract": "Contract",
+      "plan": "Plan",
+      "invoice": "Invoice",
+      "receipt": "Receipt",
+      "other": "Other"
+    },
+    "messagesEmpty": "No messages yet.",
+    "send": "Send",
+    "writeMessage": "Write a message to the sales department…",
+    "you": "You",
+    "team": "IMF sales department"
+  },
+  "admin": {
+    "title": "IMF administration",
+    "dashboard": "Dashboard",
+    "projects": "Projects",
+    "lots": "Units & availability",
+    "leads": "Enquiries",
+    "clients": "Clients",
+    "news": "News",
+    "stats": {
+      "projects": "projects",
+      "lots": "units",
+      "available": "available",
+      "leads": "enquiries",
+      "newLeads": "new enquiries"
+    },
+    "lotsTitle": "Availability management",
+    "lotsSubtitle": "Change an apartment’s status: the public site updates immediately.",
+    "selectProject": "Project",
+    "demoTools": "Presentation tools",
+    "applyDemo": "Apply a demo status set",
+    "resetDemo": "Reset everything to “available”",
+    "demoHint": "Useful for client presentations. Only affects availability statuses.",
+    "leadsTitle": "Incoming enquiries",
+    "leadsEmpty": "No enquiries yet.",
+    "leadStatus": {
+      "new": "New",
+      "contacted": "Contacted",
+      "closed": "Closed"
+    },
+    "markContacted": "Mark as contacted",
+    "markClosed": "Close",
+    "clientsTitle": "Client accounts",
+    "clientsEmpty": "No client registered.",
+    "saved": "Change saved.",
+    "table": {
+      "date": "Date",
+      "name": "Name",
+      "contact": "Contact",
+      "project": "Project",
+      "message": "Message",
+      "status": "Status",
+      "actions": "Actions",
+      "lot": "Unit"
+    }
+  },
+  "footer": {
+    "about": "An approved real estate developer, IMF designs and builds residential programmes and venues in Sfax and Greater Tunis.",
+    "navigation": "Navigation",
+    "projectsCol": "Projects",
+    "contactCol": "Contact",
+    "legal": "Legal notice",
+    "privacy": "Privacy policy",
+    "rights": "All rights reserved.",
+    "madeBy": "Website by SoluMove Technologies",
+    "vat": "VAT",
+    "rc": "Reg. No."
+  },
+  "amenities": {
+    "patio": "Landscaped patio",
+    "parking": "Underground parking",
+    "lift": "Lift",
+    "security": "Access control",
+    "garden": "Private gardens",
+    "terrace": "Terraces",
+    "kitchen": "Fitted kitchen",
+    "aluminium": "Aluminium joinery",
+    "heating": "Central heating"
+  },
+  "common": {
+    "loading": "Loading…",
+    "close": "Close",
+    "previous": "Previous",
+    "next": "Next",
+    "all": "All",
+    "of": "of",
+    "backHome": "Back to home",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "The page you are looking for does not exist or has been moved."
+  },
+  "apartment": {
+    "eyebrow": "Apartment sheet",
+    "backToProject": "Back to the programme",
+    "plan": "Apartment plan",
+    "tour360": "360° virtual tour",
+    "maquette": "3D model",
+    "specs": "Specifications",
+    "financing": "Financing",
+    "similar": "Similar apartments",
+    "reserve": "Reserve this apartment",
+    "ask": "Ask a question",
+    "ref": "Reference",
+    "notFound": "This apartment does not exist.",
+    "composition": "Layout",
+    "rooms": "rooms",
+    "sold": "This apartment is sold",
+    "soldBody": "Browse the other available apartments in the programme.",
+    "share": "Share"
+  },
+  "maquette": {
+    "title": "Interactive 3D model",
+    "subtitle": "Model generated from the actual footprints taken off the sales plans. Rotate the building, cut by floor, click an apartment to open its sheet.",
+    "hint": "Drag to rotate · scroll to zoom · click an apartment",
+    "reset": "Recenter",
+    "loading": "Loading the model…",
+    "select": "Selected apartment",
+    "allFloors": "All",
+    "floor": "Floor",
+    "realistic": "Realistic",
+    "commercial": "Sales view"
+  },
+  "pano": {
+    "title": "360° virtual tour",
+    "hint": "Drag to look around · scroll to zoom",
+    "fullscreen": "Full screen",
+    "exit": "Exit",
+    "unavailableTitle": "360° tour coming soon",
+    "unavailableBody": "Panoramas for this room are being produced by the design office. Contact us for an on-site visit.",
+    "loading": "Loading the 360° view…"
+  },
+  "plan": {
+    "title": "Sales plan",
+    "hint": "Scroll to zoom · drag to pan",
+    "download": "Download the PDF plan",
+    "missingTitle": "Plan coming soon",
+    "missingBody": "The web image of this plan has not been generated yet. The original PDF is still available.",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "reset": "100%"
+  },
+  "crm": {
+    "title": "Sales CRM",
+    "dashboard": "Dashboard",
+    "pipeline": "Pipeline",
+    "contacts": "Contacts",
+    "tasks": "Tasks",
+    "activities": "Activities",
+    "lots": "Units & availability",
+    "newContact": "New contact",
+    "addActivity": "Log an activity",
+    "addTask": "Add a task",
+    "stages": {
+      "new": "New",
+      "contacted": "Contacted",
+      "visit": "Visit",
+      "offer": "Offer",
+      "reserved": "Reserved",
+      "sold": "Won",
+      "lost": "Lost"
+    },
+    "sources": {
+      "website": "Website",
+      "phone": "Phone",
+      "walk-in": "Showroom visit",
+      "referral": "Referral",
+      "facebook": "Facebook",
+      "salon": "Trade show",
+      "other": "Other"
+    },
+    "types": {
+      "call": "Call",
+      "email": "Email",
+      "visit": "Visit",
+      "meeting": "Meeting",
+      "note": "Note",
+      "whatsapp": "WhatsApp"
+    },
+    "kpi": {
+      "openDeals": "Open deals",
+      "openValue": "Pipeline",
+      "weighted": "Weighted pipeline",
+      "won": "Closed sales",
+      "wonValue": "Revenue",
+      "conversion": "Conversion rate",
+      "contacts": "Contacts",
+      "overdue": "Overdue tasks"
+    },
+    "table": {
+      "contact": "Contact",
+      "deal": "Deal",
+      "stage": "Stage",
+      "value": "Amount",
+      "project": "Project",
+      "lot": "Unit",
+      "date": "Date",
+      "source": "Source",
+      "owner": "Owner",
+      "probability": "Probability",
+      "close": "Expected close",
+      "actions": "Actions",
+      "type": "Type"
+    },
+    "moveTo": "Move to",
+    "openContact": "Open record",
+    "noDeals": "No deal at this stage.",
+    "noContacts": "No contact recorded.",
+    "noTasks": "No task.",
+    "noActivities": "No activity recorded.",
+    "todayTasks": "Due today",
+    "upcoming": "Upcoming",
+    "overdue": "Overdue",
+    "done": "Done",
+    "markDone": "Mark as done",
+    "reopen": "Reopen",
+    "recentActivity": "Recent activity",
+    "demoBanner": "This CRM contains a demo dataset (fictional contacts).",
+    "clearDemo": "Clear demo data",
+    "writeActivity": "Describe the exchange…",
+    "taskTitle": "Task title",
+    "dueDate": "Due date",
+    "save": "Save",
+    "budget": "Budget",
+    "tags": "Tags",
+    "city": "City",
+    "createdAt": "Created",
+    "lastActivity": "Last activity",
+    "dealsOf": "Deals"
+  }
+}

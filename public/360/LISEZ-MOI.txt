@@ -1,0 +1,13 @@
+Déposez ici les panoramiques 360° équirectangulaires (ratio exact 2:1, 8192x4096) :
+
+  public/360/la-gloire/A11/salon.jpg
+  public/360/la-gloire/A11/cuisine.jpg
+  public/360/la-gloire/A11/chambre-1.jpg
+  public/360/la-gloire/A11/sdb.jpg
+  public/360/la-gloire/A11/balcon.jpg
+
+Le nom du dossier est la référence du lot (A11, B02, C25, D46, A511...).
+La visite apparaît automatiquement sur la fiche de l'appartement.
+
+Cahier des charges complet à transmettre au bureau d'études :
+VISITES-360-CAHIER-DES-CHARGES.md (à la racine du projet)

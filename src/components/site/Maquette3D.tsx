@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Lot, Massing } from '@/lib/types';
+import { useImmersiveViewer } from './useImmersiveViewer';
 
 export interface MaquetteLabels {
   title: string;
@@ -14,6 +15,9 @@ export interface MaquetteLabels {
   floor: string;
   realistic: string;
   commercial: string;
+  day: string; evening: string; aerial: string; street: string;
+  fullscreen: string; exit: string; zoomIn: string; zoomOut: string;
+  rotate: string; pause: string; error: string; retry: string; indicative: string;
 }
 
 const STATUS_COLORS: Record<Lot['status'], number> = {
@@ -161,11 +165,23 @@ export default function Maquette3D({
   selectedRef?: string;
 }) {
   const mountRef = useRef<HTMLDivElement>(null);
-  const apiRef = useRef<{ reset: () => void } | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const apiRef = useRef<{ reset: () => void; zoom: (step: number) => void; view: (name: 'aerial' | 'street') => void } | null>(null);
   const selectCb = useRef(onSelect);
   selectCb.current = onSelect;
 
   const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [immersive, setImmersive] = useState(false);
+  const [lighting, setLighting] = useState<'day' | 'evening'>('day');
+  const [rotating, setRotating] = useState(false);
+  const lightingRef = useRef(lighting);
+  lightingRef.current = lighting;
+  const rotatingRef = useRef(rotating);
+  rotatingRef.current = rotating;
+  const close = useCallback(() => setImmersive(false), []);
+  useImmersiveViewer(immersive, close, rootRef);
   const [hover, setHover] = useState<Lot | null>(null);
   const [maxFloor, setMaxFloor] = useState<number | 'all'>('all');
   const [mode, setMode] = useState<'realistic' | 'commercial'>('realistic');
@@ -223,10 +239,13 @@ export default function Maquette3D({
     if (!mount || shapes.length === 0) return;
     let disposed = false;
     let cleanup = () => {};
+    setReady(false);
+    setFailed(false);
 
     (async () => {
       const THREE = await import('three');
       const { mergeGeometries } = await import('three/examples/jsm/utils/BufferGeometryUtils.js');
+      const { Sky } = await import('three/examples/jsm/objects/Sky.js');
 
       /**
        * Fusionne une liste de géométries en une seule.
@@ -263,28 +282,21 @@ export default function Maquette3D({
       /* ---------------- Scène, ciel, rendu ---------------- */
       const scene = new THREE.Scene();
 
-      // ciel dégradé (bleu zénith → horizon chaud), comme les perspectives
-      const skyGeo = new THREE.SphereGeometry(span * 6, 32, 16);
-      const skyMat = new THREE.ShaderMaterial({
-        side: THREE.BackSide,
-        depthWrite: false,
-        uniforms: {
-          top: { value: new THREE.Color(0x4d84c4) },
-          mid: { value: new THREE.Color(0xbfd8ee) },
-          bot: { value: new THREE.Color(0xffd9a6) },
-        },
-        vertexShader: `varying float h; void main(){ vec4 wp = modelMatrix * vec4(position,1.0); h = normalize(wp.xyz).y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-        fragmentShader: `uniform vec3 top; uniform vec3 mid; uniform vec3 bot; varying float h;
-          void main(){ float t = clamp(h,-1.0,1.0);
-            vec3 c = t > 0.0 ? mix(mid, top, pow(t,0.65)) : mix(mid, bot, pow(-t,0.5));
-            gl_FragColor = vec4(c,1.0); }`,
-      });
-      scene.add(new THREE.Mesh(skyGeo, skyMat));
-      scene.fog = new THREE.Fog(0xf0e2cd, span * 3.0, span * 7.5);
+      const sky = new Sky();
+      sky.scale.setScalar(span * 12);
+      sky.material.uniforms.turbidity.value = 3.5;
+      sky.material.uniforms.rayleigh.value = 1.5;
+      sky.material.uniforms.mieCoefficient.value = .004;
+      sky.material.uniforms.mieDirectionalG.value = .8;
+      const sunDirection = new THREE.Vector3(1.1, .75, .8).normalize();
+      sky.material.uniforms.sunPosition.value.copy(sunDirection);
+      scene.add(sky);
+      scene.fog = new THREE.Fog(0xd9e3e6, span * 2.4, span * 6);
 
       const camera = new THREE.PerspectiveCamera(38, mount.clientWidth / mount.clientHeight, 0.5, span * 14);
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+      const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+      const pixelRatio = () => Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(3200000 / Math.max(1, mount.clientWidth * mount.clientHeight)));
+      renderer.setPixelRatio(pixelRatio());
       renderer.setSize(mount.clientWidth, mount.clientHeight);
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -296,9 +308,11 @@ export default function Maquette3D({
       renderer.shadowMap.autoUpdate = false;
       renderer.shadowMap.needsUpdate = true;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.0;
+      renderer.toneMappingExposure = .85;
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       mount.appendChild(renderer.domElement);
+      // Also release partial setup if a graphics allocation fails.
+      cleanup = () => { renderer.dispose(); renderer.domElement.remove(); };
 
       // Environnement : le ciel est pré-filtré une fois et sert de source de
       // reflets aux vitrages et aux garde-corps. C'est ce qui distingue une
@@ -306,33 +320,39 @@ export default function Maquette3D({
       // l'image (la texture est calculée une seule fois).
       const pmrem = new THREE.PMREMGenerator(renderer);
       const envScene = new THREE.Scene();
-      const envSky = new THREE.Mesh(new THREE.SphereGeometry(20, 32, 16), skyMat.clone());
+      const envSky = new Sky();
+      envSky.scale.setScalar(100);
+      envSky.material.uniforms = THREE.UniformsUtils.clone(sky.material.uniforms);
       envScene.add(envSky);
-      const envRT = pmrem.fromScene(envScene, 0, 0.1, 60);
+      let envRT = pmrem.fromScene(envScene, .04, .1, 200);
       scene.environment = envRT.texture;
       // dosage : le ciel sert surtout aux reflets, pas d'éclairage général —
       // sinon les façades à l'ombre s'éclaircissent et le volume disparaît
-      scene.environmentIntensity = 0.16;
-      envSky.geometry.dispose();
+      scene.environmentIntensity = .55;
 
       /* ---------------- Lumière : soleil bas + ciel ---------------- */
-      scene.add(new THREE.HemisphereLight(0xa9c9e8, 0x7a6a52, 0.18));
-      const sun = new THREE.DirectionalLight(0xffe2bd, 4.1);
+      const hemisphere = new THREE.HemisphereLight(0xc4dcf2, 0x8c7964, .45);
+      scene.add(hemisphere);
+      const sun = new THREE.DirectionalLight(0xffeee0, 3.2);
       // soleil bas, comme sur la perspective de fin de journée : c'est
       // l'inclinaison qui donne le relief et les ombres portées longues
-      sun.position.set(span * 1.15, span * 0.42, span * 0.85);
+      sun.position.copy(sunDirection).multiplyScalar(span * 1.8);
       sun.castShadow = true;
-      sun.shadow.mapSize.set(2048, 2048);
-      const d = span * 1.15;
+      const shadowSize = mount.clientWidth >= 768 && renderer.capabilities.maxTextureSize >= 4096 ? 4096 : 2048;
+      sun.shadow.mapSize.set(shadowSize, shadowSize);
+      const d = span * .85;
       sun.shadow.camera.left = -d;
       sun.shadow.camera.right = d;
       sun.shadow.camera.top = d;
       sun.shadow.camera.bottom = -d;
       sun.shadow.camera.far = span * 4;
-      sun.shadow.bias = -0.0006;
-      sun.shadow.normalBias = 0.05;
+      sun.shadow.bias = -.00015;
+      sun.shadow.normalBias = .025;
+      sun.shadow.radius = 3;
+      sun.target.position.set(cx, 5, cz);
+      scene.add(sun.target);
       scene.add(sun);
-      const bounce = new THREE.DirectionalLight(0xcfe0f2, 0.10);
+      const bounce = new THREE.DirectionalLight(0xcfe0f2, .35);
       bounce.position.set(-span * 0.7, span * 0.35, -span * 0.5);
       scene.add(bounce);
 
@@ -343,7 +363,7 @@ export default function Maquette3D({
       facadeTex.colorSpace = THREE.SRGBColorSpace;
       facadeTex.anisotropy = 8;
 
-      const facadeMat = new THREE.MeshStandardMaterial({ map: facadeTex, roughness: 0.8, metalness: 0.03, envMapIntensity: 0.55 });
+      const facadeMat = new THREE.MeshStandardMaterial({ map: facadeTex, bumpMap: facadeTex, bumpScale: .035, roughness: .86, metalness: 0, envMapIntensity: .75 });
       const plasterMat = new THREE.MeshStandardMaterial({ envMapIntensity: 0.3, color: 0xf6f3ee, roughness: 0.9 });
       const slabMat = new THREE.MeshStandardMaterial({ envMapIntensity: 0.3, color: 0xfbf9f5, roughness: 0.85 });
       const capMat = new THREE.MeshStandardMaterial({ envMapIntensity: 0.3, color: 0xf3efe9, roughness: 0.92 });
@@ -351,6 +371,7 @@ export default function Maquette3D({
       const groundTex = new THREE.CanvasTexture(groundCanvas());
       groundTex.wrapS = groundTex.wrapT = THREE.RepeatWrapping;
       groundTex.repeat.set(span / 4, span / 4);
+      groundTex.colorSpace = THREE.SRGBColorSpace;
 
       /* ---------------- Terrain, voirie, clôture, cour ---------------- */
       const court = massing.courtyard;
@@ -386,7 +407,7 @@ export default function Maquette3D({
         m.receiveShadow = true;
         scene.add(m);
       };
-      mkRoad(spanX + 60, roadW, cx, cz + plotZ + roadW / 2, Math.PI / 2, [1, (spanX + 60) / 14]);
+      mkRoad(roadW, spanX + 60, cx, cz + plotZ + roadW / 2, Math.PI / 2, [1, (spanX + 60) / 14]);
       mkRoad(roadW, spanZ + 60, cx + plotX + roadW / 2, cz, 0, [1, (spanZ + 60) / 14]);
 
       // trottoir clair sur toute la parcelle
@@ -469,7 +490,7 @@ export default function Maquette3D({
         ].forEach(([sx, sz]) => {
           const q = new THREE.Mesh(new THREE.PlaneGeometry(qw, qd), gm);
           q.rotation.x = -Math.PI / 2;
-          q.position.set(ccx + sx * cw * 0.26, 0.05, ccz + sz * cd * 0.28);
+          q.position.set(ccx + sx * cw * 0.26, 0.36, ccz + sz * cd * 0.28);
           q.receiveShadow = true;
           courtGroup.add(q);
           const border = new THREE.Mesh(
@@ -546,7 +567,7 @@ export default function Maquette3D({
 
       const makePalm = (x: number, z: number, h: number, seed: number) => {
         const lean = (seed % 0.12) - 0.06;
-        bake(new THREE.CylinderGeometry(0.17, 0.3, h, 8), [x, h / 2, z], [0, 0, lean], [1, 1, 1], trunkGeos);
+        bake(new THREE.CylinderGeometry(0.17, 0.3, h, 12), [x, h / 2, z], [0, 0, lean], [1, 1, 1], trunkGeos);
         const crowns: [number, number, number, Geo[]][] = [
           [8, 1.05, 2.9, frond2Geos],
           [9, 1.55, 3.4, frondGeos],
@@ -555,16 +576,25 @@ export default function Maquette3D({
           for (let i = 0; i < n; i += 1) {
             const ry = (i / n) * Math.PI * 2 + seed + ci * 0.4;
             const y = h - ci * 0.18;
-            // position du centre de la palme, une fois inclinée puis pivotée
-            const r = (len / 2 - 0.15) * Math.sin(tilt);
-            const dy = (len / 2 - 0.15) * Math.cos(tilt);
-            bake(
-              new THREE.ConeGeometry(0.5, len, 4, 1, true),
-              [x + Math.cos(ry) * r, y + dy, z - Math.sin(ry) * r],
-              [0, ry, tilt],
-              [1, 1, 0.28],
-              into,
-            );
+            // Curved rachis and separate tapered leaflets replace the solid cones.
+            const vertices: number[] = [], uvs: number[] = [], indices: number[] = [];
+            for (let j = 1; j < 16; j++) {
+              const t = j / 16;
+              const reach = t * len;
+              const rise = Math.sin(t * Math.PI) * .55 - t * t * (ci ? 1.1 : .25);
+              const width = Math.sin(t * Math.PI) * .65;
+              for (const side of [-1, 1]) {
+                const index = vertices.length / 3;
+                vertices.push(reach - .12, rise, 0, reach + .2, rise, 0, reach + .25, rise - .16, side * width);
+                uvs.push(0, t, .2, t, 1, t);
+                indices.push(index, index + 1, index + 2);
+              }
+            }
+            const leaf = new THREE.BufferGeometry();
+            leaf.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            leaf.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+            leaf.setIndex(indices); leaf.computeVertexNormals();
+            bake(leaf, [x - Math.sin(lean) * h / 2, y, z], [0, ry, (1.3 - tilt) * .25], [1, 1, 1], into);
           }
         });
         bake(new THREE.SphereGeometry(0.34, 8, 6), [x, h, z], [0, 0, 0], [1, 1, 1], trunkGeos);
@@ -617,7 +647,7 @@ export default function Maquette3D({
       scene.add(palmGroup);
 
       /* ---------------- Volumes : un appartement = une extrusion ---------------- */
-      const slabH = 0.34;
+      const slabH = 0.35;
       const bodyH = fh - slabH;
 
       const toShape = (poly: [number, number][]) => {
@@ -656,7 +686,7 @@ export default function Maquette3D({
         // alors à changer un seul matériau, sans toucher à la géométrie.
         const count = bodyGeo.getAttribute('position').count;
         const colors = new Float32Array(count * 3);
-        statusColor.setHex(STATUS_COLORS[lot.status]).convertSRGBToLinear();
+        statusColor.setHex(STATUS_COLORS[lot.status]);
         for (let i = 0; i < count; i += 1) {
           colors[i * 3] = statusColor.r;
           colors[i * 3 + 1] = statusColor.g;
@@ -705,6 +735,9 @@ export default function Maquette3D({
         emissive: 0xe8d08a,
         emissiveIntensity: 0.4,
         roughness: 0.5,
+        polygonOffset: true,
+        polygonOffsetFactor: -2,
+        polygonOffsetUnits: -2,
       });
       const selGeo = selectedRef ? geoByRef.get(selectedRef) : undefined;
       const selMesh = selGeo ? new THREE.Mesh(selGeo, selMat) : null;
@@ -762,14 +795,17 @@ export default function Maquette3D({
       const claustraTex = new THREE.CanvasTexture(claustraCanvas());
       claustraTex.colorSpace = THREE.SRGBColorSpace;
       const claustraMat = new THREE.MeshStandardMaterial({ map: claustraTex, roughness: 0.8, envMapIntensity: 0.4 });
-      const glassMat = new THREE.MeshStandardMaterial({
-        color: 0x171d21,
-        roughness: 0.06,
-        metalness: 0.7,
-        envMapIntensity: 2.2,
-        emissive: 0x4a3312,
-        emissiveIntensity: 0.22,
+      const glassMat = new THREE.MeshPhysicalMaterial({
+        color: 0x597078,
+        roughness: .12,
+        metalness: .38,
+        clearcoat: 1,
+        clearcoatRoughness: .08,
+        envMapIntensity: 1.8,
       });
+      const interiorMat = new THREE.MeshStandardMaterial({ color: 0x8d8273, roughness: .6, emissive: 0xffc47a, emissiveIntensity: .12 });
+      const revealMat = new THREE.MeshStandardMaterial({ color: 0x99978f, roughness: .95 });
+      const lightMat = new THREE.MeshStandardMaterial({ color: 0xffe1ab, emissive: 0xffbf70, emissiveIntensity: .25, roughness: .4 });
       const frameMat = new THREE.MeshStandardMaterial({ color: 0x24292c, roughness: 0.45, metalness: 0.35, envMapIntensity: 1 });
       const corniceMat = new THREE.MeshStandardMaterial({ color: 0x1f2326, roughness: 0.55, metalness: 0.25, envMapIntensity: 0.9 });
       const balconyMat = new THREE.MeshStandardMaterial({ color: 0xfbf9f5, roughness: 0.85, envMapIntensity: 0.3 });
@@ -778,9 +814,10 @@ export default function Maquette3D({
         roughness: 0.04,
         metalness: 0,
         transparent: true,
-        opacity: 0.26,
-        transmission: 0.65,
-        envMapIntensity: 4,
+        opacity: .32,
+        transmission: 0,
+        depthWrite: false,
+        envMapIntensity: 1.6,
         side: THREE.DoubleSide,
       });
 
@@ -860,7 +897,14 @@ export default function Maquette3D({
               put(floor, balconyMat, len, 0.3, 1.25, mx + nx * 0.5, yBase + 0.06, my + ny * 0.5, rot);
               if (floor > 0) {
                 put(floor, railGlassMat, len - 0.3, 1.0, 0.06, mx + nx * 1.08, yBase + 0.72, my + ny * 1.08, rot);
+                put(floor, frameMat, len - .2, .045, .055, mx + nx * 1.08, yBase + 1.24, my + ny * 1.08, rot);
+                const posts = Math.ceil(len / 1.8);
+                for (let p = 0; p <= posts; p++) {
+                  const t = .12 / len + p / posts * (1 - .24 / len);
+                  put(floor, frameMat, .035, 1.05, .06, x1 + dx * t + nx * 1.08, yBase + .72, y1 + dy * t + ny * 1.08, rot);
+                }
               }
+              put(floor, lightMat, len - .3, .025, .035, mx + nx * 1.1, yBase - .04, my + ny * 1.1, rot);
             }
 
             // travées : baie vitrée toutes les ~4,2 m
@@ -870,17 +914,32 @@ export default function Maquette3D({
               const bxp = x1 + dx * t;
               const byp = y1 + dy * t;
               const bw = Math.min(2.75, (len / bays) * 0.56);
-              put(floor, frameMat, bw + 0.16, 1.62, 0.14, bxp + nx * 0.03, yBase + 1.68, byp + ny * 0.03, rot);
-              put(floor, glassMat, bw, 1.44, 0.09, bxp + nx * 0.09, yBase + 1.68, byp + ny * 0.09, rot);
+              const winHeight = 2.18;
+              put(floor, revealMat, bw + .28, winHeight + .22, .16, bxp + nx * .04, yBase + 1.52, byp + ny * .04, rot);
+              put(floor, frameMat, bw + .12, winHeight + .08, .19, bxp + nx * .13, yBase + 1.52, byp + ny * .13, rot);
+              const lit = (b + a + floor) % 4 === 0;
+              put(floor, lit ? interiorMat : glassMat, bw, winHeight, .04, bxp + nx * .25, yBase + 1.52, byp + ny * .25, rot);
+              put(floor, frameMat, .045, winHeight, .06, bxp + nx * .28, yBase + 1.52, byp + ny * .28, rot);
+              put(floor, slabMat, bw + .34, .08, .4, bxp + nx * .15, yBase + .39, byp + ny * .15, rot);
+              if (lit) {
+                for (let fold = 0; fold < 8; fold++) {
+                  const offset = (fold / 7 - .5) * bw * .9;
+                  put(floor, revealMat, .025, winHeight - .08, .025, bxp + nx * .28 + dx / len * offset, yBase + 1.52, byp + ny * .28 + dy / len * offset, rot);
+                }
+              }
             }
 
             // panneau à lattes bois (claustra) tous les ~9 m
-            const slats = Math.max(0, Math.floor((len - 2.5) / 6));
+            const slats = Math.max(0, bays - 1);
             for (let c = 0; c < slats; c += 1) {
               const t = (c + 1) / (slats + 1);
               const sx = x1 + dx * t;
               const sy = y1 + dy * t;
-              put(floor, claustraMat, 1.35, fh - 0.3, 0.26, sx + nx * 0.16, yBase + fh / 2 + 0.08, sy + ny * 0.16, rot);
+              put(floor, frameMat, 1.15, fh - .35, .1, sx + nx * .1, yBase + fh / 2 + .08, sy + ny * .1, rot);
+              for (let slat = 0; slat < 9; slat++) {
+                const offset = (slat - 4) * .12;
+                put(floor, claustraMat, .05, fh - .35, .22, sx + nx * .23 + dx / len * offset, yBase + fh / 2 + .08, sy + ny * .23 + dy / len * offset, rot);
+              }
             }
 
             // corniche sombre du dernier niveau + débord de toiture
@@ -992,22 +1051,29 @@ export default function Maquette3D({
       let phi = Math.PI * 0.40;
       let radius = span * 1.55;
       const target = new THREE.Vector3(cx, topY * 0.42, cz);
-      let auto = true;
       let dragging = false;
       let moved = false;
       let px = 0;
       let py = 0;
+      let startX = 0, startY = 0;
+      let dirty = true;
+      let visible = true;
 
       const place = () => {
+        const fittedRadius = radius / Math.min(1, camera.aspect);
         camera.position.set(
-          target.x + radius * Math.sin(phi) * Math.sin(theta),
-          Math.max(2, target.y + radius * Math.cos(phi)),
-          target.z + radius * Math.sin(phi) * Math.cos(theta),
+          target.x + fittedRadius * Math.sin(phi) * Math.sin(theta),
+          Math.max(2, target.y + fittedRadius * Math.cos(phi)),
+          target.z + fittedRadius * Math.sin(phi) * Math.cos(theta),
         );
         camera.lookAt(target);
+        dirty = true;
       };
 
       const el = renderer.domElement;
+      el.tabIndex = 0;
+      el.setAttribute('aria-label', labels.hint);
+      el.style.touchAction = 'none';
       const raycaster = new THREE.Raycaster();
       const pointer = new THREE.Vector2();
 
@@ -1024,14 +1090,16 @@ export default function Maquette3D({
 
       const down = (x: number, y: number) => {
         dragging = true;
-        auto = false;
+        rotatingRef.current = false;
+        setRotating(false);
         moved = false;
         px = x;
         py = y;
+        startX = x; startY = y;
       };
       const move = (x: number, y: number) => {
         if (!dragging) return;
-        if (Math.abs(x - px) + Math.abs(y - py) > 3) moved = true;
+        if (Math.hypot(x - startX, y - startY) > 5) moved = true;
         theta -= (x - px) * 0.006;
         phi = Math.max(0.16, Math.min(1.46, phi - (y - py) * 0.005));
         px = x;
@@ -1039,53 +1107,82 @@ export default function Maquette3D({
         place();
       };
 
-      const md = (e: MouseEvent) => down(e.clientX, e.clientY);
-      const mm = (e: MouseEvent) => {
-        move(e.clientX, e.clientY);
-        const lot = pick(e.clientX, e.clientY);
-        setHover(lot);
-        el.style.cursor = lot ? 'pointer' : dragging ? 'grabbing' : 'grab';
+      const pointers = new Map<number, { x: number; y: number }>();
+      let pinchDistance = 0;
+      const stop = () => { rotatingRef.current = false; setRotating(false); };
+      const zoom = (step: number) => { stop(); radius = THREE.MathUtils.clamp(radius + span * step, span * .45, span * 3); place(); };
+      const pd = (e: PointerEvent) => {
+        el.setPointerCapture(e.pointerId); el.focus({ preventScroll: true });
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        down(e.clientX, e.clientY);
+        if (pointers.size > 1) { moved = true; const [a, b] = [...pointers.values()]; pinchDistance = Math.hypot(a.x - b.x, a.y - b.y); }
       };
-      const mu = (e: MouseEvent) => {
-        if (dragging && !moved) {
+      const pm = (e: PointerEvent) => {
+        if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (pointers.size > 1) {
+          const [a, b] = [...pointers.values()];
+          const distance = Math.hypot(a.x - b.x, a.y - b.y);
+          if (pinchDistance) zoom((pinchDistance - distance) * .003);
+          pinchDistance = distance; moved = true;
+        } else move(e.clientX, e.clientY);
+        if (!dragging && e.pointerType === 'mouse') {
+          const lot = pick(e.clientX, e.clientY); setHover(previous => previous?.ref === lot?.ref ? previous : lot);
+          el.style.cursor = lot ? 'pointer' : 'grab';
+        }
+      };
+      const pu = (e: PointerEvent) => {
+        if (dragging && !moved && pointers.size === 1 && e.type === 'pointerup') {
           const lot = pick(e.clientX, e.clientY);
           if (lot) selectCb.current?.(lot.ref);
         }
-        dragging = false;
+        pointers.delete(e.pointerId); pinchDistance = 0; dragging = pointers.size > 0;
+        if (dragging) { const point = [...pointers.values()][0]; px = point.x; py = point.y; moved = true; }
       };
-      const ts = (e: TouchEvent) => down(e.touches[0].clientX, e.touches[0].clientY);
-      const tm = (e: TouchEvent) => move(e.touches[0].clientX, e.touches[0].clientY);
-      const tu = () => {
-        dragging = false;
-      };
+      const leave = () => { if (!dragging) setHover(null); };
       const wheel = (e: WheelEvent) => {
         e.preventDefault();
-        auto = false;
-        radius = Math.max(span * 0.45, Math.min(span * 3, radius + e.deltaY * span * 0.0016));
+        zoom(e.deltaY * .0016);
+      };
+      const key = (e: KeyboardEvent) => {
+        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '=', '-', 'Home'].includes(e.key)) return;
+        e.preventDefault(); stop();
+        if (e.key === 'ArrowLeft') theta -= .1;
+        if (e.key === 'ArrowRight') theta += .1;
+        if (e.key === 'ArrowUp') phi = Math.max(.16, phi - .08);
+        if (e.key === 'ArrowDown') phi = Math.min(1.46, phi + .08);
+        if (e.key === '+' || e.key === '=') zoom(-.12);
+        if (e.key === '-') zoom(.12);
+        if (e.key === 'Home') apiRef.current?.reset();
         place();
       };
-
-      el.addEventListener('mousedown', md);
-      window.addEventListener('mousemove', mm);
-      window.addEventListener('mouseup', mu);
-      el.addEventListener('touchstart', ts, { passive: true });
-      el.addEventListener('touchmove', tm, { passive: true });
-      el.addEventListener('touchend', tu);
+      const contextLost = (e: Event) => { e.preventDefault(); setFailed(true); setReady(false); };
+      el.addEventListener('pointerdown', pd);
+      el.addEventListener('pointermove', pm);
+      el.addEventListener('pointerup', pu);
+      el.addEventListener('pointercancel', pu);
+      el.addEventListener('lostpointercapture', pu);
+      el.addEventListener('pointerleave', leave);
       el.addEventListener('wheel', wheel, { passive: false });
+      el.addEventListener('keydown', key);
+      el.addEventListener('webglcontextlost', contextLost);
 
       const resize = () => {
         if (!mount.clientWidth) return;
         camera.aspect = mount.clientWidth / mount.clientHeight;
         camera.updateProjectionMatrix();
+        renderer.setPixelRatio(pixelRatio());
         renderer.setSize(mount.clientWidth, mount.clientHeight);
+        place();
       };
       const ro = new ResizeObserver(resize);
       ro.observe(mount);
+      const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; dirty = true; });
+      io.observe(mount);
 
       place();
 
       if (selMesh) {
-        auto = false;
+        stop();
         selMesh.geometry.computeBoundingBox();
         const bb = selMesh.geometry.boundingBox!;
         target.set((bb.min.x + bb.max.x) / 2, (bb.min.y + bb.max.y) / 2 + fh * 0.2, (bb.min.z + bb.max.z) / 2);
@@ -1095,7 +1192,7 @@ export default function Maquette3D({
       }
 
       let raf = 0;
-      const clock = new THREE.Clock();
+      let previousTime = 0;
 
       /**
        * L'ancienne boucle réappliquait, 60 fois par seconde, la visibilité et
@@ -1105,6 +1202,27 @@ export default function Maquette3D({
        */
       let appliedMode = '';
       let appliedCap: number | 'all' | null = null;
+      let appliedLighting = 'day';
+      const applyLighting = (value: 'day' | 'evening') => {
+        const evening = value === 'evening';
+        sunDirection.set(1.1, evening ? .18 : .75, .8).normalize();
+        sun.position.copy(sunDirection).multiplyScalar(span * 1.8);
+        sky.material.uniforms.sunPosition.value.copy(sunDirection);
+        envSky.material.uniforms.sunPosition.value.copy(sunDirection);
+        const nextEnvironment = pmrem.fromScene(envScene, .04, .1, 200);
+        scene.environment = nextEnvironment.texture;
+        envRT.dispose(); envRT = nextEnvironment;
+        sun.color.setHex(evening ? 0xffbf83 : 0xffeee0);
+        sun.intensity = evening ? 2.4 : 3.2;
+        hemisphere.intensity = evening ? .28 : .45;
+        scene.environmentIntensity = evening ? .4 : .55;
+        scene.fog!.color.setHex(evening ? 0xd8c1ae : 0xd9e3e6);
+        renderer.toneMappingExposure = evening ? .9 : .85;
+        interiorMat.emissiveIntensity = evening ? 1.8 : .12;
+        lightMat.emissiveIntensity = evening ? 4 : .25;
+        renderer.shadowMap.needsUpdate = true;
+        dirty = true;
+      };
 
       const applyState = (realistic: boolean, cap: number | 'all') => {
         palmGroup.visible = realistic;
@@ -1127,12 +1245,15 @@ export default function Maquette3D({
         });
         if (selMesh) selMesh.visible = cap === 'all' || (selMesh.userData.floor as number) <= cap;
         renderer.shadowMap.needsUpdate = true;
+        dirty = true;
       };
 
-      const animate = () => {
+      const animate = (time: number) => {
         raf = requestAnimationFrame(animate);
-        if (auto) {
-          theta += 0.0013;
+        const dt = Math.min((time - previousTime) / 1000, .05); previousTime = time;
+        if (!visible || document.hidden) return;
+        if (rotatingRef.current) {
+          theta += dt * .06;
           place();
         }
 
@@ -1144,14 +1265,10 @@ export default function Maquette3D({
           appliedCap = cap;
         }
 
-        // seule la pulsation du logement sélectionné bouge à chaque image
-        if (selMesh && selMesh.visible) {
-          selMat.emissiveIntensity = 0.42 + Math.sin(clock.getElapsedTime() * 2.6) * 0.22;
-        }
-
-        renderer.render(scene, camera);
+        if (lightingRef.current !== appliedLighting) { applyLighting(lightingRef.current); appliedLighting = lightingRef.current; }
+        if (dirty) { renderer.render(scene, camera); dirty = false; }
       };
-      animate();
+      raf = requestAnimationFrame(animate);
       setReady(true);
 
       apiRef.current = {
@@ -1160,7 +1277,15 @@ export default function Maquette3D({
           phi = Math.PI * 0.4;
           radius = span * 1.55;
           target.set(cx, topY * 0.42, cz);
-          auto = true;
+          stop();
+          place();
+        },
+        zoom,
+        view: (name) => {
+          stop(); theta = Math.PI * .24;
+          phi = name === 'aerial' ? Math.PI * .23 : Math.PI * .51;
+          radius = span * (name === 'aerial' ? 1.65 : 1.45);
+          target.set(cx, name === 'aerial' ? topY * .3 : topY * .28, cz);
           place();
         },
       };
@@ -1168,62 +1293,81 @@ export default function Maquette3D({
       cleanup = () => {
         cancelAnimationFrame(raf);
         ro.disconnect();
-        el.removeEventListener('mousedown', md);
-        window.removeEventListener('mousemove', mm);
-        window.removeEventListener('mouseup', mu);
-        el.removeEventListener('touchstart', ts);
-        el.removeEventListener('touchmove', tm);
-        el.removeEventListener('touchend', tu);
+        io.disconnect();
+        el.removeEventListener('pointerdown', pd);
+        el.removeEventListener('pointermove', pm);
+        el.removeEventListener('pointerup', pu);
+        el.removeEventListener('pointercancel', pu);
+        el.removeEventListener('lostpointercapture', pu);
+        el.removeEventListener('pointerleave', leave);
         el.removeEventListener('wheel', wheel);
-        facadeTex.dispose();
-        groundTex.dispose();
-        lawnTex.dispose();
-        roadTex.dispose();
-        claustraTex.dispose();
+        el.removeEventListener('keydown', key);
+        el.removeEventListener('webglcontextlost', contextLost);
+        const materials = new Set<InstanceType<typeof THREE.Material>>([facadeMat, statusMat, selMat, plasterMat, slabMat, capMat]);
+        const textures = new Set<InstanceType<typeof THREE.Texture>>([facadeTex, groundTex, lawnTex, roadTex, claustraTex]);
+        scene.traverse(object => {
+          if (!(object instanceof THREE.Mesh)) return;
+          object.geometry.dispose();
+          (Array.isArray(object.material) ? object.material : [object.material]).forEach(mat => materials.add(mat));
+        });
+        materials.forEach(mat => { Object.values(mat).forEach(value => { if (value instanceof THREE.Texture) textures.add(value); }); mat.dispose(); });
+        textures.forEach(texture => texture.dispose());
+        geoByRef.forEach(geo => geo.dispose());
+        envSky.geometry.dispose(); envSky.material.dispose(); sun.shadow.dispose();
         envRT.dispose();
         pmrem.dispose();
         renderer.dispose();
         el.remove();
+        apiRef.current = null;
       };
-    })();
+    })().catch(() => { cleanup(); if (!disposed) { setReady(false); setFailed(true); } });
 
     return () => {
       disposed = true;
       cleanup();
     };
-  }, [shapes, massing, selectedRef]);
+  }, [shapes, massing, selectedRef, attempt, labels.hint]);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-ink">
-      <div ref={mountRef} className="h-[480px] w-full sm:h-[600px]" />
+    <div ref={rootRef} role={immersive ? 'dialog' : undefined} aria-modal={immersive || undefined} aria-label={labels.title}
+      className={immersive ? 'fixed inset-0 z-[120] flex flex-col bg-ink p-2 sm:p-4' : 'viewer-shell overflow-hidden rounded-2xl bg-ink'}>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-5">
+        <div className="flex items-center gap-1" aria-label={labels.title}>
+          {(['realistic', 'commercial'] as const).map(value => <button key={value} type="button" className="viewer-control" aria-pressed={mode === value} onClick={() => setMode(value)}>{labels[value]}</button>)}
+        </div>
+        <div className="flex items-center gap-1">
+          <button type="button" className="viewer-control" aria-label={immersive ? labels.exit : labels.fullscreen} onClick={() => setImmersive(v => !v)}><span aria-hidden="true" className="text-xl">{immersive ? '×' : '⛶'}</span><span className="hidden sm:inline">{immersive ? labels.exit : labels.fullscreen}</span></button>
+        </div>
+      </div>
+      <div className={`relative ${immersive ? 'min-h-0 flex-1' : ''}`}>
+      <div ref={mountRef} className={immersive ? 'h-full w-full' : 'h-[520px] w-full sm:h-[650px]'} />
 
       {!ready && (
         <div className="absolute inset-0 grid place-items-center bg-ink">
-          <p className="text-[13px] text-white/50">{labels.loading}</p>
+          <div className="max-w-sm px-5 text-center"><p className="text-base text-white/70">{failed ? labels.error : labels.loading}</p>{failed && <button type="button" className="btn-gold mt-5" onClick={() => setAttempt(v => v + 1)}>{labels.retry}</button>}</div>
         </div>
       )}
 
       {/* Mode d'affichage */}
-      <div className="absolute start-4 top-4 flex rounded-full bg-black/45 p-1 backdrop-blur">
-        {(['realistic', 'commercial'] as const).map((m) => (
+      <div className="viewer-glass absolute start-3 top-3 flex rounded-full p-1 sm:start-5 sm:top-5">
+        {(['day', 'evening'] as const).map((m) => (
           <button
             key={m}
             type="button"
-            onClick={() => setMode(m)}
-            className={`rounded-full px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] transition ${
-              mode === m ? 'bg-gold-gradient text-ink' : 'text-white/60 hover:text-gold-200'
-            }`}
+            onClick={() => setLighting(m)}
+            className="viewer-control"
+            aria-pressed={lighting === m}
           >
-            {m === 'realistic' ? labels.realistic : labels.commercial}
+            {labels[m]}
           </button>
         ))}
       </div>
 
       {/* Légende — seulement en mode commercial */}
       {mode === 'commercial' && (
-        <div className="pointer-events-none absolute start-4 top-16 flex flex-col gap-2 rounded-xl bg-black/45 px-4 py-3 backdrop-blur">
+        <div className="viewer-glass pointer-events-none absolute start-3 top-20 flex flex-col gap-2 rounded-xl px-4 py-3">
           {(['available', 'reserved', 'sold'] as const).map((s) => (
-            <span key={s} className="flex items-center gap-2 text-[11px] text-white/70">
+            <span key={s} className="flex items-center gap-2 text-sm text-white/85">
               <span
                 className="h-2.5 w-2.5 rounded-sm"
                 style={{ background: `#${STATUS_COLORS[s].toString(16).padStart(6, '0')}` }}
@@ -1235,22 +1379,12 @@ export default function Maquette3D({
       )}
 
       {/* Coupe par étage + recentrage */}
-      <div className="absolute end-4 top-4 flex flex-col items-end gap-2">
-        <button
-          type="button"
-          onClick={() => apiRef.current?.reset()}
-          className="rounded-full border border-white/25 bg-black/35 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur transition hover:border-gold-400 hover:text-gold-200"
-        >
-          {labels.reset}
-        </button>
-
-        <div className="flex flex-wrap justify-end gap-1 rounded-xl bg-black/40 p-1 backdrop-blur">
+      <div className="no-scrollbar absolute bottom-24 end-3 top-3 flex flex-col items-end gap-2 overflow-y-auto sm:end-5 sm:top-5">
+        <div className="viewer-glass flex flex-col gap-1 rounded-2xl p-1" aria-label={labels.floor}>
           <button
             type="button"
             onClick={() => setMaxFloor('all')}
-            className={`rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition ${
-              maxFloor === 'all' ? 'bg-gold-gradient text-ink' : 'text-white/60 hover:text-gold-200'
-            }`}
+            className="viewer-control" aria-pressed={maxFloor === 'all'}
           >
             {labels.allFloors}
           </button>
@@ -1259,9 +1393,7 @@ export default function Maquette3D({
               key={f}
               type="button"
               onClick={() => setMaxFloor(f)}
-              className={`w-8 rounded-lg py-1.5 text-[11px] font-semibold transition ${
-                maxFloor === f ? 'bg-gold-gradient text-ink' : 'text-white/60 hover:text-gold-200'
-              }`}
+              className="viewer-control" aria-pressed={maxFloor === f} aria-label={`${labels.floor} ${f}`}
             >
               {f === 0 ? 'R' : f}
             </button>
@@ -1270,18 +1402,33 @@ export default function Maquette3D({
       </div>
 
       {/* Infobulle */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-4">
-        <p className="text-[11px] uppercase tracking-[0.18em] text-white/50 drop-shadow">{labels.hint}</p>
+      <div className="pointer-events-none absolute bottom-24 start-4 flex items-end gap-4">
         {hover && (
           <div className="rounded-xl bg-black/60 px-4 py-3 text-end backdrop-blur">
             <p className="font-display text-[20px] leading-none text-white">{hover.code}</p>
-            <p className="mt-1.5 text-[11.5px] text-white/55">
+            <p className="mt-1.5 text-sm text-white/80">
               {hover.typology}
               {hover.sellableArea ? ` · ${hover.sellableArea.toFixed(2)} m²` : ''}
             </p>
           </div>
         )}
       </div>
+      <div className="viewer-glass absolute bottom-5 start-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full p-1" dir="ltr">
+        <button type="button" className="viewer-control w-11 text-xl" aria-label={labels.zoomOut} title={labels.zoomOut} onClick={() => apiRef.current?.zoom(.12)}>−</button>
+        <button type="button" className="viewer-control w-11 text-xl" aria-label={labels.zoomIn} title={labels.zoomIn} onClick={() => apiRef.current?.zoom(-.12)}>+</button>
+        <span className="h-5 w-px bg-white/20" />
+        <button type="button" className="viewer-control" onClick={() => { setMaxFloor('all'); apiRef.current?.reset(); }}>{labels.reset}</button>
+        <button type="button" className="viewer-control w-11" aria-label={rotating ? labels.pause : labels.rotate} title={rotating ? labels.pause : labels.rotate} aria-pressed={rotating} onClick={() => setRotating(v => !v)}>{rotating ? 'Ⅱ' : '▷'}</button>
+      </div>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-4 py-3 sm:px-5">
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className="viewer-control border border-white/15" onClick={() => apiRef.current?.view('aerial')}>{labels.aerial}</button>
+          <button type="button" className="viewer-control border border-white/15" onClick={() => apiRef.current?.view('street')}>{labels.street}</button>
+        </div>
+        <p className="max-w-md text-xs leading-relaxed text-white/55">{labels.hint}</p>
+      </div>
+      <p className="border-t border-white/5 px-5 py-2 text-xs text-white/40">{labels.indicative}</p>
     </div>
   );
 }

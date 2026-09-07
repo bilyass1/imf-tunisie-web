@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Allow a clean preview/build alongside a checkout with locked OneDrive cache files.
+  distDir: process.env.IMF_BUILD_DIR || '.next',
   compress: true,
   poweredByHeader: false,
   // Accès au serveur de développement depuis un autre poste du réseau local.

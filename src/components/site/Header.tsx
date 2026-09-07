@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Locale } from '@/i18n/config';
 import Logo from '@/components/Logo';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -34,6 +34,8 @@ export default function Header({
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const menuPanel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -47,9 +49,26 @@ export default function Header({
   }, [pathname]);
 
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const close = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setOpen(false); menuButton.current?.focus(); }
+      if (e.key === 'Tab') {
+        const items = [menuButton.current, ...Array.from(menuPanel.current?.querySelectorAll<HTMLElement>('a') ?? [])].filter(Boolean) as HTMLElement[];
+        const first = items[0], last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown', close);
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const onDesktop = () => { if (desktop.matches) setOpen(false); };
+    desktop.addEventListener('change', onDesktop);
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', close);
+      desktop.removeEventListener('change', onDesktop);
     };
   }, [open]);
 
@@ -71,16 +90,19 @@ export default function Header({
           solid ? 'border-b border-ink/8 bg-ivory/92 backdrop-blur-xl' : 'bg-gradient-to-b from-black/55 to-transparent'
         }`}
       >
-        <div className="container-lux flex h-[76px] items-center justify-between gap-4 lg:h-[84px]">
-          <Logo locale={locale} light={light} />
+        <div dir="ltr" className="flex h-[76px] w-full items-center justify-between gap-4 px-5 sm:px-8 lg:h-[84px] lg:px-10">
+          <div className="shrink-0">
+            <Logo locale={locale} light={light} />
+          </div>
 
-          <nav className="hidden items-center gap-5 lg:flex xl:gap-7">
+          <nav dir={locale === 'ar' ? 'rtl' : 'ltr'} className="hidden flex-1 items-center justify-center gap-5 lg:flex xl:gap-7">
             {links.map((link) => {
               const active = pathname === link.href || (link.href !== `/${locale}` && pathname.startsWith(link.href));
               return (
                 <Link
                   key={link.href}
                   href={link.href}
+                  aria-current={active ? 'page' : undefined}
                   className={`relative whitespace-nowrap text-[12.5px] font-medium uppercase tracking-[0.14em] transition ${
                     light ? 'text-white/85 hover:text-gold-200' : 'text-ink/70 hover:text-gold-600'
                   } ${active ? (light ? 'text-gold-200' : 'text-gold-600') : ''}`}
@@ -92,7 +114,7 @@ export default function Header({
             })}
           </nav>
 
-          <div className="flex items-center gap-2.5">
+          <div dir={locale === 'ar' ? 'rtl' : 'ltr'} className="flex shrink-0 items-center gap-2.5">
             <a
               href={`tel:${phone.replace(/\s/g, '')}`}
               className={`hidden items-center gap-2 whitespace-nowrap text-[12.5px] font-medium tracking-wide xl:flex ${
@@ -122,9 +144,12 @@ export default function Header({
             </Link>
 
             <button
+              ref={menuButton}
               type="button"
               onClick={() => setOpen((o) => !o)}
               aria-label={open ? labels.close : labels.menu}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
               className={`grid h-10 w-10 place-items-center rounded-full border transition lg:hidden ${
                 light ? 'border-white/25 text-white' : 'border-ink/15 text-ink'
               }`}
@@ -137,6 +162,10 @@ export default function Header({
 
       {/* Menu mobile */}
       <div
+        ref={menuPanel}
+        id="mobile-menu"
+        inert={!open}
+        aria-hidden={!open}
         className={`fixed inset-0 z-40 bg-ink transition-all duration-500 lg:hidden ${
           open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         }`}

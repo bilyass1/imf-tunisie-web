@@ -2,6 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+import { LA_GLOIRE_SITE } from '@/lib/la-gloire-footprints';
 import type { MaquetteLabels } from './Maquette3D';
 import type { Lot, Massing } from '@/lib/types';
 
@@ -27,10 +29,15 @@ export default function MaquetteSection({
   selectedRef?: string;
 }) {
   const router = useRouter();
+  // Existing CRM snapshots can still contain the earlier 3.10 m estimate.
+  // Apply the verified drawing height without rewriting any commercial data.
+  const displayMassing = useMemo(() => projectSlug === 'residence-la-gloire'
+    ? { ...massing, floorHeight: LA_GLOIRE_SITE.floorHeight }
+    : massing, [massing, projectSlug]);
   return (
     <Maquette3D
       lots={lots}
-      massing={massing}
+      massing={displayMassing}
       labels={labels}
       selectedRef={selectedRef}
       onSelect={(ref) => router.push(`/${locale}/projets/${projectSlug}/appartements/${ref}`)}

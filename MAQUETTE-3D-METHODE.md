@@ -1,5 +1,9 @@
 # Maquette 3D — comment elle est construite
 
+Révision du rendu, contrôle du DWG et correction du pas d'étage à 3,25 m : voir
+[RENDU-ET-SOURCES.md](RENDU-ET-SOURCES.md). Les sections historiques ci-dessous
+documentent l'origine de la maquette.
+
 La maquette n'est pas un modèle dessiné à la main : elle est **générée à partir des plans
 de vente PDF d'IMF**. Ce document explique la méthode, pour que le résultat soit vérifiable
 et que la maquette puisse être régénérée si les plans évoluent.
@@ -64,7 +68,7 @@ Couverture : **102 / 102 lots**.
 ## 5. Ce que la maquette affiche
 
 - Un volume extrudé par appartement, à sa position et à sa hauteur réelles
-  (hauteur d'étage 3,10 m).
+  (hauteur d'étage corrigée à 3,25 m après lecture du DWG, voir ci-dessous).
 - Les quatre blocs A, B, C et D dans leur implantation réelle autour de la **cour intérieure**,
   détectée automatiquement comme la plus grande zone libre à l'intérieur de l'enveloppe bâtie
   (≈ 553 m²).
@@ -131,6 +135,9 @@ Trois corrections :
 
 Mesure : **525 → 129 appels de dessin** par image après fusion des logements
 (l'état initial dépassait le millier), pour 69 600 triangles.
+
+Ces mesures précèdent la mise à jour du 7 septembre ci-dessous ; elles ne décrivent
+pas les performances mesurées de la version actuelle.
 
 **Rendu.** Le ciel est pré-filtré une fois et sert de source de reflets aux vitrages et aux
 garde-corps. La lumière reprend celle de la perspective Consilio : soleil bas de fin de

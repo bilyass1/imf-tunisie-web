@@ -1,8 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconArrow, IconArrowLeft, IconClose } from '@/components/Icons';
+import { useImmersiveViewer } from './useImmersiveViewer';
 
 export interface GalleryItem {
   src: string;
@@ -17,8 +18,10 @@ export default function Gallery({
   labels: { close: string; previous: string; next: string; of: string };
 }) {
   const [index, setIndex] = useState<number | null>(null);
+  const dialog = useRef<HTMLDivElement>(null);
 
   const close = useCallback(() => setIndex(null), []);
+  useImmersiveViewer(index !== null, close, dialog);
   const prev = useCallback(() => setIndex((i) => (i === null ? i : (i - 1 + items.length) % items.length)), [items.length]);
   const next = useCallback(() => setIndex((i) => (i === null ? i : (i + 1) % items.length)), [items.length]);
 
@@ -30,10 +33,8 @@ export default function Gallery({
       if (e.key === 'ArrowRight') next();
     };
     document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
     return () => {
       document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
     };
   }, [index, close, prev, next]);
 
@@ -53,11 +54,12 @@ export default function Gallery({
               src={item.src}
               alt={item.caption}
               fill
-              sizes="(max-width: 768px) 50vw, 25vw"
+              sizes={i === 0 ? '(max-width: 768px) 100vw, 60vw' : '(max-width: 768px) 50vw, 25vw'}
+              quality={90}
               className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.08]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-            <span className="absolute inset-x-0 bottom-0 translate-y-2 p-3 text-start text-[12px] font-medium text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent transition-opacity duration-300" />
+            <span className="absolute inset-x-0 bottom-0 p-3 text-start text-sm font-medium text-white">
               {item.caption}
             </span>
           </button>
@@ -65,7 +67,7 @@ export default function Gallery({
       </div>
 
       {index !== null && (
-        <div className="fixed inset-0 z-[100] flex flex-col bg-ink/97 backdrop-blur-sm" role="dialog" aria-modal="true">
+        <div ref={dialog} className="fixed inset-0 z-[100] flex flex-col bg-ink/97 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label={items[index].caption}>
           <div className="flex items-center justify-between px-5 py-4 text-white/70">
             <span className="text-[12px] uppercase tracking-[0.2em]">
               {index + 1} {labels.of} {items.length}
@@ -96,6 +98,7 @@ export default function Gallery({
                 alt={items[index].caption}
                 fill
                 sizes="100vw"
+                quality={95}
                 className="object-contain"
                 priority
               />

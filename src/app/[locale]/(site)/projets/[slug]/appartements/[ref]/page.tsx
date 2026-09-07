@@ -14,7 +14,7 @@ import LazyMount from '@/components/site/LazyMount';
 import Panorama360 from '@/components/site/Panorama360';
 import CreditSimulator from '@/components/site/CreditSimulator';
 import { IconArrow, IconArrowLeft, IconCheck, IconPhone, IconPin } from '@/components/Icons';
-import { publicFileExists } from '@/lib/assets';
+import { publicFileExists, panoramaAssets } from '@/lib/assets';
 
 export const dynamicParams = true;
 
@@ -163,7 +163,7 @@ export default async function ApartmentPage({
 
       {/* ---- 1. Maquette 3D ---- */}
       {project.massing && (
-        <section className="bg-ivory py-20 lg:py-24">
+        <section id="visite-360" className="scroll-mt-28 bg-ivory py-20 lg:py-24">
           <div className="container-lux">
             <SectionHeading
               eyebrow={dict.apartment.maquette}
@@ -179,6 +179,7 @@ export default async function ApartmentPage({
                 massing={project.massing}
                 selectedRef={lot.ref}
                 labels={{
+                  ...dict.maquette,
                   title: dict.maquette.title,
                   hint: dict.maquette.hint,
                   legend: dict.availability.legend,
@@ -259,8 +260,7 @@ export default async function ApartmentPage({
                   rooms={rooms.map((r) => ({
                     id: r.id,
                     label: t(r.label, locale),
-                    panorama: r.panorama,
-                    available: publicFileExists(r.panorama),
+                    ...panoramaAssets(r.panorama),
                   }))}
                   labels={dict.pano}
                 />

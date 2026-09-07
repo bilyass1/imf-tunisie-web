@@ -23,3 +23,13 @@ export function publicFileExists(url?: string | null): boolean {
   cache.set(url, ok);
   return ok;
 }
+
+/** Prefer the untouched supplied source; optional 4K/8K masters upgrade in place. */
+export function panoramaAssets(url?: string) {
+  if (!url) return { panorama: undefined, available: false };
+  const stem = url.replace(/\.[^.]+$/, '');
+  const source = `${stem}.source.png`;
+  const panorama = publicFileExists(source) ? source : url;
+  const highResolution = [`${stem}.8k.jpg`, `${stem}.4k.jpg`].find(publicFileExists);
+  return { panorama, available: publicFileExists(panorama), highResolution };
+}

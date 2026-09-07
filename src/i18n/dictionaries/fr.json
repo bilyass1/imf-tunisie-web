@@ -439,7 +439,11 @@
     "allFloors": "Tout",
     "floor": "Étage",
     "realistic": "Réaliste",
-    "commercial": "Commercial"
+    "commercial": "Disponibilités",
+    "day": "Jour", "evening": "Soir", "aerial": "Vue aérienne", "street": "Vue façade",
+    "fullscreen": "Plein écran", "exit": "Quitter", "zoomIn": "Rapprocher", "zoomOut": "Éloigner",
+    "rotate": "Rotation automatique", "pause": "Pause", "error": "La maquette n’a pas pu démarrer sur cet appareil.", "retry": "Réessayer",
+    "indicative": "Volumes issus des plans · ambiance et détails de façade illustratifs"
   },
   "pano": {
     "title": "Visite virtuelle 360°",
@@ -448,7 +452,10 @@
     "exit": "Quitter",
     "unavailableTitle": "Visite 360° bientôt disponible",
     "unavailableBody": "Les panoramiques de cette pièce sont en cours de production par le bureau d’études. Contactez-nous pour une visite sur site.",
-    "loading": "Chargement de la vue 360°…"
+    "loading": "Chargement de la vue 360°…",
+    "zoomIn": "Agrandir", "zoomOut": "Réduire", "reset": "Recentrer", "retry": "Réessayer",
+    "rotate": "Rotation automatique", "pause": "Pause", "source": "Image source", "room": "Pièce",
+    "errorTitle": "Cette vue n’a pas pu être chargée", "errorBody": "Réessayez ou choisissez une autre pièce."
   },
   "plan": {
     "title": "Plan de vente",

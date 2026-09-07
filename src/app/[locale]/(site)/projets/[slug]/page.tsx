@@ -273,6 +273,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
                 lots={project.lots}
                 massing={project.massing}
                 labels={{
+                  ...dict.maquette,
                   title: dict.maquette.title,
                   hint: dict.maquette.hint,
                   legend: dict.availability.legend,

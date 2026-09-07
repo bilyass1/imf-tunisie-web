@@ -2,276 +2,258 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconClose, IconSparkle } from '@/components/Icons';
+import { useImmersiveViewer } from './useImmersiveViewer';
 
 export interface PanoRoom {
   id: string;
   label: string;
   panorama?: string;
-  /** Présence du fichier, résolue côté serveur — évite une requête HEAD. */
+  highResolution?: string;
   available?: boolean;
 }
 
 export interface PanoramaLabels {
-  title: string;
-  hint: string;
-  fullscreen: string;
-  exit: string;
-  unavailableTitle: string;
-  unavailableBody: string;
-  loading: string;
+  title: string; hint: string; fullscreen: string; exit: string;
+  unavailableTitle: string; unavailableBody: string; loading: string;
+  zoomIn: string; zoomOut: string; reset: string; retry: string;
+  rotate: string; pause: string; source: string; room: string;
+  errorTitle: string; errorBody: string;
 }
 
-/**
- * Visionneuse 360° équirectangulaire.
- * Attend une image au format 2:1 (ex. 4096×2048 ou 8192×4096) rendue par le
- * bureau d'études en projection sphérique. Voir README §« Visites 360° ».
- */
-export default function Panorama360({
-  rooms,
-  labels,
-  poster,
-}: {
-  rooms: PanoRoom[];
-  labels: PanoramaLabels;
-  poster?: string;
+export default function Panorama360({ rooms, labels, poster }: {
+  rooms: PanoRoom[]; labels: PanoramaLabels; poster?: string;
 }) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const mountRef = useRef<HTMLDivElement>(null);
-  const cleanupRef = useRef<(() => void) | null>(null);
-  const [active, setActive] = useState(0);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'missing'>('idle');
+  const api = useRef<{ zoom: (step: number) => void; reset: () => void } | null>(null);
+  const [active, setActive] = useState(() => Math.max(0, rooms.findIndex(r => r.panorama && r.available !== false)));
+  const [status, setStatus] = useState<'loading' | 'ready' | 'missing' | 'error'>('loading');
+  const [attempt, setAttempt] = useState(0);
   const [immersive, setImmersive] = useState(false);
-
+  const [rotating, setRotating] = useState(false);
+  const [resolution, setResolution] = useState('');
+  const rotationRef = useRef(false);
+  rotationRef.current = rotating;
   const current = rooms[active];
+  const close = useCallback(() => setImmersive(false), []);
+  useImmersiveViewer(immersive, close, rootRef);
 
-  const boot = useCallback(async () => {
+  useEffect(() => {
     const mount = mountRef.current;
-    const src = current?.panorama;
-    if (!mount || !src) {
-      setStatus('missing');
-      return;
-    }
-
+    if (!mount) return;
+    let disposed = false;
+    let release = () => {};
+    setResolution('');
+    setRotating(false);
+    api.current = null;
+    if (!current?.panorama || current.available === false) { setStatus('missing'); return; }
     setStatus('loading');
-    cleanupRef.current?.();
 
-    // La présence des fichiers est résolue côté serveur (`available`).
-    // On ne retombe sur une requête HEAD que si l'information manque.
-    if (current?.available === false) {
-      setStatus('missing');
-      return;
-    }
-    if (current?.available === undefined) {
-      try {
-        const head = await fetch(src, { method: 'HEAD' });
-        if (!head.ok) {
-          setStatus('missing');
-          return;
+    const boot = async () => {
+      const THREE = await import('three');
+      if (disposed) return;
+      const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'default' });
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      // Photographs are already graded. Preserve their original exposure and colour.
+      renderer.toneMapping = THREE.NoToneMapping;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 20);
+      let geometry = new THREE.SphereGeometry(10, 96, 64);
+      geometry.scale(-1, 1, 1);
+      const material = new THREE.MeshBasicMaterial({ toneMapped: false });
+      const mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+      const el = renderer.domElement;
+      el.tabIndex = 0;
+      el.setAttribute('role', 'img');
+      el.setAttribute('aria-label', `${labels.title} — ${current.label}. ${labels.hint}`);
+      el.style.touchAction = 'none';
+      mount.appendChild(el);
+      let texture: InstanceType<typeof THREE.Texture> | undefined;
+      let raf = 0;
+      let lon = 0, lat = 0, targetLon = 0, targetLat = 0, previousTime = 0;
+      let dirty = true, visible = true, pinchDistance = 0;
+      let verticalCoverage = 180;
+      const pointers = new Map<number, { x: number; y: number }>();
+      const look = new THREE.Vector3();
+      const stopRotation = () => { rotationRef.current = false; setRotating(false); };
+      const zoom = (step: number) => {
+        stopRotation();
+        camera.fov = THREE.MathUtils.clamp(camera.fov + step, 45, Math.min(90, verticalCoverage - 4));
+        camera.updateProjectionMatrix();
+        dirty = true;
+      };
+      const down = (e: PointerEvent) => {
+        stopRotation();
+        el.setPointerCapture(e.pointerId);
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        el.focus({ preventScroll: true });
+        if (pointers.size === 2) {
+          const [a, b] = [...pointers.values()];
+          pinchDistance = Math.hypot(a.x - b.x, a.y - b.y);
         }
-      } catch {
-        setStatus('missing');
-        return;
-      }
-    }
-
-    const THREE = await import('three');
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(72, mount.clientWidth / mount.clientHeight, 0.1, 1100);
-    camera.position.set(0, 0, 0.01);
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(mount.clientWidth, mount.clientHeight);
-    mount.appendChild(renderer.domElement);
-
-    const geometry = new THREE.SphereGeometry(500, 64, 40);
-    geometry.scale(-1, 1, 1); // on regarde depuis l'intérieur
-
-    const texture = await new THREE.TextureLoader().loadAsync(src);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    const mesh = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ map: texture }));
-    scene.add(mesh);
-
-    let lon = 0;
-    let lat = 0;
-    let dragging = false;
-    let px = 0;
-    let py = 0;
-    let autoRotate = true;
-
-    const onDown = (x: number, y: number) => {
-      dragging = true;
-      autoRotate = false;
-      px = x;
-      py = y;
-    };
-    const onMove = (x: number, y: number) => {
-      if (!dragging) return;
-      lon -= (x - px) * 0.16;
-      lat += (y - py) * 0.16;
-      px = x;
-      py = y;
-    };
-    const onUp = () => {
-      dragging = false;
-    };
-
-    const md = (e: MouseEvent) => onDown(e.clientX, e.clientY);
-    const mm = (e: MouseEvent) => onMove(e.clientX, e.clientY);
-    const ts = (e: TouchEvent) => onDown(e.touches[0].clientX, e.touches[0].clientY);
-    const tm = (e: TouchEvent) => {
-      onMove(e.touches[0].clientX, e.touches[0].clientY);
-    };
-    const wheel = (e: WheelEvent) => {
-      e.preventDefault();
-      camera.fov = Math.max(38, Math.min(88, camera.fov + e.deltaY * 0.04));
-      camera.updateProjectionMatrix();
-    };
-
-    const el = renderer.domElement;
-    el.addEventListener('mousedown', md);
-    window.addEventListener('mousemove', mm);
-    window.addEventListener('mouseup', onUp);
-    el.addEventListener('touchstart', ts, { passive: true });
-    el.addEventListener('touchmove', tm, { passive: true });
-    el.addEventListener('touchend', onUp);
-    el.addEventListener('wheel', wheel, { passive: false });
-
-    const resize = () => {
-      if (!mount.clientWidth) return;
-      camera.aspect = mount.clientWidth / mount.clientHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(mount.clientWidth, mount.clientHeight);
-    };
-    const ro = new ResizeObserver(resize);
-    ro.observe(mount);
-
-    let raf = 0;
-    const animate = () => {
+      };
+      const move = (e: PointerEvent) => {
+        const previous = pointers.get(e.pointerId);
+        if (!previous) return;
+        pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (pointers.size === 2) {
+          const [a, b] = [...pointers.values()];
+          const distance = Math.hypot(a.x - b.x, a.y - b.y);
+          if (pinchDistance) zoom((pinchDistance - distance) * .1);
+          pinchDistance = distance;
+        } else {
+          const sensitivity = camera.fov / Math.max(240, mount.clientHeight);
+          targetLon -= (e.clientX - previous.x) * sensitivity;
+          targetLat = THREE.MathUtils.clamp(targetLat + (e.clientY - previous.y) * sensitivity, -85, 85);
+          dirty = true;
+        }
+      };
+      const up = (e: PointerEvent) => { pointers.delete(e.pointerId); pinchDistance = 0; };
+      const wheel = (e: WheelEvent) => { e.preventDefault(); zoom(e.deltaY * .035); };
+      const key = (e: KeyboardEvent) => {
+        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '=', '-', 'Home'].includes(e.key)) return;
+        e.preventDefault(); stopRotation(); dirty = true;
+        if (e.key === 'ArrowLeft') targetLon -= 6;
+        if (e.key === 'ArrowRight') targetLon += 6;
+        if (e.key === 'ArrowUp') targetLat = Math.min(85, targetLat + 5);
+        if (e.key === 'ArrowDown') targetLat = Math.max(-85, targetLat - 5);
+        if (e.key === '+' || e.key === '=') zoom(-5);
+        if (e.key === '-') zoom(5);
+        if (e.key === 'Home') api.current?.reset();
+      };
+      const resize = () => {
+        const w = mount.clientWidth, h = mount.clientHeight;
+        if (!w || !h) return;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.5, Math.sqrt(5000000 / (w * h))));
+        renderer.setSize(w, h);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        dirty = true;
+      };
+      const ro = new ResizeObserver(resize);
+      ro.observe(mount);
+      const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; dirty = true; });
+      io.observe(mount);
+      el.addEventListener('pointerdown', down);
+      el.addEventListener('pointermove', move);
+      el.addEventListener('pointerup', up);
+      el.addEventListener('pointercancel', up);
+      el.addEventListener('lostpointercapture', up);
+      el.addEventListener('wheel', wheel, { passive: false });
+      el.addEventListener('keydown', key);
+      const contextLost = (e: Event) => { e.preventDefault(); if (!disposed) setStatus('error'); };
+      el.addEventListener('webglcontextlost', contextLost);
+      release = () => {
+        cancelAnimationFrame(raf); ro.disconnect(); io.disconnect();
+        el.removeEventListener('pointerdown', down); el.removeEventListener('pointermove', move);
+        el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+        el.removeEventListener('lostpointercapture', up); el.removeEventListener('wheel', wheel);
+        el.removeEventListener('keydown', key); el.removeEventListener('webglcontextlost', contextLost);
+        texture?.dispose(); geometry.dispose(); material.dispose(); renderer.dispose(); el.remove();
+      };
+      resize();
+      const loader = new THREE.TextureLoader();
+      const load = async (src: string) => {
+        const loaded = await loader.loadAsync(src);
+        if (disposed) { loaded.dispose(); return false; }
+        const image = loaded.image as HTMLImageElement;
+        const aspect = image.width / image.height;
+        if (aspect < 1.98 || aspect > 3.5) { loaded.dispose(); throw new Error('Invalid panoramic image'); }
+        if (image.width > renderer.capabilities.maxTextureSize) { loaded.dispose(); return false; }
+        // A cropped panorama must not be stretched into invented floor/ceiling pixels.
+        verticalCoverage = Math.min(180, 360 / aspect);
+        const thetaLength = THREE.MathUtils.degToRad(verticalCoverage);
+        geometry.dispose();
+        geometry = new THREE.SphereGeometry(10, 96, 64, 0, Math.PI * 2, (Math.PI - thetaLength) / 2, thetaLength);
+        geometry.scale(-1, 1, 1); mesh.geometry = geometry;
+        loaded.colorSpace = THREE.SRGBColorSpace;
+        loaded.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        loaded.minFilter = THREE.LinearMipmapLinearFilter;
+        loaded.magFilter = THREE.LinearFilter;
+        loaded.wrapS = THREE.RepeatWrapping;
+        loaded.generateMipmaps = true;
+        texture?.dispose(); texture = loaded;
+        material.map = loaded; material.needsUpdate = true; dirty = true;
+        setResolution(`${image.width} × ${image.height}`);
+        return true;
+      };
+      if (!await load(current.panorama!)) { if (!disposed) throw new Error('Unsupported texture size'); return; }
+      if (disposed) return;
+      api.current = {
+        zoom,
+        reset: () => { stopRotation(); targetLon = 0; targetLat = 0; camera.fov = 70; camera.updateProjectionMatrix(); dirty = true; },
+      };
+      const animate = (time: number) => {
+        raf = requestAnimationFrame(animate);
+        const dt = Math.min((time - previousTime) / 1000, .05); previousTime = time;
+        if (!visible || document.hidden) return;
+        if (rotationRef.current && !pointers.size) { targetLon += dt * 2; dirty = true; }
+        const moving = Math.abs(targetLon - lon) + Math.abs(targetLat - lat) > .005;
+        if (!dirty && !moving) return;
+        const latitudeLimit = Math.max(0, (verticalCoverage - camera.fov) / 2 - 2);
+        targetLat = THREE.MathUtils.clamp(targetLat, -latitudeLimit, latitudeLimit);
+        lon += (targetLon - lon) * (1 - Math.exp(-dt * 14));
+        lat += (targetLat - lat) * (1 - Math.exp(-dt * 14));
+        lat = THREE.MathUtils.clamp(lat, -latitudeLimit, latitudeLimit);
+        look.setFromSphericalCoords(10, THREE.MathUtils.degToRad(90 - lat), THREE.MathUtils.degToRad(lon));
+        camera.lookAt(look); renderer.render(scene, camera); dirty = false;
+      };
       raf = requestAnimationFrame(animate);
-      if (autoRotate) lon += 0.035;
-      lat = Math.max(-82, Math.min(82, lat));
-      const phi = THREE.MathUtils.degToRad(90 - lat);
-      const theta = THREE.MathUtils.degToRad(lon);
-      camera.lookAt(
-        500 * Math.sin(phi) * Math.cos(theta),
-        500 * Math.cos(phi),
-        500 * Math.sin(phi) * Math.sin(theta),
-      );
-      renderer.render(scene, camera);
+      setStatus('ready');
+      // Upgrade in place; a failed optional master never blanks the working preview.
+      if (current.highResolution) void load(current.highResolution).catch(() => {});
     };
-    animate();
-    setStatus('ready');
-
-    cleanupRef.current = () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      el.removeEventListener('mousedown', md);
-      window.removeEventListener('mousemove', mm);
-      window.removeEventListener('mouseup', onUp);
-      el.removeEventListener('touchstart', ts);
-      el.removeEventListener('touchmove', tm);
-      el.removeEventListener('touchend', onUp);
-      el.removeEventListener('wheel', wheel);
-      texture.dispose();
-      geometry.dispose();
-      renderer.dispose();
-      el.remove();
-    };
-  }, [current]);
-
-  useEffect(() => {
-    boot();
-    return () => {
-      cleanupRef.current?.();
-      cleanupRef.current = null;
-    };
-  }, [boot]);
-
-  useEffect(() => {
-    document.body.style.overflow = immersive ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [immersive]);
+    void boot().catch(() => { release(); if (!disposed) { api.current = null; setStatus('error'); } });
+    return () => { disposed = true; api.current = null; release(); };
+  }, [current, attempt, labels.title, labels.hint]);
 
   return (
-    <div className={immersive ? 'fixed inset-0 z-[120] flex flex-col bg-ink' : ''}>
-      <div
-        className={`relative overflow-hidden rounded-2xl bg-ink ${
-          immersive ? 'flex-1 rounded-none' : 'aspect-[16/9]'
-        }`}
-      >
-        <div ref={mountRef} className="absolute inset-0 cursor-grab active:cursor-grabbing" />
-
-        {status !== 'ready' && (
-          <div className="absolute inset-0 grid place-items-center bg-ink px-8 text-center">
-            {poster && status === 'missing' && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={poster} alt="" className="absolute inset-0 h-full w-full object-cover opacity-25" />
-            )}
-            <div className="relative">
-              {status === 'loading' && <p className="text-[13px] text-white/60">{labels.loading}</p>}
-              {status === 'missing' && (
-                <>
-                  <span className="mx-auto grid h-12 w-12 place-items-center rounded-full border border-white/20 text-gold-300">
-                    <IconSparkle className="h-5 w-5" />
-                  </span>
-                  <p className="mt-5 font-display text-[22px] font-light text-white">{labels.unavailableTitle}</p>
-                  <p className="mx-auto mt-3 max-w-sm text-[13px] leading-relaxed text-white/45">
-                    {labels.unavailableBody}
-                  </p>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-
-        {status === 'ready' && (
-          <>
-            <p className="pointer-events-none absolute inset-x-0 bottom-4 text-center text-[11px] uppercase tracking-[0.2em] text-white/45">
-              {labels.hint}
-            </p>
-            <button
-              type="button"
-              onClick={() => setImmersive((v) => !v)}
-              className="absolute end-4 top-4 rounded-full border border-white/25 bg-black/30 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur transition hover:border-gold-400 hover:text-gold-200"
-            >
-              {immersive ? labels.exit : labels.fullscreen}
-            </button>
-          </>
-        )}
-
-        {immersive && (
-          <button
-            type="button"
-            onClick={() => setImmersive(false)}
-            aria-label={labels.exit}
-            className="absolute start-4 top-4 grid h-10 w-10 place-items-center rounded-full border border-white/25 text-white transition hover:border-gold-400"
-          >
-            <IconClose className="h-5 w-5" />
-          </button>
-        )}
+    <div ref={rootRef} role={immersive ? 'dialog' : undefined} aria-modal={immersive || undefined} aria-label={labels.title}
+      className={immersive ? 'fixed inset-0 z-[120] flex flex-col bg-ink p-2 sm:p-4' : 'viewer-shell overflow-hidden rounded-2xl bg-ink'}>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-4 py-3 sm:px-5">
+        <div className="flex items-center gap-3 text-white">
+          <span className="rounded-full border border-gold-300/40 px-3 py-1 text-sm text-gold-200">360°</span>
+          <div><p className="text-base font-medium">{current?.label ?? labels.title}</p><p className="text-xs text-white/55">{labels.room} {rooms.length ? active + 1 : 0} / {rooms.length}</p></div>
+        </div>
+        <button type="button" className="viewer-control" onClick={() => setImmersive(v => !v)} aria-label={immersive ? labels.exit : labels.fullscreen}>
+          {immersive ? <IconClose className="h-5 w-5" /> : <span aria-hidden="true" className="text-xl">⛶</span>}
+          <span className="hidden sm:inline">{immersive ? labels.exit : labels.fullscreen}</span>
+        </button>
       </div>
-
-      {/* Sélecteur de pièce */}
-      <div className={`no-scrollbar flex gap-2 overflow-x-auto ${immersive ? 'bg-ink px-4 py-4' : 'mt-4'}`}>
-        {rooms.map((room, i) => (
-          <button
-            key={room.id}
-            type="button"
-            onClick={() => setActive(i)}
-            className={`shrink-0 rounded-full border px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] transition ${
-              i === active
-                ? 'border-transparent bg-gold-gradient text-ink'
-                : immersive
-                  ? 'border-white/20 text-white/65 hover:border-gold-400 hover:text-gold-200'
-                  : 'border-ink/12 bg-white text-ink/55 hover:border-gold-400 hover:text-gold-600'
-            }`}
-          >
-            {room.label}
-          </button>
-        ))}
+      <div className={`relative min-h-[300px] overflow-hidden ${immersive ? 'min-h-0 flex-1' : 'h-[440px] sm:h-[580px]'}`}>
+        <div ref={mountRef} className="absolute inset-0 cursor-grab active:cursor-grabbing" />
+        {status !== 'ready' && <div className="absolute inset-0 grid place-items-center bg-ink px-6 text-center" role="status" aria-live="polite">
+          {poster && <img src={poster} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />}
+          <div className="relative max-w-md">
+            {status === 'loading' ? <><span className="mx-auto mb-5 block h-9 w-9 animate-spin rounded-full border-2 border-white/15 border-t-gold-300" /><p className="text-sm text-white/75">{labels.loading}</p></> : <>
+              <IconSparkle className="mx-auto h-8 w-8 text-gold-300" />
+              <p className="mt-5 font-display text-3xl text-white">{status === 'error' ? labels.errorTitle : labels.unavailableTitle}</p>
+              <p className="mt-3 text-base leading-relaxed text-white/65">{status === 'error' ? labels.errorBody : labels.unavailableBody}</p>
+              {status === 'error' && <button type="button" className="btn-gold mt-5" onClick={() => setAttempt(a => a + 1)}>{labels.retry}</button>}
+            </>}
+          </div>
+        </div>}
+        {status === 'ready' && <>
+          <span className="viewer-glass pointer-events-none absolute start-4 top-4 rounded-full px-3 py-1.5 text-xs text-white/80">{labels.source} · {resolution}</span>
+          <div className="viewer-glass absolute bottom-5 start-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full p-1" dir="ltr">
+            <button className="viewer-control w-11 text-xl" type="button" aria-label={labels.zoomOut} title={labels.zoomOut} onClick={() => api.current?.zoom(7)}>−</button>
+            <button className="viewer-control w-11 text-xl" type="button" aria-label={labels.zoomIn} title={labels.zoomIn} onClick={() => api.current?.zoom(-7)}>+</button>
+            <span className="h-5 w-px bg-white/20" />
+            <button className="viewer-control" type="button" onClick={() => api.current?.reset()}>{labels.reset}</button>
+            <button className="viewer-control w-11" type="button" aria-label={rotating ? labels.pause : labels.rotate} title={rotating ? labels.pause : labels.rotate} aria-pressed={rotating} onClick={() => setRotating(v => !v)}>{rotating ? 'Ⅱ' : '▷'}</button>
+          </div>
+        </>}
+      </div>
+      <div className="border-t border-white/10 p-4 sm:px-5">
+        <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1" aria-label={labels.room}>
+          {rooms.map((room, i) => <button key={room.id} type="button" aria-pressed={i === active} onClick={() => setActive(i)}
+            className={`group relative flex w-28 shrink-0 flex-col overflow-hidden rounded-lg border text-start transition sm:w-36 ${i === active ? 'border-gold-300 bg-gold-300/10' : 'border-white/15 hover:border-white/50'}`}>
+            {room.available !== false && room.panorama ? <img src={room.panorama} alt="" loading="lazy" className={`h-14 w-full object-cover transition sm:h-20 ${i === active ? 'opacity-100' : 'opacity-55 group-hover:opacity-90'}`} /> : <span className="grid h-14 place-items-center bg-white/5 text-lg text-white/30 sm:h-20">360°</span>}
+            <span className={`px-3 py-2 text-sm ${i === active ? 'text-gold-200' : 'text-white/75'}`}>{room.label}</span>
+          </button>)}
+        </div>
+        <p className="mt-3 text-xs text-white/50">{labels.hint}</p>
       </div>
     </div>
   );

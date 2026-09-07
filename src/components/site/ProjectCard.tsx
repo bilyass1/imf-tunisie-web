@@ -33,6 +33,7 @@ export default function ProjectCard({
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
           priority={priority}
+          quality={90}
           className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.07]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-transparent" />
@@ -58,7 +59,7 @@ export default function ProjectCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <p className="text-[13.5px] leading-relaxed text-ink/55">{t(project.subtitle, locale)}</p>
+        <p className="text-base leading-relaxed text-ink/65">{t(project.subtitle, locale)}</p>
 
         <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-ink/8 pt-4 text-[12px]">
           {isOngoing && stats.total > 0 ? (

@@ -439,7 +439,11 @@
     "allFloors": "All",
     "floor": "Floor",
     "realistic": "Realistic",
-    "commercial": "Sales view"
+    "commercial": "Availability",
+    "day": "Day", "evening": "Evening", "aerial": "Aerial view", "street": "Façade view",
+    "fullscreen": "Full screen", "exit": "Exit", "zoomIn": "Zoom in", "zoomOut": "Zoom out",
+    "rotate": "Auto rotate", "pause": "Pause", "error": "The model could not start on this device.", "retry": "Try again",
+    "indicative": "Volumes based on plans · atmosphere and façade details are illustrative"
   },
   "pano": {
     "title": "360° virtual tour",
@@ -448,7 +452,10 @@
     "exit": "Exit",
     "unavailableTitle": "360° tour coming soon",
     "unavailableBody": "Panoramas for this room are being produced by the design office. Contact us for an on-site visit.",
-    "loading": "Loading the 360° view…"
+    "loading": "Loading the 360° view…",
+    "zoomIn": "Zoom in", "zoomOut": "Zoom out", "reset": "Recenter", "retry": "Try again",
+    "rotate": "Auto rotate", "pause": "Pause", "source": "Source image", "room": "Room",
+    "errorTitle": "This view could not be loaded", "errorBody": "Try again or choose another room."
   },
   "plan": {
     "title": "Sales plan",

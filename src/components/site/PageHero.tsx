@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { ReactNode } from 'react';
 import { IconArrow } from '@/components/Icons';
 
@@ -23,13 +24,13 @@ export default function PageHero({
     <section className={`relative isolate overflow-hidden bg-ink ${compact ? 'min-h-[58vh]' : 'min-h-[70vh]'}`}>
       <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={image} alt="" className="h-full w-full animate-kenburns object-cover opacity-55" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/45" />
+        <Image src={image} alt="" fill priority quality={90} sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/45 to-ink/20" />
       </div>
 
       <div className={`container-lux relative flex flex-col justify-end ${compact ? 'pb-14 pt-40' : 'pb-20 pt-44'}`}>
         {breadcrumb && (
-          <nav className="mb-6 flex flex-wrap items-center gap-2 text-[12px] text-white/45">
+          <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-white/75">
             {breadcrumb.map((b, i) => (
               <span key={b.href} className="flex items-center gap-2">
                 {i > 0 && <span className="text-white/25">/</span>}

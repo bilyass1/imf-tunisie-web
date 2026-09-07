@@ -125,5 +125,7 @@ export const LA_GLOIRE_SITE = {
   /** Cour intérieure relevée sur « Messidi EXE Arch-12-05-2026.dwg » (plan béton, unités cm) */
   courtyard: { minX: -27.4, minY: -8.1, maxX: -3.6, maxY: 8.4 },
   patio: { x: -5.93, y: -1.02, radius: 6.49 },
-  floorHeight: 3.1,
+  // DWG façade principale: 290 cm clear + 35 cm slab; 325 cm repeated pitch.
+  // Text handles 47F4CFE / 47F4CF5 (audit 2026-09-07).
+  floorHeight: 3.25,
 } as const;

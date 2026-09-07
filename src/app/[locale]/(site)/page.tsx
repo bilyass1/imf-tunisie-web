@@ -30,21 +30,22 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       {/* ---------------------------- HERO ---------------------------- */}
-      <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-ink">
+      <section className="relative isolate flex min-h-[92svh] items-end overflow-hidden bg-ink">
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={hero.heroImage} alt="" className="h-full w-full animate-kenburns object-cover opacity-60" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/65 to-ink/30" />
+          <Image src={hero.heroImage} alt="" fill priority quality={90} sizes="100vw" className="object-cover object-[60%_center]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/55 to-ink/10 rtl:rotate-180" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-ink/20" />
           <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_100%,rgba(201,162,75,0.18),transparent_70%)]" />
         </div>
 
-        <div className="container-lux relative pb-20 pt-40 lg:pb-28">
+        <div className="container-lux relative pb-12 pt-36 lg:pb-20 lg:pt-44">
           <Reveal>
             <span className="eyebrow !text-gold-300">{dict.home.hero.eyebrow}</span>
           </Reveal>
 
           <Reveal delay={100}>
-            <h1 className="h-display mt-6 max-w-4xl text-balance text-[46px] leading-[1.02] text-white sm:text-[68px] lg:text-[86px]">
+            <h1 className="h-display mt-6 max-w-4xl text-balance text-[44px] leading-[1.06] text-white sm:text-[62px] lg:text-[76px]">
               {dict.home.hero.title1}
               <br />
               <span className="bg-gold-gradient bg-clip-text text-transparent">{dict.home.hero.title2}</span>
@@ -52,7 +53,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </Reveal>
 
           <Reveal delay={190}>
-            <p className="mt-8 max-w-xl text-[16px] leading-[1.85] text-white/65">{dict.home.hero.subtitle}</p>
+            <p className="mt-7 max-w-xl text-[16px] leading-[1.85] text-white/80">{dict.home.hero.subtitle}</p>
           </Reveal>
 
           <Reveal delay={280}>
@@ -144,7 +145,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             }
           />
 
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={`mt-14 grid gap-6 sm:grid-cols-2 ${ongoing.length > 2 ? 'lg:grid-cols-3' : ''}`}>
             {ongoing.map((project, i) => (
               <Reveal key={project.slug} delay={i * 110}>
                 <ProjectCard project={project} locale={locale} dict={dict} priority={i === 0} />

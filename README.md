@@ -225,3 +225,41 @@ L'application utilise un fichier JSON comme base de données. C'est volontaire :
 - Images servies par `next/image` (AVIF/WebP, dimensionnement automatique)
 - RTL natif : l'ensemble des marges et alignements utilisent les propriétés logiques (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`)
 - Métadonnées Open Graph et `alternates.languages` pour le SEO multilingue
+
+---
+
+## Passage en production — stockage des données
+
+Le site fonctionne avec un fichier `data/db.json` : c'est ce qui permet de le lancer
+avec un simple `npm install && npm run dev`, sans installer de base de données.
+
+**En hébergement serverless (Vercel, Netlify, AWS Lambda), le disque de l'application est
+en lecture seule.** La couche `src/lib/db.ts` le détecte et bascule automatiquement :
+
+| Environnement | Où sont écrites les données | Durée de vie |
+|---|---|---|
+| Poste local, serveur dédié, VPS, Docker avec volume | `data/db.json` | **durable** |
+| Vercel / Lambda | `/tmp/imf-data/db.json` | jusqu'au prochain démarrage à froid |
+| Disque totalement inaccessible | mémoire du processus | le temps de la requête |
+
+Conséquence à connaître : **sur Vercel, tout ce qui est saisi depuis le back-office
+— statuts de disponibilité, prix, contacts et affaires du CRM, messages — est perdu au
+redémarrage de l'instance**, et deux visiteurs peuvent tomber sur deux instances
+différentes. Le site public, lui, fonctionne parfaitement : il est entièrement alimenté
+par les données du fichier `src/lib/seed.ts`, qui font partie du code.
+
+C'est donc utilisable tel quel pour une **démonstration client**, pas pour l'exploitation
+réelle du CRM.
+
+### Pour un CRM réellement exploitable
+
+Deux options, par ordre de simplicité :
+
+1. **Héberger sur un serveur classique** (VPS, ou Docker avec un volume monté sur `data/`).
+   Aucune modification de code : `data/db.json` redevient durable.
+2. **Brancher une vraie base** (Vercel Postgres, Neon, Supabase…). Tout l'accès aux données
+   passe par les fonctions exportées de `src/lib/db.ts` — c'est la seule chose à réécrire,
+   le reste de l'application ne connaît que cette interface.
+
+La fonction `isPersistent()` de `src/lib/db.ts` indique si les écritures sont durables ;
+elle peut servir à afficher un bandeau d'avertissement dans le back-office.

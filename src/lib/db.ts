@@ -1,5 +1,6 @@
 import 'server-only';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import type {
   Activity,
@@ -27,34 +28,101 @@ import { buildSeed } from './seed';
  * le reste de l'application ne connaît que cette interface.
  */
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const DB_FILE = path.join(DATA_DIR, 'db.json');
+/**
+ * Emplacement du fichier de données.
+ *
+ * En local, `data/db.json` à la racine du projet. En hébergement serverless
+ * (Vercel, AWS Lambda…) le dossier de l'application est en LECTURE SEULE :
+ * on bascule alors sur /tmp, seul dossier inscriptible, et si même /tmp est
+ * refusé on garde tout en mémoire. Le site reste consultable dans tous les
+ * cas ; seules les écritures deviennent temporaires. Voir la note « Passage
+ * en production » du README.
+ */
+const LOCAL_DIR = path.join(process.cwd(), 'data');
+const TMP_DIR = path.join(os.tmpdir(), 'imf-data');
 
+type Mode = 'file' | 'memory';
+
+let mode: Mode | null = null;
+let dataDir = LOCAL_DIR;
+let dbFile = path.join(LOCAL_DIR, 'db.json');
+let memory: Database | null = null;
 let cache: { data: Database; mtime: number } | null = null;
 
+function canWrite(dir: string): boolean {
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+    const probe = path.join(dir, '.write-test');
+    fs.writeFileSync(probe, 'ok');
+    fs.unlinkSync(probe);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function resolveMode(): Mode {
+  if (mode) return mode;
+  for (const dir of [LOCAL_DIR, TMP_DIR]) {
+    if (canWrite(dir)) {
+      dataDir = dir;
+      dbFile = path.join(dir, 'db.json');
+      mode = 'file';
+      return mode;
+    }
+  }
+  mode = 'memory';
+  return mode;
+}
+
 function ensureFile(): void {
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-  if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify(buildSeed(), null, 2), 'utf8');
+  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+  if (!fs.existsSync(dbFile)) {
+    fs.writeFileSync(dbFile, JSON.stringify(buildSeed(), null, 2), 'utf8');
   }
 }
 
 export function readDb(): Database {
-  ensureFile();
-  const mtime = fs.statSync(DB_FILE).mtimeMs;
-  if (cache && cache.mtime === mtime) return cache.data;
-  const raw = fs.readFileSync(DB_FILE, 'utf8');
-  const data = JSON.parse(raw) as Database;
-  cache = { data, mtime };
-  return data;
+  if (resolveMode() === 'memory') {
+    if (!memory) memory = buildSeed();
+    return memory;
+  }
+  try {
+    ensureFile();
+    const mtime = fs.statSync(dbFile).mtimeMs;
+    if (cache && cache.mtime === mtime) return cache.data;
+    const raw = fs.readFileSync(dbFile, 'utf8');
+    const data = JSON.parse(raw) as Database;
+    cache = { data, mtime };
+    return data;
+  } catch {
+    // disque devenu inaccessible en cours de route : on ne casse pas le site
+    mode = 'memory';
+    if (!memory) memory = buildSeed();
+    return memory;
+  }
 }
 
 export function writeDb(data: Database): void {
-  ensureFile();
-  const tmp = `${DB_FILE}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
-  fs.renameSync(tmp, DB_FILE);
-  cache = { data, mtime: fs.statSync(DB_FILE).mtimeMs };
+  if (resolveMode() === 'memory') {
+    memory = data;
+    return;
+  }
+  try {
+    ensureFile();
+    const tmp = `${dbFile}.tmp`;
+    fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
+    fs.renameSync(tmp, dbFile);
+    cache = { data, mtime: fs.statSync(dbFile).mtimeMs };
+  } catch {
+    mode = 'memory';
+    memory = data;
+  }
+}
+
+/** Les écritures sont-elles durables ? Faux en hébergement serverless. */
+export function isPersistent(): boolean {
+  return resolveMode() === 'file' && dataDir === LOCAL_DIR;
 }
 
 /* ---------------------------- Projets ---------------------------- */

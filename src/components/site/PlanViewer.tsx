@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconDownload, IconClose } from '@/components/Icons';
+import { useImmersiveViewer } from './useImmersiveViewer';
 
 export interface PlanLabels {
   title: string;
@@ -12,6 +13,8 @@ export interface PlanLabels {
   zoomIn: string;
   zoomOut: string;
   reset: string;
+  fullscreen: string;
+  exit: string;
 }
 
 /**
@@ -40,10 +43,16 @@ export default function PlanViewer({
     exists === undefined ? (image ? 'checking' : 'missing') : exists && image ? 'ok' : 'missing',
   );
   const drag = useRef<{ x: number; y: number } | null>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLDivElement>(null);
+  const close = useCallback(() => setFull(false), []);
+  useImmersiveViewer(full, close, root);
 
   // Le plan n'est présent qu'après conversion des PDF (npm run plans) :
   // on vérifie sa présence avant de l'afficher, pour éviter une image cassée.
   useEffect(() => {
+    setScale(1);
+    setPos({ x: 0, y: 0 });
     // Présence déjà résolue côté serveur : aucune requête HEAD nécessaire.
     if (exists !== undefined) {
       setStatus(exists && image ? 'ok' : 'missing');
@@ -64,10 +73,21 @@ export default function PlanViewer({
 
   const clamp = (v: number) => Math.max(1, Math.min(5, v));
 
-  const onWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    setScale((s) => clamp(s - e.deltaY * 0.0022));
-  };
+  useEffect(() => {
+    const element = canvas.current;
+    if (!element) return;
+    const onWheel = (event: WheelEvent) => {
+      if (!full && scale === 1 && !event.ctrlKey) return;
+      event.preventDefault();
+      setScale(s => Math.max(1, Math.min(5, s - event.deltaY * 0.0022)));
+    };
+    element.addEventListener('wheel', onWheel, { passive: false });
+    return () => element.removeEventListener('wheel', onWheel);
+  }, [full, scale, status]);
+
+  useEffect(() => {
+    if (scale === 1) setPos({ x: 0, y: 0 });
+  }, [scale]);
 
   const reset = () => {
     setScale(1);
@@ -95,21 +115,25 @@ export default function PlanViewer({
 
   const viewer = (
     <div
-      className={`relative overflow-hidden bg-white ${full ? 'flex-1' : 'aspect-[4/3] rounded-2xl border border-ink/8'}`}
-      onWheel={onWheel}
-      onMouseDown={(e) => {
+      ref={canvas}
+      className={`relative overflow-hidden bg-white ${full ? 'min-h-0 flex-1' : 'aspect-[4/3] rounded-2xl border border-ink/8'}`}
+      style={{ touchAction: scale > 1 ? 'none' : 'pan-y' }}
+      onPointerDown={(e) => {
+        if ((e.target as HTMLElement).closest('button') || scale <= 1) return;
+        e.currentTarget.setPointerCapture(e.pointerId);
         drag.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
       }}
-      onMouseMove={(e) => {
+      onPointerMove={(e) => {
         if (!drag.current) return;
         setPos({ x: e.clientX - drag.current.x, y: e.clientY - drag.current.y });
       }}
-      onMouseUp={() => {
+      onPointerUp={() => {
         drag.current = null;
       }}
-      onMouseLeave={() => {
+      onPointerCancel={() => {
         drag.current = null;
       }}
+      onLostPointerCapture={() => { drag.current = null; }}
       role="presentation"
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -117,6 +141,8 @@ export default function PlanViewer({
         src={image}
         alt={alt}
         draggable={false}
+        loading="lazy"
+        onError={() => setStatus('missing')}
         style={{ transform: `translate(${pos.x}px, ${pos.y}px) scale(${scale})` }}
         className="h-full w-full select-none object-contain transition-transform duration-100 will-change-transform"
       />
@@ -147,6 +173,7 @@ export default function PlanViewer({
         </button>
         <button
           type="button"
+          aria-label={full ? labels.exit : labels.fullscreen}
           onClick={() => {
             setFull((f) => !f);
             reset();
@@ -164,7 +191,7 @@ export default function PlanViewer({
   );
 
   return full ? (
-    <div className="fixed inset-0 z-[120] flex flex-col bg-ivory p-4">{viewer}</div>
+    <div ref={root} role="dialog" aria-modal="true" aria-label={alt} className="fixed inset-0 z-[120] flex flex-col bg-ivory p-4">{viewer}</div>
   ) : (
     <div>
       {viewer}

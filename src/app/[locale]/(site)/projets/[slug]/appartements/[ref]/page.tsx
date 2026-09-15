@@ -10,6 +10,7 @@ import Reveal from '@/components/Reveal';
 import SectionHeading from '@/components/site/SectionHeading';
 import MaquetteSection from '@/components/site/MaquetteSection';
 import PlanViewer from '@/components/site/PlanViewer';
+import ApartmentInterior from '@/components/site/ApartmentInterior';
 import LazyMount from '@/components/site/LazyMount';
 import Panorama360 from '@/components/site/Panorama360';
 import CreditSimulator from '@/components/site/CreditSimulator';
@@ -59,6 +60,7 @@ export default async function ApartmentPage({
   if (!project || !lot) notFound();
 
   const rooms = lot.rooms ?? [];
+  const interiorImage = `/interiors/la-gloire/${lot.ref}.webp`;
   const similar = project.lots
     .filter((l) => l.ref !== lot.ref && l.typology === lot.typology && l.status === 'available')
     .slice(0, 4);
@@ -199,7 +201,7 @@ export default async function ApartmentPage({
       )}
 
       {/* ---- 2. Plan AutoCAD ---- */}
-      <section className="bg-white py-20 lg:py-24">
+      <section id="plan" className="scroll-mt-28 bg-white py-20 lg:py-24">
         <div className="container-lux grid gap-10 lg:grid-cols-[1.45fr_1fr] lg:gap-14">
           <div>
             <SectionHeading eyebrow={dict.plan.title} title={dict.apartment.plan} />
@@ -249,6 +251,9 @@ export default async function ApartmentPage({
       </section>
 
       {/* ---- 3. Visite 360° ---- */}
+      {project.slug === 'residence-la-gloire' && publicFileExists(interiorImage) && (
+        <ApartmentInterior locale={locale} image={interiorImage} reference={lot.ref} pdf={lot.planUrl} />
+      )}
       {rooms.length > 0 && (
         <section className="bg-ivory py-20 lg:py-24">
           <div className="container-lux">

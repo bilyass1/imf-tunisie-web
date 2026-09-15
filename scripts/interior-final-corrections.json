@@ -1,0 +1,10 @@
+{
+  "corrections": {
+    "C54": "Remove the invented closed wooden door on the horizontal exterior wall directly below the TOP LEFT bedroom wardrobe, just above main entrance. That wall is solid. Keep the actual bedroom door opening into interior hall to its right.",
+    "D01": "The small square shaft at the BOTTOM RIGHT corner of the main bathroom is a closed empty service void. Remove any white sanitary basin or appliance from that shaft. Keep the actual toilet in bottom middle, shower top right and basin top left.",
+    "D03": "Upper ensuite bathroom LEFT middle: keep ONE shower only at BOTTOM LEFT, toilet TOP LEFT, basin BOTTOM RIGHT. Remove the extra shower head at TOP RIGHT over the door swing. Main exterior entrance on RIGHT middle must be ONE single leaf, no double door. Lower shared bathroom toilet belongs LEFT middle, not BOTTOM wall. Preserve all walls and room sizes.",
+    "D11": "The tiny EU service shaft at the BOTTOM RIGHT corner of balcony is an empty closed void. Remove the invented sink/fixture drawn inside it. No other changes.",
+    "D13": "Remove all invented appliances from the enclosed shafts along BOTTOM edge: both the narrow E shaft right of entry and square EU+EV shaft in bottom right corner. These are empty closed voids. Remove E text. Preserve genuine bathroom/kitchen fixtures and every wall/opening.",
+    "A23": "Remove the last remaining thin glass panel/white vertical glass edge immediately LEFT of the TOP RIGHT primary bed, running from bedroom top wall down into dressing hallway. It is invented. Replace it with continuous open floor, with absolutely no dividing glass, rail, frame or partition along that line. Preserve actual bedroom dividing wall farther left."
+  }
+}

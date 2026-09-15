@@ -465,7 +465,9 @@
     "missingBody": "L’image web de ce plan n’a pas encore été générée. Le PDF d’origine reste téléchargeable.",
     "zoomIn": "Agrandir",
     "zoomOut": "Réduire",
-    "reset": "100 %"
+    "reset": "100 %",
+    "fullscreen": "Plein écran",
+    "exit": "Quitter le plein écran"
   },
   "crm": {
     "title": "CRM commercial",

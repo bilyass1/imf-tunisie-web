@@ -465,7 +465,9 @@
     "missingBody": "The web image of this plan has not been generated yet. The original PDF is still available.",
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
-    "reset": "100%"
+    "reset": "100%",
+    "fullscreen": "Full screen",
+    "exit": "Exit full screen"
   },
   "crm": {
     "title": "Sales CRM",

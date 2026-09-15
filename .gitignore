@@ -12,3 +12,4 @@ data/db.json.tmp
 next-env.d.ts
 .vercel
 tsconfig.tsbuildinfo
+tmp/

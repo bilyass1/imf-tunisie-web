@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import LaGloirePlanLibrary from '@/components/site/LaGloirePlanLibrary';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { isLocale, locales, type Locale } from '@/i18n/config';
@@ -53,6 +54,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
     { id: 'galerie', label: dict.project.gallery },
     ...(project.massing && project.lots.length ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
     ...(project.lots.length ? [{ id: 'disponibilite', label: dict.project.availability }] : []),
+    ...(project.slug === 'residence-la-gloire' ? [{ id: 'plans', label: dict.apartment.plan }] : []),
     ...(project.status === 'ongoing' ? [{ id: 'financement', label: dict.project.simulator }] : []),
     { id: 'localisation', label: dict.project.location },
   ];
@@ -327,6 +329,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       ) : null}
 
       {/* ---- Financement ---- */}
+      {project.slug === 'residence-la-gloire' && <LaGloirePlanLibrary locale={locale} />}
       {project.status === 'ongoing' && (
         <section id="financement" className="scroll-mt-[170px] bg-white py-24 lg:py-28">
           <div className="container-lux">

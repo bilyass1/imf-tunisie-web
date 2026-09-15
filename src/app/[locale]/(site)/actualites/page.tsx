@@ -30,7 +30,7 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
         eyebrow={dict.nav.news}
         title={dict.news.title}
         subtitle={dict.news.subtitle}
-        image="/media/diar-al-yassamine/3d-8.jpg"
+        image="/media/diar-al-yassamine/3d-8.jpg?v=photo-20260916"
         breadcrumb={[
           { label: dict.nav.home, href: `/${locale}` },
           { label: dict.nav.news, href: `/${locale}/actualites` },

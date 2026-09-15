@@ -1,0 +1,101 @@
+{
+  "mode": "built-in image_gen edit",
+  "images": [
+    {
+      "sourceFile": "hero.jpg",
+      "outputFile": "hero",
+      "generatedFile": "exec-130dfead-a5c2-46fe-86c4-104314b172c0.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "1d357dad08fb186a30c030b6ce0149a626e97724107cb6be5309c61166ee3ffc"
+    },
+    {
+      "sourceFile": "3d-2.jpg",
+      "outputFile": "3d-2",
+      "generatedFile": "exec-b40cb068-0b4e-4ba5-8219-2b158d5ccf6b.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "0d14dea82ba10214759d1bce478ec9a1e3b061daab58953b4195d440793bac1b"
+    },
+    {
+      "sourceFile": "3d-3.jpg",
+      "outputFile": "3d-3",
+      "generatedFile": "exec-d4407e89-f469-4332-a0a2-7757722a30b8.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "1c8e67cd21dbd5b9140c509f048710b73ab519364af312a0b2e63e1877cf59ea"
+    },
+    {
+      "sourceFile": "3d-4.jpg",
+      "outputFile": "3d-4",
+      "generatedFile": "exec-cd253551-9d21-4827-a916-0616b1b124be.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "aeda08e04f3adc44998f57c23c6590c997787c27c04e85e4c696912c396497c9"
+    },
+    {
+      "sourceFile": "3d-5.jpg",
+      "outputFile": "3d-5",
+      "generatedFile": "exec-a5486100-274a-454a-813c-937ccf96810b.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "7618b0ec72db6b2cf92b1ca83c643f35d9d7482f59f43d4c45eae5c35d90099c"
+    },
+    {
+      "sourceFile": "3d-6.jpg",
+      "outputFile": "3d-6",
+      "generatedFile": "exec-4d401b95-e30a-4b2c-84b1-81ac6013e24c.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "c9a13b989d97be44b8a3a8b9e6025c9879a8c444f6ee77247fca4ce358f7c225"
+    },
+    {
+      "sourceFile": "3d-7.jpg",
+      "outputFile": "3d-7",
+      "generatedFile": "exec-8832985d-e39a-4cb0-b595-d183c9ee1d0b.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "e179ec347044abca8d69195f6771f056845ab62014c96dddeea403b1fab34ad1"
+    },
+    {
+      "sourceFile": "3d-8.jpg",
+      "outputFile": "3d-8",
+      "generatedFile": "exec-cc7b2047-c24d-4122-99b9-66335cab13aa.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "6a4c2d6f8635c3f26a54f8b369ea3bc4353dc520a13c0b67ccafbb16fbb3a254"
+    },
+    {
+      "sourceFile": "bloc-a123.jpg",
+      "outputFile": "bloc-a123",
+      "generatedFile": "exec-cc74e63b-c047-4c6c-bde3-74e856b5d635.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "8d95d924e80999823d430b2f4394f8763372af8577b550f8199e2b53525abdee"
+    },
+    {
+      "sourceFile": "bloc-a5.jpg",
+      "outputFile": "bloc-a6",
+      "generatedFile": "exec-b71d8998-cbee-4564-8716-b47d39934198.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "53d48abf29f7d7fe20e9b6de3a82496a0a0281d9b7db6c9e46a24c7eb3c8ccbb"
+    },
+    {
+      "sourceFile": "bloc-a6.jpg",
+      "outputFile": "bloc-a5",
+      "generatedFile": "exec-3868914b-0c65-42bb-9cd8-edcee96b8b74.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "78693b0f06e33258ef04f9784d402d1f69a785f27d4601d3e6fd6ca5735bcd4d"
+    },
+    {
+      "sourceFile": "bloc-a7.jpg",
+      "outputFile": "bloc-a7",
+      "generatedFile": "exec-b3b4b9eb-7dc8-44dd-8953-77029450ff19.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "84211afcc1dff7546adec8b202bdb5131a8b798c5f09e32fd2554f9c25c0f658"
+    }
+  ]
+}

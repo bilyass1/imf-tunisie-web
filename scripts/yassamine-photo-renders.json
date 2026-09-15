@@ -1,0 +1,64 @@
+{
+  "images": [
+    {
+      "sourceFile": "hero.jpg",
+      "outputFile": "hero",
+      "generatedFile": "exec-130dfead-a5c2-46fe-86c4-104314b172c0.png"
+    },
+    {
+      "sourceFile": "3d-2.jpg",
+      "outputFile": "3d-2",
+      "generatedFile": "exec-b40cb068-0b4e-4ba5-8219-2b158d5ccf6b.png"
+    },
+    {
+      "sourceFile": "3d-3.jpg",
+      "outputFile": "3d-3",
+      "generatedFile": "exec-d4407e89-f469-4332-a0a2-7757722a30b8.png"
+    },
+    {
+      "sourceFile": "3d-4.jpg",
+      "outputFile": "3d-4",
+      "generatedFile": "exec-cd253551-9d21-4827-a916-0616b1b124be.png"
+    },
+    {
+      "sourceFile": "3d-5.jpg",
+      "outputFile": "3d-5",
+      "generatedFile": "exec-a5486100-274a-454a-813c-937ccf96810b.png"
+    },
+    {
+      "sourceFile": "3d-6.jpg",
+      "outputFile": "3d-6",
+      "generatedFile": "exec-4d401b95-e30a-4b2c-84b1-81ac6013e24c.png"
+    },
+    {
+      "sourceFile": "3d-7.jpg",
+      "outputFile": "3d-7",
+      "generatedFile": "exec-8832985d-e39a-4cb0-b595-d183c9ee1d0b.png"
+    },
+    {
+      "sourceFile": "3d-8.jpg",
+      "outputFile": "3d-8",
+      "generatedFile": "exec-cc7b2047-c24d-4122-99b9-66335cab13aa.png"
+    },
+    {
+      "sourceFile": "bloc-a123.jpg",
+      "outputFile": "bloc-a123",
+      "generatedFile": "exec-cc74e63b-c047-4c6c-bde3-74e856b5d635.png"
+    },
+    {
+      "sourceFile": "bloc-a5.jpg",
+      "outputFile": "bloc-a6",
+      "generatedFile": "exec-b71d8998-cbee-4564-8716-b47d39934198.png"
+    },
+    {
+      "sourceFile": "bloc-a6.jpg",
+      "outputFile": "bloc-a5",
+      "generatedFile": "exec-3868914b-0c65-42bb-9cd8-edcee96b8b74.png"
+    },
+    {
+      "sourceFile": "bloc-a7.jpg",
+      "outputFile": "bloc-a7",
+      "generatedFile": "exec-b3b4b9eb-7dc8-44dd-8953-77029450ff19.png"
+    }
+  ]
+}

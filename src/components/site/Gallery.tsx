@@ -67,7 +67,7 @@ export default function Gallery({
       </div>
 
       {index !== null && (
-        <div ref={dialog} className="fixed inset-0 z-[100] flex flex-col bg-ink/97 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label={items[index].caption}>
+        <div ref={dialog} className="fixed inset-0 z-[100] flex flex-col bg-ink/[0.97] backdrop-blur-sm" role="dialog" aria-modal="true" aria-label={items[index].caption}>
           <div className="flex items-center justify-between px-5 py-4 text-white/70">
             <span className="text-[12px] uppercase tracking-[0.2em]">
               {index + 1} {labels.of} {items.length}

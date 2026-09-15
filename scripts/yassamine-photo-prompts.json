@@ -1,0 +1,57 @@
+{
+  "mode": "built-in image_gen edit",
+  "sourceCommit": "1e9ec830eba6613a100f2e4c4129282d8562333f",
+  "basePrompt": "Edit the supplied architectural rendering of Diar Al Yassamine in Sfax, Tunisia into a highly photorealistic professional architectural photograph. Image 1 is the edit target and the strict architecture/composition reference. Preserve the exact building silhouette, number of storeys, facade bays, window positions and proportions, balconies, entrances, railings, roof geometry, road and parking layout, camera viewpoint and framing. Preserve the cream-white and warm grey facade colors and gold signage. Do not redesign, add storeys, openings, buildings or amenities. Transform only rendering realism: fine mineral plaster grain, believable concrete and paver detail, realistic glass reflections and recessed window shadow, finely textured dry asphalt, contact shadows, plausible naturally varied plant foliage. Replace plastic-looking vehicle/people rendering with natural photographic materials and anatomy while keeping placement/scale approximately the same. Natural Mediterranean daylight, subtle atmospheric depth, accurate exposure, neutral restrained color, soft highlight rolloff, nuanced shadows. Professional full-frame architectural photography, sharp real detail without oversharpening, no CGI sheen, no exaggerated HDR, no artificial glow, no illustration, no added overlay/text/watermark. Keep existing building signage spelling and placement unchanged. Output landscape 16:9, highest available resolution ideally 3840x2160. One finished image.",
+  "images": [
+    {
+      "file": "hero",
+      "extra": "Hero view: preserve the long A1-A3 facade and six levels including ground floor, shaded street-facing facade and street corner, with balanced bright late-afternoon daylight without changing sun direction radically."
+    },
+    {
+      "file": "3d-2",
+      "extra": "Preserve the foreground garden and entry wall on the right, the people at right, and the buildings beyond the parking court. Natural garden textures and subtle realistic daylight, no new landscaping layout."
+    },
+    {
+      "file": "3d-3",
+      "extra": "Preserve this elevated street-axis perspective, both rows of apartment blocks and all six levels on the left block. Photograph in calm Mediterranean daylight, distant perspective and individual realistic parked cars."
+    },
+    {
+      "file": "3d-4",
+      "extra": "Preserve this ground-level street junction view, the cropped facade on the left, parked cars, street width, boundary wall and trees on right; exact window rhythm and height. Crisp but natural midday architectural photography."
+    },
+    {
+      "file": "3d-5",
+      "extra": "Preserve this near-vertical drone overview exactly: every footprint, roof opening/courtyard, white flat roof, low perimeter building, street and parking bay. Make the roofs and ground physically photographic. Do not add rooftop equipment, cars, floors, landscaping or surrounding buildings."
+    },
+    {
+      "file": "3d-6",
+      "extra": "Preserve the oblique drone camera looking over the whole development, exact block heights/roof edges/courtyards and road intersections. Fine believable roof and street textures, subtle Mediterranean aerial haze. No invented rooftop equipment or architectural additions."
+    },
+    {
+      "file": "3d-7",
+      "extra": "Keep the exact oblique drone viewpoint, all building footprints, stair-stepped roof outlines, two central voids on the long left block and one on right foreground block, street grid and low neighboring buildings. Photographic realism of roof waterproofing, plaster, roads and planting. Do not add rooftop structures or equipment."
+    },
+    {
+      "file": "3d-8",
+      "extra": "Keep the ground-level garden viewpoint, the large foreground olive trees and vegetation framing the distant long apartment block, its exact roofline/window rhythm, boundary fence and curved streetlamp. Make this a natural daylight architectural landscape photograph, not night; preserve architecture even where partly occluded."
+    },
+    {
+      "file": "bloc-a123",
+      "extra": "Preserve exactly the long A1-A3 block facade, its height, facade rhythm and gold rooftop signage, street corner and palm tree. Natural soft bright afternoon light with believable shadow depth, viewed from the same elevated camera. Do not alter building design."
+    },
+    {
+      "file": "bloc-a5",
+      "extra": "Preserve the exact building shown, whose existing facade signage reads A.6 / BLOC A.6. Keep its stepped building heights, every window and recessed bay, rooftop letters, side garden and corner parking. Natural balanced Mediterranean daylight; photographic materials, no added storeys or balconies. Keep the A.6 identification unchanged.",
+      "outputFile": "bloc-a6"
+    },
+    {
+      "file": "bloc-a6",
+      "extra": "Preserve the exact building shown, whose existing corner facade signage reads A.5 / BLOC A.5. Keep the street junction, stepped facade, recessed balcony bands, ground-floor entrances, white and grey palette, planting islands and neighboring wall at right. Photographic afternoon light, realistic vehicles and natural foliage. Keep the A.5 identification unchanged.",
+      "outputFile": "bloc-a5"
+    },
+    {
+      "file": "bloc-a7",
+      "extra": "Keep the lower A7 building precisely THREE STOREYS including ground floor, its L-shaped form, tall grey window surrounds, ground-floor entrances, garden island and parking. Realistic photography with fine plaster and paving detail, natural daytime light. No new balconies, floors or openings."
+    }
+  ]
+}

@@ -33,13 +33,13 @@ export default function LaGloirePlanLibrary({ locale }: { locale: Locale }) {
                   <Link key={ref} href={`/${locale}/projets/residence-la-gloire/appartements/${ref}#plan`} aria-label={`${labels.open} ${ref} · ${type}`} className="rounded-lg border border-ink/10 bg-white px-3 py-2 text-sm transition hover:border-gold-500 hover:text-gold-700 focus-visible:outline-gold-500">{ref}</Link>
                 ))}
               </div>
-              <a href={`/plans/la-gloire/ensemble/PGARDEBLOC${block}.pdf`} target="_blank" rel="noreferrer" className="mt-5 inline-block text-xs underline underline-offset-4">{labels.cover} {block} · PDF</a>
+              <Link href={`/${locale}/projets/residence-la-gloire/plans/PGARDEBLOC${block}`} className="mt-5 inline-block text-xs underline underline-offset-4">{labels.cover} {block}</Link>
             </div>
           ))}
         </div>
         <h3 className="mt-9 text-lg">{labels.overview}</h3>
         <div className="mt-4 flex flex-wrap gap-3">
-          {documents.map(({ file, label }) => <a key={file} href={`/plans/la-gloire/ensemble/${file}.pdf`} target="_blank" rel="noreferrer" className="rounded-lg border border-ink/10 px-4 py-3 text-sm transition hover:border-gold-500">{label} · PDF</a>)}
+          {documents.map(({ file, label }) => <Link key={file} href={`/${locale}/projets/residence-la-gloire/plans/${file}`} className="rounded-lg border border-ink/10 px-4 py-3 text-sm transition hover:border-gold-500">{label}</Link>)}
         </div>
       </div>
     </section>

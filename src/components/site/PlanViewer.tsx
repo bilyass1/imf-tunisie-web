@@ -104,7 +104,7 @@ export default function PlanViewer({
         <p className="font-display text-[22px] font-light text-ink/75">{labels.missingTitle}</p>
         <p className="mx-auto mt-3 max-w-md text-[13.5px] leading-relaxed text-ink/50">{labels.missingBody}</p>
         {pdf && (
-          <a href={pdf} target="_blank" rel="noreferrer" className="btn-ghost mt-7">
+          <a href={pdf} download className="btn-ghost mt-7">
             <IconDownload className="h-4 w-4" />
             {labels.download}
           </a>
@@ -196,7 +196,7 @@ export default function PlanViewer({
     <div>
       {viewer}
       {pdf && (
-        <a href={pdf} target="_blank" rel="noreferrer" className="btn-ghost mt-4">
+        <a href={pdf} download className="btn-ghost mt-4">
           <IconDownload className="h-4 w-4" />
           {labels.download}
         </a>

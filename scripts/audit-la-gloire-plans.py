@@ -21,11 +21,15 @@ for plan in manifest['plans']:
         assert preview.size == (plan['width'], plan['height'])
         preview.verify()
 assert len(list((directory / 'ensemble').glob('*.pdf'))) == 11
+for document in (directory / 'ensemble').glob('*.pdf'):
+    with Image.open(document.with_suffix('.webp')) as preview:
+        assert max(preview.size) >= 6000, f'{document.name}: preview too small'
+        preview.verify()
 if source:
     for original in source.rglob('*.pdf'):
         if original.stem in refs:
             continue
         assert hashlib.sha256(original.read_bytes()).digest() == hashlib.sha256((directory / 'ensemble' / original.name).read_bytes()).digest()
-print('PASS: 102 lot references, saved PDF hashes and decoded previews; 11 building documents present.')
+print('PASS: 102 lot references, saved PDF hashes and decoded previews; 11 building documents with high-resolution previews.')
 if source:
     print('PASS: published PDFs match the source directory byte for byte.')

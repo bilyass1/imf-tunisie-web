@@ -33,11 +33,12 @@
     "**/*.tsx",
     ".next-final/types/**/*.ts",
     ".next-header/types/**/*.ts",
+    ".next-interiors-final/types/**/*.ts",
     ".next-plans-sept15/types/**/*.ts",
     ".next-visual/types/**/*.ts",
     ".next/types/**/*.ts",
     "next-env.d.ts",
-    ".next-interiors-final/types/**/*.ts"
+    ".next-plan-reader/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

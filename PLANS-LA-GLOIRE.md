@@ -38,6 +38,12 @@ son plan original et son intérieur illustré. La visionneuse permet le zoom,
 le déplacement et le plein écran, fermé avec Échap. Commandes en FR, EN et AR.
 Les six panoramas B02 existants restent accessibles dans leur visite 360°.
 
+Les 11 plans d'ensemble disposent aussi de pages de lecture dans le site,
+avec des aperçus de 6000 pixels sur le grand côté, zoom et plein écran.
+Le script render-ensemble-plans.py produit ces aperçus depuis les PDF originaux.
+Les liens de téléchargement utilisent l'attribut download pour éviter
+d'ouvrir les PDF dans un onglet de lecture non pris en charge.
+
 ## Vérification et ouverture
 
 Les scripts audit-la-gloire-plans.py et audit-interior-renders.py vérifient

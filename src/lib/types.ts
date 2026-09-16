@@ -40,6 +40,8 @@ export interface Lot {
   price?: number;
   /** PDF d'origine du plan de vente */
   planUrl?: string;
+  /** Original AutoCAD source when provided in DWG format. */
+  planDwgUrl?: string;
   /** Image web du plan (générée depuis le PDF par scripts/generate-plans.mjs) */
   planImage?: string;
   /** Pièces de l'appartement, pour la visite 360° */

@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import type { Activity, Contact, CrmTask, Database, Deal, Lot, Localized, Project, Room } from './types';
 import { LA_GLOIRE_LOTS, YASSAMINE_A5A_LOTS } from './lots-la-gloire';
 import { LA_GLOIRE_FOOTPRINTS, LA_GLOIRE_SITE } from './la-gloire-footprints';
+import yassamineAvailable from './yassamine-available.json';
 
 const L = (fr: string, en: string, ar: string): Localized => ({ fr, en, ar });
 
@@ -83,7 +84,7 @@ function buildGloireLots(): Lot[] {
 }
 
 function buildYassamineLots(): Lot[] {
-  return YASSAMINE_A5A_LOTS.map(([code, typology]) => {
+  return [...yassamineAvailable.map(lot => ({ ...lot, status: 'available' as const })), ...YASSAMINE_A5A_LOTS.map(([code, typology]) => {
     const [, rest] = code.split('-');
     const [floorStr] = rest.split('.');
     const ref = code.replace(/[.\-]/g, '');
@@ -98,7 +99,7 @@ function buildYassamineLots(): Lot[] {
       planImage: `/plans/diar-al-yassamine/${ref}.webp`,
       rooms: buildRooms('diar-al-yassamine', ref, typology),
     };
-  });
+  })];
 }
 
 const gloireBlocks = ['A', 'B', 'C', 'D'].map((id) => ({
@@ -249,7 +250,10 @@ const yassamine: Project = {
   ],
   amenities: ['parking', 'lift', 'garden', 'security', 'kitchen'],
   foprolos: true,
-  blocks: [{ id: 'A5.a', label: 'Bloc A5.a', floors: [0, 1, 2, 3, 4] }],
+  blocks: [
+    ...['A1', 'A2', 'A3'].map(id => ({ id, label: `Bloc ${id}`, floors: [0] })),
+    { id: 'A5.a', label: 'Bloc A5.a', floors: [0, 1, 2, 3, 4] },
+  ],
   lots: buildYassamineLots(),
   videoNote: L(
     'Une vidéo de présentation du programme est disponible sur demande auprès du service commercial.',

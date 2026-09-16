@@ -1,0 +1,72 @@
+{
+  "conversion": "LibreDWG 0.14 + ezdxf; modelspace sheet frames",
+  "statusSource": "User confirmed unsold apartments",
+  "files": [
+    {
+      "file": "A101.dwg",
+      "source": "A1-0.1.dwg",
+      "sha256": "7fb0e71d1792dc5177855a78eb49b1e9a8cfb365aab86a273da7378617fe4521",
+      "previews": [
+        "A101.webp"
+      ]
+    },
+    {
+      "file": "A104.dwg",
+      "source": "A1-0.4.dwg",
+      "sha256": "8e81310b3c7265e6fd5af21866f4af8313e96b5cff8eeed8107b7aacd993b4d1",
+      "previews": [
+        "A104.webp"
+      ]
+    },
+    {
+      "file": "A201.dwg",
+      "source": "A2-0.1.dwg",
+      "sha256": "3909bc2dfae6776a930f7ec9802355225300b6eb15e5b331a3ac9a2e08a068ee",
+      "previews": [
+        "A201.webp"
+      ]
+    },
+    {
+      "file": "A202.dwg",
+      "source": "A2-0.2.dwg",
+      "sha256": "8860e38f281c94ece5818d65d0196289c7ff620a6197412cd0baef17cbd630f6",
+      "previews": [
+        "A202.webp"
+      ]
+    },
+    {
+      "file": "A204.dwg",
+      "source": "A2-0.4.dwg",
+      "sha256": "7191444098f61774c1dac49514897b28d44f602ded68f47cd79965ed6e228856",
+      "previews": [
+        "A204.webp"
+      ]
+    },
+    {
+      "file": "A304.dwg",
+      "source": "A3-0.4.dwg",
+      "sha256": "bb8b719243801d09de1a1b9eead2b7f7afad782e526ae3ddeb9f5fa9c1873d3e",
+      "previews": [
+        "A304.webp"
+      ]
+    },
+    {
+      "file": "A305.dwg",
+      "source": "A3-0.5.dwg",
+      "sha256": "968b1991e17ef577e82272ac0266685cb16ce56b3858d171c07c401d2124eba9",
+      "previews": [
+        "A305.webp"
+      ]
+    },
+    {
+      "file": "RDC-A123.dwg",
+      "source": "PLAN RDC.dwg",
+      "sha256": "97d1e68401001c64dfbd1d6f779a4993302182e7bcd728760d0dd23afb32b5cd",
+      "previews": [
+        "RDC-A1.webp",
+        "RDC-A2.webp",
+        "RDC-A3.webp"
+      ]
+    }
+  ]
+}

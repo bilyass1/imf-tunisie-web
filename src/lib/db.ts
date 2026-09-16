@@ -16,6 +16,7 @@ import type {
 } from './types';
 import { DEAL_STAGES, PIPELINE_STAGES } from './types';
 import { buildSeed } from './seed';
+import { includeYassamineApartments } from './yassamine-catalog';
 
 /**
  * Couche de persistance simple, basée sur un fichier JSON (data/db.json).
@@ -92,7 +93,7 @@ export function readDb(): Database {
     const mtime = fs.statSync(dbFile).mtimeMs;
     if (cache && cache.mtime === mtime) return cache.data;
     const raw = fs.readFileSync(dbFile, 'utf8');
-    const data = JSON.parse(raw) as Database;
+    const data = includeYassamineApartments(JSON.parse(raw) as Database);
     cache = { data, mtime };
     return data;
   } catch {

@@ -164,7 +164,7 @@ export default async function ApartmentPage({
       </section>
 
       {/* ---- 1. Maquette 3D ---- */}
-      {project.massing && (
+      {project.massing && project.slug !== 'diar-al-yassamine' && (
         <section id="visite-360" className="scroll-mt-28 bg-ivory py-20 lg:py-24">
           <div className="container-lux">
             <SectionHeading
@@ -213,6 +213,15 @@ export default async function ApartmentPage({
                 labels={dict.plan}
                 exists={publicFileExists(lot.planImage)}
               />
+              {lot.planDwgUrl && <div className="mt-5 flex flex-wrap items-center gap-4 text-sm">
+                <a href={lot.planDwgUrl} download className="btn-ghost">
+                  {locale === 'ar' ? 'تنزيل مخطط AutoCAD' : locale === 'en' ? 'Download original AutoCAD plan' : 'Télécharger le plan AutoCAD original'} · DWG
+                </a>
+                <Link href={`/${locale}/projets/${project.slug}#plans-rdc`} className="underline underline-offset-4">
+                  {locale === 'ar' ? 'مخططات الطابق الأرضي' : locale === 'en' ? 'Ground-floor plans' : 'Plans d’ensemble du RDC'}
+                </Link>
+                <p className="w-full text-ink/50">{locale === 'ar' ? 'معاينة مستخرجة من ملف DWG الأصلي.' : locale === 'en' ? 'Preview converted from the original DWG drawing.' : 'Aperçu converti depuis le dessin DWG original.'}</p>
+              </div>}
             </div>
           </div>
 

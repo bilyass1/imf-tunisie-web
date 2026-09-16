@@ -38,10 +38,13 @@
     ".next-plans-sept15/types/**/*.ts",
     ".next-visual/types/**/*.ts",
     ".next-yassamine-final/types/**/*.ts",
+    ".next-yassamine-model-ready/types/**/*.ts",
+    ".next-yassamine-model/types/**/*.ts",
     ".next-yassamine-photo/types/**/*.ts",
+    ".next-yassamine-ready/types/**/*.ts",
     ".next/types/**/*.ts",
     "next-env.d.ts",
-    ".next-yassamine-ready/types/**/*.ts"
+    ".next-yassamine-complete/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

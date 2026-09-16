@@ -12,6 +12,8 @@ import PageHero from '@/components/site/PageHero';
 import SectionHeading from '@/components/site/SectionHeading';
 import Gallery from '@/components/site/Gallery';
 import MaquetteSection from '@/components/site/MaquetteSection';
+import YassamineMaquette from '@/components/site/YassamineMaquette';
+import YassaminePlanLibrary from '@/components/site/YassaminePlanLibrary';
 import LazyMount from '@/components/site/LazyMount';
 import AvailabilityPlan from '@/components/site/AvailabilityPlan';
 import CreditSimulator from '@/components/site/CreditSimulator';
@@ -52,9 +54,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   const sections = [
     { id: 'programme', label: dict.project.overview },
     { id: 'galerie', label: dict.project.gallery },
-    ...(project.massing && project.lots.length ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
+    ...((project.slug === 'diar-al-yassamine' || (project.massing && project.lots.length)) ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
     ...(project.lots.length ? [{ id: 'disponibilite', label: dict.project.availability }] : []),
     ...(project.slug === 'residence-la-gloire' ? [{ id: 'plans', label: dict.apartment.plan }] : []),
+    ...(project.slug === 'diar-al-yassamine' ? [{ id: 'plans-rdc', label: dict.apartment.plan }] : []),
     ...(project.status === 'ongoing' ? [{ id: 'financement', label: dict.project.simulator }] : []),
     { id: 'localisation', label: dict.project.location },
   ];
@@ -258,7 +261,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       </section>
 
       {/* ---- Maquette 3D interactive ---- */}
-      {project.massing && project.lots.length > 0 && (
+      {project.slug === 'diar-al-yassamine' && <div id="maquette" className="scroll-mt-[170px]"><LazyMount minHeight={850}><YassamineMaquette locale={locale} /></LazyMount></div>}
+      {project.slug !== 'diar-al-yassamine' && project.massing && project.lots.length > 0 && (
         <section id="maquette" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">
           <div className="container-lux">
             <SectionHeading
@@ -295,6 +299,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       )}
 
       {/* ---- Disponibilité ---- */}
+      {project.slug === 'diar-al-yassamine' && <YassaminePlanLibrary locale={locale} lots={project.lots} labels={dict.plan} statuses={dict.availability.legend} />}
       {project.lots.length > 0 ? (
         <section id="disponibilite" className="scroll-mt-[170px] bg-ivory py-24 lg:py-28">
           <div className="container-lux">

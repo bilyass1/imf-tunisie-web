@@ -69,14 +69,9 @@ export default async function ApartmentPage({
   const gloireSource = locale === 'ar' ? 'أجواء تمثيلية مستوحاة من B02 — راجع مخطط الشقة' : locale === 'en' ? 'Representative B02 interiors — refer to the apartment plan' : 'Ambiances représentatives B02 — consultez le plan de l’appartement';
   const tourRooms = rooms.map(r => {
     const assets = panoramaAssets(r.panorama);
-    const fallback = project.slug === 'residence-la-gloire' && !assets.available && ['cuisine', 'chambre-1', 'chambre-2', 'chambre-3'].includes(r.id);
+    const fallback = project.slug === 'residence-la-gloire' && !assets.available && ['salon', 'cuisine', 'chambre-1', 'chambre-2', 'chambre-3', 'sdb', 'sde'].includes(r.id);
     return { id: r.id, label: t(r.label, locale), ...(fallback ? panoramaAssets(`/360/la-gloire/B02/${r.id}.jpg`) : assets), ...(fallback ? { source: gloireSource } : {}) };
-  });
-  const interiorPhotos = project.slug === 'residence-la-gloire' ? [
-    { id: 'photo-cuisine', label: locale === 'ar' ? 'المطبخ · Photo' : locale === 'en' ? 'Kitchen · Photo' : 'Cuisine · Photo', photo: '/interiors/la-gloire/rooms/cuisine.webp', source: gloireSource },
-    { id: 'photo-suite', label: locale === 'ar' ? 'الجناح الرئيسي · Photo' : locale === 'en' ? 'Primary suite · Photo' : 'Suite parentale · Photo', photo: '/interiors/la-gloire/rooms/suite-parentale.webp', source: gloireSource },
-    { id: 'photo-chambre', label: locale === 'ar' ? 'غرفة النوم · Photo' : locale === 'en' ? 'Bedroom · Photo' : 'Chambre · Photo', photo: '/interiors/la-gloire/rooms/chambre.webp', source: gloireSource },
-  ] : [];
+  }).filter(room => project.slug !== 'residence-la-gloire' || room.available);
   const interiorImage = `/interiors/la-gloire/${lot.ref}.webp`;
   const similar = project.lots
     .filter((l) => l.ref !== lot.ref && l.typology === lot.typology && l.status === 'available')
@@ -297,7 +292,7 @@ export default async function ApartmentPage({
               <LazyMount minHeight={520}>
                 <Panorama360
                   poster={project.gallery[0]?.src}
-                  rooms={[...tourRooms, ...interiorPhotos]}
+                  rooms={tourRooms}
                   labels={dict.pano}
                 />
               </LazyMount>

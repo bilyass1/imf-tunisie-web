@@ -8,6 +8,8 @@ export interface PanoRoom {
   id: string;
   label: string;
   panorama?: string;
+  photo?: string;
+  source?: string;
   highResolution?: string;
   available?: boolean;
 }
@@ -46,6 +48,7 @@ export default function Panorama360({ rooms, labels, poster }: {
     setResolution('');
     setRotating(false);
     api.current = null;
+    if (current?.photo) { setStatus('ready'); return; }
     if (!current?.panorama || current.available === false) { setStatus('missing'); return; }
     setStatus('loading');
 
@@ -213,7 +216,7 @@ export default function Panorama360({ rooms, labels, poster }: {
       className={immersive ? 'fixed inset-0 z-[120] flex flex-col bg-ink p-2 sm:p-4' : 'viewer-shell overflow-hidden rounded-2xl bg-ink'}>
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-4 py-3 sm:px-5">
         <div className="flex items-center gap-3 text-white">
-          <span className="rounded-full border border-gold-300/40 px-3 py-1 text-sm text-gold-200">360°</span>
+          <span className="rounded-full border border-gold-300/40 px-3 py-1 text-sm text-gold-200">{current?.photo ? 'Photo' : '360°'}</span>
           <div><p className="text-base font-medium">{current?.label ?? labels.title}</p><p className="text-xs text-white/55">{labels.room} {rooms.length ? active + 1 : 0} / {rooms.length}</p></div>
         </div>
         <button type="button" className="viewer-control" onClick={() => setImmersive(v => !v)} aria-label={immersive ? labels.exit : labels.fullscreen}>
@@ -223,6 +226,7 @@ export default function Panorama360({ rooms, labels, poster }: {
       </div>
       <div className={`relative min-h-[300px] overflow-hidden ${immersive ? 'min-h-0 flex-1' : 'h-[440px] sm:h-[580px]'}`}>
         <div ref={mountRef} className="absolute inset-0 cursor-grab active:cursor-grabbing" />
+        {current?.photo && <img src={current.photo} alt={current.label} className="absolute inset-0 h-full w-full object-contain" />}
         {status !== 'ready' && <div className="absolute inset-0 grid place-items-center bg-ink px-6 text-center" role="status" aria-live="polite">
           {poster && <img src={poster} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20" />}
           <div className="relative max-w-md">
@@ -235,21 +239,21 @@ export default function Panorama360({ rooms, labels, poster }: {
           </div>
         </div>}
         {status === 'ready' && <>
-          <span className="viewer-glass pointer-events-none absolute start-4 top-4 rounded-full px-3 py-1.5 text-xs text-white/80">{labels.source} · {resolution}</span>
-          <div className="viewer-glass absolute bottom-5 start-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full p-1" dir="ltr">
+          <span className="viewer-glass pointer-events-none absolute start-4 top-4 max-w-[85%] rounded-full px-3 py-1.5 text-xs text-white/80">{current.source ?? labels.source}{resolution && ` · ${resolution}`}</span>
+          {!current.photo && <div className="viewer-glass absolute bottom-5 start-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full p-1" dir="ltr">
             <button className="viewer-control w-11 text-xl" type="button" aria-label={labels.zoomOut} title={labels.zoomOut} onClick={() => api.current?.zoom(7)}>−</button>
             <button className="viewer-control w-11 text-xl" type="button" aria-label={labels.zoomIn} title={labels.zoomIn} onClick={() => api.current?.zoom(-7)}>+</button>
             <span className="h-5 w-px bg-white/20" />
             <button className="viewer-control" type="button" onClick={() => api.current?.reset()}>{labels.reset}</button>
             <button className="viewer-control w-11" type="button" aria-label={rotating ? labels.pause : labels.rotate} title={rotating ? labels.pause : labels.rotate} aria-pressed={rotating} onClick={() => setRotating(v => !v)}>{rotating ? 'Ⅱ' : '▷'}</button>
-          </div>
+          </div>}
         </>}
       </div>
       <div className="border-t border-white/10 p-4 sm:px-5">
         <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1" aria-label={labels.room}>
           {rooms.map((room, i) => <button key={room.id} type="button" aria-pressed={i === active} onClick={() => setActive(i)}
             className={`group relative flex w-28 shrink-0 flex-col overflow-hidden rounded-lg border text-start transition sm:w-36 ${i === active ? 'border-gold-300 bg-gold-300/10' : 'border-white/15 hover:border-white/50'}`}>
-            {room.available !== false && room.panorama ? <img src={room.panorama} alt="" loading="lazy" className={`h-14 w-full object-cover transition sm:h-20 ${i === active ? 'opacity-100' : 'opacity-55 group-hover:opacity-90'}`} /> : <span className="grid h-14 place-items-center bg-white/5 text-lg text-white/30 sm:h-20">360°</span>}
+            {room.photo || (room.available !== false && room.panorama) ? <img src={room.photo ?? room.panorama} alt="" loading="lazy" className={`h-14 w-full object-cover transition sm:h-20 ${i === active ? 'opacity-100' : 'opacity-55 group-hover:opacity-90'}`} /> : <span className="grid h-14 place-items-center bg-white/5 text-lg text-white/30 sm:h-20">360°</span>}
             <span className={`px-3 py-2 text-sm ${i === active ? 'text-gold-200' : 'text-white/75'}`}>{room.label}</span>
           </button>)}
         </div>

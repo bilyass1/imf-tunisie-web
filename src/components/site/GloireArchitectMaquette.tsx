@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MaquetteLabels } from './Maquette3D';
 import { useImmersiveViewer } from './useImmersiveViewer';
+import type { Lot } from '@/lib/types';
+import { LA_GLOIRE_FOOTPRINTS, LA_GLOIRE_SITE } from '@/lib/la-gloire-footprints';
 
 const modelUrl = '/models/la-gloire/la-gloire-web.glb';
 
@@ -12,7 +14,10 @@ const localCopy = {
   ar: { source: 'نموذج المهندس بتاريخ 07/09/2026 · أبعاد ملف SketchUp · خامات محسنة للويب', aerial: 'منظر جوي', street: 'منظر الواجهة' },
 };
 
-export default function GloireArchitectMaquette({ locale, labels }: { locale: string; labels: MaquetteLabels }) {
+export default function GloireArchitectMaquette({ locale, labels, lots, onSelect }: { locale: string; labels: MaquetteLabels; lots: Lot[]; onSelect: (ref: string) => void }) {
+  const selectRef = useRef(onSelect);
+  selectRef.current = onSelect;
+  const [hovered, setHovered] = useState<Lot | null>(null);
   const c = localCopy[locale as keyof typeof localCopy] ?? localCopy.fr;
   const root = useRef<HTMLDivElement>(null);
   const mount = useRef<HTMLDivElement>(null);
@@ -135,6 +140,63 @@ export default function GloireArchitectMaquette({ locale, labels }: { locale: st
       setView('aerial');
       api.current = { reset: () => setView('aerial'), view: setView, zoom: factor => { camera.position.sub(orbit.target).multiplyScalar(factor).add(orbit.target); orbit.update(); } };
 
+      // Sales-plan coordinates registered against the upper-storey outline
+      // extracted from the SKP (source XY, Z up). Only hit areas are transformed.
+      const pickGroup = new THREE.Group();
+      const pickMaterial = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide });
+      const pickMeshes: import('three').Mesh[] = [];
+      for (const lot of lots) {
+        const polygon = LA_GLOIRE_FOOTPRINTS[lot.ref];
+        if (!polygon) continue;
+        const shape = new THREE.Shape(polygon.map(([x,y]) => new THREE.Vector2(
+          95.30044 + (x + 25.55) * (140.45673 - 95.30044) / (20.97 + 25.55),
+          100.46371 + (y + 24.29) * (146.88843 - 100.46371) / (23.17 + 24.29),
+        )));
+        const geometry = new THREE.ExtrudeGeometry(shape, { depth: LA_GLOIRE_SITE.floorHeight, bevelEnabled: false });
+        geometry.translate(0, 0, .75 + lot.floor * LA_GLOIRE_SITE.floorHeight);
+        const mesh = new THREE.Mesh(geometry, pickMaterial);
+        mesh.userData.lot = lot;
+        pickGroup.add(mesh); pickMeshes.push(mesh);
+      }
+      pickGroup.rotation.copy(building.rotation);
+      pickGroup.position.copy(building.position);
+      pickGroup.updateMatrixWorld(true);
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+      const pick = (event: PointerEvent): Lot | null => {
+        const rect = renderer.domElement.getBoundingClientRect();
+        pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
+        raycaster.setFromCamera(pointer, camera);
+        return raycaster.intersectObjects(pickMeshes, false)[0]?.object.userData.lot ?? null;
+      };
+      const pointers = new Set<number>();
+      let press: { x: number; y: number; moved: boolean; id: number } | null = null;
+      let lastHover = 0;
+      const pointerDown = (event: PointerEvent) => {
+        pointers.add(event.pointerId);
+        if (pointers.size > 1) { if (press) press.moved = true; return; }
+        if (event.button === 0) press = { x: event.clientX, y: event.clientY, moved: false, id: event.pointerId };
+      };
+      const pointerMove = (event: PointerEvent) => {
+        if (press && Math.hypot(event.clientX - press.x, event.clientY - press.y) > 6) press.moved = true;
+        if (pointers.size || performance.now() - lastHover < 80) return;
+        lastHover = performance.now();
+        const lot = pick(event);
+        setHovered(previous => previous?.ref === lot?.ref ? previous : lot);
+        renderer.domElement.style.cursor = lot ? 'pointer' : 'grab';
+      };
+      const pointerUp = (event: PointerEvent) => {
+        const clicked = press && press.id === event.pointerId && !press.moved && pointers.size === 1;
+        pointers.delete(event.pointerId); press = null;
+        if (clicked) { const lot = pick(event); if (lot) { setImmersive(false); selectRef.current(lot.ref); } }
+      };
+      const pointerCancel = () => { pointers.clear(); press = null; setHovered(null); };
+      renderer.domElement.addEventListener('pointerdown', pointerDown);
+      renderer.domElement.addEventListener('pointermove', pointerMove);
+      renderer.domElement.addEventListener('pointerup', pointerUp);
+      renderer.domElement.addEventListener('pointercancel', pointerCancel);
+      renderer.domElement.addEventListener('pointerleave', pointerCancel);
+
       let dirty = true;
       let interacting = false;
       let visible = true;
@@ -167,6 +229,12 @@ export default function GloireArchitectMaquette({ locale, labels }: { locale: st
       const onLost = (event: Event) => { event.preventDefault(); setFailed(true); };
       renderer.domElement.addEventListener('webglcontextlost', onLost);
       cleanup = () => {
+        renderer.domElement.removeEventListener('pointerdown', pointerDown);
+        renderer.domElement.removeEventListener('pointermove', pointerMove);
+        renderer.domElement.removeEventListener('pointerup', pointerUp);
+        renderer.domElement.removeEventListener('pointercancel', pointerCancel);
+        renderer.domElement.removeEventListener('pointerleave', pointerCancel);
+        pickMeshes.forEach(mesh => mesh.geometry.dispose()); pickMaterial.dispose();
         cancelAnimationFrame(frame); resize.disconnect(); visibility.disconnect(); orbit.dispose(); draco.dispose(); api.current = null;
         renderer.domElement.removeEventListener('webglcontextlost', onLost);
         const disposedMaterials = new Set<import('three').Material>();
@@ -175,7 +243,7 @@ export default function GloireArchitectMaquette({ locale, labels }: { locale: st
       };
     })().catch(() => { cleanup(); if (!cancelled) setFailed(true); });
     return () => { cancelled = true; cleanup(); };
-  }, [attempt]);
+  }, [attempt, lots]);
 
   const button = 'viewer-control';
   return <div ref={root} role={immersive ? 'dialog' : undefined} aria-modal={immersive || undefined} aria-label={labels.title} className={immersive ? 'fixed inset-0 z-[120] flex flex-col bg-ink p-2 sm:p-4' : 'viewer-shell overflow-hidden rounded-2xl bg-ink'}>
@@ -185,6 +253,7 @@ export default function GloireArchitectMaquette({ locale, labels }: { locale: st
     </div>
     <div className={`relative ${immersive ? 'min-h-0 flex-1' : ''}`}>
       <div ref={mount} className={immersive ? 'h-full w-full' : 'h-[520px] w-full sm:h-[650px]'} />
+      {ready && hovered && <div className="viewer-glass pointer-events-none absolute bottom-20 start-4 rounded-xl px-4 py-3 text-ivory"><strong>{hovered.code}</strong><p className="text-sm">{hovered.typology} · {hovered.floor === 0 ? 'RDC' : `R+${hovered.floor}`}</p></div>}
       {!ready && <div className="absolute inset-0 grid place-items-center bg-ink"><div className="max-w-sm px-5 text-center"><p className="text-white/70">{failed ? labels.error : `${labels.loading} ${progress ? `${progress}%` : ''}`}</p>{failed && <button className="btn-gold mt-5" onClick={() => setAttempt(v => v + 1)}>{labels.retry}</button>}</div></div>}
       {ready && <><div className="viewer-glass absolute start-3 top-3 flex rounded-full p-1 sm:start-5 sm:top-5"><button className={button} onClick={() => api.current?.view('aerial')}>{c.aerial}</button><button className={button} onClick={() => api.current?.view('street')}>{c.street}</button></div>
       <div className="viewer-glass absolute bottom-3 end-3 flex rounded-full p-1 sm:bottom-5 sm:end-5"><button className={button} aria-label={labels.zoomIn} onClick={() => api.current?.zoom(.82)}>+</button><button className={button} aria-label={labels.zoomOut} onClick={() => api.current?.zoom(1.18)}>−</button><button className={button} onClick={() => api.current?.reset()}>{labels.reset}</button><button className={button} aria-pressed={rotating} onClick={() => setRotating(value => !value)}>{rotating ? labels.pause : labels.rotate}</button></div></>}

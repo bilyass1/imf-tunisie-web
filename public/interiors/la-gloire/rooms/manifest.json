@@ -1,0 +1,18 @@
+{
+  "type": "Representative photorealistic interior gallery",
+  "generatedOn": "2026-09-17",
+  "project": "Résidence La Gloire",
+  "style": "Contemporary luxury with light stone, dark wood and restrained gold accents",
+  "sourceReferences": [
+    "/360/la-gloire/B02/cuisine.source.png",
+    "/360/la-gloire/B02/chambre-1.source.png",
+    "/360/la-gloire/B02/chambre-2.source.png",
+    "/plans/la-gloire/B02.webp"
+  ],
+  "promptSummary": "Photorealistic real-estate interiors based on B02 materials and atmosphere, using a rectilinear wide-angle camera, balanced verticals, natural daylight and warm architectural lighting, without structural changes.",
+  "files": [
+    { "room": "Cuisine", "path": "cuisine.webp", "width": 1672, "height": 941 },
+    { "room": "Suite parentale", "path": "suite-parentale.webp", "width": 1672, "height": 941 },
+    { "room": "Chambre", "path": "chambre.webp", "width": 1672, "height": 941 }
+  ]
+}

@@ -26,7 +26,6 @@ export default function YassaminePlanLibrary({ locale, lots, labels, statuses }:
       <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
         <div><PlanViewer key={block} image={`/plans/diar-al-yassamine/RDC-${block}.webp`} alt={`${text.ground} ${block}`} labels={labels} exists />
           <p className="mt-4 text-xs text-ink/55">{text.note}</p>
-          <a href="/plans/diar-al-yassamine/RDC-A123.dwg" download className="btn-ghost mt-4">{text.dwg} · DWG</a>
         </div>
         <div className="space-y-4">{visible.map(lot=><article key={lot.ref} className="rounded-2xl border border-ink/10 bg-white p-6">
           <div className="flex items-center justify-between gap-3"><h3 className="font-display text-2xl">{lot.code}</h3><span className={`rounded-full px-3 py-1 text-xs ${lot.status==='available'?'bg-emerald-50 text-emerald-800':lot.status==='reserved'?'bg-amber-50 text-amber-800':'bg-sand text-ink/60'}`}>{statuses[lot.status]}</span></div>

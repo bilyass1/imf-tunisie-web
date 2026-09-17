@@ -225,9 +225,6 @@ export default async function ApartmentPage({
                 exists={publicFileExists(lot.planImage)}
               />
               {lot.planDwgUrl && <div className="mt-5 flex flex-wrap items-center gap-4 text-sm">
-                <a href={lot.planDwgUrl} download className="btn-ghost">
-                  {locale === 'ar' ? 'تنزيل مخطط AutoCAD' : locale === 'en' ? 'Download original AutoCAD plan' : 'Télécharger le plan AutoCAD original'} · DWG
-                </a>
                 <Link href={`/${locale}/projets/${project.slug}#plans-rdc`} className="underline underline-offset-4">
                   {locale === 'ar' ? 'مخططات الطابق الأرضي' : locale === 'en' ? 'Ground-floor plans' : 'Plans d’ensemble du RDC'}
                 </Link>

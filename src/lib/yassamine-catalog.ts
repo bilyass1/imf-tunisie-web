@@ -1,5 +1,6 @@
 import additions from './yassamine-available.json';
 import type { Database } from './types';
+import { YASSAMINE_APPROVED_PRICES } from './yassamine-prices';
 
 /** Add the confirmed A1/A2/A3 inventory to older CRM snapshots.
  * Existing lots (including any later reservations/sales) always take precedence.
@@ -19,6 +20,9 @@ export function includeYassamineApartments(data: Database): Database {
   }
   for (const id of ['A1','A2','A3']) {
     if (!project.blocks.some(block=>block.id===id)) project.blocks.push({id,label:`Bloc ${id}`,floors:[0]});
+  }
+  for (const lot of project.lots) {
+    if (lot.price == null && YASSAMINE_APPROVED_PRICES[lot.ref]) lot.price = YASSAMINE_APPROVED_PRICES[lot.ref];
   }
   return data;
 }

@@ -3,6 +3,7 @@ import type { Activity, Contact, CrmTask, Database, Deal, Lot, Localized, Projec
 import { LA_GLOIRE_LOTS, YASSAMINE_A5A_LOTS } from './lots-la-gloire';
 import { LA_GLOIRE_FOOTPRINTS, LA_GLOIRE_SITE } from './la-gloire-footprints';
 import yassamineAvailable from './yassamine-available.json';
+import { YASSAMINE_APPROVED_PRICES } from './yassamine-prices';
 
 const L = (fr: string, en: string, ar: string): Localized => ({ fr, en, ar });
 
@@ -84,7 +85,7 @@ function buildGloireLots(): Lot[] {
 }
 
 function buildYassamineLots(): Lot[] {
-  return [...yassamineAvailable.map(lot => ({ ...lot, status: 'available' as const })), ...YASSAMINE_A5A_LOTS.map(([code, typology]) => {
+  return [...yassamineAvailable.map(lot => ({ ...lot, price: YASSAMINE_APPROVED_PRICES[lot.ref], status: 'available' as const })), ...YASSAMINE_A5A_LOTS.map(([code, typology]) => {
     const [, rest] = code.split('-');
     const [floorStr] = rest.split('.');
     const ref = code.replace(/[.\-]/g, '');

@@ -11,6 +11,7 @@ import SectionHeading from '@/components/site/SectionHeading';
 import MaquetteSection from '@/components/site/MaquetteSection';
 import PlanViewer from '@/components/site/PlanViewer';
 import ApartmentInterior from '@/components/site/ApartmentInterior';
+import YassamineFinancing from '@/components/site/YassamineFinancing';
 import LazyMount from '@/components/site/LazyMount';
 import Panorama360 from '@/components/site/Panorama360';
 import CreditSimulator from '@/components/site/CreditSimulator';
@@ -300,6 +301,7 @@ export default async function ApartmentPage({
       )}
 
       {/* ---- 4. Financement ---- */}
+      {project.slug === 'diar-al-yassamine' && <YassamineFinancing locale={locale} />}
       {project.status === 'ongoing' && lot.status !== 'sold' && (
         <section className="bg-white py-20 lg:py-24">
           <div className="container-lux">

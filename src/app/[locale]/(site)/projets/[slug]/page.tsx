@@ -17,6 +17,7 @@ import YassaminePlanLibrary from '@/components/site/YassaminePlanLibrary';
 import LazyMount from '@/components/site/LazyMount';
 import AvailabilityPlan from '@/components/site/AvailabilityPlan';
 import CreditSimulator from '@/components/site/CreditSimulator';
+import YassamineFinancing from '@/components/site/YassamineFinancing';
 import { AMENITY_ICONS, IconArrow, IconCheck, IconPin, IconPlay } from '@/components/Icons';
 
 const architectModelSubtitle = {
@@ -340,6 +341,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       ) : null}
 
       {/* ---- Financement ---- */}
+      {project.slug === 'diar-al-yassamine' && <YassamineFinancing locale={locale} />}
       {project.slug === 'residence-la-gloire' && <LaGloirePlanLibrary locale={locale} />}
       {project.status === 'ongoing' && (
         <section id="financement" className="scroll-mt-[170px] bg-white py-24 lg:py-28">

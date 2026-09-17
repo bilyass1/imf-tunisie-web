@@ -1,0 +1,26 @@
+{
+  "project": "Résidence La Gloire",
+  "source": {
+    "file": "FICHIER 3D__07-09-2026.skp",
+    "sketchupVersion": "25.0.571",
+    "units": "metres",
+    "bytes": 143213615,
+    "sha256": "BFA2CB12F32F84FBDC27B409D55ED062345DED48EE7D3FADDE5E64DFAAF98429"
+  },
+  "webModel": {
+    "file": "la-gloire-web.glb",
+    "bytes": 13842440,
+    "sha256": "CCACBF01320777DBA14DB47981971AFACE730DDBC5AF9F077B38774054A95706",
+    "boundsMetres": {
+      "minimum": [-0.49252, -0.75918, -0.00137],
+      "maximum": [176.57655, 251.01852, 23.30181]
+    },
+    "materials": 100,
+    "textures": 8,
+    "geometrySimplified": false,
+    "compression": {
+      "geometry": "Draco, high-precision quantization (position 16, normal 12, texcoord 14)",
+      "textures": "WebP, maximum 2048 px"
+    }
+  }
+}

@@ -13,10 +13,38 @@ type Level = {
 type Model = { floorHeight: number; slabHeight: number; levels: Level[] };
 
 const copy = {
-  fr: { title: 'Les blocs 5 & 6, en trois dimensions', subtitle: 'Explorez les volumes, les cours et les retraits des deux immeubles.', block: 'Bloc', whole: 'Immeuble entier', ground: 'RDC', floor: 'Étage', orbit: 'Perspective', top: 'Vue du dessus', reset: 'Recentrer', fullscreen: 'Plein écran', close: 'Fermer', rotate: 'Rotation', pause: 'Pause', loading: 'Chargement de la maquette…', error: 'La vue 3D est indisponible sur cet appareil. Les plans restent consultables ci-dessous.', retry: 'Réessayer', note: 'Maquette indicative reconstruite à partir des plans de vente. Hauteurs et finitions estimatives. Les PDF originaux font référence.', plans: 'Plans du niveau', download: 'Télécharger le PDF', hint: 'Glissez pour tourner · Molette pour zoomer', cut: 'Lecture par étage', five: 'A5.a + A5.b · RDC à R+4', six: 'A6.a : RDC à R+4 · A6.b : RDC à R+3' },
-  en: { title: 'Blocks 5 & 6, in three dimensions', subtitle: 'Explore the volumes, courtyards and setbacks of both buildings.', block: 'Block', whole: 'Whole building', ground: 'Ground', floor: 'Floor', orbit: 'Perspective', top: 'Top view', reset: 'Reset view', fullscreen: 'Fullscreen', close: 'Close', rotate: 'Rotate', pause: 'Pause', loading: 'Loading the model…', error: '3D is unavailable on this device. The original plans remain available below.', retry: 'Retry', note: 'Illustrative model reconstructed from sales plans. Heights and finishes are estimates. Original PDFs remain the reference.', plans: 'Floor plans', download: 'Download PDF', hint: 'Drag to rotate · Scroll to zoom', cut: 'Explore by floor', five: 'A5.a + A5.b · Ground to 4th floor', six: 'A6.a: ground to 4th · A6.b: ground to 3rd' },
-  ar: { title: 'العمارتان 5 و6 بثلاثة أبعاد', subtitle: 'استكشف أحجام المباني والأفنية والتراجعات.', block: 'عمارة', whole: 'كامل المبنى', ground: 'أرضي', floor: 'طابق', orbit: 'منظور', top: 'من الأعلى', reset: 'إعادة التمركز', fullscreen: 'ملء الشاشة', close: 'إغلاق', rotate: 'دوران', pause: 'إيقاف', loading: 'تحميل المجسم…', error: 'العرض ثلاثي الأبعاد غير متاح على هذا الجهاز. المخططات متاحة أدناه.', retry: 'إعادة المحاولة', note: 'مجسم توضيحي مستخلص من مخططات البيع. الارتفاعات والتشطيبات تقديرية. ملفات PDF الأصلية هي المرجع.', plans: 'مخططات الطابق', download: 'تنزيل PDF', hint: 'اسحب للدوران · مرر للتقريب', cut: 'حسب الطابق', five: 'A5.a + A5.b · أرضي إلى الرابع', six: 'A6.a: إلى الرابع · A6.b: إلى الثالث' },
+  fr: { title: 'Les blocs 5 & 6, en trois dimensions', subtitle: 'Explorez les plans 3D texturés, les cours et les retraits des deux immeubles.', block: 'Bloc', whole: 'Immeuble entier', ground: 'RDC', floor: 'Étage', orbit: 'Maquette', top: 'Plan 3D', reset: 'Recentrer', fullscreen: 'Plein écran', close: 'Fermer', rotate: 'Rotation', pause: 'Pause', loading: 'Chargement de la maquette…', error: 'La vue 3D est indisponible sur cet appareil. Les plans restent consultables ci-dessous.', retry: 'Réessayer', note: 'Dimensions, murs et ouvertures conservés selon les plans de vente. Les textures d’enduit, de pierre, de bois et de verre sont des finitions de présentation.', plans: 'Plans du niveau', download: 'Télécharger le PDF', hint: 'Glissez pour tourner · Molette pour zoomer', cut: 'Lecture par étage', five: 'A5.a + A5.b · RDC à R+4', six: 'A6.a : RDC à R+4 · A6.b : RDC à R+3' },
+  en: { title: 'Blocks 5 & 6, in three dimensions', subtitle: 'Explore the textured 3D plans, courtyards and setbacks of both buildings.', block: 'Block', whole: 'Whole building', ground: 'Ground', floor: 'Floor', orbit: 'Model', top: '3D plan', reset: 'Reset view', fullscreen: 'Fullscreen', close: 'Close', rotate: 'Rotate', pause: 'Pause', loading: 'Loading the model…', error: '3D is unavailable on this device. The original plans remain available below.', retry: 'Retry', note: 'Dimensions, walls and openings remain faithful to the sales plans. Plaster, stone, wood and glass textures are presentation finishes.', plans: 'Floor plans', download: 'Download PDF', hint: 'Drag to rotate · Scroll to zoom', cut: 'Explore by floor', five: 'A5.a + A5.b · Ground to 4th floor', six: 'A6.a: ground to 4th · A6.b: ground to 3rd' },
+  ar: { title: 'العمارتان 5 و6 بثلاثة أبعاد', subtitle: 'استكشف المخططات ثلاثية الأبعاد المكسوة بالخامات والأفنية والتراجعات.', block: 'عمارة', whole: 'كامل المبنى', ground: 'أرضي', floor: 'طابق', orbit: 'المجسم', top: 'مخطط ثلاثي الأبعاد', reset: 'إعادة التمركز', fullscreen: 'ملء الشاشة', close: 'إغلاق', rotate: 'دوران', pause: 'إيقاف', loading: 'تحميل المجسم…', error: 'العرض ثلاثي الأبعاد غير متاح على هذا الجهاز. المخططات متاحة أدناه.', retry: 'إعادة المحاولة', note: 'تم الحفاظ على الأبعاد والجدران والفتحات حسب مخططات البيع. خامات الجص والحجر والخشب والزجاج مخصصة للعرض.', plans: 'مخططات الطابق', download: 'تنزيل PDF', hint: 'اسحب للدوران · مرر للتقريب', cut: 'حسب الطابق', five: 'A5.a + A5.b · أرضي إلى الرابع', six: 'A6.a: إلى الرابع · A6.b: إلى الثالث' },
 };
+
+function finishCanvas(kind: 'plaster' | 'stone' | 'wood' | 'paving') {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 512;
+  const g = canvas.getContext('2d')!;
+  const base = kind === 'plaster' ? '#eee9df' : kind === 'stone' ? '#d8d0c3' : kind === 'wood' ? '#574134' : '#c8c0b3';
+  g.fillStyle = base; g.fillRect(0, 0, 512, 512);
+  if (kind === 'wood') {
+    for (let x = 0; x < 512; x += 32) {
+      g.fillStyle = x % 64 ? '#4b372d' : '#674d3c'; g.fillRect(x, 0, 28, 512);
+      g.fillStyle = 'rgba(235,196,145,.14)'; g.fillRect(x + 4, 0, 2, 512);
+    }
+  } else if (kind === 'stone' || kind === 'paving') {
+    const unit = kind === 'stone' ? 128 : 64;
+    g.strokeStyle = kind === 'stone' ? 'rgba(112,98,79,.2)' : 'rgba(92,82,69,.25)'; g.lineWidth = 2;
+    for (let y = 0; y <= 512; y += unit) { g.beginPath(); g.moveTo(0, y); g.lineTo(512, y); g.stroke(); }
+    for (let row = 0, y = 0; y < 512; row += 1, y += unit) for (let x = row % 2 ? -unit / 2 : 0; x <= 512; x += unit) { g.beginPath(); g.moveTo(x, y); g.lineTo(x, y + unit); g.stroke(); }
+  }
+  let seed = kind.length * 991;
+  for (let i = 0; i < 7500; i += 1) {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    const x = seed % 512; seed = (seed * 1664525 + 1013904223) >>> 0;
+    const y = seed % 512;
+    g.fillStyle = seed & 1 ? 'rgba(255,255,255,.035)' : 'rgba(30,24,18,.025)';
+    g.fillRect(x, y, kind === 'plaster' ? 2 : 3, kind === 'plaster' ? 2 : 1);
+  }
+  return canvas;
+}
 
 export default function YassamineMaquette({ locale }: { locale: string }) {
   const c = copy[locale as keyof typeof copy] ?? copy.fr;
@@ -92,15 +120,27 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
       sun.shadow.normalBias = .04; sun.shadow.bias = -.0001;
       scene.add(sun);
 
-      const plaster = new THREE.MeshStandardMaterial({ color: 0xf0ebe1, roughness: .86 });
-      const slabMat = new THREE.MeshStandardMaterial({ color: 0xe5dfd3, roughness: .88 });
-      const trim = new THREE.MeshStandardMaterial({ color: 0x938675, roughness: .75 });
-      const frame = new THREE.MeshStandardMaterial({ color: 0x57514a, roughness: .4, metalness: .55 });
-      const glass = new THREE.MeshStandardMaterial({ color: 0x687f88, roughness: .17, metalness: .65 });
-      const brass = new THREE.MeshStandardMaterial({ color: 0x8c7040, roughness: .4, metalness: .65 });
-      const roofMat = new THREE.MeshStandardMaterial({ color: 0xc8c1b5, roughness: .95 });
-      const materials: import('three').Material[] = [plaster,slabMat,trim,frame,glass,brass,roofMat];
       const textures: import('three').Texture[] = [];
+      const makeFinish = (kind: 'plaster' | 'stone' | 'wood' | 'paving', repeatX: number, repeatY: number) => {
+        const texture = new THREE.CanvasTexture(finishCanvas(kind));
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(repeatX, repeatY);
+        texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        textures.push(texture);
+        return texture;
+      };
+      const plasterTexture = makeFinish('plaster', 3, 3);
+      const stoneTexture = makeFinish('stone', 4, 4);
+      const woodTexture = makeFinish('wood', 3, 1);
+      const pavingTexture = makeFinish('paving', 7, 7);
+      const plaster = new THREE.MeshStandardMaterial({ color: 0xffffff, map: plasterTexture, roughness: .82 });
+      const slabMat = new THREE.MeshStandardMaterial({ color: 0xf4eee4, map: stoneTexture, roughness: .72 });
+      const trim = new THREE.MeshStandardMaterial({ color: 0xffffff, map: woodTexture, roughness: .62 });
+      const frame = new THREE.MeshStandardMaterial({ color: 0x57514a, roughness: .4, metalness: .55 });
+      const glass = new THREE.MeshPhysicalMaterial({ color: 0x91a9ae, roughness: .12, metalness: .1, transmission: .22, transparent: true, opacity: .82 });
+      const roofMat = new THREE.MeshStandardMaterial({ color: 0xe9e1d5, map: stoneTexture, roughness: .9 });
+      const materials: import('three').Material[] = [plaster,slabMat,trim,frame,glass,roofMat];
       const levels: { group: import('three').Group; floor: number; plan: import('three').Object3D }[] = [];
       const roofs: { group: import('three').Group; last: number }[] = [];
       const building = new THREE.Group(); scene.add(building);
@@ -167,7 +207,7 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
                 const t=THREE.MathUtils.clamp(midpoint.clone().sub(new THREE.Vector2(...c)).dot(v)/v.lengthSq(),0,1);
                 return midpoint.distanceTo(new THREE.Vector2(c[0]+v.x*t,c[1]+v.y*t))<.3;
               }));
-              if(onPerimeter){for(const h of [.55,.8,1.05])bar(a,b,.035,.035,y+.22+h,brass,group);}
+              if(onPerimeter){for(const h of [.55,.8,1.05])bar(a,b,.035,.035,y+.22+h,trim,group);}
             }
           }
           const [[x0,z0],[x1,z1]]=data.textureBounds;
@@ -192,7 +232,7 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
       }
       const bounds=new THREE.Box3().setFromObject(building);const center=bounds.getCenter(new THREE.Vector3());
       const size=bounds.getSize(new THREE.Vector3());const span=Math.max(size.x,size.z);
-      const groundMat=new THREE.MeshStandardMaterial({color:0xd4cec2,roughness:1});materials.push(groundMat);
+      const groundMat=new THREE.MeshStandardMaterial({color:0xf5efe6,map:pavingTexture,roughness:.92});materials.push(groundMat);
       const ground=new THREE.Mesh(new THREE.BoxGeometry(size.x+6,.35,size.z+6),groundMat);
       ground.position.set(center.x,-.25,center.z);ground.receiveShadow=true;scene.add(ground);
       const reset=()=>{orbit.target.set(center.x,4,center.z);camera.up.set(0,1,0);camera.position.set(center.x+span*.8,span*.78,center.z-span*1.15);orbit.update();};

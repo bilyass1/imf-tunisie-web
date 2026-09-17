@@ -45,6 +45,12 @@ const STATUS_TONE: Record<string, string> = {
   sold: 'bg-white/10 text-white/50',
 };
 
+const architectModelSubtitle = {
+  fr: 'Modèle importé directement du fichier SketchUp de l’architecte, avec sa géométrie, ses dimensions et ses matériaux.',
+  en: 'Model imported directly from the architect’s SketchUp file, including its geometry, dimensions and materials.',
+  ar: 'نموذج مستورد مباشرة من ملف SketchUp الخاص بالمهندس، مع هندسته وأبعاده وخاماته.',
+};
+
 export default async function ApartmentPage({
   params,
 }: {
@@ -170,7 +176,7 @@ export default async function ApartmentPage({
             <SectionHeading
               eyebrow={dict.apartment.maquette}
               title={dict.maquette.title}
-              subtitle={dict.maquette.subtitle}
+              subtitle={project.slug === 'residence-la-gloire' ? architectModelSubtitle[locale] : dict.maquette.subtitle}
             />
             <div className="mt-10">
               <LazyMount minHeight={520}>

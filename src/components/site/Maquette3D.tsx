@@ -157,12 +157,16 @@ export default function Maquette3D({
   labels,
   onSelect,
   selectedRef,
+  initialMode = 'realistic',
+  hideModeToggle = false,
 }: {
   lots: Lot[];
   massing: Massing;
   labels: MaquetteLabels;
   onSelect?: (ref: string) => void;
   selectedRef?: string;
+  initialMode?: 'realistic' | 'commercial';
+  hideModeToggle?: boolean;
 }) {
   const mountRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -184,11 +188,11 @@ export default function Maquette3D({
   useImmersiveViewer(immersive, close, rootRef);
   const [hover, setHover] = useState<Lot | null>(null);
   const [maxFloor, setMaxFloor] = useState<number | 'all'>('all');
-  const [mode, setMode] = useState<'realistic' | 'commercial'>('realistic');
+  const [mode, setMode] = useState<'realistic' | 'commercial'>(initialMode);
 
   const maxFloorRef = useRef<number | 'all'>('all');
   maxFloorRef.current = maxFloor;
-  const modeRef = useRef<'realistic' | 'commercial'>('realistic');
+  const modeRef = useRef<'realistic' | 'commercial'>(initialMode);
   modeRef.current = mode;
 
   const floors = useMemo(
@@ -1333,7 +1337,8 @@ export default function Maquette3D({
       className={immersive ? 'fixed inset-0 z-[120] flex flex-col bg-ink p-2 sm:p-4' : 'viewer-shell overflow-hidden rounded-2xl bg-ink'}>
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-5">
         <div className="flex items-center gap-1" aria-label={labels.title}>
-          {(['realistic', 'commercial'] as const).map(value => <button key={value} type="button" className="viewer-control" aria-pressed={mode === value} onClick={() => setMode(value)}>{labels[value]}</button>)}
+          {!hideModeToggle && (['realistic', 'commercial'] as const).map(value => <button key={value} type="button" className="viewer-control" aria-pressed={mode === value} onClick={() => setMode(value)}>{labels[value]}</button>)}
+          {hideModeToggle && <span className="px-2 text-xs uppercase tracking-[.18em] text-gold-300">{labels.commercial}</span>}
         </div>
         <div className="flex items-center gap-1">
           <button type="button" className="viewer-control" aria-label={immersive ? labels.exit : labels.fullscreen} onClick={() => setImmersive(v => !v)}><span aria-hidden="true" className="text-xl">{immersive ? '×' : '⛶'}</span><span className="hidden sm:inline">{immersive ? labels.exit : labels.fullscreen}</span></button>

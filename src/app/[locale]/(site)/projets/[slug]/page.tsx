@@ -19,6 +19,12 @@ import AvailabilityPlan from '@/components/site/AvailabilityPlan';
 import CreditSimulator from '@/components/site/CreditSimulator';
 import { AMENITY_ICONS, IconArrow, IconCheck, IconPin, IconPlay } from '@/components/Icons';
 
+const architectModelSubtitle = {
+  fr: 'Modèle importé directement du fichier SketchUp de l’architecte, avec sa géométrie, ses dimensions et ses matériaux.',
+  en: 'Model imported directly from the architect’s SketchUp file, including its geometry, dimensions and materials.',
+  ar: 'نموذج مستورد مباشرة من ملف SketchUp الخاص بالمهندس، مع هندسته وأبعاده وخاماته.',
+};
+
 export function generateStaticParams() {
   return locales.flatMap((locale) => getProjects().map((p) => ({ locale, slug: p.slug })));
 }
@@ -268,7 +274,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
             <SectionHeading
               eyebrow={dict.apartment.maquette}
               title={dict.maquette.title}
-              subtitle={dict.maquette.subtitle}
+              subtitle={project.slug === 'residence-la-gloire' ? architectModelSubtitle[locale] : dict.maquette.subtitle}
               light
             />
             <div className="mt-12 overflow-hidden rounded-2xl ring-1 ring-white/10">

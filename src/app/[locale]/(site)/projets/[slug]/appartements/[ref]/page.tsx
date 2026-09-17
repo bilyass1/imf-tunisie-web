@@ -66,12 +66,10 @@ export default async function ApartmentPage({
   if (!project || !lot) notFound();
 
   const rooms = lot.rooms ?? [];
-  const gloireSource = locale === 'ar' ? 'أجواء تمثيلية مستوحاة من B02 — راجع مخطط الشقة' : locale === 'en' ? 'Representative B02 interiors — refer to the apartment plan' : 'Ambiances représentatives B02 — consultez le plan de l’appartement';
   const tourRooms = rooms.map(r => {
     const assets = panoramaAssets(r.panorama);
-    const fallback = project.slug === 'residence-la-gloire' && !assets.available && ['salon', 'cuisine', 'chambre-1', 'chambre-2', 'chambre-3', 'sdb', 'sde'].includes(r.id);
-    return { id: r.id, label: t(r.label, locale), ...(fallback ? panoramaAssets(`/360/la-gloire/B02/${r.id}.jpg`) : assets), ...(fallback ? { source: gloireSource } : {}) };
-  }).filter(room => project.slug !== 'residence-la-gloire' || room.available);
+    return { id: r.id, label: t(r.label, locale), ...assets };
+  });
   const interiorImage = `/interiors/la-gloire/${lot.ref}.webp`;
   const similar = project.lots
     .filter((l) => l.ref !== lot.ref && l.typology === lot.typology && l.status === 'available')

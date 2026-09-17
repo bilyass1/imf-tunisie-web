@@ -10,6 +10,7 @@
     "status": "available",
     "planImage": "/plans/diar-al-yassamine/A101.webp",
     "planDwgUrl": "/plans/diar-al-yassamine/A101.dwg",
+    "rooms": [{ "id": "salon", "label": { "fr": "Séjour", "en": "Living room", "ar": "غرفة الجلوس" }, "panorama": "/360/diar-al-yassamine/A101/salon.png" }],
     "gardenArea": 104.97,
     "terraceArea": 15.89
   },
@@ -24,6 +25,7 @@
     "status": "available",
     "planImage": "/plans/diar-al-yassamine/A104.webp",
     "planDwgUrl": "/plans/diar-al-yassamine/A104.dwg",
+    "rooms": [{ "id": "salon", "label": { "fr": "Séjour", "en": "Living room", "ar": "غرفة الجلوس" }, "panorama": "/360/diar-al-yassamine/A104/salon.png" }],
     "terraceArea": 15.89
   },
   {
@@ -37,6 +39,7 @@
     "status": "available",
     "planImage": "/plans/diar-al-yassamine/A201.webp",
     "planDwgUrl": "/plans/diar-al-yassamine/A201.dwg",
+    "rooms": [{ "id": "salon", "label": { "fr": "Séjour", "en": "Living room", "ar": "غرفة الجلوس" }, "panorama": "/360/diar-al-yassamine/A201/salon.png" }],
     "gardenArea": 100.12,
     "terraceArea": 15.89
   },
@@ -51,6 +54,7 @@
     "status": "available",
     "planImage": "/plans/diar-al-yassamine/A202.webp",
     "planDwgUrl": "/plans/diar-al-yassamine/A202.dwg",
+    "rooms": [{ "id": "salon", "label": { "fr": "Séjour", "en": "Living room", "ar": "غرفة الجلوس" }, "panorama": "/360/diar-al-yassamine/A202/salon.png" }],
     "gardenArea": 98.54,
     "terraceArea": 15.89
   },
@@ -65,6 +69,7 @@
     "status": "available",
     "planImage": "/plans/diar-al-yassamine/A204.webp",
     "planDwgUrl": "/plans/diar-al-yassamine/A204.dwg",
+    "rooms": [{ "id": "salon", "label": { "fr": "Séjour", "en": "Living room", "ar": "غرفة الجلوس" }, "panorama": "/360/diar-al-yassamine/A204/salon.png" }],
     "terraceArea": 15.89
   },
   {
@@ -78,6 +83,7 @@
     "status": "available",
     "planImage": "/plans/diar-al-yassamine/A304.webp",
     "planDwgUrl": "/plans/diar-al-yassamine/A304.dwg",
+    "rooms": [{ "id": "salon", "label": { "fr": "Séjour", "en": "Living room", "ar": "غرفة الجلوس" }, "panorama": "/360/diar-al-yassamine/A304/salon.png" }],
     "gardenArea": 99.04
   },
   {
@@ -91,6 +97,7 @@
     "status": "available",
     "planImage": "/plans/diar-al-yassamine/A305.webp",
     "planDwgUrl": "/plans/diar-al-yassamine/A305.dwg",
+    "rooms": [{ "id": "salon", "label": { "fr": "Séjour", "en": "Living room", "ar": "غرفة الجلوس" }, "panorama": "/360/diar-al-yassamine/A305/salon.png" }],
     "gardenArea": 95.6,
     "terraceArea": 15.89
   }

@@ -264,9 +264,18 @@ export default async function ApartmentPage({
         <ApartmentInterior locale={locale} image={interiorImage} reference={lot.ref} pdf={lot.planUrl} />
       )}
       {rooms.length > 0 && (
-        <section className="bg-ivory py-20 lg:py-24">
+        <section id="visite-360" className="scroll-mt-28 bg-ivory py-20 lg:py-24">
           <div className="container-lux">
             <SectionHeading eyebrow={dict.apartment.tour360} title={dict.pano.title} subtitle={dict.pano.hint} />
+            {project.slug === 'diar-al-yassamine' && (
+              <p className="mt-4 max-w-3xl text-sm text-ink/55">
+                {locale === 'ar'
+                  ? 'تصوّر توضيحي بزاوية 360° أُنشئ انطلاقاً من مخطط الشقة وصور التشطيبات المنجزة في المشروع.'
+                  : locale === 'en'
+                    ? 'Illustrative 360° visualization created from the apartment plan and photographs of the completed project finishes.'
+                    : 'Visualisation 360° illustrative créée à partir du plan de l’appartement et des photos des finitions réalisées dans le projet.'}
+              </p>
+            )}
             <div className="mt-10">
               <LazyMount minHeight={520}>
                 <Panorama360

@@ -8,8 +8,13 @@ export function includeYassamineApartments(data: Database): Database {
   const project=data.projects.find(p=>p.slug==='diar-al-yassamine');
   if (!project) return data;
   for (const lot of additions) {
-    if (!project.lots.some(existing=>existing.ref===lot.ref)) {
+    const existing=project.lots.find(candidate=>candidate.ref===lot.ref);
+    if (!existing) {
       project.lots.push({...lot,status:'available'});
+    } else if ((!existing.rooms || existing.rooms.length===0) && lot.rooms) {
+      // Older saved CRM snapshots predate the 360° panoramas. Enrich only the
+      // missing presentation field; sales status, price and contacts stay intact.
+      existing.rooms=lot.rooms;
     }
   }
   for (const id of ['A1','A2','A3']) {

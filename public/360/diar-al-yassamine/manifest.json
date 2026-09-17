@@ -1,0 +1,22 @@
+{
+  "type": "illustrative-photorealistic-equirectangular-panorama",
+  "projection": "equirectangular",
+  "dimensions": "1774x887",
+  "generatedOn": "2026-09-17",
+  "architecturalSources": [
+    "/plans/diar-al-yassamine/A101.webp",
+    "/plans/diar-al-yassamine/A104.webp",
+    "/plans/diar-al-yassamine/A201.webp",
+    "/plans/diar-al-yassamine/A202.webp",
+    "/plans/diar-al-yassamine/A204.webp",
+    "/plans/diar-al-yassamine/A304.webp",
+    "/plans/diar-al-yassamine/A305.webp"
+  ],
+  "finishReferences": [
+    "/media/diar-al-yassamine/int-1.jpg",
+    "/media/diar-al-yassamine/int-2.jpg",
+    "/media/diar-al-yassamine/int-3.jpg"
+  ],
+  "promptSummary": "Photorealistic 2:1 panorama from the salon center; preserve the apartment plan's walls, doors, windows and adjoining-room relationships; use the photographed Diar Al Yassamine finishes; neutral contemporary furnishings; no structural inventions, people, text, logos or watermarks.",
+  "apartments": ["A101", "A104", "A201", "A202", "A204", "A304", "A305"]
+}

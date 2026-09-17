@@ -64,7 +64,9 @@ for index,name in enumerate(CODES+['PLAN RDC']):
         assert any(f'{sellable:.2f}' in t for t in texts)
         lot={'ref':ref,'code':name,'block':name[:2],'floor':0,'typology':typology,'grossArea':gross,
              'sellableArea':sellable,'status':'available','planImage':f'/plans/diar-al-yassamine/{ref}.webp',
-             'planDwgUrl':f'/plans/diar-al-yassamine/{ref}.dwg'}
+             'planDwgUrl':f'/plans/diar-al-yassamine/{ref}.dwg',
+             'rooms':[{'id':'salon','label':{'fr':'Séjour','en':'Living room','ar':'غرفة الجلوس'},
+                       'panorama':f'/360/diar-al-yassamine/{ref}/salon.png'}]}
         if garden is not None:lot['gardenArea']=garden
         if terrace is not None:lot['terraceArea']=terrace
         lots.append(lot)

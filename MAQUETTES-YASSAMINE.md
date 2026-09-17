@@ -61,3 +61,12 @@ niveaux de la maquette et la préservation des données commerciales existantes.
 La compilation de production et les 29 pages/fichiers contrôlés en HTTP
 ont réussi. Les deux blocs, la coupe au RDC, la vue du dessus, le plein écran
 et la fiche A1-0.1 ont également été contrôlés dans le navigateur.
+
+## Visites 360° des appartements A1, A2 et A3
+
+Les fiches A1-0.1, A1-0.4, A2-0.1, A2-0.2, A2-0.4, A3-0.4 et A3-0.5
+contiennent chacune un panorama équirectangulaire 2:1 du séjour. Ces images
+sont des visualisations illustratives produites depuis le plan individuel et
+les photos `int-1.jpg`, `int-2.jpg` et `int-3.jpg` des finitions réalisées.
+Le site les identifie explicitement comme telles. Le manifeste de provenance
+se trouve dans `public/360/diar-al-yassamine/manifest.json`.

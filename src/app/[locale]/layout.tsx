@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
+import { Analytics } from '@vercel/analytics/next';
 import '../globals.css';
 import { isLocale, localeMeta, locales, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
@@ -61,7 +62,10 @@ export default async function LocaleLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="stylesheet" href={FONTS_HREF} />
       </head>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

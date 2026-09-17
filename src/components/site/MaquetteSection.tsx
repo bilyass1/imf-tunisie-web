@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { LA_GLOIRE_SITE } from '@/lib/la-gloire-footprints';
@@ -42,6 +43,12 @@ export default function MaquetteSection({
   const router = useRouter();
   const isLaGloire = projectSlug === 'residence-la-gloire';
   const [view, setView] = useState<'architect' | 'availability'>('architect');
+  const [apartmentRef, setApartmentRef] = useState(selectedRef ?? lots[0]?.ref ?? '');
+  const apartmentCopy = locale === 'en'
+    ? { label: 'Apartment', open: 'Open apartment details', pick: 'Select on the interactive plan' }
+    : locale === 'ar'
+      ? { label: 'الشقة', open: 'فتح تفاصيل الشقة', pick: 'اختر من المخطط التفاعلي' }
+      : { label: 'Appartement', open: 'Voir la fiche appartement', pick: 'Choisir sur le plan interactif' };
   const viewLabels = viewCopy[locale as keyof typeof viewCopy] ?? viewCopy.fr;
   // Existing CRM snapshots can still contain the earlier 3.10 m estimate.
   // Apply the verified drawing height without rewriting any commercial data.
@@ -63,6 +70,18 @@ export default function MaquetteSection({
       hideModeToggle={isLaGloire}
       onSelect={(ref) => router.push(`/${locale}/projets/${projectSlug}/appartements/${ref}`)}
     />}
+      {isLaGloire && view === 'architect' && <div className="flex flex-wrap items-end gap-4 rounded-b-2xl bg-ink p-5 text-ivory">
+        <label className="flex min-w-56 flex-col gap-2 text-sm">
+          <span>{apartmentCopy.label}</span>
+          <select className="rounded-lg border border-white/25 bg-ink px-3 py-3 text-ivory" value={apartmentRef} onChange={event => setApartmentRef(event.target.value)}>
+            {Array.from(new Set(lots.map(lot => lot.block))).map(block => <optgroup key={block} label={`Bloc ${block}`}>
+              {lots.filter(lot => lot.block === block).map(lot => <option key={lot.ref} value={lot.ref}>{lot.code} · {lot.typology} · {lot.floor === 0 ? 'RDC' : `R+${lot.floor}`}</option>)}
+            </optgroup>)}
+          </select>
+        </label>
+        {apartmentRef && <Link className="btn-gold" href={`/${locale}/projets/${projectSlug}/appartements/${apartmentRef}`}>{apartmentCopy.open} →</Link>}
+        <button type="button" className="rounded-lg border border-white/25 px-4 py-3 text-sm hover:bg-white/10" onClick={() => setView('availability')}>{apartmentCopy.pick}</button>
+      </div>}
     </div>
   );
 }

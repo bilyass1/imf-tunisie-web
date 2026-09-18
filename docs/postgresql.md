@@ -1,21 +1,23 @@
-# PostgreSQL — préparation, sans bascule
+# PostgreSQL sur Vercel
 
-Le pilote `pg`, le schéma versionné et les outils d'import sont installés. Le site continue à utiliser `data/db.json`. Aucune base distante n'a été contactée et aucun compte n'a été transféré.
+DATABASE_URL active le stockage PostgreSQL pour les pages, comptes, messages, CRM et paramètres. Sans cette variable, le mode local JSON reste disponible. Une panne PostgreSQL ne déclenche jamais un retour aux données de démonstration.
 
-## Configuration ultérieure
+## Mise en service
 
-Renseigner `DATABASE_URL` dans `.env.local`, jamais dans Git ou une variable NEXT_PUBLIC. Les connexions distantes vérifient les certificats TLS. Pour une autorité privée, définir `PG_SSL_CA_FILE`. Les paramètres SSL dans l'URL sont refusés afin d'éviter qu'ils désactivent cette vérification.
+1. Configurer DATABASE_URL et AUTH_SECRET (32 caractères aléatoires minimum) dans les variables secrètes Vercel.
+2. Sauvegarder data/db.json et data/uploads, suspendre les écritures pendant le transfert.
+3. Exécuter `npm run db:validate`, puis `npm run db:check`.
+4. Exécuter `npm run db:import -- --confirm` vers une base vide. Les deux migrations et les fichiers sont importés dans une transaction. Une base remplie n’est jamais écrasée.
+5. Déployer et vérifier les parcours commercial/client.
 
-1. Sauvegarder ensemble `data/db.json` et `data/uploads` ; suspendre les écritures pendant l'import final.
-2. `npm run db:validate` : vérifier les données locales sans réseau.
-3. `npm run db:check` : vérifier la connexion configurée.
-4. `npm run db:migrate` : créer le schéma dans la base choisie.
-5. `npm run db:import -- --confirm` : importer vers une base vide, dans une transaction. Une erreur annule l'import ; une base remplie n'est jamais écrasée.
+Les connexions distantes vérifient les certificats TLS. Les URL Neon avec sslmode=require sont acceptées sans désactiver la vérification. PG_SSL_CA_FILE permet une autorité privée. Ne jamais placer une URL de connexion dans Git ou dans une variable NEXT_PUBLIC.
 
-Les résidences, lots, utilisateurs, messages et documents ont des tables séparées, avec contraintes de rôles/statuts, e-mails uniques et index de conversations. Les autres collections CRM sont conservées en JSONB sans perte de champs, dans une table par collection logique. Les mots de passe restent hachés. Les fichiers ne sont pas transférés : leurs métadonnées et liens sont importés uniquement.
+## Garanties et limites
 
-## Avant activation
+Les écritures sont transactionnelles et ne changent que les enregistrements modifiés. Une révision verrouillée en base rejette les modifications issues d’une lecture périmée ; l’utilisateur peut réessayer, sans écrasement silencieux. Les identifiants et valeurs SQL sont paramétrés. E-mails et appartements attribués sont uniques.
 
-La bascule exige encore de remplacer les accès synchrones de `src/lib/db.ts` par des requêtes asynchrones et des transactions PostgreSQL dans les pages, actions et sessions, de migrer les fichiers privés vers un stockage partagé et de tester les droits/concurrence sur une vraie base. Ajouter DATABASE_URL seul ne bascule pas l'application. Utiliser un compte de migration distinct du compte applicatif, avec permissions minimales. Les limites anti-abus en mémoire doivent également passer à un stockage partagé avant plusieurs instances.
+Les fichiers publiés sont stockés en bytea avec leurs métadonnées dans la même transaction. Les contrats restent derrière la vérification de session et du propriétaire ; leur retrait du dossier révoque l’accès. Limite de 3 Mo à l’envoi pour rester sous la limite des fonctions Vercel. Pour une grande photothèque, migrer ensuite vers un stockage objet privé.
 
-Cette préparation évite une migration non testée sur les dossiers actuels. Les scripts SQL n'ont pas été exécutés sur un serveur PostgreSQL dans cette étape.
+Ce premier adaptateur recharge les collections pour préserver les parcours existants. Il convient à la démonstration et à un petit catalogue ; il faudra des lectures ciblées, de la pagination et un limiteur distribué avant une forte montée en charge. Le limiteur actuel est en mémoire par instance.
+
+`npm test` inclut le moteur PostgreSQL isolé PGlite : persistance, unicité, conflits, annulation transactionnelle et médias. Le test de la connexion distante reste distinct.

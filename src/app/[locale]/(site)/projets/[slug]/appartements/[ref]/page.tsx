@@ -30,8 +30,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string; ref: string }>;
 }): Promise<Metadata> {
   const { locale, slug, ref } = await params;
-  const project = getProject(slug);
-  const lot = getLot(slug, ref);
+  const project = (await getProject(slug));
+  const lot = (await getLot(slug, ref));
   if (!project || !lot) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
   return {
@@ -66,9 +66,9 @@ export default async function ApartmentPage({
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
-  const SITE = getCompanySite();
+  const SITE = (await getCompanySite());
 
-  const project = getProject(slug);
+  const project = (await getProject(slug));
   const lot = project?.lots.find((l) => l.ref === ref);
   if (!project || !lot) notFound();
 

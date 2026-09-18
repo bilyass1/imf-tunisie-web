@@ -29,8 +29,9 @@ const architectModelSubtitle = {
   ar: 'استكشف الإقامة ثلاثية الأبعاد واختر شقة للاطلاع على تفاصيلها.',
 };
 
-export function generateStaticParams() {
-  return locales.flatMap((locale) => getProjects().map((p) => ({ locale, slug: p.slug })));
+export async function generateStaticParams() {
+  const projects = await getProjects();
+  return locales.flatMap((locale) => projects.map((p) => ({ locale, slug: p.slug })));
 }
 
 export async function generateMetadata({
@@ -39,7 +40,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const project = getProject(slug);
+  const project = (await getProject(slug));
   if (!project) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
   return {
@@ -55,12 +56,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
-  const SITE = getCompanySite();
-  const project = getProject(slug);
+  const SITE = (await getCompanySite());
+  const project = (await getProject(slug));
   if (!project) notFound();
 
   const stats = lotStats(project.lots);
-  const all = getProjects();
+  const all = (await getProjects());
   const nextProject = all[(all.findIndex((p) => p.slug === slug) + 1) % all.length];
 
   const sections = [

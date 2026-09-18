@@ -26,8 +26,8 @@ export default async function GroupPage({ params }: { params: Promise<{ locale: 
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
-  const SITE = getCompanySite();
-  const projects = getProjects();
+  const SITE = (await getCompanySite());
+  const projects = (await getProjects());
 
   return (
     <>

@@ -35,8 +35,14 @@ export default function PortalShell({
   children: ReactNode;
   accent?: 'client' | 'admin';
 }) {
+  const navigation = <nav aria-label={title} className="grid gap-1.5 p-2 sm:grid-cols-2 xl:grid-cols-1 xl:p-0">
+    {nav.map(item => <Link key={item.key} href={item.href} aria-current={active === item.key ? 'page' : undefined}
+      className={`flex min-h-11 items-center gap-3 rounded-xl px-4 py-3 text-[13.5px] font-medium transition ${active === item.key ? 'bg-ink text-white shadow-card' : 'text-ink/60 hover:bg-white hover:text-gold-600'}`}>
+      <span className={`shrink-0 ${active === item.key ? 'text-gold-300' : 'text-ink/35'}`}>{item.icon}</span>{item.label}
+    </Link>)}
+  </nav>;
   return (
-    <div className="min-h-screen bg-ivory">
+    <div className="portal-shell min-h-screen bg-ivory">
       <header className="border-b border-ink/8 bg-white">
         <div className="container-lux flex h-[72px] items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -64,6 +70,7 @@ export default function PortalShell({
               <input type="hidden" name="locale" value={locale} />
               <button
                 type="submit"
+                aria-label={logoutLabel}
                 className="flex items-center gap-2 rounded-full border border-ink/12 px-4 py-2 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-ink/60 transition hover:border-gold-400 hover:text-gold-600"
               >
                 <IconLogout className="h-4 w-4 rtl:rotate-180" />
@@ -74,31 +81,23 @@ export default function PortalShell({
         </div>
       </header>
 
-      <div className="container-lux grid gap-8 py-10 lg:grid-cols-[236px_1fr] lg:py-12">
-        <aside>
+      <div className="container-lux grid min-w-0 gap-5 py-5 sm:gap-6 sm:py-8 xl:grid-cols-[236px_minmax(0,1fr)] xl:py-12">
+        <aside className="min-w-0">
           <div className="lg:sticky lg:top-8">
             <h1 className="h-display text-[28px] leading-tight">{title}</h1>
             {subtitle && <p className="mt-2 text-[13.5px] text-ink/50">{subtitle}</p>}
-            <nav className="no-scrollbar mt-7 flex gap-1.5 overflow-x-auto lg:flex-col">
-              {nav.map((item) => (
-                <Link
-                  key={item.key}
-                  href={item.href}
-                  className={`flex shrink-0 items-center gap-3 rounded-xl px-4 py-3 text-[13.5px] font-medium transition ${
-                    active === item.key
-                      ? 'bg-ink text-white shadow-card'
-                      : 'text-ink/60 hover:bg-white hover:text-gold-600'
-                  }`}
-                >
-                  <span className={active === item.key ? 'text-gold-300' : 'text-ink/35'}>{item.icon}</span>
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            <details key={active} className="mt-4 rounded-xl border border-ink/10 bg-white xl:hidden">
+              <summary className="cursor-pointer px-4 py-3 font-medium xl:hidden">
+                <span className="text-gold-700">{locale === 'ar' ? 'القائمة' : 'Menu'}</span>
+                <span className="ms-3 text-sm">{nav.find(item => item.key === active)?.label}</span>
+              </summary>
+              {navigation}
+            </details>
+            <div className="mt-7 hidden xl:block">{navigation}</div>
           </div>
         </aside>
 
-        <main className="min-w-0">{children}</main>
+        <main className="portal-content min-w-0">{children}</main>
       </div>
     </div>
   );

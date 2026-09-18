@@ -26,9 +26,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
-  const SITE = getCompanySite();
+  const SITE = (await getCompanySite());
 
-  const projects = getProjects();
+  const projects = (await getProjects());
   const ongoing = projects.filter((p) => p.status === 'ongoing');
   const delivered = projects.filter((p) => p.status === 'delivered');
   const hero = ongoing[0] ?? projects[0];

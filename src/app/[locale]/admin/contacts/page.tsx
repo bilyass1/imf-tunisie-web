@@ -17,8 +17,8 @@ export default async function ContactsPage({ params }: { params: Promise<{ local
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const contacts = getContacts();
-  const deals = getDeals();
+  const contacts = (await getContacts());
+  const deals = (await getDeals());
 
   return (
     <PortalShell

@@ -18,12 +18,12 @@ export default async function CrmDashboard({ params }: { params: Promise<{ local
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const stats = pipelineStats();
-  const contacts = getContacts();
-  const deals = getDeals();
-  const tasks = getTasks();
-  const activities = getActivities().slice(0, 8);
-  const projects = getProjects();
+  const stats = (await pipelineStats());
+  const contacts = (await getContacts());
+  const deals = (await getDeals());
+  const tasks = (await getTasks());
+  const activities = (await getActivities()).slice(0, 8);
+  const projects = (await getProjects());
   const today = new Date().toISOString().slice(0, 10);
 
   const openTasks = tasks.filter((t) => !t.done);

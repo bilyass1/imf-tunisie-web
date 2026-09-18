@@ -2,10 +2,10 @@ import type { MetadataRoute } from 'next';
 import { locales } from '@/i18n/config';
 import { SITE } from '@/lib/site';
 import { getProjects, getNews } from '@/lib/db';
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const paths = ['', '/groupe', '/contact', '/projets', '/actualites'];
-  for (const article of getNews()) paths.push(`/actualites/${article.slug}`);
-  for (const project of getProjects()) {
+  for (const article of (await getNews())) paths.push(`/actualites/${article.slug}`);
+  for (const project of (await getProjects())) {
     paths.push(`/projets/${project.slug}`);
     for (const lot of project.lots) paths.push(`/projets/${project.slug}/appartements/${lot.ref}`);
   }

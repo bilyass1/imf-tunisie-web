@@ -17,8 +17,8 @@ export default async function TasksPage({ params }: { params: Promise<{ locale: 
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const tasks = getTasks();
-  const contacts = new Map(getContacts().map((c) => [c.id, c]));
+  const tasks = (await getTasks());
+  const contacts = new Map((await getContacts()).map((c) => [c.id, c]));
   const today = new Date().toISOString().slice(0, 10);
 
   const open = tasks.filter((t) => !t.done).sort((a, b) => (a.dueDate < b.dueDate ? -1 : 1));

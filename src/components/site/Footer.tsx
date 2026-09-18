@@ -7,9 +7,9 @@ import { IconPin, IconPhone, IconMail, IconFacebook, IconInstagram, IconLinkedin
 import { getProjects } from '@/lib/db';
 import { getCompanySite } from '@/lib/company';
 
-export default function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
-  const SITE=getCompanySite();
-  const projects = getProjects().slice(0, 5);
+export default async function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+  const SITE=(await getCompanySite());
+  const projects = (await getProjects()).slice(0, 5);
   const year = new Date().getFullYear();
 
   return (

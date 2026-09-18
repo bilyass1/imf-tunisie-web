@@ -22,12 +22,12 @@ export default async function ContactDetailPage({
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const contact = getContact(id);
+  const contact = (await getContact(id));
   if (!contact) notFound();
 
-  const deals = getDealsForContact(id);
-  const activities = getActivitiesForContact(id);
-  const projectNames = new Map(getProjects().map((p) => [p.slug, p.name]));
+  const deals = (await getDealsForContact(id));
+  const activities = (await getActivitiesForContact(id));
+  const projectNames = new Map((await getProjects()).map((p) => [p.slug, p.name]));
 
   return (
     <PortalShell
@@ -49,7 +49,7 @@ export default async function ContactDetailPage({
         {dict.crm.contacts}
       </Link>
 
-      <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         {/* ---- Fiche ---- */}
         <aside className="lg:sticky lg:top-8 lg:h-fit">
           <div className="overflow-hidden rounded-2xl border border-ink/8 bg-white">
@@ -138,7 +138,7 @@ export default async function ContactDetailPage({
                     </div>
 
                     <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                      <form action={updateDealAction} className="flex items-end gap-2">
+                      <form action={updateDealAction} className="flex flex-wrap items-end gap-2">
                         <input type="hidden" name="dealId" value={deal.id} />
                         <div className="flex-1">
                           <label className="label" htmlFor={`v-${deal.id}`}>
@@ -169,7 +169,7 @@ export default async function ContactDetailPage({
                         </button>
                       </form>
 
-                      <form action={setDealStageAction} className="flex items-end gap-2">
+                      <form action={setDealStageAction} className="flex flex-wrap items-end gap-2">
                         <input type="hidden" name="dealId" value={deal.id} />
                         <div className="flex-1">
                           <label className="label" htmlFor={`s-${deal.id}`}>

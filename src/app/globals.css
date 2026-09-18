@@ -146,3 +146,29 @@ canvas { display: block; }
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Keep portal content within its column, including long emails and messages. */
+.portal-shell { min-height: 100dvh; overflow-wrap: anywhere; }
+.portal-content .grid > *, .portal-content form, .portal-content label { min-width: 0; }
+.portal-shell :is(input:not([type='checkbox']):not([type='radio']), select, textarea) {
+  min-width: 0;
+  max-width: 100%;
+}
+.portal-shell :is(button, summary, select), .portal-shell .btn {
+  min-height: 44px;
+}
+.portal-content :is(.btn-gold, .btn-ghost) { max-width: 100%; text-align: center; }
+.portal-content .overflow-x-auto { overscroll-behavior-x: contain; }
+.commercial-tabs button { border-radius: .75rem; padding: .75rem; font-size: 13px; letter-spacing: normal; text-transform: none; }
+@media (max-width: 767px) {
+  /* 16px avoids Safari zooming the entire page when a field receives focus. */
+  .portal-shell :is(input:not([type='checkbox']):not([type='radio']), select, textarea) { font-size: 16px; }
+  .portal-content .btn-gold, .portal-content .btn-ghost { padding-inline: 1rem; letter-spacing: .08em; }
+  .portal-content form > .btn-gold { width: 100%; }
+}
+@media (max-width: 639px) {
+  .portal-shell .container-lux { padding-inline: max(1rem, env(safe-area-inset-left)); }
+  .portal-content { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+  .portal-content :is(.p-6, .p-10, .p-12) { padding: 1rem; }
+  .portal-content :is(.px-6) { padding-inline: 1rem; }
+}

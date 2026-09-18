@@ -24,7 +24,7 @@ export default async function AdminLotsPage({
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const projects = getProjects().filter((p) => p.lots.length > 0);
+  const projects = (await getProjects()).filter((p) => p.lots.length > 0);
   const project = projects.find((p) => p.slug === projectParam) ?? projects[0];
 
   if (!project) {

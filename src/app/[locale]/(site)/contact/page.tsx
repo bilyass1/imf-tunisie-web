@@ -19,12 +19,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
-  const SITE=getCompanySite();
+  const SITE=(await getCompanySite());
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
-  const projects = getProjects().map((p) => ({ slug: p.slug, name: p.name }));
+  const projects = (await getProjects()).map((p) => ({ slug: p.slug, name: p.name }));
 
   const infos = [
     {

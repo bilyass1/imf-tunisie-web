@@ -1,14 +1,6 @@
 const fs=require('node:fs');
 const {Pool}=require('pg');
-function config(env=process.env){
- if(!env.DATABASE_URL) throw new Error('DATABASE_URL absent : configurez .env.local.');
- const url=new URL(env.DATABASE_URL);
- if(!['postgres:','postgresql:'].includes(url.protocol)) throw new Error('URL PostgreSQL invalide.');
- const local=['localhost','127.0.0.1','[::1]'].includes(url.hostname);
- // TLS URL options can override node-postgres SSL settings. Reject rather than weaken verification.
- for(const key of ['sslmode','sslcert','sslkey','sslrootcert']) if(url.searchParams.has(key)) throw new Error('Retirez les paramètres SSL de DATABASE_URL ; configurez PG_SSL_CA_FILE si nécessaire.');
- return {connectionString:env.DATABASE_URL,max:5,connectionTimeoutMillis:10000,idleTimeoutMillis:30000,statement_timeout:30000,ssl:local?false:{rejectUnauthorized:true,...(env.PG_SSL_CA_FILE?{ca:fs.readFileSync(env.PG_SSL_CA_FILE,'utf8')}:{})}};
-}
+const {configuration:config}=require('../src/lib/postgres-store.cjs');
 function pool(){return new Pool(config());}
 function rows(db){
  for(const key of ['projects','users','news','contacts','deals','activities','tasks'])if(!Array.isArray(db[key]))throw new Error('Collection manquante : '+key);

@@ -18,7 +18,7 @@ export default async function MyLotPage({ params }: { params: Promise<{ locale: 
   const dict = getDictionary(locale);
   const user = await requireClient(locale);
 
-  const project = user.projectSlug ? getProject(user.projectSlug) : undefined;
+  const project = user.projectSlug ? (await getProject(user.projectSlug)) : undefined;
   const lot = project?.lots.find((l) => l.ref === user.lotRef);
 
   return (

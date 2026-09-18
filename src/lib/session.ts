@@ -29,7 +29,7 @@ export interface SessionPayload {
 }
 
 export async function createSession(payload: SessionPayload): Promise<void> {
-  const token = await new SignJWT({ ...payload, authVersion: getUserById(payload.sub)?.authVersion ?? 0 })
+  const token = await new SignJWT({ ...payload, authVersion: (await getUserById(payload.sub))?.authVersion ?? 0 })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(`${MAX_AGE}s`)
@@ -56,7 +56,7 @@ export async function getSession(): Promise<SessionPayload | null> {
   if (!token) return null;
   try {
     const { payload } = await jwtVerify(token, secret(),{algorithms:['HS256']});
-    const user=typeof payload.sub==='string'?getUserById(payload.sub):undefined;
+    const user=typeof payload.sub==='string'?(await getUserById(payload.sub)):undefined;
     if(!user || (payload.authVersion??0)!==(user.authVersion??0)) return null;
     return {sub:user.id,email:user.email,name:user.name,role:user.role,authVersion:user.authVersion??0};
   } catch {

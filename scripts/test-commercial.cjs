@@ -12,7 +12,8 @@ const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'imf-commercial-test-'));
 let db = { users: [{id:'staff',role:'admin',email:'staff@example.test'}], projects: [{slug:'residence',lots:[{ref:'A1',status:'available'},{ref:'A2',status:'available'}],gallery:[]}] };
 let session = {sub:'staff'};
 let persistent = true;
-const database = {readDb:()=>db,writeCommercialDb:value=>{db=value;},isPersistent:()=>persistent};
+const mediaBytes=new Map();
+const database = {readDb:async()=>structuredClone(db),writeCommercialDb:async(value,media)=>{db=value;if(media)mediaBytes.set(media.id,media.bytes);},isPersistent:()=>persistent,readMedia:async id=>mediaBytes.get(id)};
 function load(relative) {
   const module = {exports:{}};
   const code = ts.transpileModule(fs.readFileSync(path.join(root,relative),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;

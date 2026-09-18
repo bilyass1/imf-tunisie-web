@@ -21,7 +21,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
   const locale = raw as Locale;
   const dict = getDictionary(locale);
 
-  const summaries: ProjectSummary[] = getProjects().map((p) => {
+  const summaries: ProjectSummary[] = (await getProjects()).map((p) => {
     const stats = lotStats(p.lots);
     return {
       slug: p.slug,

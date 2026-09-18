@@ -14,8 +14,8 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const clients = getClients();
-  const projectNames = new Map(getProjects().map((p) => [p.slug, p.name]));
+  const clients = (await getClients());
+  const projectNames = new Map((await getProjects()).map((p) => [p.slug, p.name]));
 
   return (
     <PortalShell

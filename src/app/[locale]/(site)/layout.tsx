@@ -17,7 +17,7 @@ export default async function SiteLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
-  const SITE=getCompanySite();
+  const SITE=(await getCompanySite());
 
   return (
     <div className="flex min-h-screen flex-col">

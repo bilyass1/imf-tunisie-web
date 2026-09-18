@@ -17,27 +17,10 @@ import type {
 import { DEAL_STAGES, PIPELINE_STAGES } from './types';
 import { buildSeed } from './seed';
 import { includeYassamineApartments } from './yassamine-catalog';
+import { getStore, type MediaWrite } from './postgres-store.cjs';
 
-/**
- * Couche de persistance simple, basée sur un fichier JSON (data/db.json).
- * ---------------------------------------------------------------------
- * Volontairement sans dépendance : le projet démarre avec `npm install`
- * puis `npm run dev`, sans installer ni configurer de base de données.
- *
- * Pour passer en production multi-instances, remplacer UNIQUEMENT les
- * fonctions exportées ci-dessous par des requêtes Prisma / PostgreSQL :
- * le reste de l'application ne connaît que cette interface.
- */
-
-/**
- * Emplacement du fichier de données.
- *
- * En local, `data/db.json` à la racine du projet. En hébergement serverless
- * (Vercel, AWS Lambda…) le dossier de l'application est en LECTURE SEULE :
- * on bascule alors sur /tmp, seul dossier inscriptible, et si même /tmp est
- * refusé on garde tout en mémoire. Le site reste consultable dans tous les
- * cas ; seules les écritures deviennent temporaires. Voir la note « Passage
- * en production » du README.
+/** DATABASE_URL selects PostgreSQL; otherwise use local JSON for development.
+ * Remote connection failures never fall back to local demo data.
  */
 const LOCAL_DIR = path.join(process.cwd(), 'data');
 const TMP_DIR = path.join(os.tmpdir(), 'imf-data');
@@ -49,6 +32,7 @@ let dataDir = LOCAL_DIR;
 let dbFile = path.join(LOCAL_DIR, 'db.json');
 let memory: Database | null = null;
 let cache: { data: Database; mtime: number; size: number } | null = null;
+const localVersions = new WeakMap<Database, string>();
 
 function canWrite(dir: string): boolean {
   try {
@@ -83,7 +67,8 @@ function ensureFile(): void {
   }
 }
 
-export function readDb(): Database {
+export async function readDb(): Promise<Database> {
+  if (process.env.DATABASE_URL) return getStore().read();
   if (resolveMode() === 'memory') {
     if (!memory) memory = buildSeed();
     return structuredClone(memory);
@@ -91,51 +76,77 @@ export function readDb(): Database {
   try {
     ensureFile();
     const stat = fs.statSync(dbFile); const mtime = stat.mtimeMs;
-    if (cache && cache.mtime === mtime && cache.size === stat.size) return structuredClone(cache.data);
-    const raw = fs.readFileSync(dbFile, 'utf8');
-    const data = includeYassamineApartments(JSON.parse(raw) as Database);
-    cache = { data, mtime, size:stat.size };
-    return structuredClone(data);
+    if (!cache || cache.mtime !== mtime || cache.size !== stat.size) {
+      const raw = fs.readFileSync(dbFile, 'utf8');
+      cache = { data:includeYassamineApartments(JSON.parse(raw) as Database), mtime, size:stat.size };
+    }
+    const data = structuredClone(cache.data);
+    localVersions.set(data, `${mtime}/${stat.size}`);
+    return data;
   } catch {
     // Never replace existing customer records with demo data after a read error.
     throw new Error('Lecture des données impossible. Vérifiez le stockage et les sauvegardes.');
   }
 }
 
-export function writeDb(data: Database): void {
-  writeCommercialDb(data);
+export async function writeDb(data: Database): Promise<void> {
+  (await writeCommercialDb(data));
 }
 
 /** Les écritures sont-elles durables ? Faux en hébergement serverless. */
 export function isPersistent(): boolean {
-  return resolveMode() === 'file' && dataDir === LOCAL_DIR;
+  return Boolean(process.env.DATABASE_URL) || (!process.env.VERCEL && resolveMode() === 'file' && dataDir === LOCAL_DIR);
 }
 
 /** Commercial records must never silently fall back to volatile memory. */
-export function writeCommercialDb(data: Database): void {
-  if (process.env.VERCEL || !isPersistent()) throw new Error('Stockage durable indisponible.');
+export async function writeCommercialDb(data: Database, media?: MediaWrite): Promise<void> {
+  if (process.env.DATABASE_URL) {
+    try { await getStore().write(data, media); return; }
+    catch (error) {
+      if (error && typeof error === 'object' && 'code' in error) throw new Error('Enregistrement PostgreSQL impossible. Réessayez ou contactez l’administrateur.');
+      throw error;
+    }
+  }
+  if (!isPersistent()) throw new Error('Stockage durable indisponible.');
+  const before = fs.statSync(dbFile);
+  if (localVersions.get(data) !== `${before.mtimeMs}/${before.size}`) throw new Error('Les données ont changé. Réessayez.');
+  let mediaFile: string | undefined;
+  if (media) {
+    const directory=path.join(LOCAL_DIR,'uploads'); fs.mkdirSync(directory,{recursive:true});
+    mediaFile=path.join(directory,media.id); fs.writeFileSync(mediaFile,media.bytes,{flag:'wx'});
+  }
   const tmp = `${dbFile}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
-  fs.renameSync(tmp, dbFile);
+  try {
+    fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
+    fs.renameSync(tmp, dbFile);
+  } catch(error) { if(mediaFile) fs.rmSync(mediaFile,{force:true}); throw error; }
   const stat=fs.statSync(dbFile); cache = { data:structuredClone(data), mtime:stat.mtimeMs, size:stat.size };
+  localVersions.set(data, `${stat.mtimeMs}/${stat.size}`);
+}
+
+export async function readMedia(id: string): Promise<Buffer | undefined> {
+  if (!/^[a-f0-9-]{36}$/.test(id)) return undefined;
+  if (process.env.DATABASE_URL) return getStore().readMedia(id);
+  try { return await fs.promises.readFile(path.join(LOCAL_DIR,'uploads',id)); }
+  catch { return undefined; }
 }
 
 /* ---------------------------- Projets ---------------------------- */
 
-export function getProjects(): Project[] {
-  return readDb().projects;
+export async function getProjects(): Promise<Project[]> {
+  return (await readDb()).projects;
 }
 
-export function getProject(slug: string): Project | undefined {
-  return readDb().projects.find((p) => p.slug === slug);
+export async function getProject(slug: string): Promise<Project | undefined> {
+  return (await readDb()).projects.find((p) => p.slug === slug);
 }
 
-export function getOngoingProjects(): Project[] {
-  return getProjects().filter((p) => p.status === 'ongoing');
+export async function getOngoingProjects(): Promise<Project[]> {
+  return (await getProjects()).filter((p) => p.status === 'ongoing');
 }
 
-export function getDeliveredProjects(): Project[] {
-  return getProjects().filter((p) => p.status === 'delivered');
+export async function getDeliveredProjects(): Promise<Project[]> {
+  return (await getProjects()).filter((p) => p.status === 'delivered');
 }
 
 /* ------------------------------ Lots ------------------------------ */
@@ -150,8 +161,8 @@ export interface LotStats {
   typologies: string[];
 }
 
-export function getLot(projectSlug: string, ref: string): Lot | undefined {
-  return getProject(projectSlug)?.lots.find((l) => l.ref === ref);
+export async function getLot(projectSlug: string, ref: string): Promise<Lot | undefined> {
+  return (await getProject(projectSlug))?.lots.find((l) => l.ref === ref);
 }
 
 export function lotStats(lots: Lot[]): LotStats {
@@ -167,23 +178,23 @@ export function lotStats(lots: Lot[]): LotStats {
   };
 }
 
-export function updateLotStatus(projectSlug: string, lotRef: string, status: LotStatus): boolean {
-  const db = readDb();
+export async function updateLotStatus(projectSlug: string, lotRef: string, status: LotStatus): Promise<boolean> {
+  const db = (await readDb());
   const project = db.projects.find((p) => p.slug === projectSlug);
   const lot = project?.lots.find((l) => l.ref === lotRef);
   if (!lot) return false;
   lot.status = status;
-  writeDb(db);
+  (await writeDb(db));
   return true;
 }
 
-export function updateLotPrice(projectSlug: string, lotRef: string, price: number | undefined): boolean {
-  const db = readDb();
+export async function updateLotPrice(projectSlug: string, lotRef: string, price: number | undefined): Promise<boolean> {
+  const db = (await readDb());
   const project = db.projects.find((p) => p.slug === projectSlug);
   const lot = project?.lots.find((l) => l.ref === lotRef);
   if (!lot) return false;
   lot.price = price;
-  writeDb(db);
+  (await writeDb(db));
   return true;
 }
 
@@ -194,45 +205,45 @@ const uid = (prefix: string) =>
 
 const today = () => new Date().toISOString().slice(0, 10);
 
-export function getContacts(): Contact[] {
-  return readDb().contacts;
+export async function getContacts(): Promise<Contact[]> {
+  return (await readDb()).contacts;
 }
 
-export function getContact(id: string): Contact | undefined {
-  return readDb().contacts.find((c) => c.id === id);
+export async function getContact(id: string): Promise<Contact | undefined> {
+  return (await readDb()).contacts.find((c) => c.id === id);
 }
 
-export function getDeals(): Deal[] {
-  return readDb().deals;
+export async function getDeals(): Promise<Deal[]> {
+  return (await readDb()).deals;
 }
 
-export function getDeal(id: string): Deal | undefined {
-  return readDb().deals.find((d) => d.id === id);
+export async function getDeal(id: string): Promise<Deal | undefined> {
+  return (await readDb()).deals.find((d) => d.id === id);
 }
 
-export function getDealsForContact(contactId: string): Deal[] {
-  return readDb().deals.filter((d) => d.contactId === contactId);
+export async function getDealsForContact(contactId: string): Promise<Deal[]> {
+  return (await readDb()).deals.filter((d) => d.contactId === contactId);
 }
 
-export function getActivities(): Activity[] {
-  return readDb().activities;
+export async function getActivities(): Promise<Activity[]> {
+  return (await readDb()).activities;
 }
 
-export function getActivitiesForContact(contactId: string): Activity[] {
-  return readDb()
+export async function getActivitiesForContact(contactId: string): Promise<Activity[]> {
+  return (await readDb())
     .activities.filter((a) => a.contactId === contactId)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-export function getTasks(): CrmTask[] {
-  return readDb().tasks;
+export async function getTasks(): Promise<CrmTask[]> {
+  return (await readDb()).tasks;
 }
 
 /**
  * Point d'entrée du formulaire public : crée (ou retrouve) le contact,
  * ouvre une opportunité et journalise l'activité — comme un vrai CRM.
  */
-export function captureWebLead(input: {
+export async function captureWebLead(input: {
   name: string;
   email?: string;
   phone: string;
@@ -240,8 +251,8 @@ export function captureWebLead(input: {
   projectSlug?: string;
   lotRef?: string;
   budget?: string;
-}): { contact: Contact; deal: Deal } {
-  const db = readDb();
+}): Promise<{ contact: Contact; deal: Deal }> {
+  const db = (await readDb());
   const normalizedPhone = input.phone.replace(/\s/g, '');
 
   let contact = db.contacts.find(
@@ -296,12 +307,12 @@ export function captureWebLead(input: {
     dealId: deal.id,
   });
 
-  writeDb(db);
+  (await writeDb(db));
   return { contact, deal };
 }
 
-export function setDealStage(id: string, stage: DealStage, lostReason?: string): boolean {
-  const db = readDb();
+export async function setDealStage(id: string, stage: DealStage, lostReason?: string): Promise<boolean> {
+  const db = (await readDb());
   const deal = db.deals.find((d) => d.id === id);
   if (!deal) return false;
   deal.stage = stage;
@@ -316,61 +327,61 @@ export function setDealStage(id: string, stage: DealStage, lostReason?: string):
     dealId: deal.id,
     body: `Étape passée à « ${stage} ».${lostReason ? ` Motif : ${lostReason}` : ''}`,
   });
-  writeDb(db);
+  (await writeDb(db));
   return true;
 }
 
-export function updateDeal(id: string, patch: Partial<Pick<Deal, 'value' | 'expectedCloseDate' | 'title'>>): boolean {
-  const db = readDb();
+export async function updateDeal(id: string, patch: Partial<Pick<Deal, 'value' | 'expectedCloseDate' | 'title'>>): Promise<boolean> {
+  const db = (await readDb());
   const deal = db.deals.find((d) => d.id === id);
   if (!deal) return false;
   Object.assign(deal, patch);
   deal.updatedAt = today();
-  writeDb(db);
+  (await writeDb(db));
   return true;
 }
 
-export function addActivity(input: Omit<Activity, 'id'>): Activity {
-  const db = readDb();
+export async function addActivity(input: Omit<Activity, 'id'>): Promise<Activity> {
+  const db = (await readDb());
   const created: Activity = { ...input, id: uid('a') };
   db.activities.unshift(created);
-  writeDb(db);
+  (await writeDb(db));
   return created;
 }
 
-export function addContact(input: Omit<Contact, 'id' | 'createdAt' | 'tags'> & { tags?: string[] }): Contact {
-  const db = readDb();
+export async function addContact(input: Omit<Contact, 'id' | 'createdAt' | 'tags'> & { tags?: string[] }): Promise<Contact> {
+  const db = (await readDb());
   const created: Contact = { ...input, tags: input.tags ?? [], id: uid('c'), createdAt: today() };
   db.contacts.unshift(created);
-  writeDb(db);
+  (await writeDb(db));
   return created;
 }
 
-export function addTask(input: Omit<CrmTask, 'id' | 'createdAt' | 'done'>): CrmTask {
-  const db = readDb();
+export async function addTask(input: Omit<CrmTask, 'id' | 'createdAt' | 'done'>): Promise<CrmTask> {
+  const db = (await readDb());
   const created: CrmTask = { ...input, id: uid('t'), createdAt: today(), done: false };
   db.tasks.unshift(created);
-  writeDb(db);
+  (await writeDb(db));
   return created;
 }
 
-export function toggleTask(id: string): boolean {
-  const db = readDb();
+export async function toggleTask(id: string): Promise<boolean> {
+  const db = (await readDb());
   const task = db.tasks.find((t) => t.id === id);
   if (!task) return false;
   task.done = !task.done;
-  writeDb(db);
+  (await writeDb(db));
   return true;
 }
 
 /** Efface tous les enregistrements marqués « démonstration ». */
-export function clearDemoCrm(): void {
-  const db = readDb();
+export async function clearDemoCrm(): Promise<void> {
+  const db = (await readDb());
   db.contacts = db.contacts.filter((c) => !c.demo);
   db.deals = db.deals.filter((d) => !d.demo);
   db.activities = db.activities.filter((a) => !a.demo);
   db.tasks = db.tasks.filter((t) => !t.demo);
-  writeDb(db);
+  (await writeDb(db));
 }
 
 export interface PipelineStats {
@@ -384,8 +395,8 @@ export interface PipelineStats {
   byStage: Record<DealStage, { count: number; value: number }>;
 }
 
-export function pipelineStats(): PipelineStats {
-  const deals = getDeals();
+export async function pipelineStats(): Promise<PipelineStats> {
+  const deals = (await getDeals());
   const byStage = DEAL_STAGES.reduce(
     (acc, stage) => {
       const subset = deals.filter((d) => d.stage === stage);
@@ -414,26 +425,26 @@ export function pipelineStats(): PipelineStats {
 
 /* --------------------------- Utilisateurs -------------------------- */
 
-export function getUserByEmail(email: string): User | undefined {
-  return readDb().users.find((u) => u.email.toLowerCase() === email.toLowerCase().trim());
+export async function getUserByEmail(email: string): Promise<User | undefined> {
+  return (await readDb()).users.find((u) => u.email.toLowerCase() === email.toLowerCase().trim());
 }
 
-export function getUserById(id: string): User | undefined {
-  return readDb().users.find((u) => u.id === id);
+export async function getUserById(id: string): Promise<User | undefined> {
+  return (await readDb()).users.find((u) => u.id === id);
 }
 
-export function getClients(): User[] {
-  return readDb().users.filter((u) => u.role === 'client');
+export async function getClients(): Promise<User[]> {
+  return (await readDb()).users.filter((u) => u.role === 'client');
 }
 
 /* ---------------------------- Actualités --------------------------- */
 
-export function getNews() {
-  return readDb().news;
+export async function getNews() {
+  return (await readDb()).news;
 }
 
-export function getNewsItem(slug: string) {
-  return readDb().news.find((n) => n.slug === slug);
+export async function getNewsItem(slug: string) {
+  return (await readDb()).news.find((n) => n.slug === slug);
 }
 
 /* --------------------- Jeu de démonstration ------------------------ */
@@ -442,23 +453,23 @@ export function getNewsItem(slug: string) {
  * Applique un jeu de statuts de démonstration (pour les présentations
  * clients). Réversible via resetLotStatuses().
  */
-export function applyDemoStatuses(projectSlug: string): void {
-  const db = readDb();
+export async function applyDemoStatuses(projectSlug: string): Promise<void> {
+  const db = (await readDb());
   const project = db.projects.find((p) => p.slug === projectSlug);
   if (!project) return;
   project.lots.forEach((lot, i) => {
     const m = i % 7;
     lot.status = m === 0 || m === 3 ? 'sold' : m === 5 ? 'reserved' : 'available';
   });
-  writeDb(db);
+  (await writeDb(db));
 }
 
-export function resetLotStatuses(projectSlug: string): void {
-  const db = readDb();
+export async function resetLotStatuses(projectSlug: string): Promise<void> {
+  const db = (await readDb());
   const project = db.projects.find((p) => p.slug === projectSlug);
   if (!project) return;
   project.lots.forEach((lot) => {
     lot.status = 'available';
   });
-  writeDb(db);
+  (await writeDb(db));
 }

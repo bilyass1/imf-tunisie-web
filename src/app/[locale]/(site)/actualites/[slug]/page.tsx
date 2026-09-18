@@ -9,8 +9,9 @@ import { alternates } from '@/lib/seo';
 import PageHero from '@/components/site/PageHero';
 import { IconArrowLeft } from '@/components/Icons';
 
-export function generateStaticParams() {
-  return locales.flatMap((locale) => getNews().map((n) => ({ locale, slug: n.slug })));
+export async function generateStaticParams() {
+  const news = await getNews();
+  return locales.flatMap((locale) => news.map((n) => ({ locale, slug: n.slug })));
 }
 
 export async function generateMetadata({
@@ -19,7 +20,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const item = getNewsItem(slug);
+  const item = (await getNewsItem(slug));
   if (!item) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
   return { title: t(item.title, l), description: t(item.excerpt, l), alternates: alternates(l, `/actualites/${slug}`) };
@@ -30,7 +31,7 @@ export default async function NewsItemPage({ params }: { params: Promise<{ local
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
-  const item = getNewsItem(slug);
+  const item = (await getNewsItem(slug));
   if (!item) notFound();
 
   return (

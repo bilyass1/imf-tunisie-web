@@ -22,7 +22,7 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
-  const news = [...getNews()].sort((a, b) => (a.date < b.date ? 1 : -1));
+  const news = [...(await getNews())].sort((a, b) => (a.date < b.date ? 1 : -1));
 
   return (
     <>

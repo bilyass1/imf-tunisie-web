@@ -27,10 +27,10 @@ export default async function PipelinePage({ params }: { params: Promise<{ local
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const deals = getDeals();
-  const contacts = new Map(getContacts().map((c) => [c.id, c]));
-  const projectNames = new Map(getProjects().map((p) => [p.slug, p.name]));
-  const stats = pipelineStats();
+  const deals = (await getDeals());
+  const contacts = new Map((await getContacts()).map((c) => [c.id, c]));
+  const projectNames = new Map((await getProjects()).map((p) => [p.slug, p.name]));
+  const stats = (await pipelineStats());
 
   const columns: DealStage[] = [...PIPELINE_STAGES, 'sold', 'lost'];
 
@@ -46,7 +46,7 @@ export default async function PipelinePage({ params }: { params: Promise<{ local
       logoutLabel={dict.auth.logout}
       accent="admin"
     >
-      <div className="no-scrollbar -mx-1 flex gap-4 overflow-x-auto px-1 pb-4">
+      <div className="relative snap-x snap-proximity flex gap-4 overflow-x-auto px-1 pb-4">
         {columns.map((stage) => {
           const column = deals.filter((d) => d.stage === stage);
           const value = column.reduce((s, d) => s + (d.value ?? 0), 0);
@@ -54,7 +54,7 @@ export default async function PipelinePage({ params }: { params: Promise<{ local
           return (
             <section
               key={stage}
-              className={`w-[290px] shrink-0 rounded-2xl border border-ink/8 border-t-4 bg-white ${STAGE_TONE[stage]}`}
+              className={`w-[min(290px,85vw)] shrink-0 snap-start rounded-2xl border border-ink/8 border-t-4 bg-white ${STAGE_TONE[stage]}`}
             >
               <header className="flex items-baseline justify-between px-4 py-3.5">
                 <h2 className="text-[11.5px] font-semibold uppercase tracking-[0.14em] text-ink/60">

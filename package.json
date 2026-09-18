@@ -10,7 +10,7 @@
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "plans": "node scripts/generate-plans.mjs",
-    "test": "node scripts/test-commercial.cjs && node scripts/test-pwa.cjs && node scripts/test-storage.cjs && node scripts/test-security-postgres.cjs",
+    "test": "node scripts/test-commercial.cjs && node scripts/test-pwa.cjs && node scripts/test-storage.cjs && node scripts/test-security-postgres.cjs && node scripts/test-postgres-runtime.cjs",
     "db:check": "node scripts/postgres.cjs check",
     "db:migrate": "node scripts/postgres.cjs migrate",
     "db:import": "node scripts/postgres.cjs import",
@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
+    "@vercel/functions": "^3.9.8",
     "bcryptjs": "2.4.3",
     "jose": "5.9.6",
     "next": "^15.5.25",
@@ -28,6 +29,7 @@
     "three": "^0.171.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@types/bcryptjs": "2.4.6",
     "@types/node": "22.10.7",
     "@types/pg": "^8.23.1",

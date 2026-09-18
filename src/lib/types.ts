@@ -20,6 +20,9 @@ export interface Room {
 }
 
 export interface Lot {
+  progressPercent?: number;
+  gallery?: { src: string; caption: Localized }[];
+  constructionPhotos?: { src: string; caption: Localized }[];
   /** Code commercial, ex. "A 1-1" */
   code: string;
   /** Identifiant de fichier / slug, ex. "A11" */
@@ -86,6 +89,8 @@ export interface Massing {
 }
 
 export interface Project {
+  progressPercent?: number;
+  constructionPhotos?: { src: string; caption: Localized }[];
   slug: string;
   name: string;
   subtitle: Localized;
@@ -226,6 +231,7 @@ export interface User {
   id: string;
   email: string;
   passwordHash: string;
+  authVersion?: number;
   name: string;
   phone?: string;
   role: 'client' | 'admin';
@@ -233,10 +239,13 @@ export interface User {
   lotRef?: string;
   payments?: PaymentLine[];
   documents?: ClientDocument[];
+  archivedDocuments?: ClientDocument[];
   messages?: ClientMessage[];
 }
 
 export interface Database {
+  company?: { legalName: string; email: string; phone: string; address: string; city: string; about: string };
+  uploads?: { id: string; mime: string; name: string; clientId?: string; public: boolean }[];
   projects: Project[];
   news: NewsItem[];
   users: User[];

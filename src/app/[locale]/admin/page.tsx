@@ -48,7 +48,7 @@ export default async function CrmDashboard({ params }: { params: Promise<{ local
   return (
     <PortalShell
       locale={locale}
-      title={dict.crm.title}
+      title="Espace commercial"
       subtitle={dict.crm.dashboard}
       userName={user.name}
       nav={adminNav(locale, dict)}
@@ -57,6 +57,7 @@ export default async function CrmDashboard({ params }: { params: Promise<{ local
       logoutLabel={dict.auth.logout}
       accent="admin"
     >
+      <div className="mb-6 rounded-2xl bg-ink p-6 text-white"><h2 className="font-display text-2xl">Gérer les clients et les résidences</h2><p className="mt-2 text-white/65">Créer les comptes clients, publier les contrats et photos, mettre à jour les disponibilités et l’avancement.</p><Link className="btn-gold mt-4" href={`/${locale}/admin/gestion`}>Ouvrir la gestion commerciale</Link></div>
       {hasDemo && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-dashed border-gold-300 bg-gold-50 px-5 py-3.5">
           <p className="text-[13px] text-gold-700">{dict.crm.demoBanner}</p>

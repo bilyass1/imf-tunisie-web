@@ -17,6 +17,8 @@ export function clientNav(locale: string, dict: Dictionary): PortalNavItem[] {
 export function adminNav(locale: string, dict: Dictionary): PortalNavItem[] {
   const base = `/${locale}/admin`;
   return [
+    { key: 'management', label: 'Gestion commerciale', href: `${base}/gestion`, icon: <IconBuilding className="h-4 w-4" /> },
+    { key: 'messages', label: 'Messagerie clients', href: `${base}/messages`, icon: <IconMail className="h-4 w-4" /> },
     { key: 'dashboard', label: dict.crm.dashboard, href: base, icon: <IconChart className="h-4 w-4" /> },
     { key: 'pipeline', label: dict.crm.pipeline, href: `${base}/pipeline`, icon: <IconMail className="h-4 w-4" /> },
     { key: 'contacts', label: dict.crm.contacts, href: `${base}/contacts`, icon: <IconUser className="h-4 w-4" /> },

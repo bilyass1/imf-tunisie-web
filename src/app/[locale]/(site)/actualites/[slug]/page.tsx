@@ -5,6 +5,7 @@ import { isLocale, locales, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { getNews, getNewsItem } from '@/lib/db';
 import { t, formatDate } from '@/lib/format';
+import { alternates } from '@/lib/seo';
 import PageHero from '@/components/site/PageHero';
 import { IconArrowLeft } from '@/components/Icons';
 
@@ -21,7 +22,7 @@ export async function generateMetadata({
   const item = getNewsItem(slug);
   if (!item) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
-  return { title: t(item.title, l), description: t(item.excerpt, l) };
+  return { title: t(item.title, l), description: t(item.excerpt, l), alternates: alternates(l, `/actualites/${slug}`) };
 }
 
 export default async function NewsItemPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {

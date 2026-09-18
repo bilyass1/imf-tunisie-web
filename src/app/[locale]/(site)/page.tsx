@@ -5,6 +5,14 @@ import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { getProjects, lotStats } from '@/lib/db';
 import { SITE } from '@/lib/site';
+import { getCompanySite } from '@/lib/company';
+import { alternates } from '@/lib/seo';
+import BuyerAnswers from '@/components/site/BuyerAnswers';
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const l = isLocale(locale) ? locale : 'fr';
+  return { alternates: alternates(l), title: { absolute: l === 'ar' ? 'IMF · عقارية مسعدي إخوان · شقق في تونس وصفاقس' : l === 'en' ? 'IMF Real Estate · Apartments in Tunis and Sfax, Tunisia' : 'IMF Immobilier · Appartements à Tunis et Sfax, Tunisie' }, description: l === 'ar' ? 'مشاريع عقارية بتونس وصفاقس. مخططات وأسعار وشقق متاحة للمقيمين بتونس والتونسيين بالخارج.' : l === 'en' ? 'Explore IMF residential projects in Tunis and Sfax. Apartment plans, documented prices and availability for buyers in Tunisia and Tunisians living abroad.' : 'Découvrez les résidences IMF à Tunis et Sfax : plans, prix renseignés et appartements disponibles pour les résidents en Tunisie et les Tunisiens à l’étranger.' };
+}
 import { t } from '@/lib/format';
 import Reveal from '@/components/Reveal';
 import SectionHeading from '@/components/site/SectionHeading';
@@ -18,6 +26,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
+  const SITE = getCompanySite();
 
   const projects = getProjects();
   const ongoing = projects.filter((p) => p.status === 'ongoing');
@@ -238,6 +247,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </Reveal>
         </div>
       </section>
+      <BuyerAnswers locale={locale} />
     </>
   );
 }

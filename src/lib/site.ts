@@ -7,7 +7,7 @@ export const SITE = {
   name: 'IMF',
   legalName: 'Immobilière Mseddi Frères',
   arabicName: 'عقارية مسعدي اخوان',
-  url: 'https://www.imf-tunisie.com.tn',
+  url: 'https://imf-immobiliere.tn',
   email: 'info@imf-tunisie.com.tn',
 
   /** Siège commercial actuel (documents commerciaux 2026) */

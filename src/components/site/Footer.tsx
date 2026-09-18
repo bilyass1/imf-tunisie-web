@@ -5,8 +5,10 @@ import { SITE } from '@/lib/site';
 import { LogoMark } from '@/components/Logo';
 import { IconPin, IconPhone, IconMail, IconFacebook, IconInstagram, IconLinkedin } from '@/components/Icons';
 import { getProjects } from '@/lib/db';
+import { getCompanySite } from '@/lib/company';
 
 export default function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+  const SITE=getCompanySite();
   const projects = getProjects().slice(0, 5);
   const year = new Date().getFullYear();
 
@@ -18,7 +20,7 @@ export default function Footer({ locale, dict }: { locale: Locale; dict: Diction
             <LogoMark className="h-11 w-auto" light />
             <span className="font-display text-2xl font-semibold tracking-[0.06em] text-white">IMF</span>
           </div>
-          <p className="mt-5 max-w-sm text-[14px] leading-relaxed text-white/55">{dict.footer.about}</p>
+          <p className="mt-5 max-w-sm text-[14px] leading-relaxed text-white/55">{SITE.about??dict.footer.about}</p>
           <div className="mt-6 flex gap-3">
             {[
               { href: SITE.social.facebook, Icon: IconFacebook, label: 'Facebook' },

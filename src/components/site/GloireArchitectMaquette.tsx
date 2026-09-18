@@ -248,7 +248,6 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
   const button = 'viewer-control';
   return <div ref={root} role={immersive ? 'dialog' : undefined} aria-modal={immersive || undefined} aria-label={labels.title} className={immersive ? 'fixed inset-0 z-[120] flex flex-col bg-ink p-2 sm:p-4' : 'viewer-shell overflow-hidden rounded-2xl bg-ink'}>
     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-5">
-      <p className="max-w-3xl text-xs text-white/60">{c.source}</p>
       <button type="button" className={button} onClick={() => setImmersive(v => !v)}><span aria-hidden="true" className="text-xl">{immersive ? '×' : '⛶'}</span> <span className="hidden sm:inline">{immersive ? labels.exit : labels.fullscreen}</span></button>
     </div>
     <div className={`relative ${immersive ? 'min-h-0 flex-1' : ''}`}>

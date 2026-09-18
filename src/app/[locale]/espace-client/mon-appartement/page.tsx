@@ -9,6 +9,7 @@ import { t, formatArea, formatMoney, floorLabel } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { clientNav } from '@/components/portal/clientNav';
 import { IconArrow, IconDownload, IconPin } from '@/components/Icons';
+import ProgressMeter from '@/components/site/ProgressMeter';
 
 export default async function MyLotPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
@@ -69,6 +70,7 @@ export default async function MyLotPage({ params }: { params: Promise<{ locale: 
             </h2>
             <dl className="divide-y divide-ink/6 px-6">
               {[
+                { k: dict.availability.table.status, v: dict.availability.legend[lot.status] },
                 { k: dict.availability.table.code, v: lot.code },
                 { k: dict.availability.block, v: lot.block },
                 { k: dict.availability.floor, v: floorLabel(lot.floor, locale) },
@@ -88,6 +90,7 @@ export default async function MyLotPage({ params }: { params: Promise<{ locale: 
                 </div>
               ))}
             </dl>
+            <div className="px-6"><ProgressMeter value={lot.progressPercent} locale={locale}/></div>
           </div>
         </div>
       )}

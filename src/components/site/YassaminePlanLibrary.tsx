@@ -25,7 +25,6 @@ export default function YassaminePlanLibrary({ locale, lots, labels, statuses }:
       <div className="my-7 flex flex-wrap gap-3">{['A1','A2','A3'].map(b=><button key={b} aria-pressed={b===block} onClick={()=>setBlock(b)} className={`rounded-full border px-6 py-3 text-sm ${b===block?'border-ink bg-ink text-white':'border-ink/20 bg-white text-ink'}`}>{text.block} {b}</button>)}</div>
       <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
         <div><PlanViewer key={block} image={`/plans/diar-al-yassamine/RDC-${block}.webp`} alt={`${text.ground} ${block}`} labels={labels} exists />
-          <p className="mt-4 text-xs text-ink/55">{text.note}</p>
         </div>
         <div className="space-y-4">{visible.map(lot=><article key={lot.ref} className="rounded-2xl border border-ink/10 bg-white p-6">
           <div className="flex items-center justify-between gap-3"><h3 className="font-display text-2xl">{lot.code}</h3><span className={`rounded-full px-3 py-1 text-xs ${lot.status==='available'?'bg-emerald-50 text-emerald-800':lot.status==='reserved'?'bg-amber-50 text-amber-800':'bg-sand text-ink/60'}`}>{statuses[lot.status]}</span></div>

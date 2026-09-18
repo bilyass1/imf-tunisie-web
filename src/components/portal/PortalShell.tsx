@@ -44,7 +44,7 @@ export default function PortalShell({
             <div className="leading-none">
               <p className="font-display text-[19px] font-semibold tracking-[0.05em]">IMF</p>
               <p className="mt-1 text-[9.5px] font-semibold uppercase tracking-[0.18em] text-gold-600">
-                {accent === 'admin' ? 'Administration' : 'Espace client'}
+                {accent === 'admin' ? 'Espace commercial' : 'Espace client'}
               </p>
             </div>
           </div>

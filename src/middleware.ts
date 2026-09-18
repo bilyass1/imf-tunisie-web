@@ -31,7 +31,11 @@ export function middleware(request: NextRequest) {
   }
 
   const hasLocale = locales.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`));
-  if (hasLocale) return NextResponse.next();
+  if (hasLocale) {
+    const response = NextResponse.next();
+    if (/^\/(fr|en|ar)\/(admin(?:\/|$|-)|espace-client|connexion|inscription)/.test(pathname)) response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return response;
+  }
 
   const locale = pickLocale(request);
   const url = request.nextUrl.clone();

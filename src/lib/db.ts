@@ -48,7 +48,7 @@ let mode: Mode | null = null;
 let dataDir = LOCAL_DIR;
 let dbFile = path.join(LOCAL_DIR, 'db.json');
 let memory: Database | null = null;
-let cache: { data: Database; mtime: number } | null = null;
+let cache: { data: Database; mtime: number; size: number } | null = null;
 
 function canWrite(dir: string): boolean {
   try {
@@ -86,44 +86,38 @@ function ensureFile(): void {
 export function readDb(): Database {
   if (resolveMode() === 'memory') {
     if (!memory) memory = buildSeed();
-    return memory;
+    return structuredClone(memory);
   }
   try {
     ensureFile();
-    const mtime = fs.statSync(dbFile).mtimeMs;
-    if (cache && cache.mtime === mtime) return cache.data;
+    const stat = fs.statSync(dbFile); const mtime = stat.mtimeMs;
+    if (cache && cache.mtime === mtime && cache.size === stat.size) return structuredClone(cache.data);
     const raw = fs.readFileSync(dbFile, 'utf8');
     const data = includeYassamineApartments(JSON.parse(raw) as Database);
-    cache = { data, mtime };
-    return data;
+    cache = { data, mtime, size:stat.size };
+    return structuredClone(data);
   } catch {
-    // disque devenu inaccessible en cours de route : on ne casse pas le site
-    mode = 'memory';
-    if (!memory) memory = buildSeed();
-    return memory;
+    // Never replace existing customer records with demo data after a read error.
+    throw new Error('Lecture des données impossible. Vérifiez le stockage et les sauvegardes.');
   }
 }
 
 export function writeDb(data: Database): void {
-  if (resolveMode() === 'memory') {
-    memory = data;
-    return;
-  }
-  try {
-    ensureFile();
-    const tmp = `${dbFile}.tmp`;
-    fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
-    fs.renameSync(tmp, dbFile);
-    cache = { data, mtime: fs.statSync(dbFile).mtimeMs };
-  } catch {
-    mode = 'memory';
-    memory = data;
-  }
+  writeCommercialDb(data);
 }
 
 /** Les écritures sont-elles durables ? Faux en hébergement serverless. */
 export function isPersistent(): boolean {
   return resolveMode() === 'file' && dataDir === LOCAL_DIR;
+}
+
+/** Commercial records must never silently fall back to volatile memory. */
+export function writeCommercialDb(data: Database): void {
+  if (process.env.VERCEL || !isPersistent()) throw new Error('Stockage durable indisponible.');
+  const tmp = `${dbFile}.tmp`;
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf8');
+  fs.renameSync(tmp, dbFile);
+  const stat=fs.statSync(dbFile); cache = { data:structuredClone(data), mtime:stat.mtimeMs, size:stat.size };
 }
 
 /* ---------------------------- Projets ---------------------------- */

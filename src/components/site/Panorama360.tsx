@@ -239,7 +239,6 @@ export default function Panorama360({ rooms, labels, poster }: {
           </div>
         </div>}
         {status === 'ready' && <>
-          <span className="viewer-glass pointer-events-none absolute start-4 top-4 max-w-[85%] rounded-full px-3 py-1.5 text-xs text-white/80">{current.source ?? labels.source}{resolution && ` · ${resolution}`}</span>
           {!current.photo && <div className="viewer-glass absolute bottom-5 start-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full p-1" dir="ltr">
             <button className="viewer-control w-11 text-xl" type="button" aria-label={labels.zoomOut} title={labels.zoomOut} onClick={() => api.current?.zoom(7)}>−</button>
             <button className="viewer-control w-11 text-xl" type="button" aria-label={labels.zoomIn} title={labels.zoomIn} onClick={() => api.current?.zoom(-7)}>+</button>

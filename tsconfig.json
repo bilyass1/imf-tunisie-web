@@ -29,24 +29,13 @@
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".next-final/types/**/*.ts",
-    ".next-header/types/**/*.ts",
-    ".next-interiors-final/types/**/*.ts",
-    ".next-plan-reader/types/**/*.ts",
-    ".next-plans-sept15/types/**/*.ts",
-    ".next-visual/types/**/*.ts",
-    ".next-yassamine-360/types/**/*.ts",
-    ".next-yassamine-complete/types/**/*.ts",
-    ".next-yassamine-final/types/**/*.ts",
-    ".next-yassamine-model-ready/types/**/*.ts",
-    ".next-yassamine-model/types/**/*.ts",
-    ".next-yassamine-photo/types/**/*.ts",
-    ".next-yassamine-ready/types/**/*.ts",
+    ".next-audit-pwa/types/**/*.ts",
     ".next/types/**/*.ts",
     "next-env.d.ts",
-    ".next-yassamine-360-final/types/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tailwind.config.ts",
+    ".next-security-postgres/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

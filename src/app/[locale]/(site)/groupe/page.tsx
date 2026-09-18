@@ -6,6 +6,8 @@ import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { getProjects } from '@/lib/db';
 import { SITE } from '@/lib/site';
+import { getCompanySite } from '@/lib/company';
+import { alternates } from '@/lib/seo';
 import Reveal from '@/components/Reveal';
 import PageHero from '@/components/site/PageHero';
 import SectionHeading from '@/components/site/SectionHeading';
@@ -16,7 +18,7 @@ const VALUE_ICONS = [IconShield, IconChart, IconSparkle, IconBuilding];
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const dict = getDictionary(isLocale(locale) ? locale : 'fr');
-  return { title: dict.group.title, description: dict.group.lead };
+  return { title: dict.group.title, description: dict.group.lead, alternates: alternates(isLocale(locale) ? locale : 'fr', '/groupe') };
 }
 
 export default async function GroupPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -24,6 +26,7 @@ export default async function GroupPage({ params }: { params: Promise<{ locale: 
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
+  const SITE = getCompanySite();
   const projects = getProjects();
 
   return (

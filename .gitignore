@@ -9,6 +9,8 @@ build/
 *.log
 data/db.json
 data/db.json.tmp
+data/uploads/
+data/session-secret
 next-env.d.ts
 .vercel
 tsconfig.tsbuildinfo

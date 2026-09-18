@@ -6,6 +6,7 @@ import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { getNews } from '@/lib/db';
 import { t, formatDate } from '@/lib/format';
+import { alternates } from '@/lib/seo';
 import Reveal from '@/components/Reveal';
 import PageHero from '@/components/site/PageHero';
 import { IconArrow, IconCalendar } from '@/components/Icons';
@@ -13,7 +14,7 @@ import { IconArrow, IconCalendar } from '@/components/Icons';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const dict = getDictionary(isLocale(locale) ? locale : 'fr');
-  return { title: dict.news.title, description: dict.news.subtitle };
+  return { title: dict.news.title, description: dict.news.subtitle, alternates: alternates(isLocale(locale) ? locale : 'fr', '/actualites') };
 }
 
 export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {

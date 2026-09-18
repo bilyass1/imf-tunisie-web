@@ -7,15 +7,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
-    "plans": "node scripts/generate-plans.mjs"
+    "plans": "node scripts/generate-plans.mjs",
+    "test": "node scripts/test-commercial.cjs && node scripts/test-pwa.cjs && node scripts/test-storage.cjs && node scripts/test-security-postgres.cjs",
+    "db:check": "node scripts/postgres.cjs check",
+    "db:migrate": "node scripts/postgres.cjs migrate",
+    "db:import": "node scripts/postgres.cjs import",
+    "db:validate": "node scripts/postgres.cjs validate"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
     "bcryptjs": "2.4.3",
     "jose": "5.9.6",
     "next": "^15.5.25",
+    "pg": "^8.23.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "sharp": "^0.35.4",
@@ -24,12 +30,16 @@
   "devDependencies": {
     "@types/bcryptjs": "2.4.6",
     "@types/node": "22.10.7",
+    "@types/pg": "^8.23.1",
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
     "@types/three": "^0.171.0",
     "autoprefixer": "10.4.20",
-    "postcss": "8.5.1",
+    "postcss": "8.5.28",
     "tailwindcss": "3.4.17",
     "typescript": "5.7.3"
+  },
+  "overrides": {
+    "postcss": "8.5.28"
   }
 }

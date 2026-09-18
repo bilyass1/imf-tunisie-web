@@ -5,6 +5,8 @@ import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { getProjects } from '@/lib/db';
 import { SITE } from '@/lib/site';
+import { getCompanySite } from '@/lib/company';
+import { alternates } from '@/lib/seo';
 import Reveal from '@/components/Reveal';
 import PageHero from '@/components/site/PageHero';
 import ContactForm from '@/components/site/ContactForm';
@@ -13,10 +15,11 @@ import { IconPin, IconPhone, IconMail, IconClock } from '@/components/Icons';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const dict = getDictionary(isLocale(locale) ? locale : 'fr');
-  return { title: dict.contact.title, description: dict.contact.subtitle };
+  return { title: dict.contact.title, description: dict.contact.subtitle, alternates: alternates(isLocale(locale) ? locale : 'fr', '/contact') };
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
+  const SITE=getCompanySite();
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;

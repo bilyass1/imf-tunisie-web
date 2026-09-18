@@ -240,7 +240,11 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
       controls.current={reset,zoom:factor=>{camera.position.sub(orbit.target).multiplyScalar(factor).add(orbit.target);orbit.update();}};
       const resize=new ResizeObserver(()=>{if(!host.clientWidth||!host.clientHeight)return;camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();renderer.setSize(host.clientWidth,host.clientHeight);});resize.observe(host);
       let frameId=0,previousTop=false,previousFloor:number|null|undefined=undefined;
+      let visible=true;
+      const visibility=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??true;});visibility.observe(host);
       const draw=()=>{
+        frameId=requestAnimationFrame(draw);
+        if(!visible || document.hidden) return;
         const current=state.current;
         if(current.top!==previousTop){
           if(current.top){orbit.target.set(center.x,0,center.z);camera.position.set(center.x,span*1.6,center.z-.01);orbit.update();}
@@ -250,10 +254,10 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
         for(const l of levels){l.group.visible=current.floor===null||l.floor<=current.floor;l.plan.visible=current.floor===l.floor;}
         for(const r of roofs)r.group.visible=current.floor===null;
         if(previousFloor!==current.floor){renderer.shadowMap.needsUpdate=true;previousFloor=current.floor;}
-        orbit.update();renderer.render(scene,camera);frameId=requestAnimationFrame(draw);
+        orbit.update();renderer.render(scene,camera);
       };draw();setReady(true);
       const contextLost=(event:Event)=>{event.preventDefault();setFailed(true);};renderer.domElement.addEventListener('webglcontextlost',contextLost);
-      dispose=()=>{cancelAnimationFrame(frameId);resize.disconnect();orbit.dispose();controls.current=null;renderer.domElement.removeEventListener('webglcontextlost',contextLost);scene.traverse(o=>{const m=o as import('three').Mesh;if(m.geometry)m.geometry.dispose();});materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());environment.dispose();renderer.dispose();renderer.domElement.remove();};
+      dispose=()=>{cancelAnimationFrame(frameId);visibility.disconnect();resize.disconnect();orbit.dispose();controls.current=null;renderer.domElement.removeEventListener('webglcontextlost',contextLost);scene.traverse(o=>{const m=o as import('three').Mesh;if(m.geometry)m.geometry.dispose();});materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());environment.dispose();renderer.dispose();renderer.domElement.remove();};
     })().catch(()=>{dispose();if(!cancelled)setFailed(true);});
     return()=>{cancelled=true;dispose();};
   },[model,block,attempt]);

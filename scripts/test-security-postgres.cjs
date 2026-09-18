@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),ts=require('typescript');
+const {config,rows,importData}=require('./postgres-common.cjs');
+assert.throws(()=>config({}));assert.throws(()=>config({DATABASE_URL:'https://example.com'}));
+assert.equal(config({DATABASE_URL:'postgres://user:pass@localhost/db'}).ssl,false);
+assert.equal(config({DATABASE_URL:'postgres://user:pass@db.example.com/db'}).ssl.rejectUnauthorized,true);
+assert.throws(()=>config({DATABASE_URL:'postgres://user:pass@db.example.com/db?sslmode=no-verify'}));
+const sample={projects:[{slug:'p',lots:[{ref:'A',status:'available'}]}],users:[{id:'u',email:'a@test.tn',role:'client',passwordHash:'hash',projectSlug:'p',lotRef:'A',messages:[{id:'m',from:'client',date:'2026-09-18',body:"';DROP TABLE imf_users;--"}]}],news:[],contacts:[],deals:[],activities:[],tasks:[]};
+rows(sample);assert.throws(()=>rows({...sample,users:[...sample.users,...sample.users]}));
+const mod={exports:{}};vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/rate-limit.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{module:mod,exports:mod.exports,require:id=>id==='server-only'?{}:require(id)});
+const allow=mod.exports.allowRequest;assert.equal(allow('test','a',2,1000,0),true);assert.equal(allow('test','a',2,1000,1),true);assert.equal(allow('test','a',2,1000,2),false);assert.equal(allow('test','b',2,1000,2),true);assert.equal(allow('test','a',2,1000,1001),true);
+(async()=>{const queries=[];await importData({query:async(sql,values)=>queries.push({sql,values})},sample);assert.ok(queries.length);assert.equal(queries.some(q=>q.sql.includes('DROP TABLE')),false);assert.ok(queries.some(q=>q.values.includes(sample.users[0].messages[0].body)));console.log('PASS: PostgreSQL TLS configuration, duplicate validation, parameterized import, rate-limit isolation and expiry. No live PostgreSQL used.');})().catch(error=>{console.error(error);process.exitCode=1;});

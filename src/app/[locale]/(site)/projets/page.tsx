@@ -5,13 +5,14 @@ import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { getProjects, lotStats } from '@/lib/db';
 import { t } from '@/lib/format';
+import { alternates } from '@/lib/seo';
 import PageHero from '@/components/site/PageHero';
 import ProjectsExplorer, { type ProjectSummary } from '@/components/site/ProjectsExplorer';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const dict = getDictionary(isLocale(locale) ? locale : 'fr');
-  return { title: dict.projects.title, description: dict.projects.subtitle };
+  return { title: dict.projects.title, description: dict.projects.subtitle, alternates: alternates(isLocale(locale) ? locale : 'fr', '/projets') };
 }
 
 export default async function ProjectsPage({ params }: { params: Promise<{ locale: string }> }) {

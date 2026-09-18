@@ -1,5 +1,6 @@
 'use client';
 
+import PasswordField from './PasswordField';
 import { useActionState } from 'react';
 import { loginAction, type FormState } from '@/lib/actions';
 import { IconArrow, IconLock, IconMail } from '@/components/Icons';
@@ -40,23 +41,7 @@ export default function LoginForm({
         </div>
       </div>
 
-      <div>
-        <label className="label" htmlFor="login-password">
-          {labels.password}
-        </label>
-        <div className="relative">
-          <IconLock className="pointer-events-none absolute start-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/30" />
-          <input
-            id="login-password"
-            name="password"
-            type="password"
-            required
-            autoComplete="current-password"
-            className="field !ps-11"
-            placeholder="••••••••"
-          />
-        </div>
-      </div>
+      <PasswordField label={labels.password} name="password" autoComplete="current-password" minLength={1} locale={locale}/>
 
       {state.error && <p className="rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">{labels.invalid}</p>}
 

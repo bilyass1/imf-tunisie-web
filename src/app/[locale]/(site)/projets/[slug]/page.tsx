@@ -7,6 +7,7 @@ import { getDictionary } from '@/i18n/getDictionary';
 import { getProject, getProjects, lotStats } from '@/lib/db';
 import { t, formatArea } from '@/lib/format';
 import { SITE } from '@/lib/site';
+import { getCompanySite } from '@/lib/company';
 import Reveal from '@/components/Reveal';
 import PageHero from '@/components/site/PageHero';
 import SectionHeading from '@/components/site/SectionHeading';
@@ -18,12 +19,14 @@ import LazyMount from '@/components/site/LazyMount';
 import AvailabilityPlan from '@/components/site/AvailabilityPlan';
 import CreditSimulator from '@/components/site/CreditSimulator';
 import YassamineFinancing from '@/components/site/YassamineFinancing';
+import ProgressMeter from '@/components/site/ProgressMeter';
+import { alternates } from '@/lib/seo';
 import { AMENITY_ICONS, IconArrow, IconCheck, IconPin, IconPlay } from '@/components/Icons';
 
 const architectModelSubtitle = {
-  fr: 'Modèle importé directement du fichier SketchUp de l’architecte, avec sa géométrie, ses dimensions et ses matériaux.',
-  en: 'Model imported directly from the architect’s SketchUp file, including its geometry, dimensions and materials.',
-  ar: 'نموذج مستورد مباشرة من ملف SketchUp الخاص بالمهندس، مع هندسته وأبعاده وخاماته.',
+  fr: 'Explorez la résidence en 3D et sélectionnez un appartement pour découvrir sa fiche.',
+  en: 'Explore the residence in 3D and select an apartment to view its details.',
+  ar: 'استكشف الإقامة ثلاثية الأبعاد واختر شقة للاطلاع على تفاصيلها.',
 };
 
 export function generateStaticParams() {
@@ -40,9 +43,10 @@ export async function generateMetadata({
   if (!project) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
   return {
+    alternates: alternates(l, `/projets/${slug}`),
     title: project.name,
     description: t(project.description, l).slice(0, 180),
-    openGraph: { images: [project.heroImage] },
+    openGraph: { title: project.name, url: `${SITE.url}/${l}/projets/${slug}`, images: [project.heroImage] },
   };
 }
 
@@ -51,6 +55,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
+  const SITE = getCompanySite();
   const project = getProject(slug);
   if (!project) notFound();
 
@@ -208,6 +213,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               </dl>
             </div>
 
+            <ProgressMeter value={project.progressPercent} locale={locale}/>
             {project.progress && (
               <div className="mt-6 overflow-hidden rounded-2xl border border-ink/8 bg-white p-6">
                 <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">

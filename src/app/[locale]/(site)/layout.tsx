@@ -5,6 +5,7 @@ import { getDictionary } from '@/i18n/getDictionary';
 import Header from '@/components/site/Header';
 import Footer from '@/components/site/Footer';
 import { SITE } from '@/lib/site';
+import { getCompanySite } from '@/lib/company';
 
 export default async function SiteLayout({
   children,
@@ -16,6 +17,7 @@ export default async function SiteLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
+  const SITE=getCompanySite();
 
   return (
     <div className="flex min-h-screen flex-col">

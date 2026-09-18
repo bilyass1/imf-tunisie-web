@@ -1,6 +1,9 @@
 'use server';
 
 import bcrypt from 'bcryptjs';
+import { sendChatMessage } from './chat-actions';
+import { isLocale } from '@/i18n/config';
+import { allowRequest } from './rate-limit';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import {
@@ -37,11 +40,13 @@ export async function submitLeadAction(_prev: FormState, formData: FormData): Pr
   const message = String(formData.get('message') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim();
 
-  if (!name || !phone || !message) {
+  if (!name || !phone || !message || name.length>200 || phone.length>80 || message.length>4000 || email.length>254 || (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
     return { ok: false, error: 'required' };
   }
 
   try {
+    if(!allowRequest('contact-global','all',30,60000)||!allowRequest('contact',phone,5,3600000)) return {ok:false,error:'server'};
+    for(const key of ['project','lot','budget']) if(String(formData.get(key)??'').length>200) return {ok:false,error:'required'};
     captureWebLead({
       name,
       email,
@@ -61,13 +66,16 @@ export async function submitLeadAction(_prev: FormState, formData: FormData): Pr
 /* ------------------------------ Auth -------------------------------- */
 
 export async function loginAction(_prev: FormState, formData: FormData): Promise<FormState> {
-  const email = String(formData.get('email') ?? '').trim();
+  const email = String(formData.get('email') ?? '').trim().toLowerCase();
   const password = String(formData.get('password') ?? '');
-  const locale = String(formData.get('locale') ?? 'fr');
+  const rawLocale = String(formData.get('locale') ?? 'fr');
+  const locale = isLocale(rawLocale)?rawLocale:'fr';
   const scope = String(formData.get('scope') ?? 'client');
 
+  if(!email || email.length>254 || !password || password.length>1024 || !allowRequest('login-global','all',100,60000) || !allowRequest('login-account',email,10,600000)) return {ok:false,error:'invalid'};
+
   const user = getUserByEmail(email);
-  if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
+  if (password.length>1024 || !user || !await bcrypt.compare(password, user.passwordHash)) {
     return { ok: false, error: 'invalid' };
   }
   if (scope === 'admin' && user.role !== 'admin') {
@@ -80,7 +88,8 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
 }
 
 export async function logoutAction(formData: FormData): Promise<void> {
-  const locale = String(formData.get('locale') ?? 'fr');
+  const raw = String(formData.get('locale') ?? 'fr');
+  const locale = isLocale(raw)?raw:'fr';
   await destroySession();
   redirect(`/${locale}`);
 }
@@ -88,33 +97,15 @@ export async function logoutAction(formData: FormData): Promise<void> {
 /* --------------------------- Espace client --------------------------- */
 
 export async function sendClientMessageAction(_prev: FormState, formData: FormData): Promise<FormState> {
-  const session = await getSession();
-  if (!session) return { ok: false, error: 'auth' };
-
-  const body = String(formData.get('body') ?? '').trim();
-  if (!body) return { ok: false, error: 'required' };
-
-  const db = readDb();
-  const user = db.users.find((u) => u.id === session.sub);
-  if (!user) return { ok: false, error: 'auth' };
-
-  user.messages = user.messages ?? [];
-  user.messages.push({
-    id: `m-${Date.now().toString(36)}`,
-    from: 'client',
-    date: new Date().toISOString().slice(0, 10),
-    body,
-  });
-  writeDb(db);
-  revalidatePath('/[locale]/espace-client', 'page');
-  return { ok: true, done: true };
+  const result=await sendChatMessage({ok:false,message:''},formData);
+  return result.ok?{ok:true,done:true}:{ok:false,error:result.message};
 }
 
 /* ----------------------------- Admin -------------------------------- */
 
 async function requireAdmin() {
   const session = await getSession();
-  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+  if (!session || session.role !== 'admin' || readDb().users.find(u=>u.id===session.sub)?.role!=='admin') throw new Error('Unauthorized');
   return session;
 }
 
@@ -123,6 +114,7 @@ export async function updateLotStatusAction(formData: FormData): Promise<void> {
   const projectSlug = String(formData.get('projectSlug') ?? '');
   const lotRef = String(formData.get('lotRef') ?? '');
   const status = String(formData.get('status') ?? 'available') as LotStatus;
+  if(!['available','reserved','sold'].includes(status)) throw new Error('Invalid status');
   updateLotStatus(projectSlug, lotRef, status);
   revalidatePath('/', 'layout');
 }
@@ -132,6 +124,7 @@ export async function updateLotPriceAction(formData: FormData): Promise<void> {
   const projectSlug = String(formData.get('projectSlug') ?? '');
   const lotRef = String(formData.get('lotRef') ?? '');
   const raw = String(formData.get('price') ?? '').trim();
+  if(raw && (!Number.isFinite(Number(raw)) || Number(raw)<0)) throw new Error('Invalid price');
   updateLotPrice(projectSlug, lotRef, raw ? Number(raw) : undefined);
   revalidatePath('/', 'layout');
 }

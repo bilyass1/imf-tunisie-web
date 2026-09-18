@@ -6,12 +6,16 @@ import { getDictionary } from '@/i18n/getDictionary';
 import { getLot, getProject } from '@/lib/db';
 import { t, formatArea, formatMoney, floorLabel } from '@/lib/format';
 import { SITE } from '@/lib/site';
+import { getCompanySite } from '@/lib/company';
 import Reveal from '@/components/Reveal';
 import SectionHeading from '@/components/site/SectionHeading';
 import MaquetteSection from '@/components/site/MaquetteSection';
 import PlanViewer from '@/components/site/PlanViewer';
 import ApartmentInterior from '@/components/site/ApartmentInterior';
 import YassamineFinancing from '@/components/site/YassamineFinancing';
+import ProgressMeter from '@/components/site/ProgressMeter';
+import Gallery from '@/components/site/Gallery';
+import { alternates, jsonLd } from '@/lib/seo';
 import LazyMount from '@/components/site/LazyMount';
 import Panorama360 from '@/components/site/Panorama360';
 import CreditSimulator from '@/components/site/CreditSimulator';
@@ -31,12 +35,13 @@ export async function generateMetadata({
   if (!project || !lot) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
   return {
+    alternates: alternates(l, `/projets/${slug}/appartements/${ref}`),
     title: `${lot.code} — ${lot.typology} · ${project.name}`,
     description: `${lot.typology} de ${lot.sellableArea?.toFixed(2) ?? '—'} m² — ${project.name}, ${t(
       project.address,
       l,
     )}. Plan, visite 360° et simulateur de financement.`,
-    openGraph: { images: [project.cover] },
+    openGraph: { title: `${lot.code} · ${project.name}`, url: `${SITE.url}/${l}/projets/${slug}/appartements/${ref}`, images: [project.cover] },
   };
 }
 
@@ -47,9 +52,9 @@ const STATUS_TONE: Record<string, string> = {
 };
 
 const architectModelSubtitle = {
-  fr: 'Modèle importé directement du fichier SketchUp de l’architecte, avec sa géométrie, ses dimensions et ses matériaux.',
-  en: 'Model imported directly from the architect’s SketchUp file, including its geometry, dimensions and materials.',
-  ar: 'نموذج مستورد مباشرة من ملف SketchUp الخاص بالمهندس، مع هندسته وأبعاده وخاماته.',
+  fr: 'Explorez la résidence en 3D et sélectionnez un appartement pour découvrir sa fiche.',
+  en: 'Explore the residence in 3D and select an apartment to view its details.',
+  ar: 'استكشف الإقامة ثلاثية الأبعاد واختر شقة للاطلاع على تفاصيلها.',
 };
 
 export default async function ApartmentPage({
@@ -61,6 +66,7 @@ export default async function ApartmentPage({
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
+  const SITE = getCompanySite();
 
   const project = getProject(slug);
   const lot = project?.lots.find((l) => l.ref === ref);
@@ -99,6 +105,14 @@ export default async function ApartmentPage({
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd({
+        '@context': 'https://schema.org', '@type': 'Apartment', name: `${lot.code} · ${project.name}`,
+        url: `${SITE.url}/${locale}/projets/${project.slug}/appartements/${lot.ref}`,
+        image: `${SITE.url}${project.cover}`, numberOfBedrooms: Number(lot.typology.replace(/\D/g, '')) || undefined,
+        floorSize: lot.sellableArea ? { '@type': 'QuantitativeValue', value: lot.sellableArea, unitCode: 'MTK' } : undefined,
+        address: { '@type': 'PostalAddress', streetAddress: t(project.address, locale), addressLocality: project.city, addressCountry: 'TN' },
+        offers: lot.price && lot.status !== 'sold' ? { '@type': 'Offer', price: lot.price, priceCurrency: 'TND', url: `${SITE.url}/${locale}/projets/${project.slug}/appartements/${lot.ref}` } : undefined,
+      }) }} />
       {/* ---- En-tête ---- */}
       <section className="relative isolate overflow-hidden bg-ink pb-16 pt-36 lg:pb-20 lg:pt-44">
         <div className="absolute inset-0">
@@ -228,7 +242,6 @@ export default async function ApartmentPage({
                 <Link href={`/${locale}/projets/${project.slug}#plans-rdc`} className="underline underline-offset-4">
                   {locale === 'ar' ? 'مخططات الطابق الأرضي' : locale === 'en' ? 'Ground-floor plans' : 'Plans d’ensemble du RDC'}
                 </Link>
-                <p className="w-full text-ink/50">{locale === 'ar' ? 'معاينة مستخرجة من ملف DWG الأصلي.' : locale === 'en' ? 'Preview converted from the original DWG drawing.' : 'Aperçu converti depuis le dessin DWG original.'}</p>
               </div>}
             </div>
           </div>
@@ -268,6 +281,8 @@ export default async function ApartmentPage({
       </section>
 
       {/* ---- 3. Visite 360° ---- */}
+      <div className="container-lux"><ProgressMeter value={lot.progressPercent} locale={locale}/></div>
+      {!!lot.gallery?.length && <section className="container-lux py-12"><h2 className="h-display mb-6 text-3xl">{dict.project.gallery}</h2><Gallery items={lot.gallery.map(p=>({src:p.src,caption:t(p.caption,locale)}))} labels={{close:locale==='fr'?'Fermer':'Close',previous:locale==='fr'?'Précédent':'Previous',next:locale==='fr'?'Suivant':'Next',of:'/'}}/></section>}
       {project.slug === 'residence-la-gloire' && publicFileExists(interiorImage) && (
         <ApartmentInterior locale={locale} image={interiorImage} reference={lot.ref} pdf={lot.planUrl} />
       )}

@@ -30,6 +30,28 @@ const tables = [
   ['imf_documents', ['client_id','id'], ['client_id','id','archived','data']],
   ['imf_records', ['collection','id'], ['collection','id','position','data']],
 ];
+let schemaReady;
+async function ensureSchema(pool) {
+  if (!schemaReady) schemaReady = (async () => {
+    const statements = [`
+    CREATE TABLE IF NOT EXISTS imf_schema_migrations (version integer PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now());
+    CREATE TABLE IF NOT EXISTS imf_projects (slug text PRIMARY KEY, data jsonb NOT NULL);
+    CREATE TABLE IF NOT EXISTS imf_lots (project_slug text NOT NULL REFERENCES imf_projects(slug), ref text NOT NULL, status text NOT NULL, data jsonb NOT NULL, PRIMARY KEY(project_slug,ref));
+    CREATE TABLE IF NOT EXISTS imf_users (id text PRIMARY KEY, email text NOT NULL, role text NOT NULL, password_hash text NOT NULL, auth_version integer NOT NULL DEFAULT 0, project_slug text, lot_ref text, data jsonb NOT NULL);
+    CREATE UNIQUE INDEX IF NOT EXISTS imf_users_email_unique ON imf_users(lower(email));
+    CREATE UNIQUE INDEX IF NOT EXISTS imf_client_lot_unique ON imf_users(project_slug,lot_ref) WHERE role='client';
+    CREATE TABLE IF NOT EXISTS imf_messages (client_id text NOT NULL REFERENCES imf_users(id), id text NOT NULL, sender text NOT NULL, sent_at timestamptz NOT NULL, body text NOT NULL, PRIMARY KEY(client_id,id));
+    CREATE TABLE IF NOT EXISTS imf_documents (client_id text NOT NULL REFERENCES imf_users(id), id text NOT NULL, archived boolean NOT NULL DEFAULT false, data jsonb NOT NULL, PRIMARY KEY(client_id,id));
+    CREATE TABLE IF NOT EXISTS imf_records (collection text NOT NULL, id text NOT NULL, position integer NOT NULL, data jsonb NOT NULL, PRIMARY KEY(collection,id));
+    CREATE TABLE IF NOT EXISTS imf_revision (id integer PRIMARY KEY CHECK(id=1), revision bigint NOT NULL DEFAULT 0);
+    INSERT INTO imf_revision(id) VALUES(1) ON CONFLICT DO NOTHING;
+    CREATE TABLE IF NOT EXISTS imf_media (id text PRIMARY KEY, bytes bytea NOT NULL CHECK(octet_length(bytes) BETWEEN 1 AND 8388608));
+    INSERT INTO imf_schema_migrations(version) VALUES(1),(2) ON CONFLICT DO NOTHING;
+    `];
+    for (const statement of statements[0].split(';').map(s => s.trim()).filter(Boolean)) await pool.query(statement);
+  })();
+  await schemaReady;
+}
 function flatten(db) {
   const result = Object.fromEntries(tables.map(([table]) => [table, new Map()]));
   const add = (table, row) => {
@@ -62,6 +84,7 @@ function flatten(db) {
 function createStore(pool) {
   const snapshots = new WeakMap();
   async function read() {
+    await ensureSchema(pool);
     const client = await pool.connect();
     try {
       await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
@@ -98,6 +121,7 @@ function createStore(pool) {
     finally { client.release(); }
   }
   async function write(data, media) {
+    await ensureSchema(pool);
     const snapshot=snapshots.get(data);
     if (!snapshot) throw new Error('Rechargez les données avant de les modifier.');
     const next=flatten(data);
@@ -127,6 +151,7 @@ function createStore(pool) {
     finally { client.release(); }
   }
   async function readMedia(id) {
+    await ensureSchema(pool);
     const result=await pool.query('SELECT bytes FROM imf_media WHERE id=$1',[id]);
     return result.rows[0]?.bytes;
   }

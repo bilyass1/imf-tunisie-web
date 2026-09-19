@@ -4,9 +4,9 @@
 
 :root {
   --header-h: 84px;
-  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --font-sans: 'Jost', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-arabic: 'Cairo', 'Noto Kufi Arabic', ui-sans-serif, system-ui, sans-serif;
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-arabic: 'Noto Kufi Arabic', Tahoma, Arial, sans-serif;
 }
 
 html {

@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';

@@ -5,4 +5,4 @@ export interface PostgresStore {
   write(data: Database, media?: MediaWrite): Promise<void>;
   readMedia(id: string): Promise<Buffer | undefined>;
 }
-export function getStore(): PostgresStore;
+export function getStore(seedFactory?: () => Database): PostgresStore;

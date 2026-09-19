@@ -68,7 +68,12 @@ function ensureFile(): void {
 }
 
 export async function readDb(): Promise<Database> {
-  if (process.env.DATABASE_URL) return getStore().read();
+  // Next.js calls generateStaticParams during `next build`, before the
+  // production database migration is guaranteed to have run. Use the local
+  // seed only for that compilation pass; every runtime request still requires
+  // PostgreSQL and never falls back after a connection error.
+  const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
+  if (process.env.DATABASE_URL && !isBuild) return getStore().read();
   if (resolveMode() === 'memory') {
     if (!memory) memory = buildSeed();
     return structuredClone(memory);

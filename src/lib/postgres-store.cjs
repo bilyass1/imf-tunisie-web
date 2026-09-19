@@ -81,10 +81,33 @@ function flatten(db) {
   if (db.company) add('imf_records', {collection:'settings', id:'company', position:0, data:db.company});
   return result;
 }
+async function bootstrapIfEmpty(pool) {
+  const check = await pool.query('SELECT 1 FROM imf_projects LIMIT 1');
+  if (check.rows.length) return;
+  const seedPath = require('node:path').join(process.cwd(), 'data', 'db.json');
+  if (!fs.existsSync(seedPath)) return;
+  const rows = flatten(JSON.parse(fs.readFileSync(seedPath, 'utf8')));
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const again = await client.query('SELECT 1 FROM imf_projects LIMIT 1');
+    if (!again.rows.length) {
+      for (const [table, keys, columns] of tables) {
+        for (const [, row] of rows[table]) {
+          await client.query(`INSERT INTO ${table}(${columns.join(',')}) VALUES(${columns.map((_,i)=>`$${i+1}`).join(',')}) ON CONFLICT DO NOTHING`, columns.map(k=>row[k]));
+        }
+      }
+      await client.query('UPDATE imf_revision SET revision=1 WHERE id=1');
+    }
+    await client.query('COMMIT');
+  } catch (error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
+  finally { client.release(); }
+}
 function createStore(pool) {
   const snapshots = new WeakMap();
   async function read() {
     await ensureSchema(pool);
+    await bootstrapIfEmpty(pool);
     const client = await pool.connect();
     try {
       await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');

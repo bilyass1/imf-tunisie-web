@@ -12,10 +12,11 @@ import PageHero from '@/components/site/PageHero';
 import ContactForm from '@/components/site/ContactForm';
 import { IconPin, IconPhone, IconMail, IconClock } from '@/components/Icons';
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams:Promise<Record<string,string|string[]|undefined>> }): Promise<Metadata> {
   const { locale } = await params;
+  const prefilled=Object.values(await searchParams).some(Boolean);
   const dict = getDictionary(isLocale(locale) ? locale : 'fr');
-  return { title: dict.contact.title, description: dict.contact.subtitle, alternates: alternates(isLocale(locale) ? locale : 'fr', '/contact') };
+  return { title: dict.contact.title, description: dict.contact.subtitle, alternates: alternates(isLocale(locale) ? locale : 'fr', '/contact'), robots:prefilled?{index:false,follow:true}:undefined };
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {

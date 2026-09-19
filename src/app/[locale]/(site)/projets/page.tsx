@@ -9,10 +9,11 @@ import { alternates } from '@/lib/seo';
 import PageHero from '@/components/site/PageHero';
 import ProjectsExplorer, { type ProjectSummary } from '@/components/site/ProjectsExplorer';
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams:Promise<Record<string,string|string[]|undefined>> }): Promise<Metadata> {
   const { locale } = await params;
+  const filtered=Object.values(await searchParams).some(Boolean);
   const dict = getDictionary(isLocale(locale) ? locale : 'fr');
-  return { title: dict.projects.title, description: dict.projects.subtitle, alternates: alternates(isLocale(locale) ? locale : 'fr', '/projets') };
+  return { title: dict.projects.title, description: dict.projects.subtitle, alternates: alternates(isLocale(locale) ? locale : 'fr', '/projets'), robots:filtered?{index:false,follow:true}:undefined };
 }
 
 export default async function ProjectsPage({ params }: { params: Promise<{ locale: string }> }) {

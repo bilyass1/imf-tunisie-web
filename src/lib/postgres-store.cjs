@@ -104,9 +104,17 @@ async function bootstrapIfEmpty(pool, seedFactory) {
 }
 function createStore(pool, seedFactory) {
   const snapshots = new WeakMap();
+  let bootstrapReady;
+  let cache;
   async function read() {
     await ensureSchema(pool);
-    await bootstrapIfEmpty(pool, seedFactory);
+    if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
+    await bootstrapReady;
+    if (cache && cache.expiresAt > Date.now()) {
+      const data = structuredClone(cache.data);
+      snapshots.set(data,{revision:cache.revision,rows:flatten(data)});
+      return data;
+    }
     const client = await pool.connect();
     try {
       await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
@@ -137,7 +145,9 @@ function createStore(pool, seedFactory) {
         else if (collections.includes(row.collection)) data[row.collection].push(row.data);
       }
       await client.query('COMMIT');
-      snapshots.set(data,{revision:String(revision.rows[0].revision), rows:flatten(data)});
+      const currentRevision=String(revision.rows[0].revision);
+      cache={data:structuredClone(data),revision:currentRevision,expiresAt:Date.now()+5000};
+      snapshots.set(data,{revision:currentRevision, rows:flatten(data)});
       return data;
     } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
     finally { client.release(); }
@@ -168,6 +178,7 @@ function createStore(pool, seedFactory) {
       }
       const updated=await client.query('UPDATE imf_revision SET revision=revision+1 WHERE id=1 RETURNING revision');
       await client.query('COMMIT');
+      cache=undefined;
       snapshots.set(data,{revision:String(updated.rows[0].revision),rows:next});
     } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
     finally { client.release(); }

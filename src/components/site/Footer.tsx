@@ -11,6 +11,11 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
   const SITE=(await getCompanySite());
   const projects = (await getProjects()).slice(0, 5);
   const year = new Date().getFullYear();
+  const socialLinks = [
+    { href: SITE.social.facebook, Icon: IconFacebook, label: 'Facebook' },
+    { href: SITE.social.instagram, Icon: IconInstagram, label: 'Instagram' },
+    { href: SITE.social.linkedin, Icon: IconLinkedin, label: 'LinkedIn' },
+  ].filter(({href}) => !/^https:\/\/(www\.)?(facebook|instagram|linkedin)\.com\/?$/i.test(href));
 
   return (
     <footer className="bg-ink text-white/70">
@@ -20,13 +25,9 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
             <LogoMark className="h-11 w-auto" light />
             <span className="font-display text-2xl font-semibold tracking-[0.06em] text-white">IMF</span>
           </div>
-          <p className="mt-5 max-w-sm text-[14px] leading-relaxed text-white/55">{SITE.about??dict.footer.about}</p>
-          <div className="mt-6 flex gap-3">
-            {[
-              { href: SITE.social.facebook, Icon: IconFacebook, label: 'Facebook' },
-              { href: SITE.social.instagram, Icon: IconInstagram, label: 'Instagram' },
-              { href: SITE.social.linkedin, Icon: IconLinkedin, label: 'LinkedIn' },
-            ].map(({ href, Icon, label }) => (
+          <p className="mt-5 max-w-sm text-[14px] leading-relaxed text-white/70">{SITE.about??dict.footer.about}</p>
+          {socialLinks.length > 0 && <div className="mt-6 flex gap-3">
+            {socialLinks.map(({ href, Icon, label }) => (
               <a
                 key={label}
                 href={href}
@@ -38,7 +39,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
                 <Icon className="h-4 w-4" />
               </a>
             ))}
-          </div>
+          </div>}
         </div>
 
         <div>
@@ -55,7 +56,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
               { label: dict.nav.clientArea, href: `/${locale}/espace-client` },
             ].map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="text-white/55 transition hover:text-gold-300">
+                <Link href={l.href} className="text-white/70 transition hover:text-gold-300">
                   {l.label}
                 </Link>
               </li>
@@ -70,7 +71,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
           <ul className="space-y-3 text-[14px]">
             {projects.map((p) => (
               <li key={p.slug}>
-                <Link href={`/${locale}/projets/${p.slug}`} className="text-white/55 transition hover:text-gold-300">
+                <Link href={`/${locale}/projets/${p.slug}`} className="text-white/70 transition hover:text-gold-300">
                   {p.name}
                 </Link>
               </li>
@@ -82,7 +83,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
           <h3 className="mb-5 text-[11px] font-semibold uppercase tracking-[0.24em] text-gold-300">
             {dict.footer.contactCol}
           </h3>
-          <ul className="space-y-4 text-[14px] text-white/55">
+          <ul className="space-y-4 text-[14px] text-white/70">
             <li className="flex gap-3">
               <IconPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
               <span>
@@ -112,7 +113,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-lux flex flex-col items-center justify-between gap-3 py-6 text-[12px] text-white/40 md:flex-row">
+        <div className="container-lux flex flex-col items-center justify-between gap-3 py-6 text-[12px] text-white/65 md:flex-row">
           <p>
             © {year} {SITE.legalName}. {dict.footer.rights}
           </p>

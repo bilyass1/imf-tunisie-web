@@ -62,6 +62,17 @@ export default async function LocaleLayout({
   const meta = localeMeta[locale as Locale];
   const company = (await getCompanySite());
   const companySchema = {...organization, name:company.legalName, email:company.email, telephone:company.office.phones[0], address:{...organization.address,streetAddress:company.office.line1,addressLocality:company.office.line2}, contactPoint:{...organization.contactPoint,telephone:company.office.phones[0]}};
+  const knowledgeGraph = {
+    '@context':'https://schema.org',
+    '@graph':[
+      companySchema,
+      {
+        '@type':'WebSite', '@id':`${SITE.url}/#website`, url:SITE.url,
+        name:`${SITE.name} · ${company.legalName}`, publisher:{'@id':`${SITE.url}/#organization`},
+        inLanguage:['fr-TN','ar-TN','en'],
+      },
+    ],
+  };
 
   return (
     <html lang={meta.htmlLang} dir={meta.dir} suppressHydrationWarning>
@@ -72,7 +83,7 @@ export default async function LocaleLayout({
       <body className="font-sans">
         {children}
         <PwaInstall locale={locale}/>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(companySchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(knowledgeGraph) }} />
         {process.env.VERCEL === '1' && <Analytics />}
       </body>
     </html>

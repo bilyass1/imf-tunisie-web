@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
@@ -168,7 +169,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="relative isolate overflow-hidden bg-ink py-24 lg:py-32">
         <div className="absolute inset-0 opacity-[0.14]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/media/la-gloire/facade-nuit-1.jpg" alt="" className="h-full w-full object-cover" />
+          <Image src="/media/la-gloire/facade-nuit-1.jpg" alt="" fill priority sizes="100vw" quality={72} className="object-cover" />
         </div>
         <div className="container-lux relative">
           <SectionHeading
@@ -226,7 +227,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="relative isolate overflow-hidden bg-ink">
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/media/la-gloire/patio-jour-1.jpg" alt="" className="h-full w-full object-cover opacity-25" />
+          <Image src="/media/la-gloire/patio-jour-1.jpg" alt="" fill sizes="100vw" quality={60} className="object-cover opacity-25" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/55" />
         </div>
         <div className="container-lux relative flex flex-col items-start gap-8 py-20 lg:flex-row lg:items-center lg:justify-between lg:py-24">

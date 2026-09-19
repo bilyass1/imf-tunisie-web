@@ -14,8 +14,8 @@ export function LogoMark({ className = '', light = false }: { className?: string
     <Image
       src={light ? '/media/brand/logo-mark-blanc.png' : '/media/brand/logo-mark.png'}
       alt=""
-      width={520}
-      height={677}
+      width={80}
+      height={104}
       priority
       className={`w-auto object-contain ${className}`}
       aria-hidden="true"

@@ -73,7 +73,7 @@ export async function readDb(): Promise<Database> {
   // seed only for that compilation pass; every runtime request still requires
   // PostgreSQL and never falls back after a connection error.
   const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
-  if (process.env.DATABASE_URL && !isBuild) return getStore().read();
+  if (process.env.DATABASE_URL && !isBuild) return getStore(buildSeed).read();
   if (resolveMode() === 'memory') {
     if (!memory) memory = buildSeed();
     return structuredClone(memory);
@@ -106,7 +106,7 @@ export function isPersistent(): boolean {
 /** Commercial records must never silently fall back to volatile memory. */
 export async function writeCommercialDb(data: Database, media?: MediaWrite): Promise<void> {
   if (process.env.DATABASE_URL) {
-    try { await getStore().write(data, media); return; }
+    try { await getStore(buildSeed).write(data, media); return; }
     catch (error) {
       if (error && typeof error === 'object' && 'code' in error) throw new Error('Enregistrement PostgreSQL impossible. Réessayez ou contactez l’administrateur.');
       throw error;
@@ -131,7 +131,7 @@ export async function writeCommercialDb(data: Database, media?: MediaWrite): Pro
 
 export async function readMedia(id: string): Promise<Buffer | undefined> {
   if (!/^[a-f0-9-]{36}$/.test(id)) return undefined;
-  if (process.env.DATABASE_URL) return getStore().readMedia(id);
+  if (process.env.DATABASE_URL) return getStore(buildSeed).readMedia(id);
   try { return await fs.promises.readFile(path.join(LOCAL_DIR,'uploads',id)); }
   catch { return undefined; }
 }

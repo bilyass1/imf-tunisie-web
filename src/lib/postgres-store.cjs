@@ -81,12 +81,11 @@ function flatten(db) {
   if (db.company) add('imf_records', {collection:'settings', id:'company', position:0, data:db.company});
   return result;
 }
-async function bootstrapIfEmpty(pool) {
+async function bootstrapIfEmpty(pool, seedFactory) {
   const check = await pool.query('SELECT 1 FROM imf_projects LIMIT 1');
   if (check.rows.length) return;
-  const seedPath = require('node:path').join(process.cwd(), 'data', 'db.json');
-  if (!fs.existsSync(seedPath)) return;
-  const rows = flatten(JSON.parse(fs.readFileSync(seedPath, 'utf8')));
+  if (typeof seedFactory !== 'function') return;
+  const rows = flatten(seedFactory());
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -103,11 +102,11 @@ async function bootstrapIfEmpty(pool) {
   } catch (error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
   finally { client.release(); }
 }
-function createStore(pool) {
+function createStore(pool, seedFactory) {
   const snapshots = new WeakMap();
   async function read() {
     await ensureSchema(pool);
-    await bootstrapIfEmpty(pool);
+    await bootstrapIfEmpty(pool, seedFactory);
     const client = await pool.connect();
     try {
       await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
@@ -181,12 +180,12 @@ function createStore(pool) {
   return {read,write,readMedia};
 }
 let store;
-function getStore() {
+function getStore(seedFactory) {
   if (!store) {
     const pool=new Pool(configuration());
     if (process.env.VERCEL) require('@vercel/functions').attachDatabasePool(pool);
     pool.on('error',()=>console.error('PostgreSQL: connexion inactive interrompue.'));
-    store=createStore(pool);
+    store=createStore(pool, seedFactory);
   }
   return store;
 }

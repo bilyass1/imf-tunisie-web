@@ -14,17 +14,20 @@ export default function LazyMount({
   children,
   minHeight = 480,
   rootMargin = '300px',
+  activateLabel,
 }: {
   children: ReactNode;
   minHeight?: number;
   rootMargin?: string;
+  /** Interactive 3D starts only after explicit intent, including on small screens. */
+  activateLabel?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || shown) return;
+    if (!el || shown || activateLabel) return;
     if (typeof IntersectionObserver === 'undefined') {
       setShown(true);
       return;
@@ -40,11 +43,11 @@ export default function LazyMount({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [shown, rootMargin]);
+  }, [shown, rootMargin, activateLabel]);
 
   return (
     <div ref={ref} style={shown ? undefined : { minHeight }}>
-      {shown ? children : <div className="h-full w-full animate-pulse rounded-2xl bg-ink/5" style={{ minHeight }} />}
+      {shown ? children : activateLabel ? <div className="grid place-items-center rounded-2xl border border-gold-300 bg-gradient-to-br from-ivory to-sand p-8" style={{minHeight}}><button type="button" onClick={()=>setShown(true)} className="btn-gold">{activateLabel} →</button></div> : <div className="h-full w-full animate-pulse rounded-2xl bg-ink/5" style={{ minHeight }} />}
     </div>
   );
 }

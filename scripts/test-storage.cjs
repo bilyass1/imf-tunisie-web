@@ -3,7 +3,7 @@ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'imf-storage-test-'));
 const moduleBox={exports:{}};
 const env={};
 const code=ts.transpileModule(fs.readFileSync('src/lib/db.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
-const load=id=>id==='server-only'?{}:id==='./postgres-store.cjs'?{}:id==='./seed'?{buildSeed:()=>({users:[],projects:[],contacts:[],deals:[],tasks:[],activities:[]})}:id==='./yassamine-catalog'?{includeYassamineApartments:x=>x}:id==='./types'?{}:require(id);
+const load=id=>id==='server-only'?{}:id==='next/cache'?{unstable_noStore:()=>{}}:id==='./postgres-store.cjs'?{}:id==='./seed'?{buildSeed:()=>({users:[],projects:[],contacts:[],deals:[],tasks:[],activities:[]})}:id==='./yassamine-catalog'?{includeYassamineApartments:x=>x}:id==='./types'?{}:require(id);
 (async()=>{try {
  vm.runInNewContext(code,{module:moduleBox,exports:moduleBox.exports,require:load,process:{cwd:()=>temp,env},structuredClone});
  const db=moduleBox.exports;

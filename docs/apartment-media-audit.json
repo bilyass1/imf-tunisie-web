@@ -1,0 +1,4715 @@
+[
+  {
+    "project": "residence-la-gloire",
+    "apartments": [
+      {
+        "ref": "A01",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A01/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A01/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A01/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A01/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/A01/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A02",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A02/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A02/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A02/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A02/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A02/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A02/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/A02/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A03",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A03/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A03/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A03/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A03/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/la-gloire/A03/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A03/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A03/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/A03/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A11",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A11/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A11/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A11/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A11/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A11/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A12",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A12/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A12/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A12/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A12/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A12/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A12/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A12/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A13",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A13/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A13/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A13/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A13/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A13/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A13/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A13/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A14",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A14/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A14/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A14/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A14/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A14/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A21",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A21/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A21/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A21/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A21/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A21/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A22",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A22/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A22/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A22/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A22/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A22/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A22/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A22/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A23",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A23/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A23/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A23/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A23/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A23/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A23/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A23/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A24",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A24/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A24/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A24/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A24/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A24/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A31",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A31/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A31/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A31/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A31/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A31/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A32",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A32/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A32/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A32/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A32/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A32/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A32/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A32/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A33",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A33/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A33/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A33/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A33/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A33/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A33/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A33/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A34",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A34/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A34/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A34/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A34/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A34/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A41",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A41/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A41/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A41/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A41/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A41/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A42",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A42/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A42/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A42/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A42/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A42/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A42/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A42/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A43",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A43/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A43/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A43/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A43/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A43/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A43/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A43/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A44",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A44/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A44/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A44/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A44/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A44/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A51",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A51/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A51/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A51/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A51/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/A51/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A52",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A52/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A52/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A52/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A52/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A52/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A52/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/A52/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A53",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/A53/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/A53/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/A53/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/A53/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/la-gloire/A53/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/A53/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/A53/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/A53/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B01",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B01/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B01/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B01/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B01/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/B01/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B02",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B02/salon.jpg",
+            "available": true
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B02/cuisine.jpg",
+            "available": true
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B02/chambre-1.jpg",
+            "available": true
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B02/chambre-2.jpg",
+            "available": true
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/la-gloire/B02/chambre-3.jpg",
+            "available": true
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B02/sdb.jpg",
+            "available": true
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B02/sde.jpg",
+            "available": true
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/B02/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B11",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B11/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B11/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B11/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B11/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B11/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B12",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B12/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B12/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B12/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B12/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/la-gloire/B12/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B12/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B12/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B12/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B13",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B13/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B13/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B13/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B13/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B13/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B13/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/B13/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B21",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B21/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B21/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B21/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B21/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B21/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B22",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B22/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B22/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B22/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B22/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/la-gloire/B22/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B22/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B22/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B22/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B23",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B23/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B23/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B23/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B23/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B23/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B23/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B23/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B24",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B24/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B24/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B24/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B24/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B24/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B31",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B31/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B31/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B31/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B31/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B31/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B32",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B32/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B32/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B32/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B32/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/la-gloire/B32/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B32/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B32/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B32/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B33",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B33/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B33/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B33/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B33/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B33/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B33/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B33/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B34",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B34/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B34/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B34/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B34/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B34/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B41",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B41/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B41/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B41/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B41/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B41/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B42",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B42/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B42/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B42/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B42/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/la-gloire/B42/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B42/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B42/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B42/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B43",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B43/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B43/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B43/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B43/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B43/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B43/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B43/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B44",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B44/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B44/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B44/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B44/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B44/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B51",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B51/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B51/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B51/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B51/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/B51/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B52",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B52/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B52/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B52/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B52/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B52/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B52/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/B52/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B53",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B53/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B53/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B53/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/B53/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B53/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/B53/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/B53/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "B54",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/B54/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/B54/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/B54/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/B54/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/B54/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C01",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C01/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C01/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C01/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C01/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/C01/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C02",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C02/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C02/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C02/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C02/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/la-gloire/C02/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C02/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C02/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/C02/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C03",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C03/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C03/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C03/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C03/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/C03/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C04",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C04/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C04/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C04/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C04/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C04/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C04/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/C04/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C11",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C11/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C11/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C11/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C11/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/C11/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C12",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C12/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C12/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C12/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C12/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C12/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C12/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C12/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C13",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C13/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C13/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C13/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C13/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C13/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C14",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C14/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C14/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C14/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C14/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C14/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C15",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C15/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C15/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C15/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C15/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C15/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C15/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C15/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C21",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C21/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C21/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C21/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C21/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C21/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C22",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C22/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C22/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C22/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C22/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C22/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C22/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C22/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C23",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C23/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C23/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C23/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C23/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C23/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C24",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C24/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C24/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C24/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C24/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C24/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C25",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C25/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C25/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C25/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C25/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C25/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C25/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C25/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C31",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C31/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C31/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C31/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C31/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C31/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C32",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C32/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C32/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C32/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C32/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C32/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C32/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C32/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C33",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C33/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C33/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C33/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C33/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C33/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C34",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C34/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C34/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C34/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C34/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C34/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C35",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C35/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C35/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C35/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C35/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C35/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C35/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C35/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C41",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C41/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C41/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C41/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C41/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C41/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C42",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C42/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C42/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C42/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C42/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C42/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C42/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C42/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C43",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C43/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C43/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C43/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C43/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C43/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C44",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C44/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C44/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C44/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C44/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C44/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C45",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C45/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C45/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C45/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C45/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C45/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C45/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C45/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C51",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C51/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C51/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C51/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C51/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/C51/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C52",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C52/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C52/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C52/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C52/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C52/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C52/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/C52/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C53",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C53/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C53/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C53/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C53/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/C53/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "C54",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/C54/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/C54/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/C54/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/C54/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/C54/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/C54/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/C54/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D01",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D01/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D01/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D01/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/D01/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D01/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/D01/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/D01/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D02",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D02/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D02/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D02/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D02/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/D02/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D03",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D03/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D03/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D03/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/D03/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D03/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/D03/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "jardin",
+            "url": "/360/la-gloire/D03/jardin.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D11",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D11/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D11/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D11/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D11/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D11/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D12",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D12/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D12/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D12/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D12/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D12/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D13",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D13/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D13/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D13/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D13/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D13/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D14",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D14/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D14/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D14/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D14/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D14/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D15",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D15/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D15/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D15/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/D15/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D15/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/D15/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D15/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D16",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D16/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D16/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D16/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D16/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/D16/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D21",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D21/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D21/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D21/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D21/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D21/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D22",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D22/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D22/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D22/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D22/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D22/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D23",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D23/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D23/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D23/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D23/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D23/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D24",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D24/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D24/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D24/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D24/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D24/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D25",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D25/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D25/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D25/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/D25/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D25/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/D25/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D25/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D26",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D26/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D26/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D26/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D26/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D26/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D31",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D31/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D31/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D31/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D31/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D31/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D32",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D32/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D32/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D32/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D32/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D32/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D33",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D33/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D33/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D33/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D33/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D33/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D34",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D34/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D34/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D34/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D34/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D34/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D35",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D35/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D35/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D35/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/D35/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D35/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/D35/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D35/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D36",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D36/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D36/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D36/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D36/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D36/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D41",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D41/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D41/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D41/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D41/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D41/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D42",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D42/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D42/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D42/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D42/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D42/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D43",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D43/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D43/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D43/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D43/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D43/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D44",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D44/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D44/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D44/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D44/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D44/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D45",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D45/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D45/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D45/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/D45/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D45/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/D45/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D45/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D46",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D46/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D46/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D46/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D46/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D46/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D51",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D51/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D51/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D51/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/D51/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D51/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/D51/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/D51/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D52",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D52/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D52/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D52/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/D52/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D52/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/D52/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/D52/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D53",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D53/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D53/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D53/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/la-gloire/D53/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D53/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/la-gloire/D53/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "terrasse",
+            "url": "/360/la-gloire/D53/terrasse.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "D54",
+        "plan": true,
+        "interior": true,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/la-gloire/D54/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/la-gloire/D54/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/la-gloire/D54/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/la-gloire/D54/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/la-gloire/D54/balcon.jpg",
+            "available": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "project": "diar-al-yassamine",
+    "apartments": [
+      {
+        "ref": "A101",
+        "plan": true,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A101/salon.png",
+            "available": true
+          }
+        ]
+      },
+      {
+        "ref": "A104",
+        "plan": true,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A104/salon.png",
+            "available": true
+          }
+        ]
+      },
+      {
+        "ref": "A201",
+        "plan": true,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A201/salon.png",
+            "available": true
+          }
+        ]
+      },
+      {
+        "ref": "A202",
+        "plan": true,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A202/salon.png",
+            "available": true
+          }
+        ]
+      },
+      {
+        "ref": "A204",
+        "plan": true,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A204/salon.png",
+            "available": true
+          }
+        ]
+      },
+      {
+        "ref": "A304",
+        "plan": true,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A304/salon.png",
+            "available": true
+          }
+        ]
+      },
+      {
+        "ref": "A305",
+        "plan": true,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A305/salon.png",
+            "available": true
+          }
+        ]
+      },
+      {
+        "ref": "A501",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A501/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A501/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A501/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A501/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A501/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A501/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A501/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A502",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A502/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A502/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A502/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A502/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A502/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A502/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A502/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A503",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A503/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A503/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A503/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A503/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A503/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A504",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A504/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A504/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A504/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A504/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/diar-al-yassamine/A504/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A504/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A504/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A504/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A511",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A511/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A511/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A511/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A511/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A511/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A511/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A511/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A512",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A512/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A512/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A512/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A512/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/diar-al-yassamine/A512/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A512/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A512/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A512/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A513",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A513/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A513/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A513/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A513/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A513/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A513/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A513/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A514",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A514/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A514/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A514/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A514/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/diar-al-yassamine/A514/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A514/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A514/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A514/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A521",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A521/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A521/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A521/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A521/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A521/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A521/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A521/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A522",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A522/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A522/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A522/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A522/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/diar-al-yassamine/A522/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A522/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A522/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A522/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A523",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A523/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A523/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A523/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A523/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A523/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A523/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A523/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A524",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A524/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A524/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A524/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A524/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/diar-al-yassamine/A524/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A524/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A524/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A524/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A531",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A531/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A531/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A531/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A531/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A531/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A531/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A531/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A532",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A532/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A532/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A532/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A532/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/diar-al-yassamine/A532/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A532/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A532/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A532/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A533",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A533/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A533/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A533/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A533/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A533/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A533/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A533/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A534",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A534/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A534/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A534/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A534/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/diar-al-yassamine/A534/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A534/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A534/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A534/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A541",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A541/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A541/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A541/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A541/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A541/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A541/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A541/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A542",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A542/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A542/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A542/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A542/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/diar-al-yassamine/A542/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A542/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A542/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A542/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A543",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A543/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A543/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A543/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A543/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A543/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A543/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A543/balcon.jpg",
+            "available": false
+          }
+        ]
+      },
+      {
+        "ref": "A544",
+        "plan": false,
+        "interior": false,
+        "rooms": [
+          {
+            "id": "salon",
+            "url": "/360/diar-al-yassamine/A544/salon.jpg",
+            "available": false
+          },
+          {
+            "id": "cuisine",
+            "url": "/360/diar-al-yassamine/A544/cuisine.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-1",
+            "url": "/360/diar-al-yassamine/A544/chambre-1.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-2",
+            "url": "/360/diar-al-yassamine/A544/chambre-2.jpg",
+            "available": false
+          },
+          {
+            "id": "chambre-3",
+            "url": "/360/diar-al-yassamine/A544/chambre-3.jpg",
+            "available": false
+          },
+          {
+            "id": "sdb",
+            "url": "/360/diar-al-yassamine/A544/sdb.jpg",
+            "available": false
+          },
+          {
+            "id": "sde",
+            "url": "/360/diar-al-yassamine/A544/sde.jpg",
+            "available": false
+          },
+          {
+            "id": "balcon",
+            "url": "/360/diar-al-yassamine/A544/balcon.jpg",
+            "available": false
+          }
+        ]
+      }
+    ]
+  }
+]

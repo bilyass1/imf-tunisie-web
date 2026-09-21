@@ -18,6 +18,8 @@ export default function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (el.getBoundingClientRect().top < window.innerHeight || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    el.classList.add('reveal-pending');
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

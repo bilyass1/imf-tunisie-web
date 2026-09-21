@@ -186,7 +186,7 @@ const laGloire: Project = {
     { label: L('Second œuvre', 'Finishing works', 'أشغال التشطيب'), percent: 40, done: false },
     { label: L('Aménagements extérieurs', 'Outdoor landscaping', 'التهيئة الخارجية'), percent: 15, done: false },
   ],
-  mapQuery: 'Cité Les Palmeraies, El Aouina, Tunis',
+  mapQuery: '36.863450,10.264675',
   massing: {
     floorHeight: LA_GLOIRE_SITE.floorHeight,
     bounds: LA_GLOIRE_SITE.bounds,
@@ -261,7 +261,7 @@ const yassamine: Project = {
     'A programme presentation video is available on request from the sales department.',
     'فيديو تقديمي للمشروع متوفّر عند الطلب لدى المصلحة التجارية.',
   ),
-  mapQuery: 'Route de l’Habana Km 4, Sfax',
+  mapQuery: 'QQ8V+2PG Diar al yassamine, Sidi Mansour',
   massing: {
     floorHeight: 3,
     bounds: { minX: -22, minY: -12, maxX: 22, maxY: 12 },

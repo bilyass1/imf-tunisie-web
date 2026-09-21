@@ -1,4 +1,7 @@
 import 'server-only';
+import { cache as requestCache } from 'react';
+import { unstable_noStore as noStore } from 'next/cache';
+import type { VisitRequest } from './visit-request';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -138,12 +141,21 @@ export async function readMedia(id: string): Promise<Buffer | undefined> {
 
 /* ---------------------------- Projets ---------------------------- */
 
+// Share public reads between metadata, layout, page and footer within one render.
+// Writes and authentication retain their independent, versioned reads.
+export const getPublicData = requestCache(async () => {
+  // Prices and availability must be read at runtime, never frozen from build seed data.
+  noStore();
+  if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') return getStore(buildSeed).readPublic();
+  const { projects, company, news } = await readDb();
+  return { projects, company, news };
+});
 export async function getProjects(): Promise<Project[]> {
-  return (await readDb()).projects;
+  return (await getPublicData()).projects;
 }
 
 export async function getProject(slug: string): Promise<Project | undefined> {
-  return (await readDb()).projects.find((p) => p.slug === slug);
+  return (await getProjects()).find((p) => p.slug === slug);
 }
 
 export async function getOngoingProjects(): Promise<Project[]> {
@@ -256,8 +268,14 @@ export async function captureWebLead(input: {
   projectSlug?: string;
   lotRef?: string;
   budget?: string;
+  visit?: VisitRequest;
 }): Promise<{ contact: Contact; deal: Deal }> {
   const db = (await readDb());
+  if (input.visit) {
+    const property = db.projects.find(p => p.slug === input.projectSlug)?.lots.find(l => l.ref === input.lotRef || l.code === input.lotRef);
+    if (!property || property.status !== 'available') throw new Error('VISIT_UNAVAILABLE');
+    input = { ...input, lotRef: property.ref };
+  }
   const normalizedPhone = input.phone.replace(/\s/g, '');
 
   let contact = db.contacts.find(
@@ -285,7 +303,7 @@ export async function captureWebLead(input: {
     createdAt: today(),
     updatedAt: today(),
     contactId: contact.id,
-    title: input.lotRef ? `${input.lotRef} — demande web` : 'Demande d’information — site web',
+    title: input.visit ? `${input.lotRef} — demande de visite` : input.lotRef ? `${input.lotRef} — demande web` : 'Demande d’information — site web',
     projectSlug: input.projectSlug || undefined,
     lotRef: input.lotRef || undefined,
     stage: 'new',
@@ -299,13 +317,13 @@ export async function captureWebLead(input: {
     type: 'note',
     contactId: contact.id,
     dealId: deal.id,
-    body: input.message,
+    body: input.visit ? `Demande de visite à confirmer · ${input.visit.date} à ${input.visit.time} (heure de Tunis) · ${input.visit.mode === 'video' ? 'Visioconférence' : 'Sur place'}\n${input.message}` : input.message,
   });
 
   db.tasks.unshift({
     id: uid('t'),
     createdAt: today(),
-    title: `Rappeler ${contact.name} (demande web)`,
+    title: input.visit ? `Confirmer la visite de ${contact.name} · ${input.lotRef} · ${input.visit.date} ${input.visit.time} (Tunis)` : `Rappeler ${contact.name} (demande web)`,
     dueDate: today(),
     done: false,
     contactId: contact.id,
@@ -445,11 +463,11 @@ export async function getClients(): Promise<User[]> {
 /* ---------------------------- Actualités --------------------------- */
 
 export async function getNews() {
-  return (await readDb()).news;
+  return (await getPublicData()).news;
 }
 
 export async function getNewsItem(slug: string) {
-  return (await readDb()).news.find((n) => n.slug === slug);
+  return (await getPublicData()).news.find((n) => n.slug === slug);
 }
 
 /* --------------------- Jeu de démonstration ------------------------ */

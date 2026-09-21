@@ -1,0 +1,75 @@
+{
+  "optimized": [
+    {
+      "url": "/360/diar-al-yassamine/A101/salon.optimized.webp",
+      "originalBytes": 1939466,
+      "webBytes": 137248
+    },
+    {
+      "url": "/360/diar-al-yassamine/A104/salon.optimized.webp",
+      "originalBytes": 1968169,
+      "webBytes": 166802
+    },
+    {
+      "url": "/360/diar-al-yassamine/A201/salon.optimized.webp",
+      "originalBytes": 1897141,
+      "webBytes": 146474
+    },
+    {
+      "url": "/360/diar-al-yassamine/A202/salon.optimized.webp",
+      "originalBytes": 1894919,
+      "webBytes": 147592
+    },
+    {
+      "url": "/360/diar-al-yassamine/A204/salon.optimized.webp",
+      "originalBytes": 1812969,
+      "webBytes": 129354
+    },
+    {
+      "url": "/360/diar-al-yassamine/A304/salon.optimized.webp",
+      "originalBytes": 1979747,
+      "webBytes": 164210
+    },
+    {
+      "url": "/360/diar-al-yassamine/A305/salon.optimized.webp",
+      "originalBytes": 1820217,
+      "webBytes": 139956
+    },
+    {
+      "url": "/360/la-gloire/B02/chambre-1.optimized.webp",
+      "originalBytes": 1905996,
+      "webBytes": 137626
+    },
+    {
+      "url": "/360/la-gloire/B02/chambre-2.optimized.webp",
+      "originalBytes": 1981157,
+      "webBytes": 152448
+    },
+    {
+      "url": "/360/la-gloire/B02/chambre-3.optimized.webp",
+      "originalBytes": 1954950,
+      "webBytes": 166058
+    },
+    {
+      "url": "/360/la-gloire/B02/cuisine.optimized.webp",
+      "originalBytes": 1915238,
+      "webBytes": 149578
+    },
+    {
+      "url": "/360/la-gloire/B02/salon.optimized.webp",
+      "originalBytes": 1897226,
+      "webBytes": 132198
+    },
+    {
+      "url": "/360/la-gloire/B02/sdb.optimized.webp",
+      "originalBytes": 2138409,
+      "webBytes": 187882
+    },
+    {
+      "url": "/360/la-gloire/B02/sde.optimized.webp",
+      "originalBytes": 305228,
+      "webBytes": 196892
+    }
+  ],
+  "count": 505
+}

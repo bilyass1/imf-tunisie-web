@@ -106,6 +106,37 @@ function createStore(pool, seedFactory) {
   const snapshots = new WeakMap();
   let bootstrapReady;
   let cache;
+  let publicCache;
+  let publicRead;
+  let publicVersion = 0;
+  async function readPublic() {
+    await ensureSchema(pool);
+    if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
+    await bootstrapReady;
+    if (publicCache && publicCache.expiresAt > Date.now()) return structuredClone(publicCache.data);
+    if (publicRead) return structuredClone(await publicRead);
+    const version = publicVersion;
+    const operation = (async () => {
+      // A single statement provides one consistent snapshot without loading
+      // accounts, messages, documents, contacts or optimistic-write snapshots.
+      const result = await pool.query(`SELECT
+        (SELECT COALESCE(jsonb_agg(data || jsonb_build_object('slug',slug) ORDER BY slug),'[]'::jsonb) FROM imf_projects) AS projects,
+        (SELECT COALESCE(jsonb_agg(jsonb_build_object('project',project_slug,'lot',data || jsonb_build_object('ref',ref,'status',status)) ORDER BY project_slug,ref),'[]'::jsonb) FROM imf_lots) AS lots,
+        (SELECT COALESCE(jsonb_agg(data ORDER BY position,id),'[]'::jsonb) FROM imf_records WHERE collection='news') AS news,
+        (SELECT data FROM imf_records WHERE collection='settings' AND id='company') AS company`);
+      const row = result.rows[0];
+      if (!row?.projects?.length) throw new Error('Import initial PostgreSQL requis.');
+      const projects = row.projects.map(p => ({...p,lots:[]}));
+      const bySlug = new Map(projects.map(p => [p.slug,p]));
+      for (const entry of row.lots) bySlug.get(entry.project)?.lots.push(entry.lot);
+      const data = {projects,news:row.news,company:row.company ?? undefined};
+      if (version === publicVersion) publicCache = {data,expiresAt:Date.now()+5000};
+      return data;
+    })();
+    publicRead = operation;
+    try { return structuredClone(await operation); }
+    finally { if (publicRead === operation) publicRead = undefined; }
+  }
   async function read() {
     await ensureSchema(pool);
     if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
@@ -179,6 +210,9 @@ function createStore(pool, seedFactory) {
       const updated=await client.query('UPDATE imf_revision SET revision=revision+1 WHERE id=1 RETURNING revision');
       await client.query('COMMIT');
       cache=undefined;
+      publicVersion++;
+      publicCache=undefined;
+      publicRead=undefined;
       snapshots.set(data,{revision:String(updated.rows[0].revision),rows:next});
     } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
     finally { client.release(); }
@@ -188,7 +222,7 @@ function createStore(pool, seedFactory) {
     const result=await pool.query('SELECT bytes FROM imf_media WHERE id=$1',[id]);
     return result.rows[0]?.bytes;
   }
-  return {read,write,readMedia};
+  return {read,readPublic,write,readMedia};
 }
 let store;
 function getStore(seedFactory) {

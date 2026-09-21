@@ -138,7 +138,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
 
               <div className="mt-8">
                 <Suspense fallback={<p className="text-ink/40">{dict.common.loading}</p>}>
-                  <ContactForm labels={dict.contact.form} projects={projects} />
+                  <ContactForm labels={dict.contact.form} projects={projects} locale={locale} />
                 </Suspense>
               </div>
             </div>

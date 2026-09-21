@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { submitLeadAction, type FormState } from '@/lib/actions';
 import { IconArrow, IconCheck } from '@/components/Icons';
+import type { Locale } from '@/i18n/config';
 
 export interface ContactFormLabels {
   name: string;
@@ -28,15 +29,23 @@ export default function ContactForm({
   labels,
   projects,
   compact = false,
+  locale = 'fr',
 }: {
   labels: ContactFormLabels;
   projects: { slug: string; name: string }[];
   compact?: boolean;
+  locale?: Locale;
 }) {
   const params = useSearchParams();
   const [state, action, pending] = useActionState(submitLeadAction, initial);
   const [project, setProject] = useState('');
   const [lot, setLot] = useState('');
+  const visiting = params.get('intent') === 'visit';
+  const visitLabels = {
+    fr: { date:'Date souhaitée', time:'Heure souhaitée (Tunis)', mode:'Type de visite', onsite:'Sur place', video:'Visioconférence', note:'Ce créneau est une demande. Notre équipe vous contactera pour confirmer le rendez-vous.', consent:'J’accepte d’être contacté pour organiser cette visite.', message:'Je souhaite visiter cet appartement.', error:'Choisissez une date future dans les six prochains mois et acceptez le contact.', unavailable:'Cet appartement n’est plus disponible pour une visite. Choisissez un autre bien ou contactez notre équipe.' },
+    en: { date:'Preferred date', time:'Preferred time (Tunis)', mode:'Visit type', onsite:'On site', video:'Video call', note:'This is a requested time. Our team will contact you to confirm the appointment.', consent:'I agree to be contacted to arrange this visit.', message:'I would like to visit this apartment.', error:'Choose a future date within six months and agree to be contacted.', unavailable:'This apartment is no longer available for a visit. Choose another property or contact our team.' },
+    ar: { date:'التاريخ المرغوب', time:'الوقت المرغوب (تونس)', mode:'نوع الزيارة', onsite:'في الموقع', video:'مكالمة فيديو', note:'هذا طلب موعد. سيتصل بك فريقنا لتأكيد الزيارة.', consent:'أوافق على الاتصال بي لتنظيم هذه الزيارة.', message:'أرغب في زيارة هذه الشقة.', error:'اختر موعداً مستقبلياً خلال ستة أشهر ووافق على الاتصال بك.', unavailable:'هذه الشقة لم تعد متاحة للزيارة. اختر عقاراً آخر أو اتصل بفريقنا.' },
+  }[locale];
 
   useEffect(() => {
     setProject(params.get('project') ?? '');
@@ -56,6 +65,16 @@ export default function ContactForm({
 
   return (
     <form action={action} className="grid gap-4 sm:grid-cols-2">
+      <input type="hidden" name="intent" value={visiting ? 'visit' : 'contact'}/>
+      <div className="hidden" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off"/></label></div>
+      {visiting && <fieldset className="grid gap-4 rounded-xl border border-gold-300 bg-gold-50 p-5 sm:col-span-2 sm:grid-cols-2">
+        <legend className="px-2 font-semibold">{locale==='ar'?'طلب زيارة':locale==='en'?'Request a visit':'Demander une visite'}</legend>
+        <label><span className="label">{visitLabels.date}</span><input type="date" name="visitDate" required className="field"/></label>
+        <label><span className="label">{visitLabels.time}</span><input type="time" name="visitTime" required className="field"/></label>
+        <label className="sm:col-span-2"><span className="label">{visitLabels.mode}</span><select name="visitMode" className="field"><option value="onsite">{visitLabels.onsite}</option><option value="video">{visitLabels.video}</option></select></label>
+        <p className="text-sm sm:col-span-2">{visitLabels.note}</p>
+        <label className="flex items-start gap-3 text-sm sm:col-span-2"><input type="checkbox" name="consent" required className="mt-1"/>{visitLabels.consent}</label>
+      </fieldset>}
       <div className={compact ? 'sm:col-span-2' : ''}>
         <label className="label" htmlFor="cf-name">
           {labels.name} *
@@ -128,12 +147,12 @@ export default function ContactForm({
         <label className="label" htmlFor="cf-message">
           {labels.message} *
         </label>
-        <textarea id="cf-message" name="message" required rows={compact ? 3 : 5} className="field resize-none" />
+        <textarea key={visiting ? 'visit' : 'contact'} id="cf-message" name="message" required defaultValue={visiting ? visitLabels.message : ''} maxLength={4000} rows={compact ? 3 : 5} className="field resize-none" />
       </div>
 
       {state.error && (
         <p className="sm:col-span-2 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">
-          {state.error === 'required' ? labels.required : labels.error}
+          {state.error === 'required' ? labels.required : state.error === 'visit' ? visitLabels.error : state.error === 'unavailable' ? visitLabels.unavailable : labels.error}
         </p>
       )}
 

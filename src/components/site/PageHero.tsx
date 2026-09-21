@@ -24,7 +24,7 @@ export default function PageHero({
     <section className={`relative isolate overflow-hidden bg-ink ${compact ? 'min-h-[58vh]' : 'min-h-[70vh]'}`}>
       <div className="absolute inset-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <Image src={image} alt="" fill priority quality={90} sizes="100vw" className="object-cover" />
+        <Image src={image} alt="" fill priority quality={75} sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/45 to-ink/20" />
       </div>
 

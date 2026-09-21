@@ -1,6 +1,7 @@
 import 'server-only';
 import fs from 'node:fs';
 import path from 'node:path';
+import bundledAssets from './public-assets.json';
 
 /**
  * Présence d'un fichier de /public, résolue côté serveur.
@@ -12,24 +13,27 @@ import path from 'node:path';
  */
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
 const cache = new Map<string, boolean>();
+const bundled = new Set(bundledAssets);
 
 export function publicFileExists(url?: string | null): boolean {
   if (!url || !url.startsWith('/')) return false;
+  if (bundled.has(url.split('?')[0])) return true;
   const cached = cache.get(url);
   if (cached !== undefined) return cached;
   const rel = url.split('?')[0].replace(/^\/+/, '');
   const abs = path.join(PUBLIC_DIR, rel);
-  const ok = abs.startsWith(PUBLIC_DIR) && fs.existsSync(abs);
+  const ok = abs.startsWith(PUBLIC_DIR + path.sep) && fs.existsSync(abs);
   cache.set(url, ok);
   return ok;
 }
 
-/** Prefer the untouched supplied source; optional 4K/8K masters upgrade in place. */
+/** Serve a 4K web derivative first; retain masters without loading PNGs on mobile. */
 export function panoramaAssets(url?: string) {
   if (!url) return { panorama: undefined, available: false };
   const stem = url.replace(/\.[^.]+$/, '');
   const source = `${stem}.source.png`;
-  const panorama = publicFileExists(source) ? source : url;
+  const optimized = `${stem}.optimized.webp`;
+  const panorama = publicFileExists(optimized) ? optimized : publicFileExists(url) ? url : source;
   const highResolution = [`${stem}.8k.jpg`, `${stem}.4k.jpg`].find(publicFileExists);
   return { panorama, available: publicFileExists(panorama), highResolution };
 }

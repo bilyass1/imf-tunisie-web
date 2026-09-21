@@ -1,15 +1,17 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import PropertyActions from '@/components/site/PropertySelection';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
-import { getLot, getProject } from '@/lib/db';
+import { getProject } from '@/lib/db';
 import { t, formatArea, formatMoney, floorLabel } from '@/lib/format';
 import { SITE } from '@/lib/site';
 import { getCompanySite } from '@/lib/company';
 import Reveal from '@/components/Reveal';
 import SectionHeading from '@/components/site/SectionHeading';
-import MaquetteSection from '@/components/site/MaquetteSection';
+import { DeferredMaquette as MaquetteSection, DeferredPanorama as Panorama360 } from '@/components/site/DeferredViewers';
 import PlanViewer from '@/components/site/PlanViewer';
 import ApartmentInterior from '@/components/site/ApartmentInterior';
 import YassamineFinancing from '@/components/site/YassamineFinancing';
@@ -17,7 +19,6 @@ import ProgressMeter from '@/components/site/ProgressMeter';
 import Gallery from '@/components/site/Gallery';
 import { alternates, jsonLd } from '@/lib/seo';
 import LazyMount from '@/components/site/LazyMount';
-import Panorama360 from '@/components/site/Panorama360';
 import CreditSimulator from '@/components/site/CreditSimulator';
 import { IconArrow, IconArrowLeft, IconCheck, IconPhone, IconPin } from '@/components/Icons';
 import { publicFileExists, panoramaAssets } from '@/lib/assets';
@@ -31,7 +32,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug, ref } = await params;
   const project = (await getProject(slug));
-  const lot = (await getLot(slug, ref));
+  const lot = project?.lots.find(l => l.ref === ref);
   if (!project || !lot) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
   return {
@@ -117,7 +118,7 @@ export default async function ApartmentPage({
       <section className="relative isolate overflow-hidden bg-ink pb-16 pt-36 lg:pb-20 lg:pt-44">
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={project.heroImage} alt="" className="h-full w-full object-cover opacity-30" />
+          <Image src={project.heroImage} alt="" fill priority sizes="100vw" quality={75} className="object-cover opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/85 to-ink/60" />
         </div>
 
@@ -188,9 +189,10 @@ export default async function ApartmentPage({
         </div>
       </section>
 
+      <div className="container-lux py-6"><PropertyActions id={`${project.slug}/${lot.ref}`} locale={locale} showVisit available={lot.status === 'available'}/></div>
       {/* ---- 1. Maquette 3D ---- */}
       {project.massing && project.slug !== 'diar-al-yassamine' && (
-        <section id="visite-360" className="scroll-mt-28 bg-ivory py-20 lg:py-24">
+        <section id="maquette" className="scroll-mt-28 bg-ivory py-20 lg:py-24">
           <div className="container-lux">
             <SectionHeading
               eyebrow={dict.apartment.maquette}
@@ -198,11 +200,11 @@ export default async function ApartmentPage({
               subtitle={project.slug === 'residence-la-gloire' ? architectModelSubtitle[locale] : dict.maquette.subtitle}
             />
             <div className="mt-10">
-              <LazyMount minHeight={520}>
+              <LazyMount minHeight={520} activateLabel={locale === 'ar' ? 'استكشف المجسم ثلاثي الأبعاد' : locale === 'en' ? 'Explore the 3D model' : 'Explorer la maquette 3D'}>
               <MaquetteSection
                 locale={locale}
                 projectSlug={project.slug}
-                lots={project.lots}
+                lots={project.lots.map(({ref,code,block,floor,typology,sellableArea,status,footprint,gardenArea,terraceArea})=>({ref,code,block,floor,typology,sellableArea,status,footprint,gardenArea,terraceArea}))}
                 massing={project.massing}
                 selectedRef={lot.ref}
                 labels={{
@@ -286,7 +288,7 @@ export default async function ApartmentPage({
       {project.slug === 'residence-la-gloire' && publicFileExists(interiorImage) && (
         <ApartmentInterior locale={locale} image={interiorImage} reference={lot.ref} pdf={lot.planUrl} />
       )}
-      {rooms.length > 0 && (
+      {tourRooms.some(room=>room.available) && (
         <section id="visite-360" className="scroll-mt-28 bg-ivory py-20 lg:py-24">
           <div className="container-lux">
             <SectionHeading eyebrow={dict.apartment.tour360} title={dict.pano.title} subtitle={dict.pano.hint} />
@@ -300,7 +302,7 @@ export default async function ApartmentPage({
               </p>
             )}
             <div className="mt-10">
-              <LazyMount minHeight={520}>
+              <LazyMount minHeight={520} activateLabel={locale === 'ar' ? 'ابدأ الزيارة الافتراضية' : locale === 'en' ? 'Start the 360° tour' : 'Démarrer la visite 360°'}>
                 <Panorama360
                   poster={project.gallery[0]?.src}
                   rooms={tourRooms}

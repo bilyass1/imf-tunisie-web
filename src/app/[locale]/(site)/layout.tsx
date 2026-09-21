@@ -6,6 +6,9 @@ import Header from '@/components/site/Header';
 import Footer from '@/components/site/Footer';
 import { SITE } from '@/lib/site';
 import { getCompanySite } from '@/lib/company';
+import { PropertySelectionProvider } from '@/components/site/PropertySelection';
+
+export const dynamic = 'force-dynamic';
 
 export default async function SiteLayout({
   children,
@@ -20,7 +23,7 @@ export default async function SiteLayout({
   const SITE=(await getCompanySite());
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <PropertySelectionProvider><div className="flex min-h-screen flex-col">
       <Header
         locale={locale as Locale}
         transparent
@@ -39,6 +42,6 @@ export default async function SiteLayout({
       />
       <main className="flex-1">{children}</main>
       <Footer locale={locale as Locale} dict={dict} />
-    </div>
+    </div></PropertySelectionProvider>
   );
 }

@@ -1,0 +1,625 @@
+{
+  "scope": "Local production HTTP full HTML response, warm process, file storage. Not an LCP or Vercel/PostgreSQL network measurement.",
+  "tested": 77,
+  "failed": [],
+  "medianSeconds": 0.072,
+  "p95Seconds": 0.124,
+  "results": [
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A01",
+      "status": 200,
+      "baselineSeconds": 2.966,
+      "localSeconds": 0.241,
+      "htmlBytes": 137513,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A11",
+      "status": 200,
+      "baselineSeconds": 2.954,
+      "localSeconds": 0.125,
+      "htmlBytes": 136745,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A21",
+      "status": 200,
+      "baselineSeconds": 2.968,
+      "localSeconds": 0.124,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A02",
+      "status": 200,
+      "baselineSeconds": 3.238,
+      "localSeconds": 0.088,
+      "htmlBytes": 138979,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A13",
+      "status": 200,
+      "baselineSeconds": 3.008,
+      "localSeconds": 0.073,
+      "htmlBytes": 138245,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A22",
+      "status": 200,
+      "baselineSeconds": 2.989,
+      "localSeconds": 0.072,
+      "htmlBytes": 138242,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PGARDEBLOCA",
+      "status": 200,
+      "baselineSeconds": 3.855,
+      "localSeconds": 0.049,
+      "htmlBytes": 50436,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PGARDEBLOCB",
+      "status": 200,
+      "baselineSeconds": 3.175,
+      "localSeconds": 0.052,
+      "htmlBytes": 50436,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PGARDEBLOCC",
+      "status": 200,
+      "baselineSeconds": 3.191,
+      "localSeconds": 0.052,
+      "htmlBytes": 50436,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PGARDEBLOCD",
+      "status": 200,
+      "baselineSeconds": 3.727,
+      "localSeconds": 0.051,
+      "htmlBytes": 50436,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PLANCHE1ETAGE",
+      "status": 200,
+      "baselineSeconds": 3.733,
+      "localSeconds": 0.046,
+      "htmlBytes": 50350,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PLANCHE2ETAGE",
+      "status": 200,
+      "baselineSeconds": 3.139,
+      "localSeconds": 0.04,
+      "htmlBytes": 50350,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PLANCHE4ETAGE",
+      "status": 200,
+      "baselineSeconds": 3.744,
+      "localSeconds": 0.081,
+      "htmlBytes": 50350,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PLANCHE5ETAGE",
+      "status": 200,
+      "baselineSeconds": 3.791,
+      "localSeconds": 0.056,
+      "htmlBytes": 50350,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PLANCHERDC",
+      "status": 200,
+      "baselineSeconds": 3.766,
+      "localSeconds": 0.046,
+      "htmlBytes": 50363,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/plans/PLANCHESOUS-SOL",
+      "status": 200,
+      "baselineSeconds": 3.172,
+      "localSeconds": 0.049,
+      "htmlBytes": 50384,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A53",
+      "status": 200,
+      "baselineSeconds": 3.136,
+      "localSeconds": 0.104,
+      "htmlBytes": 139651,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B12",
+      "status": 200,
+      "baselineSeconds": 3.01,
+      "localSeconds": 0.093,
+      "htmlBytes": 138966,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A31",
+      "status": 200,
+      "baselineSeconds": 2.962,
+      "localSeconds": 0.084,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A32",
+      "status": 200,
+      "baselineSeconds": 3.013,
+      "localSeconds": 0.101,
+      "htmlBytes": 138242,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A33",
+      "status": 200,
+      "baselineSeconds": 3.179,
+      "localSeconds": 0.085,
+      "htmlBytes": 138237,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A41",
+      "status": 200,
+      "baselineSeconds": 2.989,
+      "localSeconds": 0.219,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A42",
+      "status": 200,
+      "baselineSeconds": 3.01,
+      "localSeconds": 0.081,
+      "htmlBytes": 138242,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A51",
+      "status": 200,
+      "baselineSeconds": 2.984,
+      "localSeconds": 0.092,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A52",
+      "status": 200,
+      "baselineSeconds": 3.224,
+      "localSeconds": 0.091,
+      "htmlBytes": 138935,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B01",
+      "status": 200,
+      "baselineSeconds": 3.179,
+      "localSeconds": 0.068,
+      "htmlBytes": 137525,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B21",
+      "status": 200,
+      "baselineSeconds": 3.271,
+      "localSeconds": 0.075,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B24",
+      "status": 200,
+      "baselineSeconds": 3.276,
+      "localSeconds": 0.072,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B31",
+      "status": 200,
+      "baselineSeconds": 3.068,
+      "localSeconds": 0.072,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B32",
+      "status": 200,
+      "baselineSeconds": 3.216,
+      "localSeconds": 0.072,
+      "htmlBytes": 138958,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B41",
+      "status": 200,
+      "baselineSeconds": 3.279,
+      "localSeconds": 0.081,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B44",
+      "status": 200,
+      "baselineSeconds": 2.981,
+      "localSeconds": 0.076,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B51",
+      "status": 200,
+      "baselineSeconds": 2.984,
+      "localSeconds": 0.081,
+      "htmlBytes": 137474,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B52",
+      "status": 200,
+      "baselineSeconds": 3.19,
+      "localSeconds": 0.077,
+      "htmlBytes": 138932,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C03",
+      "status": 200,
+      "baselineSeconds": 3.078,
+      "localSeconds": 0.067,
+      "htmlBytes": 137527,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C04",
+      "status": 200,
+      "baselineSeconds": 3.022,
+      "localSeconds": 0.065,
+      "htmlBytes": 138972,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C12",
+      "status": 200,
+      "baselineSeconds": 2.968,
+      "localSeconds": 0.067,
+      "htmlBytes": 138249,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C13",
+      "status": 200,
+      "baselineSeconds": 3.247,
+      "localSeconds": 0.079,
+      "htmlBytes": 136747,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C14",
+      "status": 200,
+      "baselineSeconds": 2.982,
+      "localSeconds": 0.071,
+      "htmlBytes": 136747,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C15",
+      "status": 200,
+      "baselineSeconds": 3.386,
+      "localSeconds": 0.077,
+      "htmlBytes": 138237,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C23",
+      "status": 200,
+      "baselineSeconds": 3.026,
+      "localSeconds": 0.088,
+      "htmlBytes": 136735,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C24",
+      "status": 200,
+      "baselineSeconds": 3.182,
+      "localSeconds": 0.066,
+      "htmlBytes": 136735,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C25",
+      "status": 200,
+      "baselineSeconds": 3.106,
+      "localSeconds": 0.077,
+      "htmlBytes": 138225,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C32",
+      "status": 200,
+      "baselineSeconds": 3.045,
+      "localSeconds": 0.066,
+      "htmlBytes": 138237,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C34",
+      "status": 200,
+      "baselineSeconds": 2.946,
+      "localSeconds": 0.062,
+      "htmlBytes": 136735,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C35",
+      "status": 200,
+      "baselineSeconds": 15,
+      "localSeconds": 0.069,
+      "htmlBytes": 138225,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C43",
+      "status": 200,
+      "baselineSeconds": 3.001,
+      "localSeconds": 0.071,
+      "htmlBytes": 136735,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C44",
+      "status": 200,
+      "baselineSeconds": 3.257,
+      "localSeconds": 0.093,
+      "htmlBytes": 136735,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C45",
+      "status": 200,
+      "baselineSeconds": 3.322,
+      "localSeconds": 0.09,
+      "htmlBytes": 138225,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C51",
+      "status": 200,
+      "baselineSeconds": 3.058,
+      "localSeconds": 0.085,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/C54",
+      "status": 200,
+      "baselineSeconds": 3.125,
+      "localSeconds": 0.071,
+      "htmlBytes": 138920,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D02",
+      "status": 200,
+      "baselineSeconds": 3.172,
+      "localSeconds": 0.063,
+      "htmlBytes": 137527,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D03",
+      "status": 200,
+      "baselineSeconds": 3.024,
+      "localSeconds": 0.068,
+      "htmlBytes": 138987,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D11",
+      "status": 200,
+      "baselineSeconds": 3.106,
+      "localSeconds": 0.064,
+      "htmlBytes": 136745,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D12",
+      "status": 200,
+      "baselineSeconds": 4.133,
+      "localSeconds": 0.075,
+      "htmlBytes": 136749,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D13",
+      "status": 200,
+      "baselineSeconds": 2.962,
+      "localSeconds": 0.078,
+      "htmlBytes": 136748,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D14",
+      "status": 200,
+      "baselineSeconds": 2.941,
+      "localSeconds": 0.082,
+      "htmlBytes": 136748,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D15",
+      "status": 200,
+      "baselineSeconds": 3.04,
+      "localSeconds": 0.073,
+      "htmlBytes": 138249,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D23",
+      "status": 200,
+      "baselineSeconds": 3.787,
+      "localSeconds": 0.073,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D24",
+      "status": 200,
+      "baselineSeconds": 2.962,
+      "localSeconds": 0.074,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D25",
+      "status": 200,
+      "baselineSeconds": 2.966,
+      "localSeconds": 0.072,
+      "htmlBytes": 138237,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D26",
+      "status": 200,
+      "baselineSeconds": 15,
+      "localSeconds": 0.077,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D31",
+      "status": 200,
+      "baselineSeconds": 3.008,
+      "localSeconds": 0.075,
+      "htmlBytes": 136733,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D32",
+      "status": 200,
+      "baselineSeconds": 3.035,
+      "localSeconds": 0.086,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D33",
+      "status": 200,
+      "baselineSeconds": 3.026,
+      "localSeconds": 0.075,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D34",
+      "status": 200,
+      "baselineSeconds": 3.215,
+      "localSeconds": 0.064,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D35",
+      "status": 200,
+      "baselineSeconds": 3.758,
+      "localSeconds": 0.065,
+      "htmlBytes": 138237,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D36",
+      "status": 200,
+      "baselineSeconds": 3.054,
+      "localSeconds": 0.057,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D42",
+      "status": 200,
+      "baselineSeconds": 2.986,
+      "localSeconds": 0.071,
+      "htmlBytes": 136737,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D43",
+      "status": 200,
+      "baselineSeconds": 3.034,
+      "localSeconds": 0.059,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D44",
+      "status": 200,
+      "baselineSeconds": 3.217,
+      "localSeconds": 0.069,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D45",
+      "status": 200,
+      "baselineSeconds": 2.997,
+      "localSeconds": 0.063,
+      "htmlBytes": 138237,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D46",
+      "status": 200,
+      "baselineSeconds": 3.115,
+      "localSeconds": 0.065,
+      "htmlBytes": 136736,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D51",
+      "status": 200,
+      "baselineSeconds": 3.111,
+      "localSeconds": 0.068,
+      "htmlBytes": 138928,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D52",
+      "status": 200,
+      "baselineSeconds": 2.99,
+      "localSeconds": 0.064,
+      "htmlBytes": 138920,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D53",
+      "status": 200,
+      "baselineSeconds": 3.148,
+      "localSeconds": 0.062,
+      "htmlBytes": 138930,
+      "serverError": false
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/D54",
+      "status": 200,
+      "baselineSeconds": 3.03,
+      "localSeconds": 0.06,
+      "htmlBytes": 136736,
+      "serverError": false
+    }
+  ]
+}

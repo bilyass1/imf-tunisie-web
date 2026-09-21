@@ -7,13 +7,13 @@ import { getDictionary } from '@/i18n/getDictionary';
 import { getProject, getProjects, lotStats } from '@/lib/db';
 import { t, formatArea } from '@/lib/format';
 import { SITE } from '@/lib/site';
+import { projectMap } from '@/lib/project-maps';
 import { getCompanySite } from '@/lib/company';
 import Reveal from '@/components/Reveal';
 import PageHero from '@/components/site/PageHero';
 import SectionHeading from '@/components/site/SectionHeading';
 import Gallery from '@/components/site/Gallery';
-import MaquetteSection from '@/components/site/MaquetteSection';
-import YassamineMaquette from '@/components/site/YassamineMaquette';
+import { DeferredMaquette as MaquetteSection, DeferredYassamine as YassamineMaquette } from '@/components/site/DeferredViewers';
 import YassaminePlanLibrary from '@/components/site/YassaminePlanLibrary';
 import LazyMount from '@/components/site/LazyMount';
 import AvailabilityPlan from '@/components/site/AvailabilityPlan';
@@ -275,7 +275,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       </section>
 
       {/* ---- Maquette 3D interactive ---- */}
-      {project.slug === 'diar-al-yassamine' && <div id="maquette" className="scroll-mt-[170px]"><LazyMount minHeight={850}><YassamineMaquette locale={locale} /></LazyMount></div>}
+      {project.slug === 'diar-al-yassamine' && <div id="maquette" className="container-lux scroll-mt-[170px] py-12"><LazyMount minHeight={520} activateLabel={locale === 'ar' ? 'استكشف المجسم ثلاثي الأبعاد' : locale === 'en' ? 'Explore the 3D model' : 'Explorer la maquette 3D'}><YassamineMaquette locale={locale} /></LazyMount></div>}
       {project.slug !== 'diar-al-yassamine' && project.massing && project.lots.length > 0 && (
         <section id="maquette" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">
           <div className="container-lux">
@@ -286,7 +286,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               light
             />
             <div className="mt-12 overflow-hidden rounded-2xl ring-1 ring-white/10">
-              <LazyMount minHeight={520}>
+              <LazyMount minHeight={520} activateLabel={locale === 'ar' ? 'استكشف المجسم ثلاثي الأبعاد' : locale === 'en' ? 'Explore the 3D model' : 'Explorer la maquette 3D'}>
               <MaquetteSection
                 locale={locale}
                 projectSlug={project.slug}
@@ -381,7 +381,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               {t(project.address, locale)}
             </p>
             <a
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(project.mapQuery)}`}
+              href={projectMap(project.slug, project.mapQuery, locale).externalUrl}
               target="_blank"
               rel="noreferrer noopener"
               className="btn-ghost mt-8"
@@ -395,7 +395,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
             <div className="overflow-hidden rounded-2xl border border-ink/8 bg-white shadow-card">
               <iframe
                 title={`${project.name} — ${project.city}`}
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(project.mapQuery)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                src={projectMap(project.slug, project.mapQuery, locale).embedUrl}
                 className="h-[420px] w-full"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

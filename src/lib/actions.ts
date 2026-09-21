@@ -25,6 +25,7 @@ import {
 } from './db';
 import { createSession, destroySession, getSession } from './session';
 import type { ActivityType, ContactSource, DealStage, LotStatus } from './types';
+import { validVisitRequest, type VisitRequest } from './visit-request';
 
 export interface FormState {
   ok: boolean;
@@ -39,6 +40,12 @@ export async function submitLeadAction(_prev: FormState, formData: FormData): Pr
   const phone = String(formData.get('phone') ?? '').trim();
   const message = String(formData.get('message') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim();
+  if (formData.get('website')) return { ok: true, done: true };
+  const visit: VisitRequest | undefined = formData.get('intent') === 'visit' ? {
+    date: String(formData.get('visitDate') ?? ''), time: String(formData.get('visitTime') ?? ''),
+    mode: String(formData.get('visitMode') ?? '') as VisitRequest['mode'],
+  } : undefined;
+  if (visit && (!validVisitRequest(visit) || formData.get('consent') !== 'on')) return { ok: false, error: 'visit' };
 
   if (!name || !phone || !message || name.length>200 || phone.length>80 || message.length>4000 || email.length>254 || (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
     return { ok: false, error: 'required' };
@@ -55,10 +62,12 @@ export async function submitLeadAction(_prev: FormState, formData: FormData): Pr
       projectSlug: String(formData.get('project') ?? '') || undefined,
       lotRef: String(formData.get('lot') ?? '') || undefined,
       budget: String(formData.get('budget') ?? '') || undefined,
+      visit,
     }));
     revalidatePath('/', 'layout');
     return { ok: true, done: true };
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message === 'VISIT_UNAVAILABLE') return { ok: false, error: 'unavailable' };
     return { ok: false, error: 'server' };
   }
 }

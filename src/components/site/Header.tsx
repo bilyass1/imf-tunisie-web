@@ -62,7 +62,7 @@ export default function Header({
       }
     };
     document.addEventListener('keydown', close);
-    const desktop = window.matchMedia('(min-width: 1024px)');
+    const desktop = window.matchMedia('(min-width: 1280px)');
     const onDesktop = () => { if (desktop.matches) setOpen(false); };
     desktop.addEventListener('change', onDesktop);
     return () => {
@@ -76,6 +76,8 @@ export default function Header({
     { label: labels.home, href: `/${locale}` },
     { label: labels.group, href: `/${locale}/groupe` },
     { label: labels.projects, href: `/${locale}/projets` },
+    { label: locale === 'ar' ? 'بحث' : locale === 'en' ? 'Search' : 'Rechercher', href: `/${locale}/recherche` },
+    { label: locale === 'ar' ? 'اختياراتي' : locale === 'en' ? 'Saved' : 'Ma sélection', href: `/${locale}/selection` },
     { label: labels.news, href: `/${locale}/actualites` },
     { label: labels.contact, href: `/${locale}/contact` },
   ];
@@ -95,7 +97,7 @@ export default function Header({
             <Logo locale={locale} light={light} />
           </div>
 
-          <nav dir={locale === 'ar' ? 'rtl' : 'ltr'} className="hidden flex-1 items-center justify-center gap-5 lg:flex xl:gap-7">
+          <nav dir={locale === 'ar' ? 'rtl' : 'ltr'} className="hidden flex-1 items-center justify-center gap-3 xl:flex 2xl:gap-5">
             {links.map((link) => {
               const active = pathname === link.href || (link.href !== `/${locale}` && pathname.startsWith(link.href));
               return (
@@ -117,7 +119,7 @@ export default function Header({
           <div dir={locale === 'ar' ? 'rtl' : 'ltr'} className="flex shrink-0 items-center gap-2.5">
             <a
               href={`tel:${phone.replace(/\s/g, '')}`}
-              className={`hidden items-center gap-2 whitespace-nowrap text-[12.5px] font-medium tracking-wide xl:flex ${
+              className={`hidden items-center gap-2 whitespace-nowrap text-[12.5px] font-medium tracking-wide min-[1700px]:flex ${
                 light ? 'text-white/85 hover:text-gold-200' : 'text-ink/70 hover:text-gold-600'
               }`}
             >
@@ -136,7 +138,7 @@ export default function Header({
               }`}
             >
               <IconUser className="h-3.5 w-3.5" />
-              <span className="hidden md:inline">{labels.clientArea}</span>
+              <span className="hidden md:inline xl:hidden min-[1700px]:inline">{labels.clientArea}</span>
             </Link>
 
             <Link href={`/${locale}/contact`} className="btn-gold hidden whitespace-nowrap !px-5 !py-2.5 !text-[11px] lg:inline-flex">
@@ -150,7 +152,7 @@ export default function Header({
               aria-label={open ? labels.close : labels.menu}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              className={`grid h-10 w-10 place-items-center rounded-full border transition lg:hidden ${
+              className={`grid h-10 w-10 place-items-center rounded-full border transition xl:hidden ${
                 light ? 'border-white/25 text-white' : 'border-ink/15 text-ink'
               }`}
             >
@@ -166,17 +168,17 @@ export default function Header({
         id="mobile-menu"
         inert={!open}
         aria-hidden={!open}
-        className={`fixed inset-0 z-40 bg-ink transition-all duration-500 lg:hidden ${
+        className={`fixed inset-0 z-40 overflow-y-auto bg-ink transition-all duration-500 xl:hidden ${
           open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
         }`}
       >
-        <div className="container-lux flex h-full flex-col justify-center gap-2 pt-20">
+        <div className="container-lux flex min-h-full flex-col justify-center gap-1 pb-8 pt-24">
           {links.map((link, i) => (
             <Link
               key={link.href}
               href={link.href}
               style={{ transitionDelay: `${80 + i * 55}ms` }}
-              className={`border-b border-white/10 py-4 font-display text-3xl font-light text-white transition-all duration-500 ${
+              className={`border-b border-white/10 py-3 font-display text-2xl font-light text-white transition-all duration-500 ${
                 open ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
               }`}
             >

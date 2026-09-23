@@ -35,13 +35,17 @@ export async function generateMetadata({
   const lot = project?.lots.find(l => l.ref === ref);
   if (!project || !lot) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
+  const area = lot.sellableArea ? formatArea(lot.sellableArea, l) : '';
+  const hasTour = (lot.rooms ?? []).some(room => panoramaAssets(room.panorama).available);
+  const features = l === 'ar'
+    ? `المخطط والتوفر${hasTour ? ' والجولة الافتراضية 360°' : ''}. اطلب زيارة في الموقع أو عبر الفيديو.`
+    : l === 'en'
+      ? `Floor plan and availability${hasTour ? ', plus a 360° virtual tour' : ''}. Request an on-site or video visit.`
+      : `Plan et disponibilité${hasTour ? ', visite virtuelle 360°' : ''}. Demandez une visite sur place ou en visioconférence.`;
   return {
     alternates: alternates(l, `/projets/${slug}/appartements/${ref}`),
     title: `${lot.code} — ${lot.typology} · ${project.name}`,
-    description: `${lot.typology} de ${lot.sellableArea?.toFixed(2) ?? '—'} m² — ${project.name}, ${t(
-      project.address,
-      l,
-    )}. Plan, visite 360° et simulateur de financement.`,
+    description: `${lot.code} · ${lot.typology}${area ? ` · ${area}` : ''} — ${project.name}, ${t(project.address, l)}. ${features}`,
     openGraph: { title: `${lot.code} · ${project.name}`, url: `${SITE.url}/${l}/projets/${slug}/appartements/${ref}`, images: [project.cover] },
   };
 }
@@ -200,7 +204,7 @@ export default async function ApartmentPage({
               subtitle={project.slug === 'residence-la-gloire' ? architectModelSubtitle[locale] : dict.maquette.subtitle}
             />
             <div className="mt-10">
-              <LazyMount minHeight={520} activateLabel={locale === 'ar' ? 'استكشف المجسم ثلاثي الأبعاد' : locale === 'en' ? 'Explore the 3D model' : 'Explorer la maquette 3D'}>
+              <LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
               <MaquetteSection
                 locale={locale}
                 projectSlug={project.slug}
@@ -302,7 +306,7 @@ export default async function ApartmentPage({
               </p>
             )}
             <div className="mt-10">
-              <LazyMount minHeight={520} activateLabel={locale === 'ar' ? 'ابدأ الزيارة الافتراضية' : locale === 'en' ? 'Start the 360° tour' : 'Démarrer la visite 360°'}>
+              <LazyMount minHeight={720} desktopMinHeight={850} loadingLabel={dict.pano.loading}>
                 <Panorama360
                   poster={project.gallery[0]?.src}
                   rooms={tourRooms}

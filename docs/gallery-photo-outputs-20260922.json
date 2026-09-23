@@ -1,0 +1,484 @@
+{
+  "mode": "built-in image_gen edit",
+  "promptSet": "docs/gallery-refresh-20260922.json",
+  "previousPromptSet": "docs/project-photo-prompts-2026-09-22.json",
+  "originalsPreserved": true,
+  "images": [
+    {
+      "source": "/media/marassim/ext-2.jpg",
+      "master": "output/gallery-photos-20260922/marassim/ext-2.png",
+      "output": "public/media/marassim/ext-2-photo-20260922.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 352446
+    },
+    {
+      "source": "/media/marassim/ext-3.jpg",
+      "master": "output/gallery-photos-20260922/marassim/ext-3.png",
+      "output": "public/media/marassim/ext-3-photo-20260922.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 307102
+    },
+    {
+      "source": "/media/marassim/ext-4.jpg",
+      "master": "output/gallery-photos-20260922/marassim/ext-4.png",
+      "output": "public/media/marassim/ext-4-photo-20260922.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 386902
+    },
+    {
+      "source": "/media/marassim/ext-5.jpg",
+      "master": "output/gallery-photos-20260922/marassim/ext-5.png",
+      "output": "public/media/marassim/ext-5-photo-20260922.webp",
+      "width": 1544,
+      "height": 1018,
+      "bytes": 423434
+    },
+    {
+      "source": "/media/marassim/ext-nuit.jpg",
+      "master": "output/gallery-photos-20260922/marassim/ext-nuit.png",
+      "output": "public/media/marassim/ext-nuit-photo-20260922.webp",
+      "width": 1808,
+      "height": 870,
+      "bytes": 260600
+    },
+    {
+      "source": "/media/marassim/ext-6.jpg",
+      "master": "output/gallery-photos-20260922/marassim/ext-6.png",
+      "output": "public/media/marassim/ext-6-photo-20260922.webp",
+      "width": 1815,
+      "height": 867,
+      "bytes": 260560
+    },
+    {
+      "source": "/media/marassim/hall-1.jpg",
+      "master": "output/gallery-photos-20260922/marassim/hall-1.png",
+      "output": "public/media/marassim/hall-1-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 241004
+    },
+    {
+      "source": "/media/marassim/ext-7.jpg",
+      "master": "output/gallery-photos-20260922/marassim/ext-7.png",
+      "output": "public/media/marassim/ext-7-photo-20260922.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 298232
+    },
+    {
+      "source": "/media/marassim/hall-2.jpg",
+      "master": "output/gallery-photos-20260922/marassim/hall-2.png",
+      "output": "public/media/marassim/hall-2-photo-20260922.webp",
+      "width": 1586,
+      "height": 992,
+      "bytes": 205182
+    },
+    {
+      "source": "/media/marassim/salle-1.jpg",
+      "master": "output/gallery-photos-20260922/marassim/salle-1.png",
+      "output": "public/media/marassim/salle-1-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 216364
+    },
+    {
+      "source": "/media/marassim/salle-2.jpg",
+      "master": "output/gallery-photos-20260922/marassim/salle-2.png",
+      "output": "public/media/marassim/salle-2-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 231154
+    },
+    {
+      "source": "/media/marassim/salle-3.jpg",
+      "master": "output/gallery-photos-20260922/marassim/salle-3.png",
+      "output": "public/media/marassim/salle-3-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 198122
+    },
+    {
+      "source": "/media/marassim/resto-1.jpg",
+      "master": "output/gallery-photos-20260922/marassim/resto-1.png",
+      "output": "public/media/marassim/resto-1-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 216848
+    },
+    {
+      "source": "/media/marassim/resto-2.jpg",
+      "master": "output/gallery-photos-20260922/marassim/resto-2.png",
+      "output": "public/media/marassim/resto-2-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 175252
+    },
+    {
+      "source": "/media/marassim/reel-1.jpg",
+      "master": "output/gallery-photos-20260922/marassim/reel-1.png",
+      "output": "public/media/marassim/reel-1-photo-20260922.webp",
+      "width": 1716,
+      "height": 917,
+      "bytes": 323830
+    },
+    {
+      "source": "/media/diar-al-andalous-1/3d-2.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/3d-2.png",
+      "output": "public/media/diar-al-andalous-1/3d-2-photo-20260922.webp",
+      "width": 1495,
+      "height": 1052,
+      "bytes": 226764
+    },
+    {
+      "source": "/media/diar-al-andalous-1/3d-3.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/3d-3.png",
+      "output": "public/media/diar-al-andalous-1/3d-3-photo-20260922.webp",
+      "width": 1421,
+      "height": 1107,
+      "bytes": 239232
+    },
+    {
+      "source": "/media/diar-al-andalous-1/nuit.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/nuit.png",
+      "output": "public/media/diar-al-andalous-1/nuit-photo-20260922.webp",
+      "width": 1492,
+      "height": 1054,
+      "bytes": 180904
+    },
+    {
+      "source": "/media/diar-al-andalous-1/facade-1.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/facade-1.png",
+      "output": "public/media/diar-al-andalous-1/facade-1-photo-20260922.webp",
+      "width": 1451,
+      "height": 1084,
+      "bytes": 199652
+    },
+    {
+      "source": "/media/diar-al-andalous-1/facade-2.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/facade-2.png",
+      "output": "public/media/diar-al-andalous-1/facade-2-photo-20260922.webp",
+      "width": 1451,
+      "height": 1084,
+      "bytes": 266318
+    },
+    {
+      "source": "/media/diar-al-andalous-1/facade-3.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/facade-3.png",
+      "output": "public/media/diar-al-andalous-1/facade-3-photo-20260922.webp",
+      "width": 1451,
+      "height": 1084,
+      "bytes": 161280
+    },
+    {
+      "source": "/media/diar-al-andalous-1/entree-1.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/entree-1.png",
+      "output": "public/media/diar-al-andalous-1/entree-1-photo-20260922.webp",
+      "width": 941,
+      "height": 1672,
+      "bytes": 197164
+    },
+    {
+      "source": "/media/diar-al-andalous-1/entree-2.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/entree-2.png",
+      "output": "public/media/diar-al-andalous-1/entree-2-photo-20260922.webp",
+      "width": 941,
+      "height": 1672,
+      "bytes": 207640
+    },
+    {
+      "source": "/media/diar-al-andalous-1/bois-1.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/bois-1.png",
+      "output": "public/media/diar-al-andalous-1/bois-1-photo-20260922.webp",
+      "width": 1084,
+      "height": 1451,
+      "bytes": 77138
+    },
+    {
+      "source": "/media/diar-al-andalous-1/bois-2.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/bois-2.png",
+      "output": "public/media/diar-al-andalous-1/bois-2-photo-20260922.webp",
+      "width": 1084,
+      "height": 1451,
+      "bytes": 95534
+    },
+    {
+      "source": "/media/diar-al-andalous-1/sous-sol.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-1/sous-sol.png",
+      "output": "public/media/diar-al-andalous-1/sous-sol-photo-20260922.webp",
+      "width": 1451,
+      "height": 1084,
+      "bytes": 100078
+    },
+    {
+      "source": "/media/diar-al-andalous-2/3d-2.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/3d-2.png",
+      "output": "public/media/diar-al-andalous-2/3d-2-photo-20260922.webp",
+      "width": 1556,
+      "height": 1011,
+      "bytes": 233510
+    },
+    {
+      "source": "/media/diar-al-andalous-2/3d-3.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/3d-3.png",
+      "output": "public/media/diar-al-andalous-2/3d-3-photo-20260922.webp",
+      "width": 1895,
+      "height": 830,
+      "bytes": 204876
+    },
+    {
+      "source": "/media/diar-al-andalous-2/3d-4.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/3d-4.png",
+      "output": "public/media/diar-al-andalous-2/3d-4-photo-20260922.webp",
+      "width": 1592,
+      "height": 988,
+      "bytes": 233706
+    },
+    {
+      "source": "/media/diar-al-andalous-2/3d-5.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/3d-5.png",
+      "output": "public/media/diar-al-andalous-2/3d-5-photo-20260922.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 226076
+    },
+    {
+      "source": "/media/diar-al-andalous-2/3d-6.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/3d-6.png",
+      "output": "public/media/diar-al-andalous-2/3d-6-photo-20260922.webp",
+      "width": 1829,
+      "height": 860,
+      "bytes": 220624
+    },
+    {
+      "source": "/media/diar-al-andalous-2/nuit-1.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/nuit-1.png",
+      "output": "public/media/diar-al-andalous-2/nuit-1-photo-20260922.webp",
+      "width": 1632,
+      "height": 964,
+      "bytes": 238726
+    },
+    {
+      "source": "/media/diar-al-andalous-2/reel-1.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/reel-1.png",
+      "output": "public/media/diar-al-andalous-2/reel-1-photo-20260922.webp",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 250372
+    },
+    {
+      "source": "/media/diar-al-andalous-2/nuit-2.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/nuit-2.png",
+      "output": "public/media/diar-al-andalous-2/nuit-2-photo-20260922.webp",
+      "width": 1904,
+      "height": 826,
+      "bytes": 173822
+    },
+    {
+      "source": "/media/diar-al-andalous-2/reel-4.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/reel-4.png",
+      "output": "public/media/diar-al-andalous-2/reel-4-photo-20260922.webp",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 233110
+    },
+    {
+      "source": "/media/diar-al-andalous-2/reel-2.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/reel-2.png",
+      "output": "public/media/diar-al-andalous-2/reel-2-photo-20260922.webp",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 328390
+    },
+    {
+      "source": "/media/diar-al-andalous-2/reel-3.jpg",
+      "master": "output/gallery-photos-20260922/diar-al-andalous-2/reel-3.png",
+      "output": "public/media/diar-al-andalous-2/reel-3-photo-20260922.webp",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 389166
+    },
+    {
+      "source": "/media/zephyr/hero.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/hero.png",
+      "output": "public/media/zephyr/hero-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 381608
+    },
+    {
+      "source": "/media/zephyr/ext-1.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/ext-1.png",
+      "output": "public/media/zephyr/ext-1-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 99128
+    },
+    {
+      "source": "/media/zephyr/ext-2.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/ext-2.png",
+      "output": "public/media/zephyr/ext-2-photo-20260922.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 76058
+    },
+    {
+      "source": "/media/zephyr/ext-4.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/ext-4.png",
+      "output": "public/media/zephyr/ext-4-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 128050
+    },
+    {
+      "source": "/media/zephyr/ext-5.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/ext-5.png",
+      "output": "public/media/zephyr/ext-5-photo-20260922.webp",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 273776
+    },
+    {
+      "source": "/media/zephyr/vue-1.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/vue-1.png",
+      "output": "public/media/zephyr/vue-1-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 304904
+    },
+    {
+      "source": "/media/zephyr/vue-2.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/vue-2.png",
+      "output": "public/media/zephyr/vue-2-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 172372
+    },
+    {
+      "source": "/media/zephyr/balcon.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/balcon.png",
+      "output": "public/media/zephyr/balcon-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 418802
+    },
+    {
+      "source": "/media/zephyr/aluminium.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/aluminium.png",
+      "output": "public/media/zephyr/aluminium-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 54176
+    },
+    {
+      "source": "/media/zephyr/cuisine-2.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/cuisine-2.png",
+      "output": "public/media/zephyr/cuisine-2-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 47376
+    },
+    {
+      "source": "/media/zephyr/cuisine-1.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/cuisine-1.png",
+      "output": "public/media/zephyr/cuisine-1-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 239810
+    },
+    {
+      "source": "/media/zephyr/cuisine-3.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/cuisine-3.png",
+      "output": "public/media/zephyr/cuisine-3-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 236352
+    },
+    {
+      "source": "/media/zephyr/sdb-1.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/sdb-1.png",
+      "output": "public/media/zephyr/sdb-1-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 161248
+    },
+    {
+      "source": "/media/zephyr/sdb-2.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/sdb-2.png",
+      "output": "public/media/zephyr/sdb-2-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 143116
+    },
+    {
+      "source": "/media/zephyr/bois-1.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/bois-1.png",
+      "output": "public/media/zephyr/bois-1-photo-20260922.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 125446
+    },
+    {
+      "source": "/media/zephyr/bois-2.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/bois-2.png",
+      "output": "public/media/zephyr/bois-2-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 88586
+    },
+    {
+      "source": "/media/zephyr/sous-sol.jpg",
+      "master": "output/gallery-photos-20260922/zephyr/sous-sol.png",
+      "output": "public/media/zephyr/sous-sol-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 112962
+    },
+    {
+      "project": "marassim",
+      "reference": "/media/marassim/hero.jpg",
+      "generatedFile": "exec-617826e2-d6d9-4367-b34e-896cb80486ea.png",
+      "master": "output/project-photos-20260922/marassim.png",
+      "output": "public/media/marassim/facade-photo-20260922.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 340800,
+      "sha256": "f8e5006a46fc8a31e5a01fc513609b873dd3b6b2c9ef12ee2051113ac0a4ef1e"
+    },
+    {
+      "project": "zephyr",
+      "reference": "/media/zephyr/ext-3.jpg",
+      "generatedFile": "exec-34405ee3-76fb-4d01-84c4-134422557cab.png",
+      "master": "output/project-photos-20260922/zephyr.png",
+      "output": "public/media/zephyr/facade-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 100906,
+      "sha256": "8d6459db5755c56d6c532b1c4575cfcc79b372bd3a06e763a96690ab5496997a"
+    },
+    {
+      "project": "diar-al-andalous-1",
+      "reference": "/media/diar-al-andalous-1/hero.jpg",
+      "generatedFile": "exec-5250fbd4-7e15-4bb9-aa11-89192ed470b1.png",
+      "master": "output/project-photos-20260922/diar-al-andalous-1.png",
+      "output": "public/media/diar-al-andalous-1/facade-photo-20260922.webp",
+      "width": 1473,
+      "height": 1068,
+      "bytes": 293350,
+      "sha256": "d8a1b72fffd1b3e1895e080407be2edbd9ed17db9d51c24a20a2942c79f93bd1"
+    },
+    {
+      "project": "diar-al-andalous-2",
+      "reference": "/media/diar-al-andalous-2/hero.jpg",
+      "generatedFile": "exec-953ecde9-d664-4b89-b9cb-7232b8e3a9b3.png",
+      "master": "output/project-photos-20260922/diar-al-andalous-2.png",
+      "output": "public/media/diar-al-andalous-2/facade-photo-20260922.webp",
+      "width": 1619,
+      "height": 971,
+      "bytes": 270774,
+      "sha256": "31bf03a56dee6fe009d8a71f663c21f445a9f83e7cfa44b769beb7557ceff3b6"
+    }
+  ]
+}

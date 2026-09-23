@@ -1,6 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { mappedYassamineLots, yassamineApartmentHref, yassamineLotAtPoint, type MaquetteLot } from '@/lib/yassamine-picking';
 import { useImmersiveViewer } from './useImmersiveViewer';
 
 type Point = [number, number];
@@ -46,7 +49,16 @@ function finishCanvas(kind: 'plaster' | 'stone' | 'wood' | 'paving') {
   return canvas;
 }
 
-export default function YassamineMaquette({ locale }: { locale: string }) {
+export default function YassamineMaquette({ locale, lots }: { locale: string; lots: MaquetteLot[] }) {
+  const router = useRouter();
+  const navigation = useRef({ locale, lots, router });
+  navigation.current = { locale, lots, router };
+  const [hovered, setHovered] = useState<string | null>(null);
+  const selectionCopy = locale === 'ar'
+    ? { hint: 'اضغط على الشقة لفتح صفحتها · اسحب لتدوير المجسم', list: 'صفحات الشقق', unavailable: 'صفحات شقق A5.b وA6 غير متاحة بعد.', open: 'فتح صفحة الشقة' }
+    : locale === 'en'
+    ? { hint: 'Click an apartment to open its details · Drag to rotate', list: 'Apartment details', unavailable: 'Apartment pages for A5.b and A6 are not yet available.', open: 'Open apartment' }
+    : { hint: 'Cliquez sur un appartement pour ouvrir sa fiche · Glissez pour tourner', list: 'Fiches des appartements', unavailable: 'Les fiches des appartements A5.b et A6 ne sont pas encore disponibles.', open: 'Ouvrir la fiche' };
   const c = copy[locale as keyof typeof copy] ?? copy.fr;
   const [block, setBlock] = useState<'A5'|'A6'>('A5');
   const [floor, setFloor] = useState<number | null>(null);
@@ -79,7 +91,7 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
     if (!host || !model) return;
     let cancelled = false;
     let dispose = () => {};
-    setReady(false); setFailed(false);
+    setReady(false); setFailed(false); setHovered(null);
     (async () => {
       const THREE = await import('three');
       const { OrbitControls } = await import('three/examples/jsm/controls/OrbitControls.js');
@@ -141,7 +153,7 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
       const glass = new THREE.MeshPhysicalMaterial({ color: 0x91a9ae, roughness: .12, metalness: .1, transmission: .22, transparent: true, opacity: .82 });
       const roofMat = new THREE.MeshStandardMaterial({ color: 0xe9e1d5, map: stoneTexture, roughness: .9 });
       const materials: import('three').Material[] = [plaster,slabMat,trim,frame,glass,roofMat];
-      const levels: { group: import('three').Group; floor: number; plan: import('three').Object3D }[] = [];
+      const levels: { group: import('three').Group; floor: number; plan: import('three').Object3D; data: Level }[] = [];
       const roofs: { group: import('three').Group; last: number }[] = [];
       const building = new THREE.Group(); scene.add(building);
       function shape(poly: Poly) {
@@ -173,10 +185,17 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
           if(child===keep)continue;
           const mesh=child as import('three').Mesh;
           if(!mesh.geometry||Array.isArray(mesh.material))continue;
+          // Boxes are indexed, extrusions are not: normalize before batching.
+          if(mesh.geometry.index){const original=mesh.geometry;mesh.geometry=original.toNonIndexed();original.dispose();}
           mesh.updateMatrix();mesh.geometry.applyMatrix4(mesh.matrix);
           const batch=batches.get(mesh.material)??[];batch.push(mesh.geometry);batches.set(mesh.material,batch);group.remove(mesh);
         }
-        for(const [mat,geos] of batches){const g=mergeGeometries(geos);geos.forEach(x=>x.dispose());if(g){const mesh=new THREE.Mesh(g,mat);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);}}
+        for(const [mat,geos] of batches){
+          const merged=mergeGeometries(geos);
+          if(merged)geos.forEach(g=>g.dispose());
+          // Preserve every part if a future geometry cannot be merged.
+          for(const g of merged?[merged]:geos){const mesh=new THREE.Mesh(g,mat);mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);}
+        }
       }
       for (const data of selected) {
         const texture=loader.load(data.plan);texture.colorSpace=THREE.SRGBColorSpace;texture.anisotropy=8;textures.push(texture);
@@ -218,7 +237,7 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
           planGeo.rotateX(-Math.PI/2);
           const plan=new THREE.Mesh(planGeo,planMat);plan.position.y=y+.225;plan.visible=false;group.add(plan);
           mergeStatic(group,plan);
-          levels.push({group,floor:f,plan});
+          levels.push({group,floor:f,plan,data});
         }
       }
       for(const part of [...new Set(selected.map(l=>l.block))]){
@@ -238,10 +257,62 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
       const reset=()=>{orbit.target.set(center.x,4,center.z);camera.up.set(0,1,0);camera.position.set(center.x+span*.8,span*.78,center.z-span*1.15);orbit.update();};
       reset();
       controls.current={reset,zoom:factor=>{camera.position.sub(orbit.target).multiplyScalar(factor).add(orbit.target);orbit.update();}};
-      const resize=new ResizeObserver(()=>{if(!host.clientWidth||!host.clientHeight)return;camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();renderer.setSize(host.clientWidth,host.clientHeight);});resize.observe(host);
+      let dirty=true;
+      const onChange=()=>{dirty=true;};orbit.addEventListener('change',onChange);
+      const canvas=renderer.domElement;
+      const raycaster=new THREE.Raycaster();
+      const pointer=new THREE.Vector2();
+      const pick=(event:PointerEvent)=>{
+        const rect=canvas.getBoundingClientRect();
+        pointer.set((event.clientX-rect.left)/rect.width*2-1,1-(event.clientY-rect.top)/rect.height*2);
+        scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+        raycaster.setFromCamera(pointer,camera);
+        // Explicit visibility filtering: Three's raycaster also visits hidden groups.
+        // Include roofs as occluders so a roof cannot select a flat underneath it.
+        const objects=[...levels.filter(l=>l.group.visible).flatMap(l=>l.group.children.filter(o=>o.visible)),...roofs.filter(r=>r.group.visible).flatMap(r=>r.group.children)];
+        const hit=raycaster.intersectObjects(objects,false)[0];
+        if(!hit)return;
+        const level=levels.find(l=>l.group===hit.object.parent);
+        if(!level)return;
+        return yassamineLotAtPoint({block:level.data.block,floor:level.floor,textureBounds:level.data.textureBounds},hit.point.x,hit.point.z,navigation.current.lots);
+      };
+      let gesture:{id:number;x:number;y:number;moved:boolean}|null=null;
+      const pointers=new Set<number>();
+      const clearHover=()=>{canvas.style.cursor='grab';setHovered(null);};
+      const down=(event:PointerEvent)=>{
+        clearHover();
+        pointers.add(event.pointerId);
+        if(pointers.size>1){gesture=null;clearHover();return;}
+        if(event.button===0&&event.isPrimary)gesture={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false};
+      };
+      const move=(event:PointerEvent)=>{
+        if(gesture&&Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)>6)gesture.moved=true;
+        if(pointers.size||event.pointerType!=='mouse')return;
+        const lot=pick(event);canvas.style.cursor=lot?'pointer':'grab';setHovered(lot?.code??null);
+      };
+      const up=(event:PointerEvent)=>{
+        const click=gesture?.id===event.pointerId&&!gesture.moved&&pointers.size===1
+          &&Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)<=6;
+        pointers.delete(event.pointerId);gesture=null;
+        if(!click)return;
+        const lot=pick(event);
+        if(lot){setRotating(false);navigation.current.router.push(yassamineApartmentHref(navigation.current.locale,lot.ref));}
+      };
+      const cancel=(event:PointerEvent)=>{pointers.delete(event.pointerId);gesture=null;clearHover();};
+      canvas.style.cursor='grab';
+      canvas.addEventListener('pointerdown',down,true);
+      canvas.addEventListener('pointermove',move,true);
+      canvas.addEventListener('pointerup',up,true);
+      canvas.addEventListener('pointercancel',cancel,true);
+      canvas.addEventListener('pointerleave',clearHover);
+      const disposePicking=()=>{
+        canvas.removeEventListener('pointerdown',down,true);canvas.removeEventListener('pointermove',move,true);
+        canvas.removeEventListener('pointerup',up,true);canvas.removeEventListener('pointercancel',cancel,true);canvas.removeEventListener('pointerleave',clearHover);
+      };
+      const resize=new ResizeObserver(()=>{if(!host.clientWidth||!host.clientHeight)return;camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();renderer.setSize(host.clientWidth,host.clientHeight);dirty=true;});resize.observe(host);
       let frameId=0,previousTop=false,previousFloor:number|null|undefined=undefined;
       let visible=true;
-      const visibility=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??true;});visibility.observe(host);
+      const visibility=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??true;dirty=true;});visibility.observe(host);
       const draw=()=>{
         frameId=requestAnimationFrame(draw);
         if(!visible || document.hidden) return;
@@ -253,11 +324,12 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
         orbit.autoRotate=current.rotating&&!current.top;
         for(const l of levels){l.group.visible=current.floor===null||l.floor<=current.floor;l.plan.visible=current.floor===l.floor;}
         for(const r of roofs)r.group.visible=current.floor===null;
-        if(previousFloor!==current.floor){renderer.shadowMap.needsUpdate=true;previousFloor=current.floor;}
-        orbit.update();renderer.render(scene,camera);
+        if(previousFloor!==current.floor){renderer.shadowMap.needsUpdate=true;previousFloor=current.floor;dirty=true;}
+        const changed=orbit.update();
+        if(dirty||changed||orbit.autoRotate){renderer.render(scene,camera);dirty=false;}
       };draw();setReady(true);
       const contextLost=(event:Event)=>{event.preventDefault();setFailed(true);};renderer.domElement.addEventListener('webglcontextlost',contextLost);
-      dispose=()=>{cancelAnimationFrame(frameId);visibility.disconnect();resize.disconnect();orbit.dispose();controls.current=null;renderer.domElement.removeEventListener('webglcontextlost',contextLost);scene.traverse(o=>{const m=o as import('three').Mesh;if(m.geometry)m.geometry.dispose();});materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());environment.dispose();renderer.dispose();renderer.domElement.remove();};
+      dispose=()=>{disposePicking();cancelAnimationFrame(frameId);visibility.disconnect();resize.disconnect();orbit.removeEventListener('change',onChange);orbit.dispose();controls.current=null;renderer.domElement.removeEventListener('webglcontextlost',contextLost);scene.traverse(o=>{const m=o as import('three').Mesh;if(m.geometry)m.geometry.dispose();});materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());environment.dispose();renderer.dispose();renderer.domElement.remove();};
     })().catch(()=>{dispose();if(!cancelled)setFailed(true);});
     return()=>{cancelled=true;dispose();};
   },[model,block,attempt]);
@@ -276,6 +348,7 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
         </div>
         <div className="relative min-h-[360px] bg-[#e8e5de]" style={{height:fullscreen?'calc(100dvh - 205px)':'clamp(380px, 60vw, 620px)'}}>
           <div ref={mount} className="h-full w-full" aria-label={`${c.block} ${block.slice(1)} — ${c.hint}`} />
+          {hovered&&<div className="pointer-events-none absolute left-4 top-4 rounded-xl bg-ink/90 px-4 py-3 text-sm text-white">{selectionCopy.open} · {hovered} →</div>}
           {!ready&&!failed&&<p className="absolute inset-0 grid place-items-center text-ink">{c.loading}</p>}
           {failed&&<div className="absolute inset-0 flex flex-col items-center justify-center gap-5 bg-[#e8e5de] p-10 text-center text-ink"><p>{c.error}</p><button className={`${button} border-ink/30`} onClick={()=>setAttempt(a=>a+1)}>{c.retry}</button></div>}
           <div className="absolute bottom-4 left-4 right-4 flex flex-wrap justify-between gap-2">
@@ -289,7 +362,12 @@ export default function YassamineMaquette({ locale }: { locale: string }) {
           <button className={`${button} ml-auto border-white/20`} aria-pressed={rotating} onClick={()=>setRotating(!rotating)}>{rotating?c.pause:c.rotate}</button>
         </div>
       </div>
-      <p className="mt-3 text-xs text-white/50">{c.hint}</p><p className="mt-2 max-w-3xl text-sm text-white/65">{c.note}</p>
+      <p className="mt-3 text-sm text-white/80">{selectionCopy.hint}</p>
+      <nav aria-label={selectionCopy.list} className="mt-4 flex flex-wrap gap-2">
+        {mappedYassamineLots(lots).filter(lot=>lot.block.startsWith(block)&&(floor===null||lot.floor===floor)).map(lot=><Link key={lot.ref} prefetch={false} href={yassamineApartmentHref(locale,lot.ref)} className={`${button} border-white/20 hover:border-gold-400 hover:text-gold-300`} aria-label={`${selectionCopy.open} ${lot.code}`}>{lot.code} ↗</Link>)}
+      </nav>
+      <p className="mt-3 text-xs text-white/60">{selectionCopy.unavailable}</p>
+      <p className="mt-2 max-w-3xl text-sm text-white/65">{c.note}</p>
       <div className="mt-9"><h3 className="font-display text-2xl">{c.plans} · {floor===null||floor===0?c.ground:`R+${floor}`}</h3>
         <div className="mt-5 grid gap-5 md:grid-cols-2">{selectedPlans.map(p=><article key={p.id} className="overflow-hidden rounded-xl bg-ivory text-ink"><div className="flex items-center justify-between gap-3 p-4"><strong>{p.block}</strong><a className="text-sm underline underline-offset-4" href={p.pdf} download>{c.download}</a></div><img src={p.plan} alt={`${c.plans} ${p.block}`} loading="lazy" className="h-[340px] w-full bg-white object-contain p-3" /></article>)}</div>
       </div>

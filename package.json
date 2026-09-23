@@ -14,7 +14,7 @@
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
     "plans": "node scripts/generate-plans.mjs",
-    "test": "node scripts/test-property-search.cjs && node scripts/test-visit-leads.cjs && node scripts/test-commercial.cjs && node scripts/test-pwa.cjs && node scripts/test-storage.cjs && node scripts/test-security-postgres.cjs && node scripts/test-postgres-runtime.cjs",
+    "test": "node scripts/test-yassamine-picking.cjs && node scripts/test-property-search.cjs && node scripts/test-visit-leads.cjs && node scripts/test-commercial.cjs && node scripts/test-pwa.cjs && node scripts/test-storage.cjs && node scripts/test-security-postgres.cjs && node scripts/test-postgres-runtime.cjs",
     "db:check": "node scripts/postgres.cjs check",
     "db:migrate": "node scripts/postgres.cjs migrate",
     "db:import": "node scripts/postgres.cjs import",

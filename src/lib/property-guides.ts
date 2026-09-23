@@ -7,6 +7,132 @@ export interface PropertyGuide {
   sources:{title:string;url:string}[];
 }
 export const propertyGuides:PropertyGuide[] = [
+{
+  "slug": "prix-metre-carre-comparer-surfaces-tunisie",
+  "published": "2026-09-22",
+  "updated": "2026-09-22",
+  "title": {
+    "fr": "Prix au mètre carré en Tunisie : comparer sans mélanger les surfaces",
+    "en": "Price per square metre in Tunisia: compare like-for-like areas",
+    "ar": "سعر المتر المربع في تونس: قارن دون خلط المساحات"
+  },
+  "summary": {
+    "fr": "Divisez un prix clairement défini par une surface documentée de même nature pour chaque logement. Voici une méthode de comparaison avec des calculs fictifs, sans moyenne de marché ni estimation d’un appartement réel.",
+    "en": "Divide a clearly defined price by a documented, equivalent area for each home. This guide uses fictional calculations, not market averages or valuations of actual apartments.",
+    "ar": "اقسم ثمناً محدداً بوضوح على مساحة موثقة من النوع نفسه لكل مسكن. يقدم هذا الدليل طريقة للمقارنة بأمثلة حسابية افتراضية، وليس متوسطات للسوق أو تقييماً لشقة حقيقية."
+  },
+  "sections": [
+    {
+      "title": {
+        "fr": "Fixer le périmètre avant de calculer",
+        "en": "Define what you are comparing",
+        "ar": "حدد نطاق المقارنة قبل الحساب"
+      },
+      "body": {
+        "fr": "Le calcul est simple : prix retenu en dinars ÷ surface retenue en m². Sa pertinence dépend des données. Notez la référence du lot, la date du prix, les éléments inclus et la définition de la surface. Dans le comparateur IMF, il s’agit de la surface vendable renseignée ; jardin et terrasse sont affichés séparément lorsqu’ils sont connus. Demandez le détail du calcul de cette surface, notamment le traitement des parties communes. Ne comparez pas automatiquement une surface vendable avec une surface intérieure. Si le prix ou la surface n’est pas documenté, laissez le ratio en attente.",
+        "en": "The calculation is simple: the selected price in dinars divided by the selected area in m². Its usefulness depends on the inputs. Record the apartment reference, quotation date, included items and area definition. The IMF comparison shows the recorded saleable area; known garden and terrace areas appear separately. Ask how that area was calculated, including the treatment of common parts. Do not automatically compare saleable area with internal area. If the price or area is undocumented, leave the ratio unresolved.",
+        "ar": "الحساب بسيط: الثمن المعتمد بالدينار ÷ المساحة المعتمدة بالمتر المربع. لكن فائدة النتيجة تتوقف على المعطيات. سجل مرجع الشقة وتاريخ العرض والعناصر المشمولة وتعريف المساحة. يعرض مقارن IMF مساحة البيع المدونة، مع فصل الحديقة والشرفة عند توفر بياناتهما. اطلب تفاصيل حساب المساحة، بما في ذلك الأجزاء المشتركة. لا تقارن تلقائياً مساحة البيع بالمساحة الداخلية. إذا لم يكن الثمن أو المساحة موثقاً، اترك النسبة دون حساب."
+      }
+    },
+    {
+      "title": {
+        "fr": "Exemple fictif : deux ratios, deux budgets",
+        "en": "Fictional example: two ratios, two budgets",
+        "ar": "مثال افتراضي: نسبتان وميزانيتان"
+      },
+      "body": {
+        "fr": "Exemple entièrement fictif, sans lien avec les prix IMF ou le marché tunisien : l’appartement A coûte 240 000 TND pour 100 m² de surface vendable, soit 2 400 TND/m². L’appartement B coûte 252 000 TND pour 105 m², soit également 2 400 TND/m², à périmètre identique. Leur ratio est égal, mais B demande 12 000 TND supplémentaires pour le prix présenté. Si la même offre A est divisée par 80 m² de surface intérieure, le résultat devient 3 000 TND/m². Le logement et son prix n’ont pas changé : seul le dénominateur a changé. Ces chiffres ne sont ni une moyenne locale, ni une offre commerciale.",
+        "en": "Entirely fictional example, unrelated to IMF prices or the Tunisian market: apartment A costs 240,000 TND for 100 m² of saleable area, or 2,400 TND/m². Apartment B costs 252,000 TND for 105 m², also 2,400 TND/m², on the same basis. Their ratios match, but B requires an extra 12,000 TND for the quoted price. Dividing A’s same price by 80 m² of internal area instead gives 3,000 TND/m². Neither the home nor its price changed: only the denominator did. These figures are neither local averages nor commercial offers.",
+        "ar": "مثال افتراضي بالكامل، لا يرتبط بأسعار IMF أو السوق التونسية: ثمن الشقة أ هو 240000 دينار لمساحة بيع قدرها 100 م²، أي 2400 دينار/م². وثمن الشقة ب هو 252000 دينار لمساحة 105 م²، أي أيضاً 2400 دينار/م²، وفق النطاق نفسه. النسبتان متساويتان، لكن الثمن المعروض للشقة ب يتطلب 12000 دينار إضافية. إذا قسمنا ثمن الشقة أ نفسه على مساحة داخلية قدرها 80 م²، تصبح النتيجة 3000 دينار/م². لم تتغير الشقة ولا ثمنها؛ تغير المقام فقط. هذه الأرقام ليست متوسطات محلية ولا عروضاً تجارية."
+      }
+    },
+    {
+      "title": {
+        "fr": "Isoler parking, terrasse et autres éléments",
+        "en": "Separate parking, terraces and other items",
+        "ar": "افصل الموقف والشرفة والعناصر الأخرى"
+      },
+      "body": {
+        "fr": "Demandez une ventilation écrite des éléments de l’offre. Autre exemple fictif : un ensemble annoncé à 260 000 TND comprend un appartement de 100 m² et un parking chiffré séparément à 20 000 TND. Si le vendeur confirme cette ventilation, le prix attribué à l’appartement est 240 000 TND, soit 2 400 TND/m² ; l’ensemble représente 2 600 TND par m² d’appartement. Les deux calculs décrivent des périmètres différents. Sans ventilation confirmée, ne déduisez pas un montant supposé pour le parking. N’ajoutez pas non plus jardin et terrasse au dénominateur sans convention explicitée : gardez leurs surfaces et leur traitement dans le prix sur des lignes séparées.",
+        "en": "Ask for a written breakdown of the offer. Another fictional example: a 260,000 TND package includes a 100 m² apartment and parking separately priced at 20,000 TND. If the seller confirms that breakdown, the apartment portion is 240,000 TND, or 2,400 TND/m²; the package represents 2,600 TND per square metre of apartment area. These calculations cover different items. Without a confirmed breakdown, do not subtract an assumed parking value. Do not add garden and terrace areas to the denominator without an explicit convention either: keep their areas and treatment in the price on separate lines.",
+        "ar": "اطلب تفصيلاً مكتوباً لعناصر العرض. مثال افتراضي آخر: عرض بقيمة 260000 دينار يشمل شقة بمساحة 100 م² وموقفاً محدد الثمن بشكل منفصل بقيمة 20000 دينار. إذا أكد البائع هذا التفصيل، تكون حصة الشقة 240000 دينار، أي 2400 دينار/م²، بينما يمثل العرض الكامل 2600 دينار لكل متر مربع من مساحة الشقة. الحسابان يغطيان عناصر مختلفة. دون تفصيل مؤكد، لا تخصم قيمة مفترضة للموقف. ولا تضف الحديقة والشرفة إلى المقام دون طريقة حساب واضحة؛ سجل مساحاتهما ومعالجتهما في الثمن على أسطر منفصلة."
+      }
+    },
+    {
+      "title": {
+        "fr": "Distinguer indice de marché et prix d’un logement",
+        "en": "Distinguish a market index from a home’s price",
+        "ar": "ميز بين مؤشر السوق وثمن المسكن"
+      },
+      "source": "https://www.ins.tn/methode/fiche-technique-de-lindice-des-prix-de-limmobilier-ipim-0",
+      "body": {
+        "fr": "La fiche méthodologique de l’INS décrit l’IPIM comme un indice trimestriel de l’évolution des prix de transactions immobilières, calculé à partir de données administratives. Source consultée le 22 septembre 2026. Un indice d’évolution n’est pas un devis au mètre carré pour votre appartement : c’est une distinction de lecture, pas une estimation IMF. Ce guide ne présente aucun niveau de prix actuel par quartier.",
+        "en": "The INS methodology describes IPIM as a quarterly index tracking property transaction prices using administrative data. Source checked on 22 September 2026. A price-change index is not a per-square-metre quotation for your apartment: this is an interpretive distinction, not an IMF valuation. This guide provides no current neighbourhood price levels.",
+        "ar": "تصف المنهجية الرسمية للمعهد الوطني للإحصاء مؤشر أسعار العقارات بأنه مؤشر فصلي لتطور أسعار المعاملات العقارية يعتمد على بيانات إدارية. تمت مراجعة المصدر في 22 سبتمبر 2026. مؤشر التطور ليس عرض سعر للمتر المربع لشقتك؛ هذا توضيح لطريقة القراءة وليس تقييماً من IMF. لا يقدم هذا الدليل أسعاراً حالية حسب الأحياء."
+      }
+    },
+    {
+      "title": {
+        "fr": "Conserver une fiche de comparaison exploitable",
+        "en": "Keep a comparison you can act on",
+        "ar": "احتفظ ببطاقة مقارنة واضحة"
+      },
+      "body": {
+        "fr": "Pour chaque bien, conservez le prix daté, la surface utilisée et sa définition, le calcul du ratio, les annexes incluses et les points à confirmer. Comparez ensuite l’étage, l’orientation documentée, les prestations, l’état d’avancement et la localisation réelle. Le ratio le plus bas ne suffit pas à choisir. Gardez aussi le prix total et les autres dépenses identifiées sur devis dans votre tableau de budget, sans les confondre avec le prix du seul appartement. Utilisez les favoris et la comparaison IMF pour préparer vos questions, puis faites confirmer les montants et les surfaces avant de décider.",
+        "en": "For each property, keep the dated price, chosen area and definition, ratio calculation, included annexes and unresolved questions. Then compare floor, documented orientation, specifications, construction progress and actual location. The lowest ratio alone is not enough to choose. Keep the total price and any other separately quoted expenses in your budget table without confusing them with the apartment-only price. Use IMF favourites and comparison to prepare questions, then have amounts and areas confirmed before deciding.",
+        "ar": "احتفظ لكل عقار بالثمن المؤرخ والمساحة المعتمدة وتعريفها وحساب النسبة والملحقات المشمولة والنقاط التي تحتاج إلى تأكيد. ثم قارن الطابق والتوجيه الموثق والتجهيزات وتقدم الأشغال والموقع الفعلي. لا تكفي أدنى نسبة وحدها للاختيار. سجل أيضاً الثمن الإجمالي والمصاريف الأخرى المحددة بعروض مكتوبة في جدول الميزانية، دون خلطها بثمن الشقة وحدها. استعمل المفضلة والمقارنة في IMF لإعداد أسئلتك، ثم اطلب تأكيد المبالغ والمساحات قبل القرار."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "question": {
+        "fr": "Quelle formule utiliser pour le prix au mètre carré ?",
+        "en": "How do I calculate price per square metre?",
+        "ar": "كيف أحسب سعر المتر المربع؟"
+      },
+      "answer": {
+        "fr": "Divisez le prix retenu par la surface documentée, en précisant ce que chacun comprend. Utilisez la même définition pour tous les biens comparés.",
+        "en": "Divide the selected price by the documented area, stating what each includes. Use the same definition for every property compared.",
+        "ar": "اقسم الثمن المعتمد على المساحة الموثقة، مع توضيح ما يشمله كل منهما. استخدم التعريف نفسه لكل العقارات المقارنة."
+      }
+    },
+    {
+      "question": {
+        "fr": "Les montants de ce guide sont-ils les prix des appartements IMF ?",
+        "en": "Are the amounts in this guide IMF apartment prices?",
+        "ar": "هل مبالغ هذا الدليل هي أسعار شقق IMF؟"
+      },
+      "answer": {
+        "fr": "Non. Tous les montants des exemples sont fictifs et servent uniquement à expliquer le calcul. Consultez la fiche du logement et demandez un prix daté au service commercial.",
+        "en": "No. All example amounts are fictional and only explain the calculation. Consult the listing and request a dated quotation from the sales team.",
+        "ar": "لا. كل مبالغ الأمثلة افتراضية لتوضيح الحساب فقط. راجع بطاقة المسكن واطلب عرضاً مؤرخاً من الفريق التجاري."
+      }
+    },
+    {
+      "question": {
+        "fr": "Puis-je additionner jardin, terrasse et surface vendable ?",
+        "en": "Can I add garden, terrace and saleable areas together?",
+        "ar": "هل يمكن جمع مساحة الحديقة والشرفة ومساحة البيع؟"
+      },
+      "answer": {
+        "fr": "Pas automatiquement pour comparer les prix. Demandez la définition et la méthode utilisées, puis gardez les extérieurs séparés tant que le périmètre n’est pas confirmé.",
+        "en": "Not automatically for a price comparison. Ask for the definitions and calculation method, and keep outdoor areas separate until the basis is confirmed.",
+        "ar": "ليس تلقائياً عند مقارنة الأسعار. اطلب التعريفات وطريقة الحساب، وافصل المساحات الخارجية إلى أن يتم تأكيد نطاق المقارنة."
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "INS — Fiche technique IPIM (consultée le 22 septembre 2026)",
+      "url": "https://www.ins.tn/methode/fiche-technique-de-lindice-des-prix-de-limmobilier-ipim-0"
+    },
+    {
+      "title": "IMF — Comparer les plans et les surfaces",
+      "url": "/fr/guides/comparer-plans-surfaces-appartements-tunisie"
+    }
+  ]
+},
   {
     slug:'comparer-plans-surfaces-appartements-tunisie',published:'2026-09-20',updated:'2026-09-20',
     title:L('Comment comparer les plans et surfaces de deux appartements en Tunisie ?','How to compare apartment plans and areas in Tunisia','كيف تقارن مخططات ومساحات شقتين في تونس؟'),

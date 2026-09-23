@@ -19,6 +19,16 @@ export default function Gallery({
 }) {
   const [index, setIndex] = useState<number | null>(null);
   const dialog = useRef<HTMLDivElement>(null);
+  const gesture = useRef<{ x: number; y: number } | null>(null);
+  const [loadedSrc, setLoadedSrc] = useState('');
+  const [failedSrc, setFailedSrc] = useState('');
+  const [retry, setRetry] = useState(0);
+  const locale = labels.close === 'Fermer' ? 'fr' : /[\u0600-\u06ff]/.test(labels.close) ? 'ar' : 'en';
+  const status = {
+    fr: { loading: 'Chargement de la photo…', error: 'La photo n’a pas pu se charger.', retry: 'Réessayer' },
+    en: { loading: 'Loading photo…', error: 'The photo could not be loaded.', retry: 'Try again' },
+    ar: { loading: 'جارٍ تحميل الصورة…', error: 'تعذّر تحميل الصورة.', retry: 'إعادة المحاولة' },
+  }[locale];
 
   const close = useCallback(() => setIndex(null), []);
   useImmersiveViewer(index !== null, close, dialog);
@@ -45,6 +55,7 @@ export default function Gallery({
           <button
             key={`${item.src}-${i}`}
             type="button"
+            aria-label={item.caption}
             onClick={() => setIndex(i)}
             className={`group relative overflow-hidden rounded-xl bg-sand ${
               i === 0 ? 'col-span-2 row-span-2 aspect-square md:aspect-[4/3]' : 'aspect-[4/3]'
@@ -55,7 +66,7 @@ export default function Gallery({
               alt={item.caption}
               fill
               sizes={i === 0 ? '(max-width: 768px) 100vw, 60vw' : '(max-width: 768px) 50vw, 25vw'}
-              quality={90}
+              quality={80}
               className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.08]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent transition-opacity duration-300" />
@@ -69,7 +80,7 @@ export default function Gallery({
       {index !== null && (
         <div ref={dialog} className="fixed inset-0 z-[100] flex flex-col bg-ink/[0.97] backdrop-blur-sm" role="dialog" aria-modal="true" aria-label={items[index].caption}>
           <div className="flex items-center justify-between px-5 py-4 text-white/70">
-            <span className="text-[12px] uppercase tracking-[0.2em]">
+            <span aria-live="polite" aria-atomic="true" className="text-[12px] uppercase tracking-[0.2em]">
               {index + 1} {labels.of} {items.length}
             </span>
             <button
@@ -92,14 +103,33 @@ export default function Gallery({
               <IconArrowLeft className="h-5 w-5 rtl:rotate-180" />
             </button>
 
-            <div className="relative h-full w-full max-w-6xl">
+            <div className="relative h-full w-full max-w-6xl touch-pan-y"
+              onTouchStart={event => { const point = event.touches[0]; gesture.current = event.touches.length === 1 ? { x: point.clientX, y: point.clientY } : null; }}
+              onTouchMove={event => { if (event.touches.length !== 1) gesture.current = null; }}
+              onTouchCancel={() => { gesture.current = null; }}
+              onTouchEnd={event => {
+                const start = gesture.current; gesture.current = null;
+                if (!start || !event.changedTouches[0]) return;
+                const dx = event.changedTouches[0].clientX - start.x;
+                const dy = event.changedTouches[0].clientY - start.y;
+                if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                  if ((dx < 0) !== (locale === 'ar')) next(); else prev();
+                }
+              }}>
+              {loadedSrc !== items[index].src && failedSrc !== items[index].src && <p role="status" className="absolute inset-0 grid place-items-center text-sm text-white/80">{status.loading}</p>}
+              {failedSrc === items[index].src && <div role="alert" className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 text-white">
+                <p>{status.error}</p><button type="button" className="rounded-full border border-white/40 px-5 py-3" onClick={() => { setFailedSrc(''); setLoadedSrc(''); setRetry(value => value + 1); }}>{status.retry}</button>
+              </div>}
               <Image
+                key={`${items[index].src}-${retry}`}
                 src={items[index].src}
                 alt={items[index].caption}
                 fill
-                sizes="100vw"
-                quality={95}
-                className="object-contain"
+                sizes="(max-width: 1200px) calc(100vw - 32px), 1152px"
+                quality={85}
+                onLoad={() => { setLoadedSrc(items[index].src); setFailedSrc(''); }}
+                onError={() => setFailedSrc(items[index].src)}
+                className={`object-contain transition-opacity motion-reduce:transition-none ${loadedSrc === items[index].src && failedSrc !== items[index].src ? 'opacity-100' : 'opacity-0'}`}
                 priority
               />
             </div>

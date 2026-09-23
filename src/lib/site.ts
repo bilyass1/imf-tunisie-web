@@ -7,8 +7,8 @@ export const SITE = {
   name: 'IMF',
   legalName: 'Immobilière Mseddi Frères',
   arabicName: 'عقارية مسعدي اخوان',
-  url: 'https://imf-immobiliere.tn',
-  email: 'info@imf-tunisie.com.tn',
+  url: 'https://imf-immobilere.tn',
+  email: 'contact@imf-immobilere.tn',
 
   /** Siège commercial actuel (documents commerciaux 2026) */
   office: {
@@ -25,7 +25,12 @@ export const SITE = {
     fax: '+216 74 454 365',
   },
 
-  technicalPhone: '+216 98 420 088',
+  tunisOffice: {
+    line1: 'Immeuble El Kods — Cité Ennasr',
+    line2: 'Tunis — Tunisie',
+  },
+
+  technicalPhone: '+216 58 420 088',
 
   legal: {
     vat: '1213581Z/P/M/000',

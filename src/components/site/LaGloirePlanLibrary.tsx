@@ -6,9 +6,9 @@ import { publicFileExists } from '@/lib/assets';
 import InteriorExplorer from './InteriorExplorer';
 
 const copy = {
-  fr: { title: 'Tous les plans de La Gloire', description: '102 appartements · Plans de vente du 13 février 2026', block: 'Bloc', floor: 'Étage', ground: 'Rez-de-chaussée', basement: 'Sous-sol', overview: 'Plans d’ensemble', cover: 'Présentation du bloc', open: 'Ouvrir le plan' },
-  en: { title: 'All La Gloire floor plans', description: '102 apartments · Sales plans dated 13 February 2026', block: 'Block', floor: 'Floor', ground: 'Ground floor', basement: 'Basement', overview: 'Building plans', cover: 'Block overview', open: 'Open floor plan' },
-  ar: { title: 'جميع مخططات لا غلوار', description: '102 شقة · مخططات البيع بتاريخ 13 فبراير 2026', block: 'العمارة', floor: 'الطابق', ground: 'الطابق الأرضي', basement: 'الطابق السفلي', overview: 'المخططات العامة', cover: 'تقديم العمارة', open: 'فتح المخطط' },
+  fr: { title: 'Tous les plans de La Gloire', description: '102 appartements · Plans de vente', block: 'Bloc', floor: 'Étage', ground: 'Rez-de-chaussée', basement: 'Sous-sol', overview: 'Plans d’ensemble', cover: 'Présentation du bloc', open: 'Ouvrir le plan' },
+  en: { title: 'All La Gloire floor plans', description: '102 apartments · Sales plans', block: 'Block', floor: 'Floor', ground: 'Ground floor', basement: 'Basement', overview: 'Building plans', cover: 'Block overview', open: 'Open floor plan' },
+  ar: { title: 'جميع مخططات لا غلوار', description: '102 شقة · مخططات البيع', block: 'العمارة', floor: 'الطابق', ground: 'الطابق الأرضي', basement: 'الطابق السفلي', overview: 'المخططات العامة', cover: 'تقديم العمارة', open: 'فتح المخطط' },
 };
 
 export default function LaGloirePlanLibrary({ locale }: { locale: Locale }) {

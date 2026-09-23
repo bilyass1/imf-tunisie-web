@@ -4,6 +4,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconClose, IconSparkle } from '@/components/Icons';
 import { useImmersiveViewer } from './useImmersiveViewer';
 
+const MAX_FIELD_OF_VIEW = 90;
+const ROTATION_DEGREES_PER_SECOND = 4;
+
 export interface PanoRoom {
   id: string;
   label: string;
@@ -60,7 +63,7 @@ export default function Panorama360({ rooms, labels, poster }: {
       // Photographs are already graded. Preserve their original exposure and colour.
       renderer.toneMapping = THREE.NoToneMapping;
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 20);
+      const camera = new THREE.PerspectiveCamera(MAX_FIELD_OF_VIEW, 1, 0.1, 20);
       let geometry = new THREE.SphereGeometry(10, 96, 64);
       geometry.scale(-1, 1, 1);
       const material = new THREE.MeshBasicMaterial({ toneMapped: false });
@@ -82,7 +85,7 @@ export default function Panorama360({ rooms, labels, poster }: {
       const stopRotation = () => { rotationRef.current = false; setRotating(false); };
       const zoom = (step: number) => {
         stopRotation();
-        camera.fov = THREE.MathUtils.clamp(camera.fov + step, 45, Math.min(90, verticalCoverage - 4));
+        camera.fov = THREE.MathUtils.clamp(camera.fov + step, 45, Math.min(MAX_FIELD_OF_VIEW, verticalCoverage - 4));
         camera.updateProjectionMatrix();
         dirty = true;
       };
@@ -185,13 +188,13 @@ export default function Panorama360({ rooms, labels, poster }: {
       if (disposed) return;
       api.current = {
         zoom,
-        reset: () => { stopRotation(); targetLon = 0; targetLat = 0; camera.fov = 70; camera.updateProjectionMatrix(); dirty = true; },
+        reset: () => { stopRotation(); targetLon = 0; targetLat = 0; camera.fov = Math.min(MAX_FIELD_OF_VIEW, verticalCoverage - 4); camera.updateProjectionMatrix(); dirty = true; },
       };
       const animate = (time: number) => {
         raf = requestAnimationFrame(animate);
         const dt = Math.min((time - previousTime) / 1000, .05); previousTime = time;
         if (!visible || document.hidden) return;
-        if (rotationRef.current && !pointers.size) { targetLon += dt * 2; dirty = true; }
+        if (rotationRef.current && !pointers.size) { targetLon += dt * ROTATION_DEGREES_PER_SECOND; dirty = true; }
         const moving = Math.abs(targetLon - lon) + Math.abs(targetLat - lat) > .005;
         if (!dirty && !moving) return;
         const latitudeLimit = Math.max(0, (verticalCoverage - camera.fov) / 2 - 2);

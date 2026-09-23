@@ -30,8 +30,13 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const infos = [
     {
       Icon: IconPin,
-      label: dict.contact.info.office,
+      label: locale === 'ar' ? 'مكتب صفاقس' : locale === 'en' ? 'Sfax office' : 'Bureau de Sfax',
       lines: [SITE.office.line1, SITE.office.line2],
+    },
+    {
+      Icon: IconPin,
+      label: locale === 'ar' ? 'مكتب تونس' : locale === 'en' ? 'Tunis office' : 'Bureau de Tunis',
+      lines: [SITE.tunisOffice.line1, SITE.tunisOffice.line2],
     },
     {
       Icon: IconPhone,

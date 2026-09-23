@@ -151,6 +151,11 @@ canvas { display: block; }
   scrollbar-width: none;
 }
 
+@media (max-width: 767px) {
+  /* Keep public search/contact inputs readable without iOS focus zoom. */
+  .field { font-size: 16px; }
+}
+
 /* Keep portal content within its column, including long emails and messages. */
 .portal-shell { min-height: 100dvh; overflow-wrap: anywhere; }
 .portal-content .grid > *, .portal-content form, .portal-content label { min-width: 0; }

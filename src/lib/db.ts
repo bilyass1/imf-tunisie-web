@@ -20,6 +20,7 @@ import type {
 import { DEAL_STAGES, PIPELINE_STAGES } from './types';
 import { buildSeed } from './seed';
 import { includeYassamineApartments } from './yassamine-catalog';
+import { projectPresentation } from './project-presentation';
 import { getStore, type MediaWrite } from './postgres-store.cjs';
 
 /** DATABASE_URL selects PostgreSQL; otherwise use local JSON for development.
@@ -151,7 +152,7 @@ export const getPublicData = requestCache(async () => {
   return { projects, company, news };
 });
 export async function getProjects(): Promise<Project[]> {
-  return (await getPublicData()).projects;
+  return (await getPublicData()).projects.map(projectPresentation);
 }
 
 export async function getProject(slug: string): Promise<Project | undefined> {

@@ -42,6 +42,14 @@ export default function PropertyExplorer({ listings, locale }: { listings: Prope
   const mapProjects = [...new Map(results.map(l => [l.project,l])).values()];
   const mapped = mapProjects.find(p => p.project === mapProject) ?? mapProjects[0];
   const map = mapped ? projectMap(mapped.project, mapped.mapQuery, locale) : undefined;
+  const invalidRange = (filters.minPrice !== '' && filters.maxPrice !== '' && Number(filters.minPrice) > Number(filters.maxPrice))
+    || (filters.minArea !== '' && filters.maxArea !== '' && Number(filters.minArea) > Number(filters.maxArea));
+  const help = {
+    fr: { range: 'Le minimum doit être inférieur ou égal au maximum.', contact: 'Être accompagné dans ma recherche', hint: 'Élargissez vos critères ou demandez à notre équipe de vous aider.' },
+    en: { range: 'The minimum must not exceed the maximum.', contact: 'Get help finding a property', hint: 'Broaden your criteria or ask our team for help.' },
+    ar: { range: 'يجب ألا يتجاوز الحد الأدنى الحد الأقصى.', contact: 'مساعدتي في البحث عن عقار', hint: 'وسّع معايير البحث أو اطلب المساعدة من فريقنا.' },
+  }[locale];
+  function reset() { window.history.replaceState(null, '', pathname); setLimit(12); }
   function change(key: keyof PropertyFilters, value: string) {
     const next = { ...filters, [key]: value };
     const query = new URLSearchParams();
@@ -62,7 +70,8 @@ export default function PropertyExplorer({ listings, locale }: { listings: Prope
       <label><span className="label">{c.bedrooms}</span><select className="field" value={filters.bedrooms} onChange={e=>change('bedrooms',e.target.value)}><option value="">{c.all}</option>{[...new Set(listings.map(l=>l.bedrooms))].sort((a,b)=>a-b).map(n=><option key={n} value={n}>{n} · S+{n}</option>)}</select></label>
       <label><span className="label">{c.status}</span><select className="field" value={filters.status} onChange={e=>change('status',e.target.value)}><option value="">{c.all}</option>{(['available','reserved','sold'] as const).map(s=><option key={s} value={s}>{c[s]}</option>)}</select></label>
       <label><span className="label">{c.sort}</span><select className="field" value={filters.sort} onChange={e=>change('sort',e.target.value)}>{[['reference',c.reference],['price-asc',c.priceAsc],['price-desc',c.priceDesc],['area-asc',c.areaAsc],['area-desc',c.areaDesc]].map(([v,label])=><option key={v} value={v}>{label}</option>)}</select></label>
-      <button className="btn-ghost self-end" type="button" onClick={()=>{window.history.replaceState(null,'',pathname);setLimit(12);}}>{c.reset}</button>
+      <button className="btn-ghost self-end" type="button" onClick={reset}>{c.reset}</button>
+      {invalidRange && <p role="alert" className="text-sm text-red-700 sm:col-span-2 lg:col-span-4">{help.range}</p>}
     </form>
     <div className="flex flex-wrap items-center justify-between gap-4"><p aria-live="polite">{results.length} {c.results}</p><button type="button" className="btn-ghost" aria-expanded={mapOpen} aria-controls="property-map" onClick={()=>setMapOpen(v=>!v)}>{c.map}</button></div>
     {mapOpen && <section id="property-map" className="rounded-2xl border border-ink/10 bg-white p-5">
@@ -73,7 +82,7 @@ export default function PropertyExplorer({ listings, locale }: { listings: Prope
         <a className="text-sm underline" href={map?.externalUrl} target="_blank" rel="noopener noreferrer">{c.mapExternal}</a>
       </> : <p>{c.empty}</p>}
     </section>}
-    {results.length ? <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{results.slice(0,limit).map(item=><PropertyCard key={item.id} item={item} locale={locale}/>)}</div> : <p className="rounded-2xl bg-white p-10 text-center">{c.empty}</p>}
+    {results.length ? <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{results.slice(0,limit).map(item=><PropertyCard key={item.id} item={item} locale={locale}/>)}</div> : <div className="space-y-5 rounded-2xl bg-white p-6 text-center sm:p-10"><p className="font-semibold">{c.empty}</p><p>{help.hint}</p><div className="flex flex-wrap justify-center gap-3"><button type="button" className="btn-ghost" onClick={reset}>{c.reset}</button><Link className="btn-gold" href={`/${locale}/contact`}>{help.contact}</Link></div></div>}
     {results.length>limit && <button type="button" className="btn-ghost" onClick={()=>setLimit(v=>v+12)}>{c.more}</button>}
   </div>;
 }

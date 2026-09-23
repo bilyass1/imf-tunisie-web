@@ -11,6 +11,7 @@ export default function PageHero({
   breadcrumb,
   children,
   compact = false,
+  brandArtwork = false,
 }: {
   eyebrow?: string;
   title: string;
@@ -19,16 +20,17 @@ export default function PageHero({
   breadcrumb?: { label: string; href: string }[];
   children?: ReactNode;
   compact?: boolean;
+  brandArtwork?: boolean;
 }) {
   return (
     <section className={`relative isolate overflow-hidden bg-ink ${compact ? 'min-h-[58vh]' : 'min-h-[70vh]'}`}>
-      <div className="absolute inset-0">
+      <div className={brandArtwork ? 'absolute inset-x-0 top-20 h-64 lg:inset-0 lg:h-auto' : 'absolute inset-0'}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <Image src={image} alt="" fill priority quality={75} sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/45 to-ink/20" />
+        <Image src={image} alt="" fill priority quality={75} sizes="100vw" className={brandArtwork ? 'object-cover object-right' : 'object-cover'} />
+        <div className={brandArtwork ? 'absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent lg:from-ink/60' : 'absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/45 to-ink/20'} />
       </div>
 
-      <div className={`container-lux relative flex flex-col justify-end ${compact ? 'pb-14 pt-40' : 'pb-20 pt-44'}`}>
+      <div className={`container-lux relative flex flex-col justify-end ${brandArtwork ? 'pb-14 pt-80 lg:pt-40 lg:[&>*]:max-w-[55%] lg:rtl:items-end' : compact ? 'pb-14 pt-40' : 'pb-20 pt-44'}`}>
         {breadcrumb && (
           <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-white/75">
             {breadcrumb.map((b, i) => (

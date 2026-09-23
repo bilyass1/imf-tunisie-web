@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { submitLeadAction, type FormState } from '@/lib/actions';
 import { IconArrow, IconCheck } from '@/components/Icons';
 import type { Locale } from '@/i18n/config';
+import { visitDateBounds } from '@/lib/visit-request';
 
 export interface ContactFormLabels {
   name: string;
@@ -40,6 +41,7 @@ export default function ContactForm({
   const [state, action, pending] = useActionState(submitLeadAction, initial);
   const [project, setProject] = useState('');
   const [lot, setLot] = useState('');
+  const [dateBounds, setDateBounds] = useState<{ min: string; max: string }>();
   const visiting = params.get('intent') === 'visit';
   const visitLabels = {
     fr: { date:'Date souhaitée', time:'Heure souhaitée (Tunis)', mode:'Type de visite', onsite:'Sur place', video:'Visioconférence', note:'Ce créneau est une demande. Notre équipe vous contactera pour confirmer le rendez-vous.', consent:'J’accepte d’être contacté pour organiser cette visite.', message:'Je souhaite visiter cet appartement.', error:'Choisissez une date future dans les six prochains mois et acceptez le contact.', unavailable:'Cet appartement n’est plus disponible pour une visite. Choisissez un autre bien ou contactez notre équipe.' },
@@ -48,6 +50,7 @@ export default function ContactForm({
   }[locale];
 
   useEffect(() => {
+    setDateBounds(visitDateBounds());
     setProject(params.get('project') ?? '');
     setLot(params.get('lot') ?? '');
   }, [params]);
@@ -69,7 +72,7 @@ export default function ContactForm({
       <div className="hidden" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off"/></label></div>
       {visiting && <fieldset className="grid gap-4 rounded-xl border border-gold-300 bg-gold-50 p-5 sm:col-span-2 sm:grid-cols-2">
         <legend className="px-2 font-semibold">{locale==='ar'?'طلب زيارة':locale==='en'?'Request a visit':'Demander une visite'}</legend>
-        <label><span className="label">{visitLabels.date}</span><input type="date" name="visitDate" required className="field"/></label>
+        <label><span className="label">{visitLabels.date}</span><input type="date" name="visitDate" min={dateBounds?.min} max={dateBounds?.max} required className="field"/></label>
         <label><span className="label">{visitLabels.time}</span><input type="time" name="visitTime" required className="field"/></label>
         <label className="sm:col-span-2"><span className="label">{visitLabels.mode}</span><select name="visitMode" className="field"><option value="onsite">{visitLabels.onsite}</option><option value="video">{visitLabels.video}</option></select></label>
         <p className="text-sm sm:col-span-2">{visitLabels.note}</p>
@@ -104,7 +107,7 @@ export default function ContactForm({
           id="cf-project"
           name="project"
           value={project}
-          onChange={(e) => setProject(e.target.value)}
+          onChange={(e) => { setProject(e.target.value); setLot(''); }}
           className="field"
         >
           <option value="">{labels.choose}</option>
@@ -151,7 +154,7 @@ export default function ContactForm({
       </div>
 
       {state.error && (
-        <p className="sm:col-span-2 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">
+        <p role="alert" className="sm:col-span-2 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">
           {state.error === 'required' ? labels.required : state.error === 'visit' ? visitLabels.error : state.error === 'unavailable' ? visitLabels.unavailable : labels.error}
         </p>
       )}

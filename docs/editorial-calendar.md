@@ -34,3 +34,13 @@ Cadence autorisée : chaque mardi à 10 h, heure de Tunis, un guide utile avec v
 - https://www.cpf.gov.tn/CPFWebSite/Arabe/ServiceEnLigne.php
 - https://www.ubci.tn/particuliers/tunisiens-residents-a-letranger/acheter-un-logement-en-tunisie/credit-immobilier/
 - https://www.bhbank.tn/le-credit-foprolos
+
+## Édition préparée le 22 septembre 2026
+
+- Guide : Prix au mètre carré en Tunisie : comparer sans mélanger les surfaces.
+- Slug : prix-metre-carre-comparer-surfaces-tunisie. Versions FR, AR et EN complètes.
+- Angle distinct du guide sur les plans : calcul du ratio, périmètre du prix, exemples fictifs chiffrés et distinction entre indice statistique et estimation individuelle.
+- Source officielle consultée le 22 septembre 2026 : https://www.ins.tn/methode/fiche-technique-de-lindice-des-prix-de-limmobilier-ipim-0
+- Aucun prix de marché, taux bancaire ou règle fiscale avancé. Tous les montants des exemples sont fictifs.
+- Préparé localement ; publication non effectuée. Le dernier accord de push concernait le lot précédent ; aucun accord permanent de publication automatique n’est consigné dans le projet.
+- Validation terminée : npm test réussi ; compilation de production réussie dans .next-guide-20260922 (153 pages générées), encodage UTF-8/arabe et calculs des exemples vérifiés. Les fichiers techniques réécrits par la compilation ont été restaurés à leur état antérieur.

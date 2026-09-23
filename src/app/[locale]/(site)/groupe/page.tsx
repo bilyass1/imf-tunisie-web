@@ -11,6 +11,7 @@ import { alternates } from '@/lib/seo';
 import Reveal from '@/components/Reveal';
 import PageHero from '@/components/site/PageHero';
 import SectionHeading from '@/components/site/SectionHeading';
+import GroupIdentities from '@/components/site/GroupIdentities';
 import { IconArrow, IconBuilding, IconSparkle, IconChart, IconShield, IconPhone } from '@/components/Icons';
 
 const VALUE_ICONS = [IconShield, IconChart, IconSparkle, IconBuilding];
@@ -36,12 +37,15 @@ export default async function GroupPage({ params }: { params: Promise<{ locale: 
         eyebrow={dict.group.eyebrow}
         title={dict.group.title}
         subtitle={dict.group.lead}
-        image="/media/zephyr/ext-1.jpg"
+        image="/brands/mseddi-groupe-hero.webp"
+        brandArtwork
         breadcrumb={[
           { label: dict.nav.home, href: `/${locale}` },
           { label: dict.nav.group, href: `/${locale}/groupe` },
         ]}
       />
+
+      <GroupIdentities locale={locale} />
 
       {/* ---- Histoire ---- */}
       <section className="bg-ivory py-24 lg:py-32">

@@ -96,6 +96,10 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
               </span>
             </li>
             <li className="flex gap-3">
+              <IconPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
+              <span>{SITE.tunisOffice.line1}<br />{SITE.tunisOffice.line2}</span>
+            </li>
+            <li className="flex gap-3">
               <IconPhone className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
               <span className="flex flex-col">
                 {SITE.office.phones.map((p) => (

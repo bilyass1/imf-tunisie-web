@@ -8,6 +8,7 @@ import { SITE } from '@/lib/site';
 import { getCompanySite } from '@/lib/company';
 import { alternates } from '@/lib/seo';
 import BuyerAnswers from '@/components/site/BuyerAnswers';
+import HomeHeroPhotos from '@/components/site/HomeHeroPhotos';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const l = isLocale(locale) ? locale : 'fr';
@@ -33,7 +34,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const delivered = projects.filter((p) => p.status === 'delivered');
   const hero = ongoing[0] ?? projects[0];
 
-  const totalLots = projects.reduce((sum, p) => sum + p.lots.length, 0);
   const totalAvailable = projects.reduce((sum, p) => sum + lotStats(p.lots).available, 0);
 
   return (
@@ -41,8 +41,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* ---------------------------- HERO ---------------------------- */}
       <section className="relative isolate flex min-h-[92svh] items-end overflow-hidden bg-ink">
         <div className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image src={hero.heroImage} alt="" fill priority quality={90} sizes="100vw" className="object-cover object-[60%_center]" />
+          <HomeHeroPhotos
+            initialImage={hero.heroImage}
+            additionalImages={[
+              '/media/la-gloire/facade-jour-2.jpg',
+              '/media/la-gloire/facade-nuit-1.jpg',
+              '/media/la-gloire/patio-jour-1.jpg',
+            ]}
+            locale={locale}
+          />
           <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/55 to-ink/10 rtl:rotate-180" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-ink/20" />
           <div className="absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_100%,rgba(201,162,75,0.18),transparent_70%)]" />
@@ -87,7 +94,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           {[
             { value: `${SITE.figures.years}+`, label: dict.home.stats.years },
             { value: `${projects.length}`, label: dict.home.stats.projects },
-            { value: `${totalLots || SITE.figures.units}+`, label: dict.home.stats.units },
+            { value: `${SITE.figures.units}+`, label: dict.home.stats.units },
             { value: `${SITE.figures.cities}`, label: dict.home.stats.cities },
           ].map((s, i) => (
             <Reveal key={s.label} delay={i * 90} className="px-2 py-5 text-center sm:px-6">

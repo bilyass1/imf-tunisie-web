@@ -1,0 +1,137 @@
+{
+  "origin": "http://127.0.0.1:3108",
+  "scope": "Local production HTTP checks, not public PageSpeed or ranking measurements",
+  "results": [
+    {
+      "path": "/fr",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/fr"
+    },
+    {
+      "path": "/fr/recherche",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/fr/recherche"
+    },
+    {
+      "path": "/fr/selection",
+      "status": 200
+    },
+    {
+      "path": "/fr/guides",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/fr/guides"
+    },
+    {
+      "path": "/fr/contact",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/fr/contact"
+    },
+    {
+      "path": "/fr/projets/residence-zephyr",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/fr/projets/residence-zephyr"
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/B02",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/fr/projets/residence-la-gloire/appartements/B02"
+    },
+    {
+      "path": "/fr/projets/residence-la-gloire/appartements/A43",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/fr/projets/residence-la-gloire/appartements/A43"
+    },
+    {
+      "path": "/en",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/en"
+    },
+    {
+      "path": "/en/recherche",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/en/recherche"
+    },
+    {
+      "path": "/en/selection",
+      "status": 200
+    },
+    {
+      "path": "/en/guides",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/en/guides"
+    },
+    {
+      "path": "/en/contact",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/en/contact"
+    },
+    {
+      "path": "/en/projets/residence-zephyr",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/en/projets/residence-zephyr"
+    },
+    {
+      "path": "/en/projets/residence-la-gloire/appartements/B02",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/en/projets/residence-la-gloire/appartements/B02"
+    },
+    {
+      "path": "/en/projets/residence-la-gloire/appartements/A43",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/en/projets/residence-la-gloire/appartements/A43"
+    },
+    {
+      "path": "/ar",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/ar"
+    },
+    {
+      "path": "/ar/recherche",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/ar/recherche"
+    },
+    {
+      "path": "/ar/selection",
+      "status": 200
+    },
+    {
+      "path": "/ar/guides",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/ar/guides"
+    },
+    {
+      "path": "/ar/contact",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/ar/contact"
+    },
+    {
+      "path": "/ar/projets/residence-zephyr",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/ar/projets/residence-zephyr"
+    },
+    {
+      "path": "/ar/projets/residence-la-gloire/appartements/B02",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/ar/projets/residence-la-gloire/appartements/B02"
+    },
+    {
+      "path": "/ar/projets/residence-la-gloire/appartements/A43",
+      "status": 200,
+      "canonical": "https://imf-immobilere.tn/ar/projets/residence-la-gloire/appartements/A43"
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200
+    },
+    {
+      "path": "/llms.txt",
+      "status": 200
+    }
+  ],
+  "filteredSearchNoindex": true,
+  "apartmentTourMetadata": true
+}

@@ -82,7 +82,10 @@ export default function Header({
     { label: labels.contact, href: `/${locale}/contact` },
   ];
 
-  const solid = scrolled || !transparent || open;
+  // These pages start on an ivory background rather than an image hero.
+  const plainPage = /^\/(fr|en|ar)\/(recherche|selection|guides)(\/|$)/.test(pathname)
+    || pathname.includes('/plans/');
+  const solid = scrolled || !transparent || open || plainPage;
   const light = !solid;
 
   return (
@@ -137,8 +140,8 @@ export default function Header({
                   : 'border-ink/15 text-ink/70 hover:border-gold-400 hover:text-gold-600'
               }`}
             >
-              <IconUser className="h-3.5 w-3.5" />
-              <span className="hidden md:inline xl:hidden min-[1700px]:inline">{labels.clientArea}</span>
+              <IconUser className="h-3.5 w-3.5" aria-hidden="true" />
+              <span className="sr-only md:not-sr-only xl:sr-only min-[1700px]:not-sr-only">{labels.clientArea}</span>
             </Link>
 
             <Link href={`/${locale}/contact`} className="btn-gold hidden whitespace-nowrap !px-5 !py-2.5 !text-[11px] lg:inline-flex">
@@ -177,6 +180,7 @@ export default function Header({
             <Link
               key={link.href}
               href={link.href}
+              onClick={() => setOpen(false)}
               style={{ transitionDelay: `${80 + i * 55}ms` }}
               className={`border-b border-white/10 py-3 font-display text-2xl font-light text-white transition-all duration-500 ${
                 open ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'

@@ -8,11 +8,12 @@ import { getProject, getProjects, lotStats } from '@/lib/db';
 import { t, formatArea } from '@/lib/format';
 import { SITE } from '@/lib/site';
 import { projectMap } from '@/lib/project-maps';
+import { YASSAMINE_PROGRAMME } from '@/lib/project-presentation';
 import { getCompanySite } from '@/lib/company';
 import Reveal from '@/components/Reveal';
 import PageHero from '@/components/site/PageHero';
 import SectionHeading from '@/components/site/SectionHeading';
-import Gallery from '@/components/site/Gallery';
+import ProjectGallery from '@/components/site/ProjectGallery';
 import { DeferredMaquette as MaquetteSection, DeferredYassamine as YassamineMaquette } from '@/components/site/DeferredViewers';
 import YassaminePlanLibrary from '@/components/site/YassaminePlanLibrary';
 import LazyMount from '@/components/site/LazyMount';
@@ -61,6 +62,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   if (!project) notFound();
 
   const stats = lotStats(project.lots);
+  const programme = project.slug === 'diar-al-yassamine' ? YASSAMINE_PROGRAMME : undefined;
   const all = (await getProjects());
   const nextProject = all[(all.findIndex((p) => p.slug === slug) + 1) % all.length];
 
@@ -124,7 +126,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       {stats.total > 0 && (
         <section className="border-b border-ink/8 bg-white">
           <div className="container-lux grid grid-cols-2 gap-y-6 py-10 lg:grid-cols-4">
-            {[
+            {(programme ? [
+              { value: String(programme.apartments), label: dict.availability.stats.total },
+              { value: String(programme.sold), label: locale === 'ar' ? 'شقة مبيعة' : locale === 'en' ? 'apartments sold' : 'appartements vendus' },
+              { value: String(programme.inProgress), label: locale === 'ar' ? 'شقة قيد البناء' : locale === 'en' ? 'apartments under construction' : 'appartements en construction', accent: true },
+              { value: `${formatArea(programme.minArea, locale)} – ${formatArea(programme.maxArea, locale)}`, label: locale === 'ar' ? 'مساحات الشقق' : locale === 'en' ? 'Apartment areas' : 'Surfaces des appartements' },
+            ] : [
               { value: String(stats.total), label: dict.availability.stats.total },
               { value: String(stats.available), label: dict.availability.stats.available, accent: true },
               { value: stats.typologies.join(' · '), label: dict.availability.typology },
@@ -132,7 +139,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
                 value: `${stats.minArea.toFixed(0)} – ${stats.maxArea.toFixed(0)} m²`,
                 label: dict.availability.table.sellable,
               },
-            ].map((s, i) => (
+            ]).map((s, i) => (
               <Reveal key={s.label} delay={i * 80} className="px-2 text-center">
                 <p
                   className={`font-display text-[28px] font-light leading-tight lg:text-[34px] ${
@@ -261,7 +268,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
             title={dict.project.gallery}
           />
           <div className="mt-12">
-            <Gallery
+            <ProjectGallery
+              locale={locale}
+              projectSlug={project.slug}
               items={project.gallery.map((g) => ({ src: g.src, caption: t(g.caption, locale) }))}
               labels={{
                 close: dict.common.close,
@@ -275,7 +284,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       </section>
 
       {/* ---- Maquette 3D interactive ---- */}
-      {project.slug === 'diar-al-yassamine' && <div id="maquette" className="container-lux scroll-mt-[170px] py-12"><LazyMount minHeight={520} activateLabel={locale === 'ar' ? 'استكشف المجسم ثلاثي الأبعاد' : locale === 'en' ? 'Explore the 3D model' : 'Explorer la maquette 3D'}><YassamineMaquette locale={locale} /></LazyMount></div>}
+      {project.slug === 'diar-al-yassamine' && <div id="maquette" className="container-lux scroll-mt-[170px] py-12"><LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}><YassamineMaquette locale={locale} lots={project.lots.map(({ ref, code, block, floor }) => ({ ref, code, block, floor }))} /></LazyMount></div>}
       {project.slug !== 'diar-al-yassamine' && project.massing && project.lots.length > 0 && (
         <section id="maquette" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">
           <div className="container-lux">
@@ -286,7 +295,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               light
             />
             <div className="mt-12 overflow-hidden rounded-2xl ring-1 ring-white/10">
-              <LazyMount minHeight={520} activateLabel={locale === 'ar' ? 'استكشف المجسم ثلاثي الأبعاد' : locale === 'en' ? 'Explore the 3D model' : 'Explorer la maquette 3D'}>
+              <LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
               <MaquetteSection
                 locale={locale}
                 projectSlug={project.slug}

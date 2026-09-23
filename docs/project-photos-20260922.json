@@ -1,0 +1,50 @@
+{
+  "mode": "built-in image_gen edit",
+  "originalsPreserved": true,
+  "images": [
+    {
+      "project": "marassim",
+      "reference": "/media/marassim/hero.jpg",
+      "generatedFile": "exec-617826e2-d6d9-4367-b34e-896cb80486ea.png",
+      "master": "output/project-photos-20260922/marassim.png",
+      "output": "public/media/marassim/facade-photo-20260922.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 340800,
+      "sha256": "f8e5006a46fc8a31e5a01fc513609b873dd3b6b2c9ef12ee2051113ac0a4ef1e"
+    },
+    {
+      "project": "zephyr",
+      "reference": "/media/zephyr/ext-3.jpg",
+      "generatedFile": "exec-34405ee3-76fb-4d01-84c4-134422557cab.png",
+      "master": "output/project-photos-20260922/zephyr.png",
+      "output": "public/media/zephyr/facade-photo-20260922.webp",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 100906,
+      "sha256": "8d6459db5755c56d6c532b1c4575cfcc79b372bd3a06e763a96690ab5496997a"
+    },
+    {
+      "project": "diar-al-andalous-1",
+      "reference": "/media/diar-al-andalous-1/hero.jpg",
+      "generatedFile": "exec-5250fbd4-7e15-4bb9-aa11-89192ed470b1.png",
+      "master": "output/project-photos-20260922/diar-al-andalous-1.png",
+      "output": "public/media/diar-al-andalous-1/facade-photo-20260922.webp",
+      "width": 1473,
+      "height": 1068,
+      "bytes": 293350,
+      "sha256": "d8a1b72fffd1b3e1895e080407be2edbd9ed17db9d51c24a20a2942c79f93bd1"
+    },
+    {
+      "project": "diar-al-andalous-2",
+      "reference": "/media/diar-al-andalous-2/hero.jpg",
+      "generatedFile": "exec-953ecde9-d664-4b89-b9cb-7232b8e3a9b3.png",
+      "master": "output/project-photos-20260922/diar-al-andalous-2.png",
+      "output": "public/media/diar-al-andalous-2/facade-photo-20260922.webp",
+      "width": 1619,
+      "height": 971,
+      "bytes": 270774,
+      "sha256": "31bf03a56dee6fe009d8a71f663c21f445a9f83e7cfa44b769beb7557ceff3b6"
+    }
+  ]
+}

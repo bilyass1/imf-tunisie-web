@@ -6,6 +6,7 @@ import type { Project } from '@/lib/types';
 import { lotStats } from '@/lib/db';
 import { t, formatArea } from '@/lib/format';
 import { IconArrow, IconPin } from '@/components/Icons';
+import { YASSAMINE_PROGRAMME } from '@/lib/project-presentation';
 
 export default function ProjectCard({
   project,
@@ -20,6 +21,7 @@ export default function ProjectCard({
 }) {
   const stats = lotStats(project.lots);
   const isOngoing = project.status === 'ongoing';
+  const programme = project.slug === 'diar-al-yassamine' ? YASSAMINE_PROGRAMME : undefined;
 
   return (
     <Link
@@ -60,6 +62,7 @@ export default function ProjectCard({
 
       <div className="flex flex-1 flex-col p-5">
         <p className="text-base leading-relaxed text-ink/65">{t(project.subtitle, locale)}</p>
+        {project.deliveryLabel && <p className="mt-2 text-sm text-ink/60">{t(project.deliveryLabel, locale)}</p>}
 
         <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-ink/8 pt-4 text-[12px]">
           {isOngoing && stats.total > 0 ? (
@@ -68,11 +71,11 @@ export default function ProjectCard({
                 {stats.available} {dict.projects.available}
               </span>
               <span className="text-ink/40">
-                {stats.total} {dict.projects.lots}
+                {programme?.apartments ?? stats.total} {dict.projects.lots}
               </span>
               {stats.minArea > 0 && (
                 <span className="text-ink/40">
-                  {dict.projects.from} {formatArea(stats.minArea, locale)}
+                  {dict.projects.from} {formatArea(programme?.minArea ?? stats.minArea, locale)}
                 </span>
               )}
             </>

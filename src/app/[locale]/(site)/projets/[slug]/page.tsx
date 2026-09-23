@@ -339,6 +339,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
                 locale={locale}
                 labels={{
                   ...dict.availability,
+                  ...(project.slug === 'diar-al-yassamine' ? { table: {
+                    ...dict.availability.table,
+                    sellable: locale === 'ar' ? 'مساحة الأرضية' : locale === 'en' ? 'Floor area' : 'Surface du plancher',
+                    gross: locale === 'ar' ? 'المساحة خارج الجدران' : locale === 'en' ? 'Gross area' : 'Surface hors œuvre',
+                  } } : {}),
                   all: dict.common.all,
                   downloadPlan: dict.project.downloadPlan,
                   sheet: dict.apartment.eyebrow,

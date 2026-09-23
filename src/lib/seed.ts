@@ -85,7 +85,7 @@ function buildGloireLots(): Lot[] {
 }
 
 function buildYassamineLots(): Lot[] {
-  return [...yassamineAvailable.map(lot => ({ ...lot, price: YASSAMINE_APPROVED_PRICES[lot.ref], status: 'available' as const })), ...YASSAMINE_A5A_LOTS.map(([code, typology]) => {
+  return [...yassamineAvailable.map(lot => ({ ...lot, price: YASSAMINE_APPROVED_PRICES[lot.ref], status: 'available' as const })), ...YASSAMINE_A5A_LOTS.map(([code, typology, grossArea, sellableArea]) => {
     const [, rest] = code.split('-');
     const [floorStr] = rest.split('.');
     const ref = code.replace(/[.\-]/g, '');
@@ -95,6 +95,8 @@ function buildYassamineLots(): Lot[] {
       block: 'A5.a',
       floor: Number(floorStr),
       typology,
+      grossArea,
+      sellableArea,
       status: 'available' as const,
       planUrl: `/plans/diar-al-yassamine/${ref}.pdf`,
       planImage: `/plans/diar-al-yassamine/${ref}.webp`,

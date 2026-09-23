@@ -343,6 +343,11 @@ export default function AvailabilityPlan({
                 </div>
               ))}
             </dl>
+            {projectSlug === 'diar-al-yassamine' && selected.block === 'A5.a' && (
+              <p className="px-6 pt-4 text-xs leading-relaxed text-ink/55">
+                {locale === 'ar' ? 'المساحات تقريبية حسب مخطط البيع الفردي.' : locale === 'en' ? 'Approximate areas from the individual sales plan.' : 'Surfaces approximatives selon le plan de vente individuel.'}
+              </p>
+            )}
 
             <div className="flex flex-col gap-2.5 p-6 pt-2">
               <Link

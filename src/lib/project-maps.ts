@@ -9,6 +9,10 @@ const locations: Record<string, { query: string; url: string; featureId?: string
     url: 'https://maps.app.goo.gl/xRwdQXSZjQcyQZk97',
     featureId: '0x1301d3001dbbd917:0xf5d162f54b877f75',
   },
+  'residence-zephyr': {
+    query: 'QQ35+56H, Sfax, Tunisia',
+    url: 'https://www.google.com/maps/search/?api=1&query=QQ35%2B56H%2C%20Sfax%2C%20Tunisia',
+  },
 };
 
 // Resolve at display time so existing PostgreSQL records with old address

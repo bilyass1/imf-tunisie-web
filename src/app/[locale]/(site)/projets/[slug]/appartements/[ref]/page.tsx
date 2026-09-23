@@ -25,6 +25,23 @@ import { publicFileExists, panoramaAssets } from '@/lib/assets';
 
 export const dynamicParams = true;
 
+function representativePanorama(slug: string, roomId: string, typology: string): string | undefined {
+  if (slug === 'residence-la-gloire') {
+    if (roomId === 'cuisine') return '/360/representative/la-gloire/cuisine.webp';
+    if (roomId === 'chambre-1' && Number(typology.replace(/\D/g, '')) > 1) {
+      return '/360/representative/la-gloire/suite-parentale.webp';
+    }
+    if (roomId.startsWith('chambre-')) return '/360/representative/la-gloire/chambre.webp';
+  }
+  if (slug === 'diar-al-yassamine') {
+    if (roomId === 'salon' || roomId === 'cuisine' || roomId === 'sdb') {
+      return `/360/representative/diar-al-yassamine/${roomId}.webp`;
+    }
+    if (roomId.startsWith('chambre-')) return '/360/representative/diar-al-yassamine/chambre.webp';
+  }
+  return undefined;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -40,7 +57,8 @@ export async function generateMetadata({
       ? l === 'ar' ? ' (تقريبية)' : l === 'en' ? ' (approx.)' : ' (approx.)'
       : ''}`
     : '';
-  const hasTour = (lot.rooms ?? []).some(room => panoramaAssets(room.panorama).available);
+  const hasTour = (lot.rooms ?? []).some(room => panoramaAssets(room.panorama).available
+    || publicFileExists(representativePanorama(project.slug, room.id, lot.typology)));
   const features = l === 'ar'
     ? `المخطط والتوفر${hasTour ? ' والجولة الافتراضية 360°' : ''}. اطلب زيارة في الموقع أو عبر الفيديو.`
     : l === 'en'
@@ -84,6 +102,17 @@ export default async function ApartmentPage({
   const rooms = lot.rooms ?? [];
   const tourRooms = rooms.map(r => {
     const assets = panoramaAssets(r.panorama);
+    if (assets.available) return { id: r.id, label: t(r.label, locale), ...assets };
+    const illustration = representativePanorama(project.slug, r.id, lot.typology);
+    if (publicFileExists(illustration)) {
+      return {
+        id: r.id,
+        label: t(r.label, locale),
+        panorama: illustration,
+        available: true,
+        source: locale === 'ar' ? 'تصوّر توضيحي' : locale === 'en' ? 'Illustrative view' : 'Vue illustrative',
+      };
+    }
     return { id: r.id, label: t(r.label, locale), ...assets };
   });
   const interiorImage = `/interiors/la-gloire/${lot.ref}.webp`;
@@ -327,13 +356,13 @@ export default async function ApartmentPage({
         <section id="visite-360" className="scroll-mt-28 bg-ivory py-20 lg:py-24">
           <div className="container-lux">
             <SectionHeading eyebrow={dict.apartment.tour360} title={dict.pano.title} subtitle={dict.pano.hint} />
-            {project.slug === 'diar-al-yassamine' && (
+            {tourRooms.some(room => room.source) && (
               <p className="mt-4 max-w-3xl text-sm text-ink/55">
                 {locale === 'ar'
-                  ? 'تصوّر توضيحي بزاوية 360° أُنشئ انطلاقاً من مخطط الشقة وصور التشطيبات المنجزة في المشروع.'
+                  ? 'بعض المشاهد تصوّرات بانورامية مستوحاة من صور وتشطيبات الإقامة؛ مخطط الشقة الأصلي هو مرجع التوزيع والأبعاد.'
                   : locale === 'en'
-                    ? 'Illustrative 360° visualization created from the apartment plan and photographs of the completed project finishes.'
-                    : 'Visualisation 360° illustrative créée à partir du plan de l’appartement et des photos des finitions réalisées dans le projet.'}
+                    ? 'Some panoramic views illustrate the residence’s images and finishes. The original apartment plan is the reference for layout and dimensions.'
+                    : 'Certaines vues panoramiques illustrent les images et finitions de la résidence. Le plan original de l’appartement reste la référence pour l’agencement et les dimensions.'}
               </p>
             )}
             <div className="mt-10">

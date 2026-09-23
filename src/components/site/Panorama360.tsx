@@ -220,7 +220,7 @@ export default function Panorama360({ rooms, labels, poster }: {
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-4 py-3 sm:px-5">
         <div className="flex items-center gap-3 text-white">
           <span className="rounded-full border border-gold-300/40 px-3 py-1 text-sm text-gold-200">{current?.photo ? 'Photo' : '360°'}</span>
-          <div><p className="text-base font-medium">{current?.label ?? labels.title}</p><p className="text-xs text-white/55">{labels.room} {rooms.length ? active + 1 : 0} / {rooms.length}</p></div>
+          <div><p className="text-base font-medium">{current?.label ?? labels.title}</p><p className="text-xs text-white/55">{labels.room} {rooms.length ? active + 1 : 0} / {rooms.length}{current?.source ? ` · ${current.source}` : ''}</p></div>
         </div>
         <button type="button" className="viewer-control" onClick={() => setImmersive(v => !v)} aria-label={immersive ? labels.exit : labels.fullscreen}>
           {immersive ? <IconClose className="h-5 w-5" /> : <span aria-hidden="true" className="text-xl">⛶</span>}

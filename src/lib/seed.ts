@@ -321,7 +321,7 @@ const zephyr: Project = {
   amenities: ['parking', 'lift', 'heating', 'kitchen', 'aluminium', 'security'],
   blocks: [],
   lots: [],
-  mapQuery: 'Route Teniour Km 1, Sfax',
+  mapQuery: 'QQ35+56H, Sfax, Tunisia',
 };
 
 const andalous2: Project = {

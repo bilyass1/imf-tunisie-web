@@ -71,7 +71,7 @@ export default function ProjectCard({
                 {stats.available} {dict.projects.available}
               </span>
               <span className="text-ink/40">
-                {programme?.apartments ?? stats.total} {dict.projects.lots}
+                {stats.total} {dict.projects.lots}
               </span>
               {stats.minArea > 0 && (
                 <span className="text-ink/40">

@@ -109,12 +109,20 @@ function createStore(pool, seedFactory) {
   let publicCache;
   let publicRead;
   let publicVersion = 0;
-  async function readPublic() {
+  async function revision() {
     await ensureSchema(pool);
     if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
     await bootstrapReady;
-    if (publicCache && publicCache.expiresAt > Date.now()) return structuredClone(publicCache.data);
-    if (publicRead) return structuredClone(await publicRead);
+    const result = await pool.query('SELECT revision FROM imf_revision WHERE id=1');
+    if (!result.rows.length) throw new Error('Import initial PostgreSQL requis.');
+    return String(result.rows[0].revision);
+  }
+  async function readPublic() {
+    // Vercel runs admin actions and public pages in different instances. A
+    // process-local TTL alone can show a sold lot as available after a write.
+    const currentRevision = await revision();
+    if (publicCache?.revision === currentRevision) return structuredClone(publicCache.data);
+    if (publicRead?.revision === currentRevision) return structuredClone(await publicRead.promise);
     const version = publicVersion;
     const operation = (async () => {
       // A single statement provides one consistent snapshot without loading
@@ -123,25 +131,28 @@ function createStore(pool, seedFactory) {
         (SELECT COALESCE(jsonb_agg(data || jsonb_build_object('slug',slug) ORDER BY slug),'[]'::jsonb) FROM imf_projects) AS projects,
         (SELECT COALESCE(jsonb_agg(jsonb_build_object('project',project_slug,'lot',data || jsonb_build_object('ref',ref,'status',status)) ORDER BY project_slug,ref),'[]'::jsonb) FROM imf_lots) AS lots,
         (SELECT COALESCE(jsonb_agg(data ORDER BY position,id),'[]'::jsonb) FROM imf_records WHERE collection='news') AS news,
-        (SELECT data FROM imf_records WHERE collection='settings' AND id='company') AS company`);
+        (SELECT data FROM imf_records WHERE collection='settings' AND id='company') AS company,
+        (SELECT revision FROM imf_revision WHERE id=1) AS revision`);
       const row = result.rows[0];
       if (!row?.projects?.length) throw new Error('Import initial PostgreSQL requis.');
       const projects = row.projects.map(p => ({...p,lots:[]}));
       const bySlug = new Map(projects.map(p => [p.slug,p]));
       for (const entry of row.lots) bySlug.get(entry.project)?.lots.push(entry.lot);
       const data = {projects,news:row.news,company:row.company ?? undefined};
-      if (version === publicVersion) publicCache = {data,expiresAt:Date.now()+5000};
+      if (version === publicVersion && (!publicCache || BigInt(row.revision) >= BigInt(publicCache.revision))) {
+        publicCache = {data,revision:String(row.revision)};
+      }
       return data;
     })();
-    publicRead = operation;
+    publicRead = {revision:currentRevision,promise:operation};
     try { return structuredClone(await operation); }
-    finally { if (publicRead === operation) publicRead = undefined; }
+    finally { if (publicRead?.promise === operation) publicRead = undefined; }
   }
   async function read() {
     await ensureSchema(pool);
     if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
     await bootstrapReady;
-    if (cache && cache.expiresAt > Date.now()) {
+    if (cache && cache.revision === await revision()) {
       const data = structuredClone(cache.data);
       snapshots.set(data,{revision:cache.revision,rows:flatten(data)});
       return data;
@@ -177,7 +188,7 @@ function createStore(pool, seedFactory) {
       }
       await client.query('COMMIT');
       const currentRevision=String(revision.rows[0].revision);
-      cache={data:structuredClone(data),revision:currentRevision,expiresAt:Date.now()+5000};
+      cache={data:structuredClone(data),revision:currentRevision};
       snapshots.set(data,{revision:currentRevision, rows:flatten(data)});
       return data;
     } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
@@ -222,7 +233,7 @@ function createStore(pool, seedFactory) {
     const result=await pool.query('SELECT bytes FROM imf_media WHERE id=$1',[id]);
     return result.rows[0]?.bytes;
   }
-  return {read,readPublic,write,readMedia};
+  return {read,readPublic,revision,write,readMedia};
 }
 let store;
 function getStore(seedFactory) {

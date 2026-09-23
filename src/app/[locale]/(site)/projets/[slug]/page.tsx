@@ -127,10 +127,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
         <section className="border-b border-ink/8 bg-white">
           <div className="container-lux grid grid-cols-2 gap-y-6 py-10 lg:grid-cols-4">
             {(programme ? [
-              { value: String(programme.apartments), label: dict.availability.stats.total },
-              { value: String(programme.sold), label: locale === 'ar' ? 'شقة مبيعة' : locale === 'en' ? 'apartments sold' : 'appartements vendus' },
-              { value: String(programme.inProgress), label: locale === 'ar' ? 'شقة قيد البناء' : locale === 'en' ? 'apartments under construction' : 'appartements en construction', accent: true },
-              { value: `${formatArea(programme.minArea, locale)} – ${formatArea(programme.maxArea, locale)}`, label: locale === 'ar' ? 'مساحات الشقق' : locale === 'en' ? 'Apartment areas' : 'Surfaces des appartements' },
+              { value: String(programme.apartments), label: locale === 'ar' ? 'شقق المشروع' : locale === 'en' ? 'Apartments in the development' : 'Appartements du programme' },
+              { value: String(stats.total), label: locale === 'ar' ? 'شقق معروضة على الموقع' : locale === 'en' ? 'Apartments listed online' : 'Appartements en ligne' },
+              { value: String(stats.available), label: locale === 'ar' ? 'متاحة على الموقع' : locale === 'en' ? 'Available online' : 'Disponibles en ligne', accent: true },
+              { value: String(stats.sold), label: locale === 'ar' ? 'مباعة من الشقق المعروضة' : locale === 'en' ? 'Sold among listed apartments' : 'Vendus parmi les lots en ligne' },
             ] : [
               { value: String(stats.total), label: dict.availability.stats.total },
               { value: String(stats.available), label: dict.availability.stats.available, accent: true },

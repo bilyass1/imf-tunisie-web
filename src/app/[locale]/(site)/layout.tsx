@@ -6,7 +6,9 @@ import Header from '@/components/site/Header';
 import Footer from '@/components/site/Footer';
 import { SITE } from '@/lib/site';
 import { getCompanySite } from '@/lib/company';
+import { getPublicRevision } from '@/lib/db';
 import { PropertySelectionProvider } from '@/components/site/PropertySelection';
+import PublicContentRefresh from '@/components/site/PublicContentRefresh';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,10 +22,10 @@ export default async function SiteLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale as Locale);
-  const SITE=(await getCompanySite());
+  const [SITE, initialRevision] = await Promise.all([getCompanySite(), getPublicRevision()]);
 
   return (
-    <PropertySelectionProvider><div className="flex min-h-screen flex-col">
+    <PropertySelectionProvider><PublicContentRefresh initialRevision={initialRevision} /><div className="flex min-h-screen flex-col">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-3 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-5 focus:py-3 focus:text-ink">
         {locale === 'ar' ? 'الانتقال إلى المحتوى' : locale === 'en' ? 'Skip to content' : 'Aller au contenu'}
       </a>

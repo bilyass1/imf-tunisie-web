@@ -1,9 +1,9 @@
 'use client';
-import { useActionState, useState, type ReactNode } from 'react';
+import { useActionState, useEffect, useState, type ReactNode } from 'react';
 import { commercialAction } from '@/lib/commercial-actions';
 import PasswordField from '@/components/auth/PasswordField';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import type { Database, ClientDocument, ClientMessage } from '@/lib/types';
 
 type Client = {id:string;name:string;email:string;phone?:string;projectSlug?:string;lotRef?:string;documents:ClientDocument[];archivedDocuments:ClientDocument[];messages:ClientMessage[]};
@@ -11,10 +11,14 @@ type Client = {id:string;name:string;email:string;phone?:string;projectSlug?:str
 type Property = {slug:string;name:string;progressPercent?:number;lots:{ref:string;code:string;status:string;progressPercent?:number}[]};
 function Form({operation,title,children}: {operation:string;title:string;children:ReactNode}) {
   const [state,action,pending]=useActionState(commercialAction,{ok:false,message:''});
+  const router=useRouter();
+  const {locale}=useParams<{locale:string}>();
+  useEffect(()=>{if(state.ok) router.refresh();},[state,router]);
   return <form action={action} className="space-y-5 rounded-2xl border border-ink/10 bg-white p-4 sm:p-6">
     <h2 className="font-display text-2xl">{title}</h2><input type="hidden" name="operation" value={operation}/>
     {children}<button disabled={pending} className="btn-gold disabled:opacity-50">{pending?'Enregistrement…':operation==='document-remove'?'Supprimer du dossier':operation==='document-restore'?'Restaurer':operation==='upload'?'Publier':operation==='client'?'Créer le compte':'Enregistrer'}</button>
     {state.message && <p role="status" className={state.ok?'text-emerald-700':'text-red-700'}>{state.message}</p>}
+    {state.ok && state.publicPath && <Link href={`/${locale}${state.publicPath}`} target="_blank" className="inline-block text-sm font-semibold text-gold-700 underline">Voir la modification sur le site public</Link>}
   </form>;
 }
 function Field({label,name,type='text',defaultValue,required=true}: {label:string;name:string;type?:string;defaultValue?:string;required?:boolean}) {

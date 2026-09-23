@@ -35,7 +35,9 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal((await act({...property,progress:'101'})).ok,false);
   assert.equal((await act({...property,status:'invalid'})).ok,false);
   assert.equal(db.projects[0].lots[0].status,'available');
-  assert.equal((await act(property)).ok,true); assert.equal(db.projects[0].lots[0].progressPercent,65);
+  const propertyResult=await act(property);
+  assert.equal(propertyResult.ok,true); assert.equal(propertyResult.publicPath,'/projets/residence/appartements/A1');
+  assert.equal(db.projects[0].lots[0].progressPercent,65);
   assert.equal((await act({...property,lot:'',progress:'72'})).ok,true); assert.equal(db.projects[0].progressPercent,72);
   const client={operation:'client',project:'residence',lot:'A1',name:'Test Client',email:'client@example.test',password:'test-password-1234'};
   assert.equal((await act(client)).ok,true);
@@ -60,7 +62,14 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   session={sub:owner.id}; assert.equal((await media(privateId)).status,200);
   session={sub:'staff'}; assert.equal((await act({...photo,lot:''})).ok,true); const sharedId=db.uploads.at(-1).id;
   session={sub:'other'}; assert.equal((await media(sharedId)).status,200);
-  session={sub:'staff'}; assert.equal((await act({...photo,kind:'gallery'})).ok,true); const publicId=db.uploads.at(-1).id;
+  session={sub:'staff'};
+  const galleryResult=await act({...photo,kind:'gallery'});
+  assert.equal(galleryResult.ok,true);
+  assert.equal(galleryResult.publicPath,'/projets/residence/appartements/A1');
+  const publicId=db.uploads.at(-1).id;
+  const projectGalleryResult=await act({...photo,kind:'gallery',lot:''});
+  assert.equal(projectGalleryResult.publicPath,'/projets/residence#galerie');
+  assert.equal(db.projects[0].gallery.length,1);
   session=null; assert.equal((await media(publicId)).status,200);
   session={sub:'staff'}; assert.equal((await act({operation:'message',client:owner.id,body:'Avancement disponible'})).ok,true);
   assert.equal((await act({operation:'company',name:'Test Immobilier',email:'office@example.test',phone:'123',address:'Rue test',city:'Tunis',about:'Présentation test'})).ok,true);

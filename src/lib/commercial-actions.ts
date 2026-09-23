@@ -8,7 +8,7 @@ import { readDb, writeCommercialDb as writeDb, isPersistent } from './db';
 import type { Database, Localized } from './types';
 import { allowRequest } from './rate-limit';
 
-export type CommercialState = { ok: boolean; message: string };
+export type CommercialState = { ok: boolean; message: string; publicPath?: string };
 const localize = (s: string): Localized => ({ fr:s, en:s, ar:s });
 const value = (form: FormData, key: string) => String(form.get(key) ?? '').trim();
 function text(form: FormData, key: string, max = 200) { const s=value(form,key); if (!s || s.length>max) throw new Error(`Champ ${key} manquant ou trop long.`); return s; }
@@ -31,6 +31,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
   try {
     await staff();
     const operation=value(form,'operation');
+    let publicPath: string | undefined;
     const actor=await getSession();
     if(!allowRequest(`commercial-${operation}`,actor!.sub,operation.startsWith('password-')?10:60,60000)) throw new Error('Trop de demandes. Réessayez dans une minute.');
     if(operation==='password-self' || operation==='password-client') {
@@ -85,6 +86,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       } else {
         const {project,lot}=target(db,form); const dest=lot??project; const photo={src:href,caption:localize(label)};
         if(kind==='gallery') (dest.gallery??=[]).push(photo); else (dest.constructionPhotos??=[]).push(photo);
+        if(kind==='gallery') publicPath=`/projets/${project.slug}${lot?`/appartements/${lot.ref}`:'#galerie'}`;
       }
 
       (db.uploads??=[]).push({id,mime,name:label+(kind==='contract'?'.pdf':'.webp'),clientId:recipient?.id,public:kind==='gallery'});
@@ -119,9 +121,11 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       } else if(operation==='property') {
         const {project,lot}=target(db,form); (lot??project).progressPercent=percent(form);
         if(lot) { const status=value(form,'status'); if(!['available','reserved','sold'].includes(status)) throw new Error('Statut invalide.'); lot.status=status as typeof lot.status; }
+        publicPath=`/projets/${project.slug}${lot?`/appartements/${lot.ref}`:'#disponibilite'}`;
       } else if(operation==='company') {
         const email=text(form,'email'); if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Adresse e-mail invalide.');
         db.company={legalName:text(form,'name'),email,phone:text(form,'phone'),address:text(form,'address'),city:text(form,'city'),about:text(form,'about',2000)};
+        publicPath='/';
       } else if(operation==='message') {
         const client=db.users.find(u=>u.id===value(form,'client') && u.role==='client'); if(!client) throw new Error('Client introuvable.');
         (client.messages??=[]).push({id:randomUUID(),date:new Date().toISOString(),from:'imf',body:text(form,'body',4000)});
@@ -129,7 +133,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       (await writeDb(db));
     }
     revalidatePath('/','layout');
-    return {ok:true,message:operation==='client'?'Compte créé. Communiquez les identifiants au client par votre canal habituel.':operation==='upload'?'Publication enregistrée. Le destinataire peut la consulter dans son espace.':'Modifications enregistrées.'};
+    return {ok:true,publicPath,message:operation==='client'?'Compte créé. Communiquez les identifiants au client par votre canal habituel.':operation==='upload' && publicPath?'Photo ajoutée à la galerie publique.':operation==='upload'?'Publication enregistrée. Le destinataire peut la consulter dans son espace.':'Modifications enregistrées.'};
   } catch(error) {
 
     return {ok:false,message:error instanceof Error ? error.message : 'Enregistrement impossible.'};

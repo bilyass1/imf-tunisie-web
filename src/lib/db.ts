@@ -161,6 +161,16 @@ export const getPublicData = requestCache(async () => {
   const { projects, company, news } = await readDb();
   return { projects, company, news };
 });
+/** A small cross-instance signal for already-open public pages. */
+export async function getPublicRevision(): Promise<string> {
+  if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') {
+    return getStore(buildSeed).revision();
+  }
+  if (resolveMode() !== 'file') return 'memory';
+  ensureFile();
+  const stat = fs.statSync(dbFile);
+  return `${stat.mtimeMs}/${stat.size}`;
+}
 export async function getProjects(): Promise<Project[]> {
   return (await getPublicData()).projects.map(projectPresentation);
 }

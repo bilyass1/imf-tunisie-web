@@ -348,7 +348,7 @@ export default async function ApartmentPage({
 
       {/* ---- 3. Visite 360° ---- */}
       <div className="container-lux"><ProgressMeter value={lot.progressPercent} locale={locale}/></div>
-      {!!lot.gallery?.length && <section className="container-lux py-12"><h2 className="h-display mb-6 text-3xl">{dict.project.gallery}</h2><Gallery items={lot.gallery.map(p=>({src:p.src,caption:t(p.caption,locale)}))} labels={{close:locale==='fr'?'Fermer':'Close',previous:locale==='fr'?'Précédent':'Previous',next:locale==='fr'?'Suivant':'Next',of:'/'}}/></section>}
+      {!!lot.gallery?.length && <section id="galerie" className="container-lux scroll-mt-28 py-12"><h2 className="h-display mb-6 text-3xl">{dict.project.gallery}</h2><Gallery items={lot.gallery.map(p=>({src:p.src,caption:t(p.caption,locale)}))} labels={{close:locale==='fr'?'Fermer':'Close',previous:locale==='fr'?'Précédent':'Previous',next:locale==='fr'?'Suivant':'Next',of:'/'}}/></section>}
       {project.slug === 'residence-la-gloire' && publicFileExists(interiorImage) && (
         <ApartmentInterior locale={locale} image={interiorImage} reference={lot.ref} pdf={lot.planUrl} />
       )}

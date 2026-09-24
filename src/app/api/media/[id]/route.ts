@@ -1,14 +1,15 @@
 
 
-import { readDb, readMedia } from '@/lib/db';
+import { getMediaMetadata, readDb, readMedia } from '@/lib/db';
 import { getSession } from '@/lib/session';
 export const runtime='nodejs';
 export async function GET(_: Request, {params}: {params: Promise<{id:string}>}) {
   const {id}=await params;
   if(!/^[a-f0-9-]{36}$/.test(id)) return new Response(null,{status:404});
-  const db=(await readDb()); const file=db.uploads?.find(f=>f.id===id);
+  const file=await getMediaMetadata(id);
   if(!file) return new Response(null,{status:404});
   if(!file.public) {
+    const db=await readDb();
     const session=await getSession(); const user=session ? db.users.find(u=>u.id===session.sub) : undefined;
     const project=db.projects.find(p=>p.slug===user?.projectSlug);
     const lot=project?.lots.find(l=>l.ref===user?.lotRef);

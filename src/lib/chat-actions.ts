@@ -11,7 +11,7 @@ export async function sendChatMessage(_: {ok:boolean;message:string}, form:FormD
     const db=(await readDb());
     const sender=db.users.find(u=>u.id===session?.sub);
     if(!sender) throw new Error('Veuillez vous reconnecter.');
-    if(!allowRequest('chat',sender.id,30,60000)) throw new Error('Trop de messages. Réessayez dans une minute.');
+    if(!await allowRequest('chat',sender.id,30,60000)) throw new Error('Trop de messages. Réessayez dans une minute.');
     if(!isPersistent()) throw new Error('Le stockage durable des messages doit être configuré.');
     const client=sender.role==='admin'?db.users.find(u=>u.id===String(form.get('client')??'') && u.role==='client'):sender;
     if(!client || client.role!=='client') throw new Error('Client introuvable.');

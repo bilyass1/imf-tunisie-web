@@ -46,7 +46,9 @@ async function ensureSchema(pool) {
     CREATE TABLE IF NOT EXISTS imf_revision (id integer PRIMARY KEY CHECK(id=1), revision bigint NOT NULL DEFAULT 0);
     INSERT INTO imf_revision(id) VALUES(1) ON CONFLICT DO NOTHING;
     CREATE TABLE IF NOT EXISTS imf_media (id text PRIMARY KEY, bytes bytea NOT NULL CHECK(octet_length(bytes) BETWEEN 1 AND 8388608));
-    INSERT INTO imf_schema_migrations(version) VALUES(1),(2) ON CONFLICT DO NOTHING;
+    CREATE TABLE IF NOT EXISTS imf_rate_limits (key text PRIMARY KEY, count integer NOT NULL CHECK(count > 0), expires_at timestamptz NOT NULL);
+    CREATE INDEX IF NOT EXISTS imf_rate_limits_expires_at ON imf_rate_limits(expires_at);
+    INSERT INTO imf_schema_migrations(version) VALUES(1),(2),(3) ON CONFLICT DO NOTHING;
     `];
     for (const statement of statements[0].split(';').map(s => s.trim()).filter(Boolean)) await pool.query(statement);
   })();
@@ -109,6 +111,53 @@ function createStore(pool, seedFactory) {
   let publicCache;
   let publicRead;
   let publicVersion = 0;
+  async function consumeRateLimit(key, limit, windowMs, now = Date.now()) {
+    await ensureSchema(pool);
+    const result = await pool.query(`INSERT INTO imf_rate_limits(key,count,expires_at)
+      VALUES($1,1,$2::timestamptz)
+      ON CONFLICT(key) DO UPDATE SET
+        count=CASE WHEN imf_rate_limits.expires_at <= $3::timestamptz THEN 1 ELSE imf_rate_limits.count+1 END,
+        expires_at=CASE WHEN imf_rate_limits.expires_at <= $3::timestamptz THEN $2::timestamptz ELSE imf_rate_limits.expires_at END
+      RETURNING count <= $4 AS allowed`, [key,new Date(now+windowMs).toISOString(),new Date(now).toISOString(),limit]);
+    // Cleanup is deliberately occasional; the write above remains atomic across instances.
+    if (Math.random() < 0.01) await pool.query('DELETE FROM imf_rate_limits WHERE expires_at < $1::timestamptz', [new Date(now-86400000).toISOString()]).catch(()=>{});
+    return result.rows[0].allowed;
+  }
+  async function readAuthUser(field, value) {
+    await ensureSchema(pool);
+    if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
+    await bootstrapReady;
+    const where = field === 'id' ? 'id=$1' : 'lower(email)=lower($1)';
+    const result = await pool.query(`SELECT id,email,role,password_hash,auth_version,data->>'name' AS name
+      FROM imf_users WHERE ${where} LIMIT 1`, [value]);
+    const row = result.rows[0];
+    return row && {id:row.id,email:row.email,role:row.role,passwordHash:row.password_hash,
+      authVersion:row.auth_version,name:row.name};
+  }
+  async function readUserById(id) {
+    await ensureSchema(pool);
+    if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
+    await bootstrapReady;
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
+      const result = await client.query('SELECT * FROM imf_users WHERE id=$1 LIMIT 1', [id]);
+      const row = result.rows[0];
+      if (!row) { await client.query('COMMIT'); return undefined; }
+      const user = {...row.data,id:row.id,email:row.email,role:row.role,passwordHash:row.password_hash,
+        authVersion:row.auth_version,projectSlug:row.project_slug??undefined,lotRef:row.lot_ref??undefined,
+        messages:[],documents:[],archivedDocuments:[]};
+      for (const message of (await client.query('SELECT * FROM imf_messages WHERE client_id=$1 ORDER BY sent_at,id', [id])).rows) {
+        user.messages.push({id:message.id,from:message.sender,date:new Date(message.sent_at).toISOString(),body:message.body});
+      }
+      for (const document of (await client.query('SELECT archived,data FROM imf_documents WHERE client_id=$1 ORDER BY id', [id])).rows) {
+        user[document.archived?'archivedDocuments':'documents'].push(document.data);
+      }
+      await client.query('COMMIT');
+      return user;
+    } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
+    finally { client.release(); }
+  }
   async function revision() {
     await ensureSchema(pool);
     if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
@@ -154,7 +203,7 @@ function createStore(pool, seedFactory) {
     await bootstrapReady;
     if (cache && cache.revision === await revision()) {
       const data = structuredClone(cache.data);
-      snapshots.set(data,{revision:cache.revision,rows:flatten(data)});
+      snapshots.set(data,{revision:cache.revision,rows:flatten(structuredClone(data))});
       return data;
     }
     const client = await pool.connect();
@@ -189,7 +238,7 @@ function createStore(pool, seedFactory) {
       await client.query('COMMIT');
       const currentRevision=String(revision.rows[0].revision);
       cache={data:structuredClone(data),revision:currentRevision};
-      snapshots.set(data,{revision:currentRevision, rows:flatten(data)});
+      snapshots.set(data,{revision:currentRevision, rows:flatten(structuredClone(data))});
       return data;
     } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
     finally { client.release(); }
@@ -224,7 +273,7 @@ function createStore(pool, seedFactory) {
       publicVersion++;
       publicCache=undefined;
       publicRead=undefined;
-      snapshots.set(data,{revision:String(updated.rows[0].revision),rows:next});
+      snapshots.set(data,{revision:String(updated.rows[0].revision),rows:flatten(structuredClone(data))});
     } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
     finally { client.release(); }
   }
@@ -233,7 +282,12 @@ function createStore(pool, seedFactory) {
     const result=await pool.query('SELECT bytes FROM imf_media WHERE id=$1',[id]);
     return result.rows[0]?.bytes;
   }
-  return {read,readPublic,revision,write,readMedia};
+  async function readMediaMetadata(id) {
+    await ensureSchema(pool);
+    const result = await pool.query("SELECT data FROM imf_records WHERE collection='uploads' AND id=$1 LIMIT 1", [id]);
+    return result.rows[0]?.data;
+  }
+  return {read,readPublic,revision,write,readMedia,readMediaMetadata,consumeRateLimit,readAuthUser,readUserById};
 }
 let store;
 function getStore(seedFactory) {

@@ -30,6 +30,9 @@ export function publicFileExists(url?: string | null): boolean {
 /** Serve a 4K web derivative first; retain masters without loading PNGs on mobile. */
 export function panoramaAssets(url?: string) {
   if (!url) return { panorama: undefined, available: false };
+  // Commercial uploads are stored outside /public and served by the guarded
+  // media route. A valid media URL is already backed by a committed upload.
+  if (/^\/api\/media\/[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/.test(url)) return { panorama: url, available: true };
   const stem = url.replace(/\.[^.]+$/, '');
   const source = `${stem}.source.png`;
   const optimized = `${stem}.optimized.webp`;

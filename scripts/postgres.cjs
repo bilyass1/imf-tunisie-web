@@ -12,6 +12,7 @@ const command=process.argv[2]??'check';
   await client.query('BEGIN');await client.query("SELECT pg_advisory_xact_lock(834921)");
   await client.query(fs.readFileSync(path.join(__dirname,'../database/001-initial.sql'),'utf8'));
   await client.query(fs.readFileSync(path.join(__dirname,'../database/002-runtime.sql'),'utf8'));
+  await client.query(fs.readFileSync(path.join(__dirname,'../database/003-rate-limits.sql'),'utf8'));
   if(command==='import'){
    if(!process.argv.includes('--confirm'))throw new Error('Import non lancé : ajoutez --confirm après vérification de la base cible.');
    const counts=await client.query('SELECT (SELECT count(*) FROM imf_users)+(SELECT count(*) FROM imf_projects)+(SELECT count(*) FROM imf_records) AS total');

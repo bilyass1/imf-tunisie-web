@@ -13,7 +13,7 @@ import {
   applyDemoStatuses,
   captureWebLead,
   clearDemoCrm,
-  getUserByEmail,
+  getAuthUserByEmail,
   readDb,
   resetLotStatuses,
   setDealStage,
@@ -52,7 +52,7 @@ export async function submitLeadAction(_prev: FormState, formData: FormData): Pr
   }
 
   try {
-    if(!allowRequest('contact-global','all',30,60000)||!allowRequest('contact',phone,5,3600000)) return {ok:false,error:'server'};
+    if(!await allowRequest('contact-global','all',30,60000)||!await allowRequest('contact',phone,5,3600000)) return {ok:false,error:'server'};
     for(const key of ['project','lot','budget']) if(String(formData.get(key)??'').length>200) return {ok:false,error:'required'};
     (await captureWebLead({
       name,
@@ -81,9 +81,9 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   const locale = isLocale(rawLocale)?rawLocale:'fr';
   const scope = String(formData.get('scope') ?? 'client');
 
-  if(!email || email.length>254 || !password || password.length>1024 || !allowRequest('login-global','all',100,60000) || !allowRequest('login-account',email,10,600000)) return {ok:false,error:'invalid'};
+  if(!email || email.length>254 || !password || password.length>1024 || !await allowRequest('login-global','all',100,60000) || !await allowRequest('login-account',email,10,600000)) return {ok:false,error:'invalid'};
 
-  const user = (await getUserByEmail(email));
+  const user = (await getAuthUserByEmail(email));
   if (password.length>1024 || !user || !await bcrypt.compare(password, user.passwordHash)) {
     return { ok: false, error: 'invalid' };
   }

@@ -145,6 +145,12 @@ export async function readMedia(id: string): Promise<Buffer | undefined> {
   catch { return undefined; }
 }
 
+export async function getMediaMetadata(id: string): Promise<NonNullable<Database['uploads']>[number] | undefined> {
+  if (!/^[a-f0-9-]{36}$/.test(id)) return undefined;
+  if (process.env.DATABASE_URL) return getStore(buildSeed).readMediaMetadata(id);
+  return (await readDb()).uploads?.find(file => file.id === id);
+}
+
 /* ---------------------------- Projets ---------------------------- */
 
 // Share public reads between metadata, layout, page and footer within one render.
@@ -474,7 +480,19 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 }
 
 export async function getUserById(id: string): Promise<User | undefined> {
+  if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') return getStore(buildSeed).readUserById(id);
   return (await readDb()).users.find((u) => u.id === id);
+}
+
+/** A session only needs identity and role; avoid loading the entire CRM. */
+export async function getAuthUserById(id: string) {
+  if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') return getStore(buildSeed).readAuthUser('id', id);
+  return (await readDb()).users.find((u) => u.id === id);
+}
+
+export async function getAuthUserByEmail(email: string) {
+  if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') return getStore(buildSeed).readAuthUser('email', email.trim());
+  return (await readDb()).users.find((u) => u.email.toLowerCase() === email.toLowerCase().trim());
 }
 
 export async function getClients(): Promise<User[]> {

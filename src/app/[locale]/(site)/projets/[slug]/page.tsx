@@ -24,6 +24,10 @@ import ProgressMeter from '@/components/site/ProgressMeter';
 import { alternates } from '@/lib/seo';
 import { AMENITY_ICONS, IconArrow, IconCheck, IconPin, IconPlay } from '@/components/Icons';
 
+// Gallery photos and construction progress are edited in the commercial panel.
+// Render current PostgreSQL data instead of the snapshot produced at build time.
+export const dynamic = 'force-dynamic';
+
 const architectModelSubtitle = {
   fr: 'Explorez la résidence en 3D et sélectionnez un appartement pour découvrir sa fiche.',
   en: 'Explore the residence in 3D and select an apartment to view its details.',
@@ -221,27 +225,29 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               </dl>
             </div>
 
-            <ProgressMeter value={project.progressPercent} locale={locale}/>
-            {project.progress && (
-              <div className="mt-6 overflow-hidden rounded-2xl border border-ink/8 bg-white p-6">
-                <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
-                  {dict.project.progress}
-                </h3>
-                <ul className="mt-5 space-y-5">
-                  {project.progress.map((step) => (
-                    <li key={step.label.fr}>
-                      <div className="flex items-center justify-between text-[13px]">
-                        <span className="font-medium text-ink/75">{t(step.label, locale)}</span>
-                        <span className="font-display text-[17px] text-gold-600">{step.percent}%</span>
-                      </div>
-                      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-sand">
-                        <div className="h-full rounded-full bg-gold-gradient" style={{ width: `${step.percent}%` }} />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <div id="avancement" className="scroll-mt-28">
+              <ProgressMeter value={project.progressPercent} locale={locale}/>
+              {project.progress && (
+                <div className="mt-6 overflow-hidden rounded-2xl border border-ink/8 bg-white p-6">
+                  <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
+                    {dict.project.progress}
+                  </h3>
+                  <ul className="mt-5 space-y-5">
+                    {project.progress.map((step) => (
+                      <li key={step.label.fr}>
+                        <div className="flex items-center justify-between text-[13px]">
+                          <span className="font-medium text-ink/75">{t(step.label, locale)}</span>
+                          <span className="font-display text-[17px] text-gold-600">{step.percent}%</span>
+                        </div>
+                        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-sand">
+                          <div className="h-full rounded-full bg-gold-gradient" style={{ width: `${step.percent}%` }} />
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
 
             {project.videoNote && (
               <div className="mt-6 flex items-start gap-4 rounded-2xl border border-ink/8 bg-white p-6">

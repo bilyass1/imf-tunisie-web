@@ -34,6 +34,27 @@ const architectModelSubtitle = {
   ar: 'استكشف الإقامة ثلاثية الأبعاد واختر شقة للاطلاع على تفاصيلها.',
 };
 
+const yassamineVideo = {
+  fr: {
+    nav: 'Vidéo',
+    title: 'Diar Al Yassamine en vidéo',
+    description: 'Découvrez la résidence à travers cette visualisation 3D illustrative.',
+    fallback: 'Votre navigateur ne peut pas lire cette vidéo.',
+  },
+  en: {
+    nav: 'Video',
+    title: 'Diar Al Yassamine on video',
+    description: 'Explore the residence through this illustrative 3D visualization.',
+    fallback: 'Your browser cannot play this video.',
+  },
+  ar: {
+    nav: 'فيديو',
+    title: 'ديار الياسمين بالفيديو',
+    description: 'اكتشف الإقامة من خلال هذا العرض التوضيحي ثلاثي الأبعاد.',
+    fallback: 'متصفحك لا يستطيع تشغيل هذا الفيديو.',
+  },
+};
+
 export async function generateStaticParams() {
   const projects = await getProjects();
   return locales.flatMap((locale) => projects.map((p) => ({ locale, slug: p.slug })));
@@ -72,6 +93,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
 
   const sections = [
     { id: 'programme', label: dict.project.overview },
+    ...(project.slug === 'diar-al-yassamine' ? [{ id: 'video', label: yassamineVideo[locale].nav }] : []),
     { id: 'galerie', label: dict.project.gallery },
     ...((project.slug === 'diar-al-yassamine' || (project.massing && project.lots.length)) ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
     ...(project.lots.length ? [{ id: 'disponibilite', label: dict.project.availability }] : []),
@@ -249,7 +271,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               )}
             </div>
 
-            {project.videoNote && (
+            {project.videoNote && project.slug !== 'diar-al-yassamine' && (
               <div className="mt-6 flex items-start gap-4 rounded-2xl border border-ink/8 bg-white p-6">
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gold-gradient text-ink">
                   <IconPlay className="h-4 w-4" />
@@ -265,6 +287,32 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
           </Reveal>
         </div>
       </section>
+
+      {project.slug === 'diar-al-yassamine' && (
+        <section id="video" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">
+          <div className="container-lux">
+            <SectionHeading
+              eyebrow={yassamineVideo[locale].nav}
+              title={yassamineVideo[locale].title}
+              subtitle={yassamineVideo[locale].description}
+              light
+            />
+            <div className="mt-12 overflow-hidden rounded-2xl ring-1 ring-white/15">
+              <video
+                className="aspect-video w-full bg-black object-contain"
+                controls
+                playsInline
+                preload="none"
+                poster="/media/diar-al-yassamine/presentation-poster.webp"
+                aria-label={yassamineVideo[locale].title}
+              >
+                <source src="/media/diar-al-yassamine/presentation-imf.mp4" type="video/mp4" />
+                {yassamineVideo[locale].fallback}
+              </video>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ---- Galerie ---- */}
       <section id="galerie" className="scroll-mt-[170px] bg-white py-24 lg:py-28">

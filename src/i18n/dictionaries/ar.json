@@ -184,7 +184,8 @@
     "legend": {
       "available": "متوفّرة",
       "reserved": "محجوزة",
-      "sold": "مباعة"
+      "sold": "مباعة",
+      "unconfirmed": "التوفّر يحتاج إلى تأكيد"
     },
     "table": {
       "code": "الشقة",

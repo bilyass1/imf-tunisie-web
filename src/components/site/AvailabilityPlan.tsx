@@ -14,7 +14,7 @@ export interface AvailabilityLabels {
   floor: string;
   allFloors: string;
   typology: string;
-  legend: { available: string; reserved: string; sold: string };
+  legend: Record<Lot['status'], string>;
   table: {
     code: string;
     typology: string;
@@ -53,6 +53,11 @@ const STATUS_STYLES: Record<Lot['status'], { tile: string; dot: string; text: st
     tile: 'border-red-400 bg-red-50 hover:border-red-500 hover:bg-red-100 text-red-900',
     dot: 'bg-red-500',
     text: 'text-red-700',
+  },
+  unconfirmed: {
+    tile: 'border-slate-300 bg-slate-50 hover:border-slate-500 hover:bg-slate-100 text-slate-700',
+    dot: 'bg-slate-400',
+    text: 'text-slate-600',
   },
 };
 
@@ -99,6 +104,7 @@ export default function AvailabilityPlan({
       available: blockLots.filter((l) => l.status === 'available').length,
       reserved: blockLots.filter((l) => l.status === 'reserved').length,
       sold: blockLots.filter((l) => l.status === 'sold').length,
+      unconfirmed: blockLots.filter((l) => l.status === 'unconfirmed').length,
     }),
     [blockLots],
   );
@@ -180,7 +186,7 @@ export default function AvailabilityPlan({
 
         {/* ---- Légende + stats ---- */}
         <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border border-ink/8 bg-white px-5 py-4 text-[12.5px]">
-          {(['available', 'reserved', 'sold'] as const).map((s) => (
+          {(['available', 'reserved', 'sold', 'unconfirmed'] as const).map((s) => (
             <span key={s} className="flex items-center gap-2">
               <span className={`h-2.5 w-2.5 rounded-full ${STATUS_STYLES[s].dot}`} />
               <span className="text-ink/60">{labels.legend[s]}</span>
@@ -319,7 +325,9 @@ export default function AvailabilityPlan({
                     ? 'bg-emerald-400/15 text-emerald-300'
                     : selected.status === 'reserved'
                       ? 'bg-gold-400/20 text-gold-200'
-                      : 'bg-red-400/20 text-red-200'
+                      : selected.status === 'sold'
+                        ? 'bg-red-400/20 text-red-200'
+                        : 'bg-slate-400/20 text-slate-200'
                 }`}
               >
                 <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLES[selected.status].dot}`} />
@@ -343,7 +351,7 @@ export default function AvailabilityPlan({
                 </div>
               ))}
             </dl>
-            {projectSlug === 'diar-al-yassamine' && selected.block === 'A5.a' && (
+            {projectSlug === 'diar-al-yassamine' && (selected.block === 'A5.a' || selected.block.startsWith('A6.')) && (
               <p className="px-6 pt-4 text-xs leading-relaxed text-ink/55">
                 {locale === 'ar' ? 'المساحات تقريبية حسب مخطط البيع الفردي.' : locale === 'en' ? 'Approximate areas from the individual sales plan.' : 'Surfaces approximatives selon le plan de vente individuel.'}
               </p>
@@ -362,7 +370,9 @@ export default function AvailabilityPlan({
                   href={`/${locale}/contact?project=${projectSlug}&lot=${encodeURIComponent(selected.code)}`}
                   className="btn-gold w-full"
                 >
-                  {labels.request}
+                  {selected.status === 'unconfirmed'
+                    ? locale === 'ar' ? 'الاستفسار عن التوفّر' : locale === 'en' ? 'Ask about availability' : 'Demander la disponibilité'
+                    : labels.request}
                   <IconArrow className="h-4 w-4 rtl:rotate-180" />
                 </Link>
               )}
@@ -378,8 +388,8 @@ export default function AvailabilityPlan({
           <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-8 text-center">
             <p className="font-display text-[22px] font-light text-ink/70">{labels.title}</p>
             <p className="mt-3 text-[13.5px] leading-relaxed text-ink/50">{labels.subtitle}</p>
-            <div className="mt-6 grid grid-cols-3 gap-3 text-center">
-              {(['available', 'reserved', 'sold'] as const).map((s) => (
+            <div className="mt-6 grid grid-cols-2 gap-3 text-center sm:grid-cols-4 lg:grid-cols-2">
+              {(['available', 'reserved', 'sold', 'unconfirmed'] as const).map((s) => (
                 <div key={s} className="rounded-xl bg-sand/50 px-2 py-3">
                   <p className={`font-display text-[24px] leading-none ${STATUS_STYLES[s].text}`}>{stats[s]}</p>
                   <p className="mt-1.5 text-[10px] uppercase tracking-wider text-ink/45">{labels.legend[s]}</p>

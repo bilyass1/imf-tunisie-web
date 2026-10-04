@@ -208,7 +208,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         (restoring?(client.documents??=[]):(client.archivedDocuments??=[])).push(document);
       } else if(operation==='property') {
         const {project,lot}=target(db,form); (lot??project).progressPercent=percent(form);
-        if(lot) { const status=value(form,'status'); if(!['available','reserved','sold'].includes(status)) throw new Error('Statut invalide.'); lot.status=status as typeof lot.status; }
+        if(lot) { const status=value(form,'status'); if(!['available','reserved','sold','unconfirmed'].includes(status)) throw new Error('Statut invalide.'); lot.status=status as typeof lot.status; }
         else if(project.progress?.length && form.has('step-0')) project.progress=project.progress.map((step,index)=>{
           const next=percentValue(value(form,`step-${index}`));
           return {...step,percent:next,done:next===100};

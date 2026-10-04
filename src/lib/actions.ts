@@ -123,7 +123,7 @@ export async function updateLotStatusAction(formData: FormData): Promise<void> {
   const projectSlug = String(formData.get('projectSlug') ?? '');
   const lotRef = String(formData.get('lotRef') ?? '');
   const status = String(formData.get('status') ?? 'available') as LotStatus;
-  if(!['available','reserved','sold'].includes(status)) throw new Error('Invalid status');
+  if(!['available','reserved','sold','unconfirmed'].includes(status)) throw new Error('Invalid status');
   (await updateLotStatus(projectSlug, lotRef, status));
   revalidatePath('/', 'layout');
 }

@@ -3,8 +3,9 @@
 Usage:
   python scripts/rebrand-sale-plans.py --sample
   python scripts/rebrand-sale-plans.py --all
+  python scripts/rebrand-sale-plans.py --a6-source "C:/path/to/imf a6 a et b"
 
-The seven template regions below cover only the previous IMF contact panels. The
+The template regions below cover only the previous IMF contact panels. The
 original PDF/DWG/WebP files remain available for technical and legal reference.
 """
 
@@ -13,6 +14,7 @@ from __future__ import annotations
 import argparse
 from io import BytesIO
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 
@@ -196,13 +198,39 @@ def process_model(source: Path, sample: bool) -> None:
     print(f"{source.name} -> {pdf_path.relative_to(ROOT)}")
 
 
+def process_a6_apartment(source: Path, sample: bool) -> None:
+    """Make a site copy of an A6 sales sheet, preserving its measured-area table."""
+    match = re.fullmatch(r"A6\.([ab])-App ([0-4])\.([1-4])", source.stem)
+    if not match:
+        raise ValueError(f"Unexpected A6 apartment sheet: {source.name}")
+    ref = f"A6{match[1]}{match[2]}{match[3]}"
+    image_path, pdf_path = destinations("plans/diar-al-yassamine", ref, sample)
+    rendered = render_pdf(source)
+    x, top, width, height = BOXES["yassamine_a5_lot"]
+    position = (round(x * rendered.width), round(top * rendered.height))
+    rendered.paste(card(round(width * rendered.width), round(height * rendered.height), "Diar El Yassamine", rotated=True), position)
+    save_webp(rendered, image_path)
+    image_pdf(rendered, source, pdf_path)
+    print(f"{source.name} -> {pdf_path.relative_to(ROOT)}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    mode = parser.add_mutually_exclusive_group(required=True)
+    mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--sample", action="store_true")
     mode.add_argument("--all", action="store_true")
+    parser.add_argument("--a6-source", type=Path, metavar="DIRECTORY")
     args = parser.parse_args()
     sample = args.sample
+    if args.a6_source:
+        sources = sorted(args.a6_source.rglob("A6.[ab]-App *.pdf"))
+        if len(sources) != 32:
+            raise ValueError(f"Expected 32 A6 apartment sheets, found {len(sources)}")
+        for source in (sources[:1] if sample else sources):
+            process_a6_apartment(source, sample)
+        return
+    if not (args.sample or args.all):
+        parser.error("choose --sample or --all, or provide --a6-source")
     gloire = PUBLIC / "plans/la-gloire"
     source = list(sorted(gloire.glob("[ABCD][0-9][0-9].webp")))
     if len(source) != 102:

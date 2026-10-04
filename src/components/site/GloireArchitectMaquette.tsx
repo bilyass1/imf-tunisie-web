@@ -5,6 +5,7 @@ import type { MaquetteLabels } from './Maquette3D';
 import { useImmersiveViewer } from './useImmersiveViewer';
 import type { Lot } from '@/lib/types';
 import { LA_GLOIRE_FOOTPRINTS, LA_GLOIRE_SITE } from '@/lib/la-gloire-footprints';
+import ModelCompass, { updateModelCompass } from './ModelCompass';
 
 const modelUrl = '/models/la-gloire/la-gloire-web.glb';
 
@@ -21,6 +22,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
   const c = localCopy[locale as keyof typeof localCopy] ?? localCopy.fr;
   const root = useRef<HTMLDivElement>(null);
   const mount = useRef<HTMLDivElement>(null);
+  const compassRef = useRef<HTMLDivElement>(null);
   const api = useRef<{ reset: () => void; view: (name: 'aerial' | 'street') => void; zoom: (factor: number) => void } | null>(null);
   const rotatingRef = useRef(false);
   const [rotating, setRotating] = useState(false);
@@ -223,7 +225,11 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         const changed = orbit.update();
         const ratio = interacting || orbit.autoRotate || changed ? Math.min(restingPixelRatio, .85) : restingPixelRatio;
         if (renderer.getPixelRatio() !== ratio) { renderer.setPixelRatio(ratio); dirty = true; }
-        if (dirty || changed || orbit.autoRotate) { renderer.render(scene, camera); dirty = false; }
+        if (dirty || changed || orbit.autoRotate) {
+          // SKP x/y plan coordinates are rotated into world x/-z.
+          updateModelCompass(camera, [0, 1], compassRef.current);
+          renderer.render(scene, camera); dirty = false;
+        }
       };
       draw(); setProgress(100); setReady(true);
       const onLost = (event: Event) => { event.preventDefault(); setFailed(true); };
@@ -252,6 +258,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
     </div>
     <div className={`relative ${immersive ? 'min-h-0 flex-1' : ''}`}>
       <div ref={mount} className={immersive ? 'h-full w-full' : 'h-[520px] w-full sm:h-[650px]'} />
+      <ModelCompass locale={locale} needleRef={compassRef} className="end-3 top-3 sm:end-5 sm:top-5" />
       {ready && hovered && <div className="viewer-glass pointer-events-none absolute bottom-20 start-4 rounded-xl px-4 py-3 text-ivory"><strong>{hovered.code}</strong><p className="text-sm">{hovered.typology} · {hovered.floor === 0 ? 'RDC' : `R+${hovered.floor}`}</p></div>}
       {!ready && <div className="absolute inset-0 grid place-items-center bg-ink"><div className="max-w-sm px-5 text-center"><p className="text-white/70">{failed ? labels.error : `${labels.loading} ${progress ? `${progress}%` : ''}`}</p>{failed && <button className="btn-gold mt-5" onClick={() => setAttempt(v => v + 1)}>{labels.retry}</button>}</div></div>}
       {ready && <><div className="viewer-glass absolute start-3 top-3 flex rounded-full p-1 sm:start-5 sm:top-5"><button className={button} onClick={() => api.current?.view('aerial')}>{c.aerial}</button><button className={button} onClick={() => api.current?.view('street')}>{c.street}</button></div>

@@ -4,8 +4,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import PlanBrand, { type PlanBrandDetails } from './PlanBrand';
 import { useRouter } from 'next/navigation';
-import { mappedYassamineLots, yassamineApartmentHref, yassamineLotAtPoint, type MaquetteLot } from '@/lib/yassamine-picking';
+import { listedYassamineLots, yassamineApartmentHref, yassamineLotAtPoint, type MaquetteLot } from '@/lib/yassamine-picking';
 import { useImmersiveViewer } from './useImmersiveViewer';
+import ModelCompass, { updateModelCompass } from './ModelCompass';
 
 type Point = [number, number];
 type Poly = { outer: Point[]; holes: Point[][] };
@@ -56,10 +57,10 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
   navigation.current = { locale, lots, router };
   const [hovered, setHovered] = useState<string | null>(null);
   const selectionCopy = locale === 'ar'
-    ? { hint: 'اضغط على الشقة لفتح صفحتها · اسحب لتدوير المجسم', list: 'صفحات الشقق', unavailable: 'صفحات شقق A5.b وA6 غير متاحة بعد.', open: 'فتح صفحة الشقة' }
+    ? { hint: 'اضغط على الشقة لفتح صفحتها · اسحب لتدوير المجسم', list: 'صفحات الشقق', unavailable: 'صفحات شقق A5.b غير متاحة بعد.', open: 'فتح صفحة الشقة' }
     : locale === 'en'
-    ? { hint: 'Click an apartment to open its details · Drag to rotate', list: 'Apartment details', unavailable: 'Apartment pages for A5.b and A6 are not yet available.', open: 'Open apartment' }
-    : { hint: 'Cliquez sur un appartement pour ouvrir sa fiche · Glissez pour tourner', list: 'Fiches des appartements', unavailable: 'Les fiches des appartements A5.b et A6 ne sont pas encore disponibles.', open: 'Ouvrir la fiche' };
+    ? { hint: 'Click an apartment to open its details · Drag to rotate', list: 'Apartment details', unavailable: 'Apartment pages for A5.b are not yet available.', open: 'Open apartment' }
+    : { hint: 'Cliquez sur un appartement pour ouvrir sa fiche · Glissez pour tourner', list: 'Fiches des appartements', unavailable: 'Les fiches des appartements A5.b ne sont pas encore disponibles.', open: 'Ouvrir la fiche' };
   const c = copy[locale as keyof typeof copy] ?? copy.fr;
   const [block, setBlock] = useState<'A5'|'A6'>('A5');
   const [floor, setFloor] = useState<number | null>(null);
@@ -72,6 +73,7 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
   const [top, setTop] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const mount = useRef<HTMLDivElement>(null);
+  const compassRef = useRef<HTMLDivElement>(null);
   const state = useRef({ floor, rotating, top });
   state.current = { floor, rotating, top };
   const controls = useRef<{ reset: () => void; zoom: (factor: number) => void } | null>(null);
@@ -327,7 +329,12 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
         for(const r of roofs)r.group.visible=current.floor===null;
         if(previousFloor!==current.floor){renderer.shadowMap.needsUpdate=true;previousFloor=current.floor;dirty=true;}
         const changed=orbit.update();
-        if(dirty||changed||orbit.autoRotate){renderer.render(scene,camera);dirty=false;}
+        if(dirty||changed||orbit.autoRotate){
+          // The sales-sheet north arrow points SE on A5 plans; the A6 floor
+          // sheets are quarter-turned relative to their individual sale sheets.
+          updateModelCompass(camera, block === 'A5' ? [1, 1] : [1, -1], compassRef.current);
+          renderer.render(scene,camera);dirty=false;
+        }
       };draw();setReady(true);
       const contextLost=(event:Event)=>{event.preventDefault();setFailed(true);};renderer.domElement.addEventListener('webglcontextlost',contextLost);
       dispose=()=>{disposePicking();cancelAnimationFrame(frameId);visibility.disconnect();resize.disconnect();orbit.removeEventListener('change',onChange);orbit.dispose();controls.current=null;renderer.domElement.removeEventListener('webglcontextlost',contextLost);scene.traverse(o=>{const m=o as import('three').Mesh;if(m.geometry)m.geometry.dispose();});materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());environment.dispose();renderer.dispose();renderer.domElement.remove();};
@@ -349,6 +356,7 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
         </div>
         <div className="relative min-h-[360px] bg-[#e8e5de]" style={{height:fullscreen?'calc(100dvh - 205px)':'clamp(380px, 60vw, 620px)'}}>
           <div ref={mount} className="h-full w-full" aria-label={`${c.block} ${block.slice(1)} — ${c.hint}`} />
+          <ModelCompass locale={locale} needleRef={compassRef} className="right-3 top-3 sm:right-5 sm:top-5" />
           {hovered&&<div className="pointer-events-none absolute left-4 top-4 rounded-xl bg-ink/90 px-4 py-3 text-sm text-white">{selectionCopy.open} · {hovered} →</div>}
           {!ready&&!failed&&<p className="absolute inset-0 grid place-items-center text-ink">{c.loading}</p>}
           {failed&&<div className="absolute inset-0 flex flex-col items-center justify-center gap-5 bg-[#e8e5de] p-10 text-center text-ink"><p>{c.error}</p><button className={`${button} border-ink/30`} onClick={()=>setAttempt(a=>a+1)}>{c.retry}</button></div>}
@@ -365,9 +373,9 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
       </div>
       <p className="mt-3 text-sm text-white/80">{selectionCopy.hint}</p>
       <nav aria-label={selectionCopy.list} className="mt-4 flex flex-wrap gap-2">
-        {mappedYassamineLots(lots).filter(lot=>lot.block.startsWith(block)&&(floor===null||lot.floor===floor)).map(lot=><Link key={lot.ref} prefetch={false} href={yassamineApartmentHref(locale,lot.ref)} className={`${button} border-white/20 hover:border-gold-400 hover:text-gold-300`} aria-label={`${selectionCopy.open} ${lot.code}`}>{lot.code} ↗</Link>)}
+          {listedYassamineLots(lots).filter(lot=>lot.block.startsWith(block)&&(floor===null||lot.floor===floor)).map(lot=><Link key={lot.ref} prefetch={false} href={yassamineApartmentHref(locale,lot.ref)} className={`${button} border-white/20 hover:border-gold-400 hover:text-gold-300`} aria-label={`${selectionCopy.open} ${lot.code}`}>{lot.code} ↗</Link>)}
       </nav>
-      <p className="mt-3 text-xs text-white/60">{selectionCopy.unavailable}</p>
+        {block === 'A5' && <p className="mt-3 text-xs text-white/60">{selectionCopy.unavailable}</p>}
       <p className="mt-2 max-w-3xl text-sm text-white/65">{c.note}</p>
       <div className="mt-9"><h3 className="font-display text-2xl">{c.plans} · {floor===null||floor===0?c.ground:`R+${floor}`}</h3>
         <div className="mt-5 grid gap-5 md:grid-cols-2">{selectedPlans.map(p=><article key={p.id} className="overflow-hidden rounded-xl bg-ivory text-ink"><PlanBrand project="Diar El Yassamine" document={`${p.block} · ${floor===null||floor===0?c.ground:`R+${floor}`}`} {...planContact} /><div className="flex items-center justify-between gap-3 p-4"><strong>{p.block}</strong><a className="text-sm underline underline-offset-4" href={p.pdf.replace('/models/yassamine/', '/models/yassamine/presentation/')} download>{c.download}</a></div><img src={p.plan.replace('/models/yassamine/', '/models/yassamine/presentation/')} alt={`${c.plans} ${p.block}`} loading="lazy" className="h-[340px] w-full bg-white object-contain p-3" /></article>)}</div>

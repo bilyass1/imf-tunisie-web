@@ -35,6 +35,12 @@ export function mappedYassamineLots(lots: readonly MaquetteLot[]) {
     && Number(lot.code.charAt(3))===lot.floor);
 }
 
+/** Lots with individual sales sheets; A6 is navigable even where 3D hit regions are unavailable. */
+export function listedYassamineLots(lots: readonly MaquetteLot[]) {
+  return lots.filter(lot => mappedYassamineLots([lot]).length > 0
+    || (/^A6\.[ab]$/.test(lot.block) && /^A6\.[ab]-[0-4]\.[1-4]$/.test(lot.code)));
+}
+
 export function yassamineLotAtPoint(level: PickingLevel, x: number, z: number, lots: readonly MaquetteLot[]) {
   if (level.block!=='A5.a') return undefined;
   const [[x0,z0],[x1,z1]]=level.textureBounds;

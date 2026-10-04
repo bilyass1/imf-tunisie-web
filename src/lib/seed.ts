@@ -4,6 +4,7 @@ import { LA_GLOIRE_LOTS, YASSAMINE_A5A_LOTS } from './lots-la-gloire';
 import { LA_GLOIRE_FOOTPRINTS, LA_GLOIRE_SITE } from './la-gloire-footprints';
 import yassamineAvailable from './yassamine-available.json';
 import { YASSAMINE_APPROVED_PRICES } from './yassamine-prices';
+import { YASSAMINE_A6_LOTS } from './yassamine-a6';
 
 const L = (fr: string, en: string, ar: string): Localized => ({ fr, en, ar });
 
@@ -102,7 +103,7 @@ function buildYassamineLots(): Lot[] {
       planImage: `/plans/diar-al-yassamine/${ref}.webp`,
       rooms: buildRooms('diar-al-yassamine', ref, typology),
     };
-  })];
+  }), ...YASSAMINE_A6_LOTS];
 }
 
 const gloireBlocks = ['A', 'B', 'C', 'D'].map((id) => ({
@@ -256,6 +257,8 @@ const yassamine: Project = {
   blocks: [
     ...['A1', 'A2', 'A3'].map(id => ({ id, label: `Bloc ${id}`, floors: [0] })),
     { id: 'A5.a', label: 'Bloc A5.a', floors: [0, 1, 2, 3, 4] },
+    { id: 'A6.a', label: 'Bloc A6.a', floors: [0, 1, 2, 3, 4] },
+    { id: 'A6.b', label: 'Bloc A6.b', floors: [0, 1, 2, 3] },
   ],
   lots: buildYassamineLots(),
   videoNote: L(

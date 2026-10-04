@@ -1,4 +1,4 @@
-export type LotStatus = 'available' | 'reserved' | 'sold';
+export type LotStatus = 'available' | 'reserved' | 'sold' | 'unconfirmed';
 export type ProjectStatus = 'ongoing' | 'delivered' | 'upcoming';
 
 export interface Localized {

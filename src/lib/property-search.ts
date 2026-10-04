@@ -35,7 +35,7 @@ export function readFilters(params: URLSearchParams): PropertyFilters {
   for (const key of ['minPrice','maxPrice','minArea','maxArea'] as const) {
     if (filters[key] && (!Number.isFinite(Number(filters[key])) || Number(filters[key]) < 0)) filters[key] = '';
   }
-  if (!['', 'available', 'reserved', 'sold'].includes(filters.status)) filters.status = 'available';
+  if (!['', 'available', 'reserved', 'sold', 'unconfirmed'].includes(filters.status)) filters.status = 'available';
   if (!['reference','price-asc','price-desc','area-asc','area-desc'].includes(filters.sort)) filters.sort = 'reference';
   return filters;
 }

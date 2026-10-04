@@ -29,7 +29,7 @@ export default function YassaminePlanLibrary({ locale, lots, labels, statuses, p
         <div><PlanViewer key={block} image={`/plans/diar-al-yassamine/presentation/RDC-${block}.webp`} pdf={`/plans/diar-al-yassamine/presentation/RDC-${block}.pdf`} alt={`${text.ground} ${block}`} labels={labels} exists brand={{ project: 'Diar El Yassamine', document: `${text.block} ${block} · ${text.ground}`, ...planContact }} />
         </div>
         <div className="space-y-4">{visible.map(lot=><article key={lot.ref} className="rounded-2xl border border-ink/10 bg-white p-6">
-          <div className="flex items-center justify-between gap-3"><h3 className="font-display text-2xl">{lot.code}</h3><span className={`rounded-full px-3 py-1 text-xs ${lot.status==='available'?'bg-emerald-50 text-emerald-800':lot.status==='reserved'?'bg-gold-100 text-gold-700':'bg-red-50 text-red-700'}`}>{statuses[lot.status]}</span></div>
+          <div className="flex items-center justify-between gap-3"><h3 className="font-display text-2xl">{lot.code}</h3><span className={`rounded-full px-3 py-1 text-xs ${lot.status==='available'?'bg-emerald-50 text-emerald-800':lot.status==='reserved'?'bg-gold-100 text-gold-700':lot.status==='sold'?'bg-red-50 text-red-700':'bg-slate-50 text-slate-700'}`}>{statuses[lot.status]}</span></div>
           <p className="mt-2 text-sm text-ink/60">{lot.typology} · {text.ground}</p>
           <dl className="my-5 space-y-2 text-sm"><div className="flex justify-between"><dt>{text.area}</dt><dd className="font-semibold">{formatArea(lot.sellableArea,locale)}</dd></div>
             {lot.gardenArea&&<div className="flex justify-between"><dt>{text.garden}</dt><dd>{formatArea(lot.gardenArea,locale)}</dd></div>}

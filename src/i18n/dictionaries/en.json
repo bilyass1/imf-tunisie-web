@@ -184,7 +184,8 @@
     "legend": {
       "available": "Available",
       "reserved": "Reserved",
-      "sold": "Sold"
+      "sold": "Sold",
+      "unconfirmed": "Availability to confirm"
     },
     "table": {
       "code": "Apartment",

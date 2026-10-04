@@ -62,6 +62,7 @@ export default function MaquetteSection({
       </div>}
       {isLaGloire && view === 'architect' ? <GloireArchitectMaquette locale={locale} labels={labels} lots={lots} onSelect={ref => router.push(`/${locale}/projets/${projectSlug}/appartements/${ref}`)} /> : <Maquette3D
       key={isLaGloire ? 'availability' : projectSlug}
+      locale={locale}
       lots={lots}
       massing={displayMassing}
       labels={labels}

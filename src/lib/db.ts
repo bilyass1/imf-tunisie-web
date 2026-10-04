@@ -20,6 +20,7 @@ import type {
 import { DEAL_STAGES, PIPELINE_STAGES } from './types';
 import { buildSeed } from './seed';
 import { applyYassamineA5aFacts, includeYassamineApartments } from './yassamine-catalog';
+import { includeYassamineA6Lots } from './yassamine-a6';
 import { projectPresentation } from './project-presentation';
 import { getStore, type MediaWrite } from './postgres-store.cjs';
 
@@ -80,7 +81,7 @@ export async function readDb(): Promise<Database> {
   if (process.env.DATABASE_URL && !isBuild) {
     const data = await getStore(buildSeed).read();
     const project = data.projects.find(item => item.slug === 'diar-al-yassamine');
-    if (project) applyYassamineA5aFacts(project);
+    if (project) includeYassamineA6Lots(applyYassamineA5aFacts(project));
     return data;
   }
   if (resolveMode() === 'memory') {
@@ -92,7 +93,10 @@ export async function readDb(): Promise<Database> {
     const stat = fs.statSync(dbFile); const mtime = stat.mtimeMs;
     if (!cache || cache.mtime !== mtime || cache.size !== stat.size) {
       const raw = fs.readFileSync(dbFile, 'utf8');
-      cache = { data:includeYassamineApartments(JSON.parse(raw) as Database), mtime, size:stat.size };
+      const data = includeYassamineApartments(JSON.parse(raw) as Database);
+      const project = data.projects.find(item => item.slug === 'diar-al-yassamine');
+      if (project) includeYassamineA6Lots(project);
+      cache = { data, mtime, size:stat.size };
     }
     const data = structuredClone(cache.data);
     localVersions.set(data, `${mtime}/${stat.size}`);
@@ -161,7 +165,7 @@ export const getPublicData = requestCache(async () => {
   if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') {
     const data = await getStore(buildSeed).readPublic();
     const project = data.projects.find((item: Project) => item.slug === 'diar-al-yassamine');
-    if (project) applyYassamineA5aFacts(project);
+    if (project) includeYassamineA6Lots(applyYassamineA5aFacts(project));
     return data;
   }
   const { projects, company, news } = await readDb();

@@ -53,7 +53,7 @@ export async function generateMetadata({
   if (!project || !lot) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
   const area = lot.sellableArea
-    ? `${formatArea(lot.sellableArea, l)}${project.slug === 'diar-al-yassamine' && lot.block === 'A5.a'
+    ? `${formatArea(lot.sellableArea, l)}${project.slug === 'diar-al-yassamine' && (lot.block === 'A5.a' || lot.block.startsWith('A6.'))
       ? l === 'ar' ? ' (تقريبية)' : l === 'en' ? ' (approx.)' : ' (approx.)'
       : ''}`
     : '';
@@ -76,6 +76,7 @@ const STATUS_TONE: Record<string, string> = {
   available: 'bg-emerald-500/15 text-emerald-300',
   reserved: 'bg-gold-500/20 text-gold-200',
   sold: 'bg-red-500/20 text-red-200',
+  unconfirmed: 'bg-slate-500/20 text-slate-200',
 };
 
 const architectModelSubtitle = {
@@ -122,18 +123,24 @@ export default async function ApartmentPage({
 
   const contactHref = `/${locale}/contact?project=${project.slug}&lot=${encodeURIComponent(lot.code)}`;
   const a5PlanArea = project.slug === 'diar-al-yassamine' && lot.block === 'A5.a';
+  const approximatePlanArea = a5PlanArea || (project.slug === 'diar-al-yassamine' && lot.block.startsWith('A6.'));
   const a5AreaPending = a5PlanArea && !lot.sellableArea;
   const pendingAreaLabel = locale === 'ar' ? 'بانتظار التأكيد' : locale === 'en' ? 'To be confirmed' : 'À confirmer';
-  const saleAreaLabel = a5PlanArea
+  const saleAreaLabel = approximatePlanArea
     ? locale === 'ar' ? 'مساحة الأرضية (تقريبية)' : locale === 'en' ? 'Floor area (approx.)' : 'Surface du plancher (approx.)'
     : dict.availability.table.sellable;
-  const grossAreaLabel = a5PlanArea
+  const grossAreaLabel = approximatePlanArea
     ? locale === 'ar' ? 'المساحة خارج الجدران (تقريبية)' : locale === 'en' ? 'Gross area (approx.)' : 'Surface hors œuvre (approx.)'
     : dict.availability.table.gross;
   // The A5.a floor sheets identify the apartments, but do not state saleable areas.
   const a5FloorSheet = a5AreaPending && (lot.floor === 0 || lot.floor === 1)
     ? `/models/yassamine/presentation/A5a-${lot.floor}`
     : undefined;
+  const a6FloorSheet = lot.block === 'A6.a'
+    ? `/models/yassamine/presentation/A6a-${lot.floor === 4 ? 4 : lot.floor === 0 ? 0 : 1}`
+    : lot.block === 'A6.b'
+      ? `/models/yassamine/presentation/A6b-${lot.floor <= 1 ? lot.floor : 2}`
+      : undefined;
   const individualPlanExists = publicFileExists(lot.planImage);
   const planImage = individualPlanExists ? lot.planImage : a5FloorSheet ? `${a5FloorSheet}.webp` : undefined;
   const planPdf = individualPlanExists && publicFileExists(lot.planUrl)
@@ -167,7 +174,7 @@ export default async function ApartmentPage({
         image: `${SITE.url}${project.cover}`, numberOfBedrooms: Number(lot.typology.replace(/\D/g, '')) || undefined,
         floorSize: lot.sellableArea ? { '@type': 'QuantitativeValue', value: lot.sellableArea, unitCode: 'MTK' } : undefined,
         address: { '@type': 'PostalAddress', streetAddress: t(project.address, locale), addressLocality: project.city, addressCountry: 'TN' },
-        offers: lot.price && lot.status !== 'sold' ? { '@type': 'Offer', price: lot.price, priceCurrency: 'TND', url: `${SITE.url}/${locale}/projets/${project.slug}/appartements/${lot.ref}` } : undefined,
+        offers: lot.price && lot.status === 'available' ? { '@type': 'Offer', price: lot.price, priceCurrency: 'TND', url: `${SITE.url}/${locale}/projets/${project.slug}/appartements/${lot.ref}` } : undefined,
       }) }} />
       {/* ---- En-tête ---- */}
       <section className="relative isolate overflow-hidden bg-ink pb-16 pt-36 lg:pb-20 lg:pt-44">
@@ -212,7 +219,9 @@ export default async function ApartmentPage({
             <div className="flex flex-col gap-3 sm:flex-row">
               {lot.status !== 'sold' && (
                 <Link href={contactHref} className="btn-gold">
-                  {dict.apartment.reserve}
+                  {lot.status === 'unconfirmed'
+                    ? locale === 'ar' ? 'الاستفسار عن التوفّر' : locale === 'en' ? 'Ask about availability' : 'Demander la disponibilité'
+                    : dict.apartment.reserve}
                   <IconArrow className="h-4 w-4 rtl:rotate-180" />
                 </Link>
               )}
@@ -242,7 +251,7 @@ export default async function ApartmentPage({
             </Reveal>
           ))}
         </div>
-        {a5PlanArea && <p className="container-lux pb-6 text-sm text-ink/65">
+      {approximatePlanArea && <p className="container-lux pb-6 text-sm text-ink/65">
           {a5AreaPending
             ? locale === 'ar' ? 'مساحة الشقة قيد التحقق. اطلب جدول المساحات من الفريق التجاري.' : locale === 'en' ? 'The apartment area is being verified. Request its area schedule from the sales team.' : 'La surface de cet appartement est en cours de vérification. Demandez son tableau de surfaces au service commercial.'
             : locale === 'ar' ? 'المساحات تقريبية كما وردت في مخطط البيع الفردي لهذه الشقة. تحقّق من المساحة التعاقدية قبل الشراء.' : locale === 'en' ? 'These are approximate areas stated on this apartment’s individual sales plan. Confirm the contractual area before purchase.' : 'Surfaces approximatives relevées sur le plan de vente individuel de cet appartement. Vérifiez la surface contractuelle avant l’achat.'}
@@ -311,6 +320,9 @@ export default async function ApartmentPage({
               {a5FloorSheet && !individualPlanExists && <p className="mt-3 text-sm text-ink/60">
                 {locale === 'ar' ? 'مخطط الطابق الكامل للعمارة A5.a؛ ابحث عن مرجع الشقة على الرسم.' : locale === 'en' ? 'Full floor plan for block A5.a; locate the apartment reference on the drawing.' : 'Plan de l’étage complet du bloc A5.a ; repérez la référence de l’appartement sur le dessin.'}
               </p>}
+              {a6FloorSheet && <a className="mt-5 inline-block text-sm font-semibold text-gold-700 underline underline-offset-4" href={`${a6FloorSheet}.pdf`} target="_blank" rel="noreferrer">
+                {locale === 'ar' ? 'عرض مخطط الطابق الكامل' : locale === 'en' ? 'View the full floor plan' : 'Voir le plan complet de l’étage'} ↗
+              </a>}
               {lot.planDwgUrl && <div className="mt-5 flex flex-wrap items-center gap-4 text-sm">
                 <Link href={`/${locale}/projets/${project.slug}#plans-rdc`} className="underline underline-offset-4">
                   {locale === 'ar' ? 'مخططات الطابق الأرضي' : locale === 'en' ? 'Ground-floor plans' : 'Plans d’ensemble du RDC'}
@@ -387,7 +399,7 @@ export default async function ApartmentPage({
 
       {/* ---- 4. Financement ---- */}
       {project.slug === 'diar-al-yassamine' && <YassamineFinancing locale={locale} />}
-      {project.status === 'ongoing' && lot.status !== 'sold' && (
+      {project.status === 'ongoing' && lot.status !== 'sold' && lot.price && (
         <section className="bg-white py-20 lg:py-24">
           <div className="container-lux">
             <SectionHeading
@@ -400,7 +412,7 @@ export default async function ApartmentPage({
                 locale={locale}
                 labels={dict.simulator}
                 contactHref={contactHref}
-                defaultPrice={lot.price ?? Math.round((lot.sellableArea ?? 60) * 3200)}
+                defaultPrice={lot.price}
               />
             </div>
           </div>
@@ -459,7 +471,9 @@ export default async function ApartmentPage({
             </Link>
             {lot.status !== 'sold' && (
               <Link href={contactHref} className="btn-gold">
-                {dict.apartment.reserve}
+                {lot.status === 'unconfirmed'
+                  ? locale === 'ar' ? 'الاستفسار عن التوفّر' : locale === 'en' ? 'Ask about availability' : 'Demander la disponibilité'
+                  : dict.apartment.reserve}
                 <IconArrow className="h-4 w-4 rtl:rotate-180" />
               </Link>
             )}

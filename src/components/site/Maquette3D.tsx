@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Lot, Massing } from '@/lib/types';
 import { useImmersiveViewer } from './useImmersiveViewer';
+import ModelCompass, { updateModelCompass } from './ModelCompass';
 
 export interface MaquetteLabels {
   title: string;
   hint: string;
-  legend: { available: string; reserved: string; sold: string };
+  legend: Record<Lot['status'], string>;
   reset: string;
   loading: string;
   select: string;
@@ -24,6 +25,7 @@ const STATUS_COLORS: Record<Lot['status'], number> = {
   available: 0x2f9c6a,
   reserved: 0xd6a02f,
   sold: 0xdc4545,
+  unconfirmed: 0x9099a4,
 };
 
 /* ------------------------------------------------------------------ */
@@ -152,6 +154,7 @@ function lawnCanvas(): HTMLCanvasElement {
  * repérage des fiches de vente (src/lib/la-gloire-footprints.ts).
  */
 export default function Maquette3D({
+  locale,
   lots,
   massing,
   labels,
@@ -160,6 +163,7 @@ export default function Maquette3D({
   initialMode = 'realistic',
   hideModeToggle = false,
 }: {
+  locale: string;
   lots: Lot[];
   massing: Massing;
   labels: MaquetteLabels;
@@ -170,6 +174,7 @@ export default function Maquette3D({
 }) {
   const mountRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const compassRef = useRef<HTMLDivElement>(null);
   const apiRef = useRef<{ reset: () => void; zoom: (step: number) => void; view: (name: 'aerial' | 'street') => void } | null>(null);
   const selectCb = useRef(onSelect);
   selectCb.current = onSelect;
@@ -1071,6 +1076,8 @@ export default function Maquette3D({
           target.z + fittedRadius * Math.sin(phi) * Math.cos(theta),
         );
         camera.lookAt(target);
+        // Plan-repérage coordinates: x east, y south; this viewer maps y to world +z.
+        updateModelCompass(camera, [0, -1], compassRef.current);
         dirty = true;
       };
 
@@ -1346,6 +1353,7 @@ export default function Maquette3D({
       </div>
       <div className={`relative ${immersive ? 'min-h-0 flex-1' : ''}`}>
       <div ref={mountRef} className={immersive ? 'h-full w-full' : 'h-[520px] w-full sm:h-[650px]'} />
+      <ModelCompass locale={locale} needleRef={compassRef} className="end-3 top-3 sm:end-5 sm:top-5" />
 
       {!ready && (
         <div className="absolute inset-0 grid place-items-center bg-ink">
@@ -1371,7 +1379,7 @@ export default function Maquette3D({
       {/* Légende — seulement en mode commercial */}
       {mode === 'commercial' && (
         <div className="viewer-glass pointer-events-none absolute start-3 top-20 flex flex-col gap-2 rounded-xl px-4 py-3">
-          {(['available', 'reserved', 'sold'] as const).map((s) => (
+          {(['available', 'reserved', 'sold', 'unconfirmed'] as const).map((s) => (
             <span key={s} className="flex items-center gap-2 text-sm text-white/85">
               <span
                 className="h-2.5 w-2.5 rounded-sm"
@@ -1384,7 +1392,7 @@ export default function Maquette3D({
       )}
 
       {/* Coupe par étage + recentrage */}
-      <div className="no-scrollbar absolute bottom-24 end-3 top-3 flex flex-col items-end gap-2 overflow-y-auto sm:end-5 sm:top-5">
+      <div className="no-scrollbar absolute bottom-24 end-3 top-24 flex flex-col items-end gap-2 overflow-y-auto sm:end-5 sm:top-28">
         <div className="viewer-glass flex flex-col gap-1 rounded-2xl p-1" aria-label={labels.floor}>
           <button
             type="button"

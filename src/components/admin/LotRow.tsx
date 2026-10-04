@@ -15,7 +15,7 @@ export default function LotRow({
   projectSlug: string;
   floorText: string;
   areaText: string;
-  statusLabels: { available: string; reserved: string; sold: string };
+  statusLabels: Record<Lot['status'], string>;
 }) {
   const statusForm = useRef<HTMLFormElement>(null);
 
@@ -45,6 +45,7 @@ export default function LotRow({
             <option value="available">{statusLabels.available}</option>
             <option value="reserved">{statusLabels.reserved}</option>
             <option value="sold">{statusLabels.sold}</option>
+            <option value="unconfirmed">{statusLabels.unconfirmed}</option>
           </select>
         </form>
       </td>

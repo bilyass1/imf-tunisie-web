@@ -36,7 +36,7 @@ export default function InteriorExplorer({ locale, references, labels }: { local
           </label>
         </div>
         <Link href={`/${locale}/projets/residence-la-gloire/appartements/${reference}#interieur`} className="btn-gold mt-6">{t.open}</Link>
-        <a href={`/plans/la-gloire/${reference}.pdf`} download className="mt-4 block text-xs underline underline-offset-4">{t.plan}</a>
+        <a href={`/plans/la-gloire/presentation/${reference}.pdf`} download className="mt-4 block text-xs underline underline-offset-4">{t.plan}</a>
         <p className="mt-6 text-xs leading-relaxed text-ink/50">{t.note}</p>
       </div>
       <PlanViewer key={reference} image={`/interiors/la-gloire/${reference}.webp`} alt={`${t.apartment} ${reference} · 3D`} labels={labels} exists />

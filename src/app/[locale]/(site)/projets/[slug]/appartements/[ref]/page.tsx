@@ -74,8 +74,8 @@ export async function generateMetadata({
 
 const STATUS_TONE: Record<string, string> = {
   available: 'bg-emerald-500/15 text-emerald-300',
-  reserved: 'bg-amber-500/15 text-amber-300',
-  sold: 'bg-white/10 text-white/50',
+  reserved: 'bg-gold-500/20 text-gold-200',
+  sold: 'bg-red-500/20 text-red-200',
 };
 
 const architectModelSubtitle = {
@@ -132,7 +132,7 @@ export default async function ApartmentPage({
     : dict.availability.table.gross;
   // The A5.a floor sheets identify the apartments, but do not state saleable areas.
   const a5FloorSheet = a5AreaPending && (lot.floor === 0 || lot.floor === 1)
-    ? `/models/yassamine/A5a-${lot.floor}`
+    ? `/models/yassamine/presentation/A5a-${lot.floor}`
     : undefined;
   const individualPlanExists = publicFileExists(lot.planImage);
   const planImage = individualPlanExists ? lot.planImage : a5FloorSheet ? `${a5FloorSheet}.webp` : undefined;
@@ -300,6 +300,13 @@ export default async function ApartmentPage({
                 alt={a5FloorSheet && !individualPlanExists ? `${dict.apartment.plan} · ${floorLabel(lot.floor, locale)} · ${lot.code}` : `${dict.apartment.plan} ${lot.code}`}
                 labels={dict.plan}
                 exists={publicFileExists(planImage)}
+                brand={planImage ? {
+                  project: project.name,
+                  document: `${lot.code} · ${floorLabel(lot.floor, locale)}`,
+                  phone: SITE.office.phones[0],
+                  email: SITE.email,
+                  website: SITE.url,
+                } : undefined}
               />
               {a5FloorSheet && !individualPlanExists && <p className="mt-3 text-sm text-ink/60">
                 {locale === 'ar' ? 'مخطط الطابق الكامل للعمارة A5.a؛ ابحث عن مرجع الشقة على الرسم.' : locale === 'en' ? 'Full floor plan for block A5.a; locate the apartment reference on the drawing.' : 'Plan de l’étage complet du bloc A5.a ; repérez la référence de l’appartement sur le dessin.'}

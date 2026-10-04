@@ -2,22 +2,26 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireClient } from '@/lib/auth';
-import { getProject } from '@/lib/db';
+import { getProjects } from '@/lib/db';
+import { resolvedClientProperties, selectedClientProperty } from '@/lib/client-properties';
 import { t } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { clientNav } from '@/components/portal/clientNav';
+import ClientPropertyTabs from '@/components/portal/ClientPropertyTabs';
 import { IconCheck } from '@/components/Icons';
 import ProgressMeter from '@/components/site/ProgressMeter';
 
-export default async function ProgressPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function ProgressPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ project?: string; lot?: string }> }) {
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
   const user = await requireClient(locale);
-  const project = user.projectSlug ? (await getProject(user.projectSlug)) : undefined;
+  const properties=resolvedClientProperties(user,await getProjects());
+  const selected=selectedClientProperty(properties,await searchParams);
+  const project=selected?.project;
   const steps = project?.progress ?? [];
-  const lot=project?.lots.find(l=>l.ref===user.lotRef);
+  const lot=selected?.lot;
   const photos = [...(project?.constructionPhotos??[]),...(lot?.constructionPhotos??[])];
 
   return (
@@ -26,11 +30,12 @@ export default async function ProgressPage({ params }: { params: Promise<{ local
       title={dict.client.progress}
       subtitle={project?.name}
       userName={user.name}
-      nav={clientNav(locale, dict)}
+      nav={clientNav(locale, dict,selected ? {projectSlug:project.slug,lotRef:lot.ref} : undefined)}
       active="progress"
       backLabel={dict.auth.backToSite}
       logoutLabel={dict.auth.logout}
     >
+      <ClientPropertyTabs locale={locale} basePath={`/${locale}/espace-client/chantier`} properties={properties} selected={selected}/>
       <ProgressMeter value={project?.progressPercent} locale={locale} label={project?.name}/>
       <ProgressMeter value={lot?.progressPercent} locale={locale} label={lot?.code}/>
       {steps.length === 0 && !photos.length && project?.progressPercent==null && lot?.progressPercent==null ? (

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireClient } from '@/lib/auth';
+import { getProjects } from '@/lib/db';
 import { t, formatDate } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { clientNav } from '@/components/portal/clientNav';
@@ -14,6 +15,7 @@ export default async function DocumentsPage({ params }: { params: Promise<{ loca
   const dict = getDictionary(locale);
   const user = await requireClient(locale);
   const documents = user.documents ?? [];
+  const projects=await getProjects();
 
   return (
     <PortalShell
@@ -45,6 +47,7 @@ export default async function DocumentsPage({ params }: { params: Promise<{ loca
                   <p className="mt-1 text-[12px] text-ink/45">
                     {(dict.client.kinds as Record<string, string>)[doc.kind] ?? doc.kind} · {formatDate(doc.date, locale)}
                   </p>
+                  {doc.projectSlug && doc.lotRef && <p className="mt-1 text-xs text-gold-600">{projects.find(item=>item.slug===doc.projectSlug)?.name??doc.projectSlug} · {projects.find(item=>item.slug===doc.projectSlug)?.lots.find(lot=>lot.ref===doc.lotRef)?.code??doc.lotRef}</p>}
                 </div>
                 <IconDownload className="h-5 w-5 shrink-0 text-ink/30 transition group-hover:text-gold-600" />
               </a>

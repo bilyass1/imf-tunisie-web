@@ -9,7 +9,7 @@ import { getCompanySite } from '@/lib/company';
 
 export default async function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const SITE=(await getCompanySite());
-  const projects = (await getProjects()).slice(0, 5);
+  const projects = await getProjects();
   const year = new Date().getFullYear();
   const socialLinks = [
     { href: SITE.social.facebook, Icon: IconFacebook, label: 'Facebook' },

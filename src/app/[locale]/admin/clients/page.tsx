@@ -3,6 +3,7 @@ import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireAdminUser } from '@/lib/auth';
 import { getClients, getProjects } from '@/lib/db';
+import { clientProperties } from '@/lib/client-properties';
 import { formatMoney } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
@@ -61,9 +62,9 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
                         {c.phone && <span className="block text-ink/40">{c.phone}</span>}
                       </td>
                       <td className="px-6 py-4 text-ink/55">
-                        {c.projectSlug ? (projectNames.get(c.projectSlug) ?? c.projectSlug) : '—'}
+                        {clientProperties(c).map(item=>projectNames.get(item.projectSlug)??item.projectSlug).join(' · ') || '—'}
                       </td>
-                      <td className="px-6 py-4 font-semibold text-ink">{c.lotRef ?? '—'}</td>
+                      <td className="px-6 py-4 font-semibold text-ink">{clientProperties(c).map(item=>item.lotRef).join(' · ') || '—'}</td>
                       <td className="px-6 py-4 text-end text-emerald-600">{formatMoney(paid, locale)}</td>
                       <td className="px-6 py-4 text-end text-gold-600">{formatMoney(total - paid, locale)}</td>
                     </tr>

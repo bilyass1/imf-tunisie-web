@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Locale } from '@/i18n/config';
 
 const labels = {
@@ -25,6 +25,7 @@ export default function HomeHeroPhotos({ initialImage, additionalImages, locale 
   const [pageVisible, setPageVisible] = useState(true);
   const [saveData, setSaveData] = useState(false);
   const [requestedCount, setRequestedCount] = useState(0);
+  const firstPaintAt = useRef<number | null>(null);
 
   useEffect(() => {
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -52,21 +53,24 @@ export default function HomeHeroPhotos({ initialImage, additionalImages, locale 
 
   useEffect(() => {
     if (!firstLoaded || loadedImages.length === 0 || paused || reducedMotion || !pageVisible) return;
-    const timer = window.setInterval(() => setActiveIndex(current => {
+    const delay = activeIndex === 0
+      ? Math.max(0, (firstPaintAt.current ?? Date.now()) + 12000 - Date.now())
+      : 6000;
+    const timer = window.setTimeout(() => setActiveIndex(current => {
       // Keep the current photo if no other image has finished loading.
       for (let step = 1; step < images.length; step++) {
         const next = (current + step) % images.length;
         if (next === 0 || loadedImages.includes(images[next])) return next;
       }
       return current;
-    }), 6000);
-    return () => window.clearInterval(timer);
-  }, [firstLoaded, loadedImages, images, paused, reducedMotion, pageVisible]);
+    }), delay);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, firstLoaded, loadedImages, images, paused, reducedMotion, pageVisible]);
 
   return (
     <>
       <Image src={initialImage} alt="" fill priority quality={80} sizes="100vw"
-        className="object-cover object-[60%_center]" onLoad={() => setFirstLoaded(true)} />
+        className="object-cover object-[60%_center]" onLoad={() => { firstPaintAt.current ??= Date.now(); setFirstLoaded(true); }} />
       {firstLoaded && !reducedMotion && images.slice(1, requestedCount + 1).map((src, index) => (
         <Image key={src} src={src} alt="" fill quality={80} sizes="100vw" loading="eager" fetchPriority="low"
           onLoad={() => setLoadedImages(current => current.includes(src) ? current : [...current, src])}

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import PlanBrand, { type PlanBrandDetails } from './PlanBrand';
 import { useRouter } from 'next/navigation';
 import { mappedYassamineLots, yassamineApartmentHref, yassamineLotAtPoint, type MaquetteLot } from '@/lib/yassamine-picking';
 import { useImmersiveViewer } from './useImmersiveViewer';
@@ -49,7 +50,7 @@ function finishCanvas(kind: 'plaster' | 'stone' | 'wood' | 'paving') {
   return canvas;
 }
 
-export default function YassamineMaquette({ locale, lots }: { locale: string; lots: MaquetteLot[] }) {
+export default function YassamineMaquette({ locale, lots, planContact }: { locale: string; lots: MaquetteLot[]; planContact: Pick<PlanBrandDetails, 'phone' | 'email' | 'website'> }) {
   const router = useRouter();
   const navigation = useRef({ locale, lots, router });
   navigation.current = { locale, lots, router };
@@ -369,7 +370,7 @@ export default function YassamineMaquette({ locale, lots }: { locale: string; lo
       <p className="mt-3 text-xs text-white/60">{selectionCopy.unavailable}</p>
       <p className="mt-2 max-w-3xl text-sm text-white/65">{c.note}</p>
       <div className="mt-9"><h3 className="font-display text-2xl">{c.plans} · {floor===null||floor===0?c.ground:`R+${floor}`}</h3>
-        <div className="mt-5 grid gap-5 md:grid-cols-2">{selectedPlans.map(p=><article key={p.id} className="overflow-hidden rounded-xl bg-ivory text-ink"><div className="flex items-center justify-between gap-3 p-4"><strong>{p.block}</strong><a className="text-sm underline underline-offset-4" href={p.pdf} download>{c.download}</a></div><img src={p.plan} alt={`${c.plans} ${p.block}`} loading="lazy" className="h-[340px] w-full bg-white object-contain p-3" /></article>)}</div>
+        <div className="mt-5 grid gap-5 md:grid-cols-2">{selectedPlans.map(p=><article key={p.id} className="overflow-hidden rounded-xl bg-ivory text-ink"><PlanBrand project="Diar El Yassamine" document={`${p.block} · ${floor===null||floor===0?c.ground:`R+${floor}`}`} {...planContact} /><div className="flex items-center justify-between gap-3 p-4"><strong>{p.block}</strong><a className="text-sm underline underline-offset-4" href={p.pdf.replace('/models/yassamine/', '/models/yassamine/presentation/')} download>{c.download}</a></div><img src={p.plan.replace('/models/yassamine/', '/models/yassamine/presentation/')} alt={`${c.plans} ${p.block}`} loading="lazy" className="h-[340px] w-full bg-white object-contain p-3" /></article>)}</div>
       </div>
     </div>
   </section>;

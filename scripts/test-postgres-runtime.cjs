@@ -15,7 +15,7 @@ const {importData}=require('./postgres-common.cjs');
   const pool={connect:async()=>({query,release(){}}),query};
   const fixture={projects:[{slug:'p',name:'Test',progress:[{label:{fr:'Façades',en:'Facades',ar:'الواجهات'},percent:70,done:false}],lots:[{ref:'A',status:'available'},{ref:'B',status:'available'}]}],
    users:[{id:'admin',email:'admin@example.test',name:'Admin',role:'admin',passwordHash:'hash'},
-    {id:'client',email:'client@example.test',name:'Client',role:'client',passwordHash:'hash',projectSlug:'p',lotRef:'A',messages:[],documents:[]}],
+    {id:'client',email:'client@example.test',name:'Client',role:'client',passwordHash:'hash',projectSlug:'p',lotRef:'A',properties:[{projectSlug:'p',lotRef:'A'},{projectSlug:'p',lotRef:'B'}],messages:[],documents:[]}],
    news:[],contacts:[],deals:[],activities:[],tasks:[]};
   await importData({query},fixture);
   const store=createStore(pool);
@@ -25,6 +25,7 @@ const {importData}=require('./postgres-common.cjs');
   assert.equal(await store.readAuthUser('id','unknown'),undefined);
   assert(!JSON.stringify(await store.readAuthUser('id','client')).includes('documents'),'Auth lookup must not load documents');
   assert.equal((await store.readUserById('client')).messages.length,0);
+  assert.equal((await store.readUserById('client')).properties.length,2);
   assert.equal(await store.readUserById('unknown'),undefined);
   assert.equal(await store.consumeRateLimit('shared-login',2,1000,100),true);
   assert.equal(await publicInstance.consumeRateLimit('shared-login',2,1000,101),true);

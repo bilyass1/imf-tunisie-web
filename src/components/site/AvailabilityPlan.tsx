@@ -45,14 +45,14 @@ const STATUS_STYLES: Record<Lot['status'], { tile: string; dot: string; text: st
     text: 'text-emerald-700',
   },
   reserved: {
-    tile: 'border-amber-500/40 bg-amber-50 hover:border-amber-500 hover:bg-amber-100 text-amber-900',
-    dot: 'bg-amber-500',
-    text: 'text-amber-700',
+    tile: 'border-gold-400 bg-gold-100 hover:border-gold-500 hover:bg-gold-200 text-gold-700',
+    dot: 'bg-gold-500',
+    text: 'text-gold-700',
   },
   sold: {
-    tile: 'border-ink/12 bg-ink/[0.05] text-ink/40 hover:border-ink/25',
-    dot: 'bg-ink/45',
-    text: 'text-ink/45',
+    tile: 'border-red-400 bg-red-50 hover:border-red-500 hover:bg-red-100 text-red-900',
+    dot: 'bg-red-500',
+    text: 'text-red-700',
   },
 };
 
@@ -201,7 +201,7 @@ export default function AvailabilityPlan({
                 key={f}
                 className={`flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:gap-5 sm:px-6 ${
                   i > 0 ? 'border-t border-ink/8' : ''
-                } ${f === 0 ? 'bg-sand/40' : ''}`}
+                }`}
               >
                 <button
                   type="button"
@@ -318,8 +318,8 @@ export default function AvailabilityPlan({
                   selected.status === 'available'
                     ? 'bg-emerald-400/15 text-emerald-300'
                     : selected.status === 'reserved'
-                      ? 'bg-amber-400/15 text-amber-300'
-                      : 'bg-white/10 text-white/50'
+                      ? 'bg-gold-400/20 text-gold-200'
+                      : 'bg-red-400/20 text-red-200'
                 }`}
               >
                 <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLES[selected.status].dot}`} />

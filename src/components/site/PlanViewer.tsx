@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconDownload, IconClose } from '@/components/Icons';
 import { useImmersiveViewer } from './useImmersiveViewer';
+import PlanBrand, { type PlanBrandDetails } from './PlanBrand';
 
 export interface PlanLabels {
   title: string;
@@ -18,9 +19,8 @@ export interface PlanLabels {
 }
 
 /**
- * Visionneuse du plan de vente (image générée depuis le PDF AutoCAD
- * par scripts/generate-plans.mjs). Zoom molette, déplacement à la souris,
- * plein écran, et lien vers le PDF d'origine.
+ * Visionneuse du plan présenté sur le site. Zoom molette, déplacement à la
+ * souris, plein écran et lien vers son PDF correspondant.
  */
 export default function PlanViewer({
   image,
@@ -28,6 +28,7 @@ export default function PlanViewer({
   alt,
   labels,
   exists,
+  brand,
 }: {
   image?: string;
   pdf?: string;
@@ -35,6 +36,7 @@ export default function PlanViewer({
   labels: PlanLabels;
   /** Présence du fichier, résolue côté serveur — évite une requête HEAD. */
   exists?: boolean;
+  brand?: PlanBrandDetails;
 }) {
   const [scale, setScale] = useState(1);
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -191,9 +193,13 @@ export default function PlanViewer({
   );
 
   return full ? (
-    <div ref={root} role="dialog" aria-modal="true" aria-label={alt} className="fixed inset-0 z-[120] flex flex-col bg-ivory p-4">{viewer}</div>
+    <div ref={root} role="dialog" aria-modal="true" aria-label={alt} className="fixed inset-0 z-[120] flex flex-col bg-ivory p-4">
+      {brand && <PlanBrand {...brand} />}
+      {viewer}
+    </div>
   ) : (
     <div>
+      {brand && <PlanBrand {...brand} />}
       {viewer}
       {pdf && (
         <a href={pdf} download className="btn-ghost mt-4">

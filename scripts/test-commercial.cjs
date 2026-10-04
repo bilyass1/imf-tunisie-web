@@ -10,7 +10,7 @@ const bcrypt = require('bcryptjs');
 const root = path.resolve(__dirname, '..');
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'imf-commercial-test-'));
 const progressLabel=name=>({fr:name,en:name,ar:name});
-let db = { users: [{id:'staff',role:'admin',email:'staff@example.test'}], projects: [{slug:'residence',progress:[{label:progressLabel('Gros œuvre'),percent:100,done:true},{label:progressLabel('Façades'),percent:70,done:false}],lots:[{ref:'A1',status:'available',rooms:[{id:'salon',label:progressLabel('Séjour'),panorama:'/360/residence/A1/salon.jpg'}]},{ref:'A2',status:'available'}],gallery:[]}] };
+let db = { users: [{id:'staff',role:'admin',email:'staff@example.test'}], projects: [{slug:'residence',progress:[{label:progressLabel('Gros œuvre'),percent:100,done:true},{label:progressLabel('Façades'),percent:70,done:false}],lots:[{ref:'A1',status:'available',rooms:[{id:'salon',label:progressLabel('Séjour'),panorama:'/360/residence/A1/salon.jpg'}]},{ref:'A2',status:'available'}],gallery:[]},{slug:'second-residence',lots:[{ref:'B1',status:'available'},{ref:'B2',status:'available'}],gallery:[]}] };
 let session = {sub:'staff'};
 let persistent = true;
 const mediaBytes=new Map();
@@ -18,11 +18,12 @@ const database = {readDb:async()=>structuredClone(db),writeCommercialDb:async(va
 function load(relative) {
   const module = {exports:{}};
   const code = ts.transpileModule(fs.readFileSync(path.join(root,relative),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
-  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='./rate-limit'?{allowRequest:()=>true}:id==='next/cache'?{revalidatePath:()=>{}}:require(id);
+  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='./rate-limit'?{allowRequest:()=>true}:id==='./project-presentation'?{projectPresentation:project=>project}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
   vm.runInNewContext(code,{module,exports:module.exports,require:localRequire,Buffer,File,Response,FormData,structuredClone,process:{cwd:()=>temp,env:{}},console},{filename:relative});
   return module.exports;
 }
 const {commercialAction} = load('src/lib/commercial-actions.ts');
+const {clientProperties,clientPaymentsForProperty,selectedClientProperty,resolvedClientProperties}=load('src/lib/client-properties.ts');
 const {sendChatMessage} = load('src/lib/chat-actions.ts');
 async function chat(values) {const form=new FormData();for(const [k,v] of Object.entries(values)) form.set(k,v);return sendChatMessage({ok:false,message:''},form);}
 const {GET} = load('src/app/api/media/[id]/route.ts');
@@ -43,20 +44,57 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal(db.projects[0].progress[1].percent,70);
   assert.equal((await act({...property,lot:'',progress:'72','step-0':'100','step-1':'75'})).ok,true); assert.equal(db.projects[0].progressPercent,72);
   assert.equal(db.projects[0].progress[1].percent,75);
+  Object.assign(db.projects[0],{name:'Résidence test',subtitle:progressLabel('Sous-titre'),address:progressLabel('Adresse'),description:progressLabel('Ancien texte'),deliveryLabel:progressLabel('Livraison'),highlights:[progressLabel('Ancien point')],specs:[{label:progressLabel('Surface'),value:progressLabel('100 m²')}],amenities:['parking']});
+  const content={operation:'project-content',project:'residence',name:'Nouvelle résidence',progress:'74',subtitleFr:'Titre FR',subtitleEn:'Title EN',subtitleAr:'عنوان',addressFr:'Adresse FR',addressEn:'Address EN',addressAr:'العنوان',descriptionFr:'Texte FR',descriptionEn:'Text EN',descriptionAr:'النص',deliveryFr:'2028',deliveryEn:'2028',deliveryAr:'٢٠٢٨',highlightsFr:'Premier\nSecond',highlightsEn:'First\nSecond',highlightsAr:'أول\nثان',specLabel0Fr:'Surface',specLabel0En:'Area',specLabel0Ar:'المساحة',specValue0Fr:'100 m²',specValue0En:'100 sqm',specValue0Ar:'١٠٠ م²',progressLabel0Fr:'Structure',progressLabel0En:'Structure',progressLabel0Ar:'الهيكل',progressLabel1Fr:'Façades',progressLabel1En:'Facades',progressLabel1Ar:'الواجهات','step-0':'100','step-1':'76',amenities:'garden'};
+  for(const [key,fr,en,ar] of [
+    ['Overview','Le programme','The programme','البرنامج'],
+    ['Highlights','Points forts','Highlights','نقاط القوة'],
+    ['Specs','Fiche technique','Technical details','المواصفات'],
+    ['Amenities','Prestations','Amenities','التجهيزات'],
+    ['Progress','Avancement du chantier','Construction progress','تقدم الأشغال'],
+    ['Gallery','Galerie','Gallery','الصور'],
+  ]) Object.assign(content,{[`section${key}Fr`]:fr,[`section${key}En`]:en,[`section${key}Ar`]:ar});
+  assert.equal((await act({...content,highlightsEn:'First'})).ok,false);
+  assert.equal((await act(content)).ok,true);
+  assert.equal(db.projects[0].presentationEdited,true);
+  assert.equal(db.projects[0].presentationLabels.overview.fr,'Le programme');
+  assert.equal(db.projects[0].description.ar,'النص');
+  assert.equal(db.projects[0].highlights.length,2);
+  assert.equal(db.projects[0].progressPercent,74);
+  assert.equal(db.projects[0].progress[1].percent,76);
+  assert.deepEqual(db.projects[0].amenities,['garden']);
   const client={operation:'client',project:'residence',lot:'A1',name:'Test Client',email:'client@example.test',password:'test-password-1234'};
   assert.equal((await act(client)).ok,true);
   const owner=db.users.find(u=>u.email===client.email);
   assert.notEqual(owner.passwordHash,client.password); assert.equal(await bcrypt.compare(client.password,owner.passwordHash),true);
+  assert.equal(JSON.stringify(clientProperties(owner)),JSON.stringify([{projectSlug:'residence',lotRef:'A1'}]));
+  const addProperty={operation:'client-property-add',client:owner.id,project:'second-residence',lot:'B1'};
+  assert.equal((await act(addProperty)).ok,true);
+  assert.equal((await act(addProperty)).ok,false);
+  assert.equal(JSON.stringify(clientProperties(db.users.find(u=>u.id===owner.id))),JSON.stringify([{projectSlug:'residence',lotRef:'A1'},{projectSlug:'second-residence',lotRef:'B1'}]));
+  assert.equal(selectedClientProperty(resolvedClientProperties(db.users.find(u=>u.id===owner.id),db.projects),{project:'second-residence',lot:'B1'}).lot.ref,'B1');
+  assert.equal(selectedClientProperty(resolvedClientProperties(db.users.find(u=>u.id===owner.id),db.projects),{project:'second-residence',lot:'B2'}).lot.ref,'A1');
+  db.users.find(u=>u.id===owner.id).payments=[{id:'pay-1',amount:1000,paid:false,label:progressLabel('Acompte')}];
+  assert.equal((await act({operation:'client-property-primary',client:owner.id,project:'second-residence',lot:'B1'})).ok,true);
+  assert.equal(db.users.find(u=>u.id===owner.id).projectSlug,'second-residence');
+  assert.equal(clientPaymentsForProperty(db.users.find(u=>u.id===owner.id),{projectSlug:'residence',lotRef:'A1'}).length,1);
+  assert.equal(clientPaymentsForProperty(db.users.find(u=>u.id===owner.id),{projectSlug:'second-residence',lotRef:'B1'}).length,0);
+  assert.equal((await act({operation:'client-property-primary',client:owner.id,project:'residence',lot:'A1'})).ok,true);
   assert.equal((await act(client)).ok,false);
   assert.equal((await act({...client,email:'other@example.test'})).ok,false);
   const contract={operation:'upload',kind:'contract',client:owner.id,label:'Contrat test',file:new File(['%PDF-1.4\n%%EOF'],'test.pdf',{type:'application/pdf'})};
   assert.equal((await act({...contract,file:new File(['bad'],'bad.pdf')})).ok,false);
-  assert.equal((await act(contract)).ok,true);
+  assert.equal((await act({...contract,contractProperty:'2'})).ok,false);
+  assert.equal((await act({...contract,contractProperty:'1'})).ok,true);
+  assert.equal(db.users.find(u=>u.id===owner.id).documents[0].projectSlug,'second-residence');
+  assert.equal(db.users.find(u=>u.id===owner.id).documents[0].lotRef,'B1');
   const pdfId=db.uploads.at(-1).id;
   session=null; assert.equal((await media(pdfId)).status,404);
   session={sub:owner.id}; assert.equal((await media(pdfId)).status,200);
   assert.equal((await act(property)).ok,false);
   db.users.push({id:'other',role:'client',projectSlug:'residence',lotRef:'A2',email:'other@example.test'});
+  session={sub:'staff'};
+  assert.equal((await act({...addProperty,client:'other'})).ok,false);
   session={sub:'other'}; assert.equal((await media(pdfId)).status,404);
   session={sub:'staff'};
   const bytes=await sharp({create:{width:4,height:4,channels:3,background:'#bbaa77'}}).png().toBuffer();
@@ -67,6 +105,21 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   session={sub:'staff'}; assert.equal((await act({...photo,lot:''})).ok,true); const sharedId=db.uploads.at(-1).id;
   session={sub:'other'}; assert.equal((await media(sharedId)).status,200);
   session={sub:'staff'};
+  assert.equal((await act({...photo,project:'second-residence',lot:'B1',label:'Deuxième chantier'})).ok,true);
+  const secondPrivateId=db.uploads.at(-1).id;
+  session={sub:owner.id}; assert.equal((await media(secondPrivateId)).status,200);
+  session={sub:'other'}; assert.equal((await media(secondPrivateId)).status,404);
+  session={sub:'staff'};
+  const removeProperty={operation:'client-property-remove',client:owner.id,project:'second-residence',lot:'B1',confirm:'yes'};
+  assert.equal((await act({...removeProperty,confirm:''})).ok,false);
+  assert.equal((await act(removeProperty)).ok,true);
+  session={sub:owner.id}; assert.equal((await media(secondPrivateId)).status,404);
+  session={sub:'staff'};
+  assert.equal((await act({...addProperty,client:'other'})).ok,true);
+  assert.equal((await act(addProperty)).ok,false);
+  assert.equal((await act({...addProperty,lot:'B2',status:'invalid'})).ok,false);
+  assert.equal((await act({...addProperty,lot:'B2',status:'sold'})).ok,true);
+  assert.equal(db.projects[1].lots[1].status,'sold');
   const galleryResult=await act({...photo,kind:'gallery'});
   assert.equal(galleryResult.ok,true);
   assert.equal(galleryResult.publicPath,'/projets/residence/appartements/A1#galerie');
@@ -75,6 +128,21 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   const projectGalleryResult=await act({...photo,kind:'gallery',lot:''});
   assert.equal(projectGalleryResult.publicPath,'/projets/residence#galerie');
   assert.equal(db.projects[0].gallery.length,1);
+  const photoSrc=db.projects[0].gallery[0].src;
+  const galleryEdit={operation:'gallery-edit',project:'residence',photo:photoSrc,captionFr:'Nouvelle façade',captionEn:'New façade',captionAr:'واجهة جديدة',category:'works',position:'1'};
+  assert.equal((await act({...galleryEdit,position:'0'})).ok,false);
+  assert.equal((await act(galleryEdit)).ok,true);
+  assert.equal(db.projects[0].gallery[0].caption.ar,'واجهة جديدة');
+  assert.equal(db.projects[0].gallery[0].category,'works');
+  assert.equal(db.projects[0].galleryEdited,true);
+  assert.equal((await act({...photo,kind:'gallery',lot:'',label:'Nouvelle photo',position:'1',category:'interiors'})).ok,true);
+  assert.equal(db.projects[0].gallery[0].caption.fr,'Nouvelle photo');
+  assert.equal(db.projects[0].gallery[0].category,'interiors');
+  assert.equal((await act({operation:'gallery-remove',project:'residence',photo:photoSrc})).ok,false);
+  assert.equal((await act({operation:'gallery-remove',project:'residence',photo:photoSrc,confirm:'yes'})).ok,true);
+  assert.equal(db.projects[0].gallery.length,1);
+  session=null; assert.equal((await media(photoSrc.split('/').at(-1))).status,404); session={sub:'staff'};
+  assert.equal((await act({operation:'gallery-remove',project:'residence',photo:photoSrc,confirm:'yes'})).ok,false);
   const panoramicBytes=await sharp({create:{width:2048,height:1024,channels:3,background:'#aabbcc'}}).png().toBuffer();
   const widePhoto=await sharp({create:{width:2048,height:1152,channels:3,background:'#aabbcc'}}).png().toBuffer();
   const panoramic={...photo,kind:'panorama',label:'Séjour 360',room:'salon',file:new File([panoramicBytes],'salon.png',{type:'image/png'})};
@@ -99,10 +167,9 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal((await act({operation:'company',name:'Test Immobilier',email:'office@example.test',phone:'123',address:'Rue test',city:'Tunis',about:'Présentation test'})).ok,true);
   assert.equal(db.company.legalName,'Test Immobilier');
   assert.equal(db.projects[0].lots[0].gallery.length,1);
-  const edit={operation:'client-edit',client:owner.id,project:'residence',lot:'A1',name:'Client corrigé',email:'updated@example.test',phone:'12345678'};
+  const edit={operation:'client-edit',client:owner.id,name:'Client corrigé',email:'updated@example.test',phone:'12345678'};
   const originalHash=db.users.find(u=>u.id===owner.id).passwordHash;
   assert.equal((await act({...edit,email:'other@example.test'})).ok,false);
-  assert.equal((await act({...edit,lot:'A2'})).ok,false);
   assert.equal((await act({...edit,client:'staff'})).ok,false);
   assert.equal((await act(edit)).ok,true);
   assert.equal(db.users.find(u=>u.id===owner.id).email,'updated@example.test');

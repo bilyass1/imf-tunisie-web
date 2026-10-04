@@ -19,3 +19,5 @@
 Chaque fiche appartement précise le plan, la surface, le type, la disponibilité et le prix lorsqu'il est documenté. Les disponibilités, prix et modalités doivent être confirmés avant réservation. Les visualisations intérieures illustratives ne remplacent pas les plans contractuels. L'éligibilité FOPROLOS doit être confirmée avec IMF et BH Bank. Contact commercial : +216 26 711 008.
 
 - [Prix au mètre carré : comparer les surfaces](https://imf-immobilere.tn/fr/guides/prix-metre-carre-comparer-surfaces-tunisie)
+
+- [FOPROLOS : questions pour la banque](https://imf-immobilere.tn/fr/guides/foprolos-questions-banque-premier-logement)

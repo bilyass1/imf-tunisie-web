@@ -41,7 +41,7 @@ export interface Lot {
   status: LotStatus;
   /** Prix indicatif en TND (saisi au back-office) */
   price?: number;
-  /** PDF d'origine du plan de vente */
+  /** PDF du plan présenté sur le site (original ou copie commerciale). */
   planUrl?: string;
   /** Original AutoCAD source when provided in DWG format. */
   planDwgUrl?: string;
@@ -89,6 +89,18 @@ export interface Massing {
 }
 
 export interface Project {
+  /** The commercial team has replaced the default project presentation. */
+  presentationEdited?: boolean;
+  /** Preserve the administrator's chosen gallery order and captions. */
+  galleryEdited?: boolean;
+  presentationLabels?: {
+    overview: Localized;
+    highlights: Localized;
+    specs: Localized;
+    amenities: Localized;
+    progress: Localized;
+    gallery: Localized;
+  };
   progressPercent?: number;
   constructionPhotos?: { src: string; caption: Localized }[];
   slug: string;
@@ -101,7 +113,7 @@ export interface Project {
   deliveryLabel?: Localized;
   heroImage: string;
   cover: string;
-  gallery: { src: string; caption: Localized }[];
+  gallery: { src: string; caption: Localized; category?: 'perspectives' | 'works' | 'interiors' }[];
   description: Localized;
   highlights: Localized[];
   specs: { label: Localized; value: Localized }[];
@@ -210,6 +222,8 @@ export interface PaymentLine {
   amount: number;
   paid: boolean;
   paidAt?: string;
+  projectSlug?: string;
+  lotRef?: string;
 }
 
 export interface ClientDocument {
@@ -218,6 +232,9 @@ export interface ClientDocument {
   kind: 'contract' | 'plan' | 'invoice' | 'receipt' | 'other';
   date: string;
   href: string;
+  /** Bien concerné par le document, lorsqu'il est connu. */
+  projectSlug?: string;
+  lotRef?: string;
 }
 
 export interface ClientMessage {
@@ -237,6 +254,8 @@ export interface User {
   role: 'client' | 'admin';
   projectSlug?: string;
   lotRef?: string;
+  /** Tous les biens rattachés au compte. Les deux champs ci-dessus restent le bien principal historique. */
+  properties?: { projectSlug: string; lotRef: string }[];
   payments?: PaymentLine[];
   documents?: ClientDocument[];
   archivedDocuments?: ClientDocument[];

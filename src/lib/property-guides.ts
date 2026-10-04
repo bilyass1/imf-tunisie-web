@@ -8,6 +8,122 @@ export interface PropertyGuide {
 }
 export const propertyGuides:PropertyGuide[] = [
 {
+  "slug": "foprolos-questions-banque-premier-logement",
+  "published": "2026-09-29",
+  "updated": "2026-09-29",
+  "title": {
+    "fr": "FOPROLOS : les questions à poser à la banque avant de réserver un logement",
+    "en": "FOPROLOS: questions to ask the bank before reserving a home",
+    "ar": "فوبرولوس: أسئلة للبنك قبل حجز مسكن"
+  },
+  "summary": {
+    "fr": "Préparez un entretien avec BH Bank : catégorie de revenus, premier logement, surface couverte, prix, apport et pièces du dossier. Seule l'étude de votre situation et du bien permet de confirmer un financement.",
+    "en": "Prepare for a BH Bank meeting: income category, first-home status, covered area, price, deposit and application documents. Financing depends on the bank's assessment of you and the property.",
+    "ar": "حضّر موعدك مع بنك الإسكان: فئة الدخل، شرط المسكن الأول، المساحة المغطاة، الثمن، التمويل الذاتي ووثائق الملف. لا يتأكد التمويل إلا بعد دراسة وضعيتك والمسكن."
+  },
+  "sections": [
+    {
+      "title": {
+        "fr": "Commencer par le logement et le promoteur",
+        "en": "Start with the property and the developer",
+        "ar": "ابدأ بالمسكن والباعث العقاري"
+      },
+      "body": {
+        "fr": "BH Bank présente FOPROLOS notamment pour l'acquisition d'un premier logement auprès d'un promoteur immobilier agréé. Demandez au commercial la référence précise du lot, son prix écrit et daté, le plan, la surface couverte et la preuve de l'agrément applicable au programme. Demandez à la banque si ce lot particulier peut entrer dans le dispositif. Une étiquette FOPROLOS sur une annonce ne vaut ni accord de crédit ni confirmation de l'éligibilité du logement. Source BH Bank vérifiée le 29 septembre 2026.",
+        "en": "BH Bank describes FOPROLOS as a route to buying a first home from an approved developer, among other uses. Ask the sales team for the specific unit reference, a dated written price, its plan, covered area and evidence of the approval applicable to the development. Ask the bank whether that particular unit qualifies. A FOPROLOS label in an advert is neither a loan approval nor confirmation that the unit qualifies. BH Bank source checked on 29 September 2026.",
+        "ar": "يعرض بنك الإسكان تمويل فوبرولوس، من بين استعمالاته، لاقتناء مسكن أول لدى باعث عقاري مصادق عليه. اطلب من الفريق التجاري مرجع الشقة وثمنها المكتوب والمؤرخ ومخططها ومساحتها المغطاة وما يثبت المصادقة على المشروع. واسأل البنك هل يشمل التمويل هذه الشقة بالذات. عبارة فوبرولوس في الإعلان لا تعني الموافقة على القرض ولا تأكيد أهلية المسكن. تم التثبت من مصدر بنك الإسكان يوم 29 سبتمبر 2026."
+      },
+      "source": "https://www.bhbank.tn/le-credit-foprolos"
+    },
+    {
+      "title": {
+        "fr": "Faire vérifier la catégorie de revenus et la surface",
+        "en": "Ask the bank to check income band and area",
+        "ar": "تحقق مع البنك من فئة الدخل والمساحة"
+      },
+      "body": {
+        "fr": "BH Bank distingue quatre catégories selon le revenu mensuel brut, indemnités comprises, exprimé en multiples du SMIG. La situation du conjoint entre aussi dans les vérifications. La banque indique pour l'acquisition une limite de surface couverte de 100 m² pour un logement individuel et de 120 m², parties communes comprises, pour un logement collectif. Demandez quels justificatifs de revenus elle accepte, quel SMIG et quelle période elle retient, et quelle surface du plan elle examine. La surface vendable affichée sur IMF ne doit pas être assimilée automatiquement à la surface couverte du dispositif. Source BH Bank vérifiée le 29 septembre 2026.",
+        "en": "BH Bank sets out four bands based on gross monthly income including allowances, expressed as multiples of the Tunisian minimum wage (SMIG). The spouse's situation is also part of the checks. For acquisition, the bank lists a covered-area limit of 100 m² for an individual home and 120 m² including shared areas for a collective home. Ask which income evidence, SMIG figure and period the bank uses, and which area on the plan it will assess. Do not assume that the saleable area shown on IMF equals the scheme's covered area. BH Bank source checked on 29 September 2026.",
+        "ar": "يحدد بنك الإسكان أربع فئات بحسب الدخل الشهري الخام مع المنح، قياسا بالأجر الأدنى المهني المضمون، ويأخذ وضعية القرين في الاعتبار. ولشراء المسكن يذكر سقف مساحة مغطاة قدره 100 م² للمسكن الفردي و120 م² للمسكن الجماعي باعتبار الأجزاء المشتركة. اسأل عن وثائق الدخل المعتمدة وقيمة الأجر الأدنى وفترة احتسابه، وعن المساحة التي سيعتمدها البنك من المخطط. لا تساوِ تلقائيا بين المساحة القابلة للبيع في موقع IMF والمساحة المغطاة الخاصة بالتمويل. تم التثبت من مصدر بنك الإسكان يوم 29 سبتمبر 2026."
+      },
+      "source": "https://www.bhbank.tn/le-credit-foprolos"
+    },
+    {
+      "title": {
+        "fr": "Demander un plan de financement écrit",
+        "en": "Request a written financing breakdown",
+        "ar": "اطلب خطة تمويل مكتوبة"
+      },
+      "body": {
+        "fr": "Pour l'acquisition auprès d'un promoteur agréé, la page BH Bank indique un crédit plafonné à 90 % du prix et un financement personnel d'au moins 10 %, ainsi qu'une durée de remboursement pouvant atteindre 25 ans. Les taux et délais de grâce y varient par catégorie : ne choisissez pas votre catégorie vous-même à partir d'un seul chiffre. Demandez une simulation individualisée indiquant prix retenu, apport, montant finançable, mensualités, durée, différé, assurance, garanties et autres coûts éventuels. Faites confirmer par écrit les conditions en vigueur à la date de votre dossier ; une simulation n'est pas une acceptation du prêt. Source BH Bank vérifiée le 29 septembre 2026.",
+        "en": "For purchase from an approved developer, the BH Bank page lists a loan cap of 90% of the purchase price, at least 10% own funding and a repayment term of up to 25 years. Rates and grace periods vary by category: do not assign yourself a band from one number. Ask for an individual written breakdown of the price used, deposit, possible loan, instalments, term, grace period, insurance, guarantees and any other costs. Confirm the terms applying to your application date in writing; a simulation is not loan approval. BH Bank source checked on 29 September 2026.",
+        "ar": "بالنسبة إلى الشراء من باعث عقاري مصادق عليه، تذكر صفحة بنك الإسكان قرضا لا يتجاوز 90% من ثمن الاقتناء وتمويلا ذاتيا لا يقل عن 10% ومدة سداد قد تصل إلى 25 سنة. تختلف نسبة الفائدة ومدة الإمهال حسب الفئة، فلا تحدد فئتك اعتمادا على رقم واحد. اطلب بيانا شخصيا مكتوبا يوضح الثمن المعتمد والمساهمة الذاتية ومبلغ القرض والقسط والمدة والإمهال والتأمين والضمانات والمصاريف المحتملة. أكد الشروط السارية يوم إيداع ملفك كتابة؛ المحاكاة ليست موافقة على القرض. تم التثبت من مصدر بنك الإسكان يوم 29 سبتمبر 2026."
+      },
+      "source": "https://www.bhbank.tn/le-credit-foprolos"
+    },
+    {
+      "title": {
+        "fr": "Préparer les pièces et garder la réservation conditionnelle",
+        "en": "Prepare documents and keep the reservation conditional",
+        "ar": "حضّر الوثائق ولا تعتبر الحجز موافقة مصرفية"
+      },
+      "body": {
+        "fr": "Demandez directement à BH Bank la liste actuelle des pièces pour votre catégorie et votre situation familiale, ainsi que les justificatifs relatifs au logement. Préparez vos justificatifs d'identité, de revenus et les documents du lot seulement selon la liste communiquée par la banque. Avant tout versement, demandez au vendeur les conditions écrites de réservation et ce qui se passe si le financement est refusé. Faites relire ces documents par un professionnel compétent si nécessaire. Ni le site IMF ni ce guide ne décident de l'éligibilité ou de l'issue du dossier.",
+        "en": "Ask BH Bank for its current document checklist for your band and family circumstances, including documents relating to the property. Assemble identity, income and unit documents according to the bank's actual list. Before paying anything, request the seller's written reservation terms and the consequences if financing is declined. Have a qualified professional review them if needed. Neither IMF nor this guide decides eligibility or the outcome of an application.",
+        "ar": "اطلب من بنك الإسكان القائمة الحالية للوثائق بحسب فئتك ووضعيتك العائلية وبحسب المسكن. حضّر وثائق الهوية والدخل والشقة وفق القائمة التي يقدمها البنك. قبل دفع أي مبلغ، اطلب شروط الحجز المكتوبة وما يترتب عن رفض التمويل. اعرض الوثائق على مختص عند الحاجة. لا يحدد موقع IMF ولا هذا الدليل أهليتك أو نتيجة ملفك."
+      }
+    }
+  ],
+  "questions": [
+    {
+      "question": {
+        "fr": "Le prix d'un appartement suffit-il à confirmer FOPROLOS ?",
+        "en": "Does an apartment's price prove FOPROLOS eligibility?",
+        "ar": "هل يكفي ثمن الشقة لإثبات أهلية فوبرولوس؟"
+      },
+      "answer": {
+        "fr": "Non. BH Bank examine le demandeur, le logement et les conditions du dispositif ; demandez une réponse portant sur le lot précis.",
+        "en": "No. BH Bank assesses the applicant, the home and the scheme's criteria; ask about the exact unit.",
+        "ar": "لا. يدرس بنك الإسكان طالب القرض والمسكن وشروط التمويل؛ اسأل عن الشقة المحددة."
+      }
+    },
+    {
+      "question": {
+        "fr": "La surface vendable IMF est-elle la surface FOPROLOS ?",
+        "en": "Is IMF saleable area the FOPROLOS covered area?",
+        "ar": "هل مساحة البيع في IMF هي مساحة فوبرولوس المغطاة؟"
+      },
+      "answer": {
+        "fr": "Pas nécessairement. Demandez la définition et le calcul de la surface couverte que la banque retiendra, notamment les parties communes.",
+        "en": "Not necessarily. Ask how the bank defines and calculates covered area, including shared areas.",
+        "ar": "ليس بالضرورة. اطلب تعريف وحساب المساحة المغطاة التي سيعتمدها البنك، وخاصة الأجزاء المشتركة."
+      }
+    },
+    {
+      "question": {
+        "fr": "Une simulation bancaire confirme-t-elle mon crédit ?",
+        "en": "Does a bank simulation approve my loan?",
+        "ar": "هل تؤكد المحاكاة البنكية حصولي على القرض؟"
+      },
+      "answer": {
+        "fr": "Non. Demandez la liste des pièces et une décision de financement écrite après étude du dossier.",
+        "en": "No. Request the document checklist and a written financing decision after the bank assesses your application.",
+        "ar": "لا. اطلب قائمة الوثائق وقرارا مكتوبا بعد دراسة ملفك."
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "BH Bank — Le Crédit FOPROLOS (consulté le 29 septembre 2026)",
+      "url": "https://www.bhbank.tn/le-credit-foprolos"
+    },
+    {
+      "title": "BH Bank — Documents utiles (consulté le 29 septembre 2026)",
+      "url": "https://www.bhbank.tn/documents-utiles"
+    }
+  ]
+},
+{
   "slug": "prix-metre-carre-comparer-surfaces-tunisie",
   "published": "2026-09-22",
   "updated": "2026-09-22",

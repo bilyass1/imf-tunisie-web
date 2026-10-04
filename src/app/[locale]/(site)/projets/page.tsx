@@ -10,6 +10,8 @@ import { alternates } from '@/lib/seo';
 import PageHero from '@/components/site/PageHero';
 import ProjectsExplorer, { type ProjectSummary } from '@/components/site/ProjectsExplorer';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams:Promise<Record<string,string|string[]|undefined>> }): Promise<Metadata> {
   const { locale } = await params;
   const filtered=Object.values(await searchParams).some(Boolean);

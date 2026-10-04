@@ -23,6 +23,7 @@ export default function PortalShell({
   logoutLabel,
   children,
   accent = 'client',
+  wide = false,
 }: {
   locale: Locale;
   title: string;
@@ -34,6 +35,7 @@ export default function PortalShell({
   logoutLabel: string;
   children: ReactNode;
   accent?: 'client' | 'admin';
+  wide?: boolean;
 }) {
   const navigation = <nav aria-label={title} className="grid gap-1.5 p-2 sm:grid-cols-2 xl:grid-cols-1 xl:p-0">
     {nav.map(item => <Link key={item.key} href={item.href} aria-current={active === item.key ? 'page' : undefined}
@@ -44,7 +46,7 @@ export default function PortalShell({
   return (
     <div className="portal-shell min-h-screen bg-ivory">
       <header className="border-b border-ink/8 bg-white">
-        <div className="container-lux flex h-[72px] items-center justify-between gap-4">
+        <div className={`${wide ? 'max-w-[1720px]' : ''} container-lux flex h-[72px] items-center justify-between gap-4`}>
           <div className="flex items-center gap-3">
             <LogoMark className="h-8 w-auto" />
             <div className="leading-none">
@@ -81,7 +83,7 @@ export default function PortalShell({
         </div>
       </header>
 
-      <div className="container-lux grid min-w-0 gap-5 py-5 sm:gap-6 sm:py-8 xl:grid-cols-[236px_minmax(0,1fr)] xl:py-12">
+      <div className={`${wide ? 'max-w-[1720px]' : ''} container-lux grid min-w-0 gap-5 py-5 sm:gap-6 sm:py-8 xl:grid-cols-[236px_minmax(0,1fr)] xl:py-12`}>
         <aside className="min-w-0">
           <div className="lg:sticky lg:top-8">
             <h1 className="h-display text-[28px] leading-tight">{title}</h1>

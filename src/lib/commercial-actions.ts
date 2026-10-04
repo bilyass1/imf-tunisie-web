@@ -6,14 +6,44 @@ import { revalidatePath } from 'next/cache';
 import { getSession, createSession } from './session';
 import { readDb, writeCommercialDb as writeDb, isPersistent } from './db';
 import type { Database, Localized } from './types';
+import { projectPresentation } from './project-presentation';
 import { allowRequest } from './rate-limit';
+import { clientProperties, setClientProperties } from './client-properties';
 
 export type CommercialState = { ok: boolean; message: string; publicPath?: string };
 const localize = (s: string): Localized => ({ fr:s, en:s, ar:s });
+const galleryCategories = ['','perspectives','works','interiors'] as const;
 const value = (form: FormData, key: string) => String(form.get(key) ?? '').trim();
 function text(form: FormData, key: string, max = 200) { const s=value(form,key); if (!s || s.length>max) throw new Error(`Champ ${key} manquant ou trop long.`); return s; }
 function percentValue(raw: string) { const n=Number(raw); if (!raw || !Number.isInteger(n) || n<0 || n>100) throw new Error('L’avancement doit être un entier compris entre 0 et 100.'); return n; }
 function percent(form: FormData) { return percentValue(value(form,'progress')); }
+function translated(form: FormData, prefix: string, max = 200): Localized {
+  return { fr:text(form,`${prefix}Fr`,max), en:text(form,`${prefix}En`,max), ar:text(form,`${prefix}Ar`,max) };
+}
+function optionalTranslated(form: FormData, prefix: string, max = 200): Localized | undefined {
+  const values={fr:value(form,`${prefix}Fr`),en:value(form,`${prefix}En`),ar:value(form,`${prefix}Ar`)};
+  if(!values.fr && !values.en && !values.ar) return undefined;
+  if(Object.values(values).some(item=>!item || item.length>max)) throw new Error(`Renseignez ${prefix} dans les trois langues.`);
+  return values;
+}
+function lines(form: FormData, key: string, maxLines = 20): string[] {
+  const raw=value(form,key);
+  if(raw.length>6000) throw new Error(`${key} est trop long.`);
+  const result=raw.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+  if(result.length>maxLines || result.some(line=>line.length>240)) throw new Error(`${key} dépasse la limite autorisée.`);
+  return result;
+}
+function galleryPosition(form: FormData, maximum: number): number {
+  const raw=value(form,'position');
+  const number=Number(raw);
+  if(!raw || !Number.isInteger(number) || number<1 || number>maximum) throw new Error(`La position doit être comprise entre 1 et ${maximum}.`);
+  return number-1;
+}
+function galleryCategory(form: FormData) {
+  const category=value(form,'category');
+  if(!galleryCategories.includes(category as typeof galleryCategories[number])) throw new Error('Emplacement de galerie invalide.');
+  return category ? category as 'perspectives'|'works'|'interiors' : undefined;
+}
 async function staff() {
   const session=await getSession();
   const db=(await readDb());
@@ -62,8 +92,8 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       const db=(await readDb()); const {project,lot}=target(db,form);
       if (!lot) throw new Error('Sélectionnez un appartement.');
       if(db.users.some(u=>u.email.toLowerCase()===email)) throw new Error('Cette adresse possède déjà un compte.');
-      if(db.users.some(u=>u.role==='client' && u.projectSlug===project.slug && u.lotRef===lot.ref)) throw new Error('Cet appartement possède déjà un compte client.');
-      db.users.push({id:randomUUID(),name:text(form,'name'),email,phone:value(form,'phone'),passwordHash,role:'client',projectSlug:project.slug,lotRef:lot.ref,documents:[],messages:[],payments:[]});
+      if(db.users.some(u=>u.role==='client' && clientProperties(u).some(item=>item.projectSlug===project.slug && item.lotRef===lot.ref))) throw new Error('Cet appartement possède déjà un compte client.');
+      db.users.push({id:randomUUID(),name:text(form,'name'),email,phone:value(form,'phone'),passwordHash,role:'client',projectSlug:project.slug,lotRef:lot.ref,properties:[{projectSlug:project.slug,lotRef:lot.ref}],documents:[],messages:[],payments:[]});
       (await writeDb(db));
     } else if(operation==='upload') {
       const file=form.get('file');
@@ -71,6 +101,8 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       const inputLimit=kind==='panorama'||kind==='gallery'?8*1024*1024:3*1024*1024;
       if (!(file instanceof File) || !file.size || file.size>inputLimit) throw new Error(`Sélectionnez un fichier de moins de ${Math.round(inputLimit/1048576)} Mo.`);
       const label=text(form,'label');
+      const caption: Localized = {fr:label,en:value(form,'labelEn')||label,ar:value(form,'labelAr')||label};
+      if(caption.en.length>200 || caption.ar.length>200) throw new Error('Titre de photo trop long.');
       if(!['contract','gallery','construction','panorama'].includes(kind)) throw new Error('Type de publication invalide.');
       let bytes=Buffer.from(await file.arrayBuffer()); let mime='application/pdf';
       if(kind==='contract') { if(bytes.subarray(0,5).toString()!=='%PDF-') throw new Error('Le contrat doit être un fichier PDF.'); }
@@ -94,10 +126,15 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       const recipient=kind==='contract' ? db.users.find(u=>u.id===value(form,'client') && u.role==='client') : undefined;
       if(kind==='contract' && !recipient) throw new Error('Client introuvable.');
       if(recipient) {
-        (recipient.documents??=[]).push({id,label:localize(label),kind:'contract',date:new Date().toISOString(),href});
+        const properties=clientProperties(recipient);
+        const propertyIndex=value(form,'contractProperty');
+        const index=propertyIndex ? Number(propertyIndex) : 0;
+        if(!Number.isInteger(index) || index<0 || (propertyIndex && index>=properties.length)) throw new Error('Appartement du contrat invalide.');
+        const property=properties[index];
+        (recipient.documents??=[]).push({id,label:localize(label),kind:'contract',date:new Date().toISOString(),href,...property});
         (recipient.messages??=[]).push({id:randomUUID(),from:'imf',date:new Date().toISOString(),body:`Un document est disponible dans votre espace Documents : ${label}`});
       } else {
-        const {project,lot}=target(db,form); const dest=lot??project; const photo={src:href,caption:localize(label)};
+        const {project,lot}=target(db,form); const dest=lot??project; const photo={src:href,caption};
         if(kind==='panorama') {
           if(!lot) throw new Error('Sélectionnez un appartement pour le panorama.');
           const roomId=value(form,'room');
@@ -110,7 +147,11 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
           }
           publicPath=`/projets/${project.slug}/appartements/${lot.ref}#visite-360`;
         } else if(kind==='gallery') {
-          (dest.gallery??=[]).push(photo);
+          if(!lot && !project.galleryEdited) project.gallery=projectPresentation(project).gallery;
+          const gallery=dest.gallery??=[];
+          const position=value(form,'position') ? galleryPosition(form,gallery.length+1) : gallery.length;
+          gallery.splice(position,0,{...photo,...(!lot ? {category:galleryCategory(form)} : {})});
+          if(!lot) project.galleryEdited=true;
           publicPath=`/projets/${project.slug}${lot?`/appartements/${lot.ref}#galerie`:'#galerie'}`;
         } else (dest.constructionPhotos??=[]).push(photo);
       }
@@ -125,11 +166,32 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         const email=text(form,'email').toLowerCase();
         if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Adresse e-mail invalide.');
         if(db.users.some(u=>u.id!==client.id && u.email.toLowerCase()===email)) throw new Error('Cette adresse possède déjà un compte.');
+        const phone=value(form,'phone'); if(phone.length>80) throw new Error('Téléphone trop long.');
+        Object.assign(client,{name:text(form,'name'),email,phone});
+      } else if(operation==='client-property-add' || operation==='client-property-remove' || operation==='client-property-primary') {
+        const client=db.users.find(u=>u.id===value(form,'client') && u.role==='client');
+        if(!client) throw new Error('Client introuvable.');
         const {project,lot}=target(db,form);
         if(!lot) throw new Error('Sélectionnez un appartement.');
-        if(db.users.some(u=>u.id!==client.id && u.role==='client' && u.projectSlug===project.slug && u.lotRef===lot.ref)) throw new Error('Cet appartement possède déjà un compte client.');
-        const phone=value(form,'phone'); if(phone.length>80) throw new Error('Téléphone trop long.');
-        Object.assign(client,{name:text(form,'name'),email,phone,projectSlug:project.slug,lotRef:lot.ref});
+        const current=clientProperties(client);
+        const exists=current.some(item=>item.projectSlug===project.slug && item.lotRef===lot.ref);
+        if(operation==='client-property-add') {
+          if(exists) throw new Error('Cet appartement est déjà lié au client.');
+          if(db.users.some(u=>u.id!==client.id && u.role==='client' && clientProperties(u).some(item=>item.projectSlug===project.slug && item.lotRef===lot.ref))) throw new Error('Cet appartement possède déjà un autre compte client.');
+          const status=value(form,'status');
+          if(!['','reserved','sold'].includes(status)) throw new Error('Statut de vente invalide.');
+          setClientProperties(client,[...current,{projectSlug:project.slug,lotRef:lot.ref}]);
+          if(status) {
+            lot.status=status as typeof lot.status;
+            publicPath=`/projets/${project.slug}/appartements/${lot.ref}`;
+          }
+        } else {
+          if(!exists) throw new Error('Cet appartement n’est pas lié au client.');
+          if(operation==='client-property-remove') {
+            if(value(form,'confirm')!=='yes') throw new Error('Confirmez le retrait de cet appartement.');
+            setClientProperties(client,current.filter(item=>item.projectSlug!==project.slug || item.lotRef!==lot.ref));
+          } else setClientProperties(client,[{projectSlug:project.slug,lotRef:lot.ref},...current.filter(item=>item.projectSlug!==project.slug || item.lotRef!==lot.ref)]);
+        }
       } else if(operation==='message-edit') {
         const client=db.users.find(u=>u.id===value(form,'client') && u.role==='client');
         const message=client?.messages?.find(m=>m.id===value(form,'message') && m.from==='imf');
@@ -152,6 +214,54 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
           return {...step,percent:next,done:next===100};
         });
         publicPath=`/projets/${project.slug}${lot?`/appartements/${lot.ref}`:'#avancement'}`;
+      } else if(operation==='project-content') {
+        const {project,lot}=target(db,form);
+        if(lot) throw new Error('Sélectionnez une résidence.');
+        project.name=text(form,'name',120);
+        project.progressPercent=value(form,'progress') ? percent(form) : undefined;
+        project.presentationLabels={
+          overview:translated(form,'sectionOverview',120),
+          highlights:translated(form,'sectionHighlights',120),
+          specs:translated(form,'sectionSpecs',120),
+          amenities:translated(form,'sectionAmenities',120),
+          progress:translated(form,'sectionProgress',120),
+          gallery:translated(form,'sectionGallery',120),
+        };
+        project.subtitle=translated(form,'subtitle',240);
+        project.address=translated(form,'address',240);
+        project.description=translated(form,'description',3000);
+        project.deliveryLabel=optionalTranslated(form,'delivery',160);
+        const highlights={fr:lines(form,'highlightsFr'),en:lines(form,'highlightsEn'),ar:lines(form,'highlightsAr')};
+        if(highlights.fr.length!==highlights.en.length || highlights.fr.length!==highlights.ar.length) throw new Error('Les points forts doivent avoir le même nombre de lignes dans les trois langues.');
+        project.highlights=highlights.fr.map((fr,index)=>({fr,en:highlights.en[index],ar:highlights.ar[index]}));
+        project.specs=project.specs.map((_,index)=>({label:translated(form,`specLabel${index}`,120),value:translated(form,`specValue${index}`,240)}));
+        project.progress=project.progress?.map((step,index)=>({label:translated(form,`progressLabel${index}`,120),percent:percentValue(value(form,`step-${index}`)),done:value(form,`step-${index}`)==='100'}));
+        project.amenities=form.getAll('amenities').map(String).filter(item=>/^[a-z-]{1,40}$/.test(item));
+        project.presentationEdited=true;
+        publicPath=`/projets/${project.slug}#programme`;
+      } else if(operation==='gallery-edit' || operation==='gallery-remove') {
+        const {project,lot}=target(db,form);
+        if(lot) throw new Error('Sélectionnez une résidence.');
+        if(!project.galleryEdited) project.gallery=projectPresentation(project).gallery;
+        const index=project.gallery.findIndex(item=>item.src===value(form,'photo'));
+        if(index<0) throw new Error('Photo introuvable dans cette résidence. Rechargez la page.');
+        if(operation==='gallery-remove') {
+          if(value(form,'confirm')!=='yes') throw new Error('Confirmez le retrait de cette photo.');
+          const [removed]=project.gallery.splice(index,1);
+          const mediaId=/^\/api\/media\/([a-f0-9-]{36})$/.exec(removed.src)?.[1];
+          if(mediaId && !db.projects.some(item=>item.gallery.some(photo=>photo.src===removed.src) || item.lots.some(apartment=>apartment.gallery?.some(photo=>photo.src===removed.src)))) {
+            const upload=db.uploads?.find(file=>file.id===mediaId);
+            if(upload) upload.public=false;
+          }
+        }
+        else {
+          const [photo]=project.gallery.splice(index,1);
+          photo.caption=translated(form,'caption',200);
+          photo.category=galleryCategory(form);
+          project.gallery.splice(galleryPosition(form,project.gallery.length+1),0,photo);
+        }
+        project.galleryEdited=true;
+        publicPath=`/projets/${project.slug}#galerie`;
       } else if(operation==='company') {
         const email=text(form,'email'); if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Adresse e-mail invalide.');
         db.company={legalName:text(form,'name'),email,phone:text(form,'phone'),address:text(form,'address'),city:text(form,'city'),about:text(form,'about',2000)};

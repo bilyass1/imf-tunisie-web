@@ -2,18 +2,23 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireClient } from '@/lib/auth';
+import { getProjects } from '@/lib/db';
+import { clientPaymentsForProperty, resolvedClientProperties, selectedClientProperty } from '@/lib/client-properties';
 import { t, formatMoney, formatDate } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { clientNav } from '@/components/portal/clientNav';
+import ClientPropertyTabs from '@/components/portal/ClientPropertyTabs';
 import { IconCheck, IconClock } from '@/components/Icons';
 
-export default async function PaymentsPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function PaymentsPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ project?: string; lot?: string }> }) {
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
   const user = await requireClient(locale);
-  const payments = user.payments ?? [];
+  const properties=resolvedClientProperties(user,await getProjects());
+  const selected=selectedClientProperty(properties,await searchParams);
+  const payments=clientPaymentsForProperty(user,selected ? {projectSlug:selected.project.slug,lotRef:selected.lot.ref} : undefined);
 
   const today = new Date().toISOString().slice(0, 10);
   const total = payments.reduce((s, p) => s + p.amount, 0);
@@ -23,12 +28,14 @@ export default async function PaymentsPage({ params }: { params: Promise<{ local
     <PortalShell
       locale={locale}
       title={dict.client.payments}
+      subtitle={selected ? `${selected.project.name} · ${selected.lot.code}` : undefined}
       userName={user.name}
-      nav={clientNav(locale, dict)}
+      nav={clientNav(locale, dict,selected ? {projectSlug:selected.project.slug,lotRef:selected.lot.ref} : undefined)}
       active="payments"
       backLabel={dict.auth.backToSite}
       logoutLabel={dict.auth.logout}
     >
+      <ClientPropertyTabs locale={locale} basePath={`/${locale}/espace-client/paiements`} properties={properties} selected={selected}/>
       <div className="grid gap-4 sm:grid-cols-3">
         {[
           { label: dict.client.summary.total, value: formatMoney(total, locale) },

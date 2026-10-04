@@ -46,7 +46,12 @@ for(const level of model.levels){
   assert(fs.existsSync(path.join(root,'public',level.plan)));
 }
 const code=ts.transpileModule(fs.readFileSync('src/lib/yassamine-catalog.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,esModuleInterop:true}}).outputText;
-const mod={exports:{}};vm.runInNewContext(code,{exports:mod.exports,require:()=>lots});
+const mod={exports:{}};vm.runInNewContext(code,{exports:mod.exports,require:(id)=>
+  id.includes('yassamine-available') ? lots :
+  id.includes('lots-la-gloire') ? {YASSAMINE_A5A_LOTS:[]} :
+  id.includes('yassamine-prices') ? {YASSAMINE_APPROVED_PRICES:{}} :
+  (()=>{throw new Error(`Unexpected import: ${id}`);})()
+});
 const existing={...lots[0],rooms:undefined,status:'sold',price:199000};
 const project={slug:'diar-al-yassamine',lots:[existing,{ref:'A511',status:'reserved'}],blocks:[{id:'A5.a',floors:[0,1,2,3,4]}]};
 const data={projects:[project],contacts:[{id:'keep'}]};

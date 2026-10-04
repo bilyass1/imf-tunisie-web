@@ -4,22 +4,26 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireClient } from '@/lib/auth';
-import { getProject } from '@/lib/db';
+import { getProjects } from '@/lib/db';
+import { resolvedClientProperties, selectedClientProperty } from '@/lib/client-properties';
 import { t, formatArea, formatMoney, floorLabel } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { clientNav } from '@/components/portal/clientNav';
+import ClientPropertyTabs from '@/components/portal/ClientPropertyTabs';
 import { IconArrow, IconDownload, IconPin } from '@/components/Icons';
 import ProgressMeter from '@/components/site/ProgressMeter';
 
-export default async function MyLotPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function MyLotPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ project?: string; lot?: string }> }) {
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
   const user = await requireClient(locale);
 
-  const project = user.projectSlug ? (await getProject(user.projectSlug)) : undefined;
-  const lot = project?.lots.find((l) => l.ref === user.lotRef);
+  const properties=resolvedClientProperties(user,await getProjects());
+  const selected=selectedClientProperty(properties,await searchParams);
+  const project=selected?.project;
+  const lot=selected?.lot;
 
   return (
     <PortalShell
@@ -27,11 +31,12 @@ export default async function MyLotPage({ params }: { params: Promise<{ locale: 
       title={dict.client.myLot}
       subtitle={project?.name}
       userName={user.name}
-      nav={clientNav(locale, dict)}
+      nav={clientNav(locale, dict,selected ? {projectSlug:project.slug,lotRef:lot.ref} : undefined)}
       active="lot"
       backLabel={dict.auth.backToSite}
       logoutLabel={dict.auth.logout}
     >
+      <ClientPropertyTabs locale={locale} basePath={`/${locale}/espace-client/mon-appartement`} properties={properties} selected={selected}/>
       {!project || !lot ? (
         <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center text-ink/50">
           {dict.client.noLot}

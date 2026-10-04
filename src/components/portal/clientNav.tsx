@@ -2,14 +2,15 @@ import type { Dictionary } from '@/i18n/getDictionary';
 import type { PortalNavItem } from './PortalShell';
 import { IconChart, IconBuilding, IconCalendar, IconDoc, IconMail, IconUser, IconCheck } from '@/components/Icons';
 
-export function clientNav(locale: string, dict: Dictionary): PortalNavItem[] {
+export function clientNav(locale: string, dict: Dictionary, selected?: {projectSlug:string;lotRef:string}): PortalNavItem[] {
   const base = `/${locale}/espace-client`;
+  const propertyQuery=selected ? `?project=${encodeURIComponent(selected.projectSlug)}&lot=${encodeURIComponent(selected.lotRef)}` : '';
   return [
-    { key: 'dashboard', label: dict.client.dashboard, href: base, icon: <IconChart className="h-4 w-4" /> },
-    { key: 'lot', label: dict.client.myLot, href: `${base}/mon-appartement`, icon: <IconBuilding className="h-4 w-4" /> },
-    { key: 'payments', label: dict.client.payments, href: `${base}/paiements`, icon: <IconCalendar className="h-4 w-4" /> },
+    { key: 'dashboard', label: dict.client.dashboard, href: `${base}${propertyQuery}`, icon: <IconChart className="h-4 w-4" /> },
+    { key: 'lot', label: dict.client.myLot, href: `${base}/mon-appartement${propertyQuery}`, icon: <IconBuilding className="h-4 w-4" /> },
+    { key: 'payments', label: dict.client.payments, href: `${base}/paiements${propertyQuery}`, icon: <IconCalendar className="h-4 w-4" /> },
     { key: 'documents', label: dict.client.documents, href: `${base}/documents`, icon: <IconDoc className="h-4 w-4" /> },
-    { key: 'progress', label: dict.client.progress, href: `${base}/chantier`, icon: <IconChart className="h-4 w-4" /> },
+    { key: 'progress', label: dict.client.progress, href: `${base}/chantier${propertyQuery}`, icon: <IconChart className="h-4 w-4" /> },
     { key: 'messages', label: dict.client.messages, href: `${base}/messages`, icon: <IconMail className="h-4 w-4" /> },
   ];
 }

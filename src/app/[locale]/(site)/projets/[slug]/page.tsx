@@ -85,6 +85,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   const SITE = (await getCompanySite());
   const project = (await getProject(slug));
   if (!project) notFound();
+  const sectionLabel = (key: keyof NonNullable<typeof project.presentationLabels>, fallback: string) =>
+    project.presentationLabels ? t(project.presentationLabels[key], locale) : fallback;
 
   const stats = lotStats(project.lots);
   const programme = project.slug === 'diar-al-yassamine' ? YASSAMINE_PROGRAMME : undefined;
@@ -92,9 +94,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   const nextProject = all[(all.findIndex((p) => p.slug === slug) + 1) % all.length];
 
   const sections = [
-    { id: 'programme', label: dict.project.overview },
+    { id: 'programme', label: sectionLabel('overview', dict.project.overview) },
     ...(project.slug === 'diar-al-yassamine' ? [{ id: 'video', label: yassamineVideo[locale].nav }] : []),
-    { id: 'galerie', label: dict.project.gallery },
+    { id: 'galerie', label: sectionLabel('gallery', dict.project.gallery) },
     ...((project.slug === 'diar-al-yassamine' || (project.massing && project.lots.length)) ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
     ...(project.lots.length ? [{ id: 'disponibilite', label: dict.project.availability }] : []),
     ...(project.slug === 'residence-la-gloire' ? [{ id: 'plans', label: dict.apartment.plan }] : []),
@@ -186,7 +188,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
         <div className="container-lux grid gap-14 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
           <div>
             <Reveal>
-              <span className="eyebrow">{dict.project.overview}</span>
+              <span className="eyebrow">{sectionLabel('overview', dict.project.overview)}</span>
               <h2 className="h-display mt-4 text-[32px] sm:text-[42px]">{project.name}</h2>
               <div className="rule-gold mt-6" />
             </Reveal>
@@ -196,7 +198,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
 
             <Reveal delay={190}>
               <h3 className="mt-10 text-[12px] font-semibold uppercase tracking-[0.2em] text-ink/45">
-                {dict.project.highlights}
+                {sectionLabel('highlights', dict.project.highlights)}
               </h3>
               <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                 {project.highlights.map((h) => (
@@ -211,7 +213,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
             {project.amenities.length > 0 && (
               <Reveal delay={250}>
                 <h3 className="mt-10 text-[12px] font-semibold uppercase tracking-[0.2em] text-ink/45">
-                  {dict.project.amenities}
+                  {sectionLabel('amenities', dict.project.amenities)}
                 </h3>
                 <div className="mt-5 flex flex-wrap gap-2.5">
                   {project.amenities.map((a) => {
@@ -235,7 +237,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
           <Reveal delay={120}>
             <div className="overflow-hidden rounded-2xl border border-ink/8 bg-white">
               <h3 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
-                {dict.project.specs}
+                {sectionLabel('specs', dict.project.specs)}
               </h3>
               <dl className="divide-y divide-ink/6 px-6">
                 {project.specs.map((s) => (
@@ -252,7 +254,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               {project.progress && (
                 <div className="mt-6 overflow-hidden rounded-2xl border border-ink/8 bg-white p-6">
                   <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
-                    {dict.project.progress}
+                    {sectionLabel('progress', dict.project.progress)}
                   </h3>
                   <ul className="mt-5 space-y-5">
                     {project.progress.map((step) => (
@@ -319,13 +321,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
         <div className="container-lux">
           <SectionHeading
             eyebrow={`${project.gallery.length} ${dict.project.photos}`}
-            title={dict.project.gallery}
+            title={sectionLabel('gallery', dict.project.gallery)}
           />
           <div className="mt-12">
             <ProjectGallery
               locale={locale}
               projectSlug={project.slug}
-              items={project.gallery.map((g) => ({ src: g.src, caption: t(g.caption, locale) }))}
+              items={project.gallery.map((g) => ({ src: g.src, caption: t(g.caption, locale), category: g.category }))}
               labels={{
                 close: dict.common.close,
                 previous: dict.common.previous,
@@ -338,7 +340,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       </section>
 
       {/* ---- Maquette 3D interactive ---- */}
-      {project.slug === 'diar-al-yassamine' && <div id="maquette" className="container-lux scroll-mt-[170px] py-12"><LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}><YassamineMaquette locale={locale} lots={project.lots.map(({ ref, code, block, floor }) => ({ ref, code, block, floor }))} /></LazyMount></div>}
+      {project.slug === 'diar-al-yassamine' && <div id="maquette" className="container-lux scroll-mt-[170px] py-12"><LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}><YassamineMaquette locale={locale} lots={project.lots.map(({ ref, code, block, floor }) => ({ ref, code, block, floor }))} planContact={{ phone: SITE.office.phones[0], email: SITE.email, website: SITE.url }} /></LazyMount></div>}
       {project.slug !== 'diar-al-yassamine' && project.massing && project.lots.length > 0 && (
         <section id="maquette" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">
           <div className="container-lux">
@@ -376,7 +378,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       )}
 
       {/* ---- Disponibilité ---- */}
-      {project.slug === 'diar-al-yassamine' && <YassaminePlanLibrary locale={locale} lots={project.lots} labels={dict.plan} statuses={dict.availability.legend} />}
+      {project.slug === 'diar-al-yassamine' && <YassaminePlanLibrary locale={locale} lots={project.lots} labels={dict.plan} statuses={dict.availability.legend} planContact={{ phone: SITE.office.phones[0], email: SITE.email, website: SITE.url }} />}
       {project.lots.length > 0 ? (
         <section id="disponibilite" className="scroll-mt-[170px] bg-ivory py-24 lg:py-28">
           <div className="container-lux">

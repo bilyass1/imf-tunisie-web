@@ -9,6 +9,8 @@ import { getCompanySite } from '@/lib/company';
 import { alternates } from '@/lib/seo';
 import BuyerAnswers from '@/components/site/BuyerAnswers';
 import HomeHeroPhotos from '@/components/site/HomeHeroPhotos';
+// Project names, availability and images edited by the commercial team are live data.
+export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const l = isLocale(locale) ? locale : 'fr';
@@ -42,10 +44,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="relative isolate flex min-h-[92svh] items-end overflow-hidden bg-ink">
         <div className="absolute inset-0">
           <HomeHeroPhotos
-            initialImage={hero.heroImage}
+            initialImage="/media/la-gloire/facade-nuit-1.jpg"
             additionalImages={[
+              '/media/la-gloire/facade-sunset-1.jpg',
               '/media/la-gloire/facade-jour-2.jpg',
-              '/media/la-gloire/facade-nuit-1.jpg',
               '/media/la-gloire/patio-jour-1.jpg',
             ]}
             locale={locale}

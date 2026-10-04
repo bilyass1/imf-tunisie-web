@@ -23,7 +23,7 @@ export interface MaquetteLabels {
 const STATUS_COLORS: Record<Lot['status'], number> = {
   available: 0x2f9c6a,
   reserved: 0xd6a02f,
-  sold: 0x8d8d94,
+  sold: 0xdc4545,
 };
 
 /* ------------------------------------------------------------------ */

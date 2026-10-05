@@ -13,13 +13,20 @@ const {importData}=require('./postgres-common.cjs');
   await engine.exec(fs.readFileSync('database/003-rate-limits.sql','utf8'));
   const query=(sql,params)=>engine.query(sql,params);
   const pool={connect:async()=>({query,release(){}}),query};
-  const fixture={projects:[{slug:'p',name:'Test',progress:[{label:{fr:'Façades',en:'Facades',ar:'الواجهات'},percent:70,done:false}],lots:[{ref:'A',status:'available'},{ref:'B',status:'available'}]}],
+  const fixture={projects:[{slug:'a-p',name:'Test',progress:[{label:{fr:'Façades',en:'Facades',ar:'الواجهات'},percent:70,done:false}],lots:[{ref:'A',status:'available'},{ref:'B',status:'available'}]},
+   {slug:'diar-al-yassamine',name:'Diar Al Yassamine',lots:[{ref:'Y1',status:'sold'},{ref:'Y2',status:'reserved'}]}],
    users:[{id:'admin',email:'admin@example.test',name:'Admin',role:'admin',passwordHash:'hash'},
-    {id:'client',email:'client@example.test',name:'Client',role:'client',passwordHash:'hash',projectSlug:'p',lotRef:'A',properties:[{projectSlug:'p',lotRef:'A'},{projectSlug:'p',lotRef:'B'}],messages:[],documents:[]}],
+    {id:'client',email:'client@example.test',name:'Client',role:'client',passwordHash:'hash',projectSlug:'a-p',lotRef:'A',properties:[{projectSlug:'a-p',lotRef:'A'},{projectSlug:'a-p',lotRef:'B'}],messages:[],documents:[]}],
    news:[],contacts:[],deals:[],activities:[],tasks:[]};
   await importData({query},fixture);
   const store=createStore(pool);
   const publicInstance=createStore(pool); // separate Vercel function with its own warm cache
+  assert.deepEqual((await store.readPublic()).projects[1].lots.map(lot=>lot.status),['available','available'],'One-time availability correction reaches old PostgreSQL lots');
+  assert.equal((await query('SELECT count(*)::int AS count FROM imf_schema_migrations WHERE version=4')).rows[0].count,1);
+  const afterMigration=await store.read();
+  afterMigration.projects[1].lots[0].status='sold';
+  await store.write(afterMigration);
+  assert.equal((await publicInstance.readPublic()).projects[1].lots[0].status,'sold','A later admin status change must not be reset');
   assert.equal((await store.readAuthUser('email','ADMIN@example.test')).id,'admin');
   assert.equal((await publicInstance.readAuthUser('id','client')).role,'client');
   assert.equal(await store.readAuthUser('id','unknown'),undefined);

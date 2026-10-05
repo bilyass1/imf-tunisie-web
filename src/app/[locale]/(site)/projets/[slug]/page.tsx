@@ -55,6 +55,12 @@ const yassamineVideo = {
   },
 };
 
+const zephyrVideo = {
+  fr: { nav: 'Vidéo', title: 'Résidence Zéphyr en vidéo', description: 'Découvrez la résidence dans la vidéo publiée par IMF Immobilière.' },
+  en: { nav: 'Video', title: 'Résidence Zéphyr on video', description: 'Explore the residence in the video published by IMF Immobilière.' },
+  ar: { nav: 'فيديو', title: 'إقامة زفير بالفيديو', description: 'تعرّف على الإقامة في الفيديو الذي نشرته شركة IMF العقارية.' },
+};
+
 export async function generateStaticParams() {
   const projects = await getProjects();
   return locales.flatMap((locale) => projects.map((p) => ({ locale, slug: p.slug })));
@@ -95,7 +101,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
 
   const sections = [
     { id: 'programme', label: sectionLabel('overview', dict.project.overview) },
-    ...(project.slug === 'diar-al-yassamine' ? [{ id: 'video', label: yassamineVideo[locale].nav }] : []),
+    ...(['diar-al-yassamine', 'residence-zephyr'].includes(project.slug) ? [{ id: 'video', label: project.slug === 'residence-zephyr' ? zephyrVideo[locale].nav : yassamineVideo[locale].nav }] : []),
     { id: 'galerie', label: sectionLabel('gallery', dict.project.gallery) },
     ...((project.slug === 'diar-al-yassamine' || (project.massing && project.lots.length)) ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
     ...(project.lots.length ? [{ id: 'disponibilite', label: dict.project.availability }] : []),
@@ -311,6 +317,30 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
                 <source src="/media/diar-al-yassamine/presentation-imf.mp4" type="video/mp4" />
                 {yassamineVideo[locale].fallback}
               </video>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {project.slug === 'residence-zephyr' && (
+        <section id="video" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">
+          <div className="container-lux">
+            <SectionHeading
+              eyebrow={zephyrVideo[locale].nav}
+              title={zephyrVideo[locale].title}
+              subtitle={zephyrVideo[locale].description}
+              light
+            />
+            <div className="mt-12 overflow-hidden rounded-2xl ring-1 ring-white/15">
+              <iframe
+                className="aspect-video w-full bg-black"
+                src="https://www.youtube-nocookie.com/embed/QMOEIN4uh4A"
+                title={zephyrVideo[locale].title}
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
             </div>
           </div>
         </section>

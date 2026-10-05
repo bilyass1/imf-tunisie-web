@@ -3,6 +3,7 @@
 Usage:
   python scripts/rebrand-sale-plans.py --sample
   python scripts/rebrand-sale-plans.py --all
+  python scripts/rebrand-sale-plans.py --yassamine-rdc
   python scripts/rebrand-sale-plans.py --a6-source "C:/path/to/imf a6 a et b"
 
 The template regions below cover only the previous IMF contact panels. The
@@ -41,8 +42,17 @@ BOXES = {
     "gloire_floor": (.022, .017, .383, .069),
     "gloire_cover": (.047, .854, .607, .129),
     "yassamine_a123_lot": (.800, .021, .192, .193),
-    "yassamine_a123_floor": (.775, .575, .216, .168),
+    # The RDC sheets have a narrower contact cell than the apartment sheets.
+    # Its right edge is inside the page frame, not at the image's right edge.
+    "yassamine_a123_floor": (.748, .575, .210, .161),
     "yassamine_a5_lot": (.800, .800, .192, .198),
+}
+
+# The A3 title block is a few pixels farther left than those of A1 and A2.
+YASSAMINE_RDC_BOXES = {
+    "RDC-A1": BOXES["yassamine_a123_floor"],
+    "RDC-A2": BOXES["yassamine_a123_floor"],
+    "RDC-A3": (.744, .575, .207, .161),
 }
 
 # The floor PDFs use different crop/rotation offsets. Coordinates were checked
@@ -167,7 +177,8 @@ def destinations(group: str, name: str, sample: bool) -> tuple[Path, Path]:
 
 def process_image(source: Path, group: str, template: str, project: str, sample: bool, original_pdf: Path | None = None) -> None:
     image_path, pdf_path = destinations(group, source.stem, sample)
-    image = stamped_image(source, BOXES[template], project, template == "yassamine_a5_lot")
+    box = YASSAMINE_RDC_BOXES[source.stem] if template == "yassamine_a123_floor" else BOXES[template]
+    image = stamped_image(source, box, project, template == "yassamine_a5_lot")
     save_webp(image, image_path)
     if original_pdf and template == "yassamine_a5_lot":
         # Render the vector master at higher resolution for the PDF copy. This
@@ -219,6 +230,7 @@ def main() -> None:
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--sample", action="store_true")
     mode.add_argument("--all", action="store_true")
+    mode.add_argument("--yassamine-rdc", action="store_true")
     parser.add_argument("--a6-source", type=Path, metavar="DIRECTORY")
     args = parser.parse_args()
     sample = args.sample
@@ -229,8 +241,13 @@ def main() -> None:
         for source in (sources[:1] if sample else sources):
             process_a6_apartment(source, sample)
         return
+    if args.yassamine_rdc:
+        for name in YASSAMINE_RDC_BOXES:
+            source = PUBLIC / "plans/diar-al-yassamine" / f"{name}.webp"
+            process_image(source, "plans/diar-al-yassamine", "yassamine_a123_floor", "Diar El Yassamine", False)
+        return
     if not (args.sample or args.all):
-        parser.error("choose --sample or --all, or provide --a6-source")
+        parser.error("choose --sample, --all, --yassamine-rdc or provide --a6-source")
     gloire = PUBLIC / "plans/la-gloire"
     source = list(sorted(gloire.glob("[ABCD][0-9][0-9].webp")))
     if len(source) != 102:

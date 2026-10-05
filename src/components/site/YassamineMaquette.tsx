@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import PlanBrand, { type PlanBrandDetails } from './PlanBrand';
 import { useRouter } from 'next/navigation';
-import { listedYassamineLots, yassamineApartmentHref, yassamineLotAtPoint, type MaquetteLot } from '@/lib/yassamine-picking';
+import { listedYassamineLots, yassamineA5bPlanCodeAtPoint, yassamineApartmentHref, yassamineLotAtPoint, type MaquetteLot } from '@/lib/yassamine-picking';
 import { useImmersiveViewer } from './useImmersiveViewer';
 import ModelCompass, { updateModelCompass } from './ModelCompass';
 
@@ -55,14 +55,15 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
   const router = useRouter();
   const navigation = useRef({ locale, lots, router });
   navigation.current = { locale, lots, router };
-  const [hovered, setHovered] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<{ code: string; ref?: string } | null>(null);
   const selectionCopy = locale === 'ar'
-    ? { hint: 'اضغط على الشقة لفتح صفحتها · اسحب لتدوير المجسم', list: 'صفحات الشقق', unavailable: 'صفحات شقق A5.b غير متاحة بعد.', open: 'فتح صفحة الشقة' }
+    ? { hint: 'اختر الطابق ثم مرّر المؤشر فوق الشقة لمعرفة رقمها. اضغط على شقق A5.a لفتح صفحتها.', list: 'صفحات الشقق', unavailable: 'أرقام شقق A5.b مأخوذة من المخطط؛ صفحات البيع غير منشورة.', open: 'فتح صفحة الشقة', planOnly: 'الرقم من المخطط · لا توجد صفحة بيع', filter: 'تصفية العمارة', both: 'A5.a + A5.b' }
     : locale === 'en'
-    ? { hint: 'Click an apartment to open its details · Drag to rotate', list: 'Apartment details', unavailable: 'Apartment pages for A5.b are not yet available.', open: 'Open apartment' }
-    : { hint: 'Cliquez sur un appartement pour ouvrir sa fiche · Glissez pour tourner', list: 'Fiches des appartements', unavailable: 'Les fiches des appartements A5.b ne sont pas encore disponibles.', open: 'Ouvrir la fiche' };
+    ? { hint: 'Choose a floor, then hover to see the apartment number. Click A5.a apartments to open their details.', list: 'Apartment details', unavailable: 'A5.b apartment numbers come from the floor plan; sales pages are not published.', open: 'Open apartment', planOnly: 'Number on plan · no sales page', filter: 'Filter block', both: 'A5.a + A5.b' }
+    : { hint: 'Choisissez un étage, puis survolez un appartement pour voir son numéro. Cliquez sur A5.a pour ouvrir sa fiche.', list: 'Fiches des appartements', unavailable: 'Les numéros A5.b proviennent du plan ; les fiches de vente ne sont pas publiées.', open: 'Ouvrir la fiche', planOnly: 'Numéro du plan · fiche non publiée', filter: 'Filtrer le bloc', both: 'A5.a + A5.b' };
   const c = copy[locale as keyof typeof copy] ?? copy.fr;
   const [block, setBlock] = useState<'A5'|'A6'>('A5');
+  const [a5Block, setA5Block] = useState<'all' | 'A5.a' | 'A5.b'>('all');
   const [floor, setFloor] = useState<number | null>(null);
   const [model, setModel] = useState<Model | null>(null);
   const [ready, setReady] = useState(false);
@@ -74,8 +75,8 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
   const root = useRef<HTMLDivElement>(null);
   const mount = useRef<HTMLDivElement>(null);
   const compassRef = useRef<HTMLDivElement>(null);
-  const state = useRef({ floor, rotating, top });
-  state.current = { floor, rotating, top };
+  const state = useRef({ floor, rotating, top, a5Block });
+  state.current = { floor, rotating, top, a5Block };
   const controls = useRef<{ reset: () => void; zoom: (factor: number) => void } | null>(null);
   const close = useCallback(() => setFullscreen(false), []);
   useImmersiveViewer(fullscreen, close, root);
@@ -157,7 +158,7 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
       const roofMat = new THREE.MeshStandardMaterial({ color: 0xe9e1d5, map: stoneTexture, roughness: .9 });
       const materials: import('three').Material[] = [plaster,slabMat,trim,frame,glass,roofMat];
       const levels: { group: import('three').Group; floor: number; plan: import('three').Object3D; data: Level }[] = [];
-      const roofs: { group: import('three').Group; last: number }[] = [];
+      const roofs: { group: import('three').Group; last: number; block: string }[] = [];
       const building = new THREE.Group(); scene.add(building);
       function shape(poly: Poly) {
         const s = new THREE.Shape(poly.outer.map(([x,z]) => new THREE.Vector2(x,-z)));
@@ -250,14 +251,25 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
         extrude(data.outline,.2,(last+1)*model.floorHeight,roofMat,roof);
         for(const p of data.outline)for(let i=0;i<p.outer.length;i++)bar(p.outer[i],p.outer[(i+1)%p.outer.length],.16,.65,(last+1)*model.floorHeight+.2,plaster,roof);
         mergeStatic(roof);
-        roofs.push({group:roof,last});
+        roofs.push({group:roof,last,block:part});
       }
       const bounds=new THREE.Box3().setFromObject(building);const center=bounds.getCenter(new THREE.Vector3());
       const size=bounds.getSize(new THREE.Vector3());const span=Math.max(size.x,size.z);
       const groundMat=new THREE.MeshStandardMaterial({color:0xf5efe6,map:pavingTexture,roughness:.92});materials.push(groundMat);
       const ground=new THREE.Mesh(new THREE.BoxGeometry(size.x+6,.35,size.z+6),groundMat);
       ground.position.set(center.x,-.25,center.z);ground.receiveShadow=true;scene.add(ground);
-      const reset=()=>{orbit.target.set(center.x,4,center.z);camera.up.set(0,1,0);camera.position.set(center.x+span*.8,span*.78,center.z-span*1.15);orbit.update();};
+      const focus=()=>{
+        const part=block==='A5'?state.current.a5Block:'all';
+        if(part==='all')return {center,span};
+        const box=new THREE.Box3();
+        for(const level of levels)if(level.data.block===part)box.expandByObject(level.group);
+        for(const roof of roofs)if(roof.block===part)box.expandByObject(roof.group);
+        const partCenter=box.getCenter(new THREE.Vector3());
+        const partSize=box.getSize(new THREE.Vector3());
+        return {center:partCenter,span:Math.max(partSize.x,partSize.z)};
+      };
+      const reset=()=>{const view=focus();orbit.target.set(view.center.x,4,view.center.z);camera.up.set(0,1,0);camera.position.set(view.center.x+view.span*.8,view.span*.78,view.center.z-view.span*1.15);orbit.update();};
+      const topView=()=>{const view=focus();orbit.target.set(view.center.x,0,view.center.z);camera.position.set(view.center.x,view.span*1.6,view.center.z-.01);orbit.update();};
       reset();
       controls.current={reset,zoom:factor=>{camera.position.sub(orbit.target).multiplyScalar(factor).add(orbit.target);orbit.update();}};
       let dirty=true;
@@ -277,7 +289,11 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
         if(!hit)return;
         const level=levels.find(l=>l.group===hit.object.parent);
         if(!level)return;
-        return yassamineLotAtPoint({block:level.data.block,floor:level.floor,textureBounds:level.data.textureBounds},hit.point.x,hit.point.z,navigation.current.lots);
+        const target={block:level.data.block,floor:level.floor,textureBounds:level.data.textureBounds};
+        const lot=yassamineLotAtPoint(target,hit.point.x,hit.point.z,navigation.current.lots);
+        if(lot)return {code:lot.code,ref:lot.ref};
+        const code=yassamineA5bPlanCodeAtPoint(target,hit.point.x,hit.point.z);
+        return code?{code}:undefined;
       };
       let gesture:{id:number;x:number;y:number;moved:boolean}|null=null;
       const pointers=new Set<number>();
@@ -291,15 +307,17 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
       const move=(event:PointerEvent)=>{
         if(gesture&&Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)>6)gesture.moved=true;
         if(pointers.size||event.pointerType!=='mouse')return;
-        const lot=pick(event);canvas.style.cursor=lot?'pointer':'grab';setHovered(lot?.code??null);
+        const apartment=pick(event);canvas.style.cursor=apartment?.ref?'pointer':apartment?'help':'grab';
+        setHovered(current=>current?.code===apartment?.code&&current?.ref===apartment?.ref?current:apartment??null);
       };
       const up=(event:PointerEvent)=>{
         const click=gesture?.id===event.pointerId&&!gesture.moved&&pointers.size===1
           &&Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)<=6;
         pointers.delete(event.pointerId);gesture=null;
         if(!click)return;
-        const lot=pick(event);
-        if(lot){setRotating(false);navigation.current.router.push(yassamineApartmentHref(navigation.current.locale,lot.ref));}
+        const apartment=pick(event);
+        if(apartment?.ref){setRotating(false);navigation.current.router.push(yassamineApartmentHref(navigation.current.locale,apartment.ref));}
+        else if(apartment)setHovered(apartment);
       };
       const cancel=(event:PointerEvent)=>{pointers.delete(event.pointerId);gesture=null;clearHover();};
       canvas.style.cursor='grab';
@@ -314,19 +332,24 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
       };
       const resize=new ResizeObserver(()=>{if(!host.clientWidth||!host.clientHeight)return;camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();renderer.setSize(host.clientWidth,host.clientHeight);dirty=true;});resize.observe(host);
       let frameId=0,previousTop=false,previousFloor:number|null|undefined=undefined;
+      let previousA5Block=state.current.a5Block;
       let visible=true;
       const visibility=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??true;dirty=true;});visibility.observe(host);
       const draw=()=>{
         frameId=requestAnimationFrame(draw);
         if(!visible || document.hidden) return;
         const current=state.current;
+        if(block==='A5'&&current.a5Block!==previousA5Block){
+          if(current.top)topView();else reset();
+          previousA5Block=current.a5Block;previousTop=current.top;dirty=true;
+        }
         if(current.top!==previousTop){
-          if(current.top){orbit.target.set(center.x,0,center.z);camera.position.set(center.x,span*1.6,center.z-.01);orbit.update();}
+          if(current.top)topView();
           else reset();previousTop=current.top;
         }
         orbit.autoRotate=current.rotating&&!current.top;
-        for(const l of levels){l.group.visible=current.floor===null||l.floor<=current.floor;l.plan.visible=current.floor===l.floor;}
-        for(const r of roofs)r.group.visible=current.floor===null;
+        for(const l of levels){l.group.visible=(block!=='A5'||current.a5Block==='all'||l.data.block===current.a5Block)&&(current.floor===null||l.floor<=current.floor);l.plan.visible=current.floor===l.floor;}
+        for(const r of roofs)r.group.visible=(block!=='A5'||current.a5Block==='all'||r.block===current.a5Block)&&current.floor===null;
         if(previousFloor!==current.floor){renderer.shadowMap.needsUpdate=true;previousFloor=current.floor;dirty=true;}
         const changed=orbit.update();
         if(dirty||changed||orbit.autoRotate){
@@ -342,7 +365,7 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
     return()=>{cancelled=true;dispose();};
   },[model,block,attempt]);
 
-  const selectedPlans=model?.levels.filter(l=>l.block.startsWith(block)&&l.floors.includes(floor??0))??[];
+  const selectedPlans=model?.levels.filter(l=>l.block.startsWith(block)&&(block!=='A5'||a5Block==='all'||l.block===a5Block)&&l.floors.includes(floor??0))??[];
   const button='rounded-full border px-4 py-2 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold-400';
   return <section className="bg-ink py-20 text-ivory">
     <div className="container-lux">
@@ -350,14 +373,18 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
       <h2 className="mt-4 font-display text-3xl sm:text-5xl">{c.title}</h2><p className="mt-4 text-white/65">{c.subtitle}</p>
       <div ref={root} role={fullscreen?'dialog':undefined} aria-modal={fullscreen||undefined} aria-label={c.title} className={fullscreen?'fixed inset-0 z-[100] flex flex-col overflow-auto bg-ink p-4':'mt-9 overflow-hidden rounded-2xl border border-white/15'}>
         <div className="flex flex-wrap items-center justify-between gap-4 bg-[#262522] p-4">
-          <div className="flex gap-2">{(['A5','A6'] as const).map(b=><button key={b} className={`${button} ${block===b?'border-gold-400 bg-gold-400 text-ink':'border-white/20'}`} aria-pressed={block===b} onClick={()=>{setBlock(b);setTop(false);}}>{c.block} {b.slice(1)}</button>)}</div>
-          <span className="text-xs text-white/60">{block==='A5'?c.five:c.six}</span>
+          <div className="flex gap-2">{(['A5','A6'] as const).map(b=><button key={b} className={`${button} ${block===b?'border-gold-400 bg-gold-400 text-ink':'border-white/20'}`} aria-pressed={block===b} onClick={()=>{setBlock(b);setTop(false);setHovered(null);}}>{c.block} {b.slice(1)}</button>)}</div>
+          <span className="text-xs text-white/60">{block==='A5'?(a5Block==='all'?c.five:a5Block):c.six}</span>
           <button className={`${button} border-white/20`} onClick={()=>setFullscreen(!fullscreen)}>{fullscreen?c.close:c.fullscreen}</button>
         </div>
+        {block==='A5'&&<div className="flex flex-wrap items-center gap-2 border-t border-white/10 bg-[#262522] px-4 pb-4" role="group" aria-label={selectionCopy.filter}>
+          <span className="me-2 text-xs text-white/60">{selectionCopy.filter}</span>
+          {(['all','A5.a','A5.b'] as const).map(part=><button key={part} type="button" className={`${button} ${a5Block===part?'border-gold-400 bg-gold-400 text-ink':'border-white/20'}`} aria-pressed={a5Block===part} onClick={()=>{setA5Block(part);setHovered(null);}}>{part==='all'?selectionCopy.both:part}</button>)}
+        </div>}
         <div className="relative min-h-[360px] bg-[#e8e5de]" style={{height:fullscreen?'calc(100dvh - 205px)':'clamp(380px, 60vw, 620px)'}}>
-          <div ref={mount} className="h-full w-full" aria-label={`${c.block} ${block.slice(1)} — ${c.hint}`} />
+          <div ref={mount} className="h-full w-full" aria-label={`${c.block} ${block==='A5'?(a5Block==='all'?'A5.a + A5.b':a5Block):block} — ${c.hint}`} />
           <ModelCompass locale={locale} needleRef={compassRef} className="right-3 top-3 sm:right-5 sm:top-5" />
-          {hovered&&<div className="pointer-events-none absolute left-4 top-4 rounded-xl bg-ink/90 px-4 py-3 text-sm text-white">{selectionCopy.open} · {hovered} →</div>}
+          {hovered&&<div className="pointer-events-none absolute left-4 top-4 rounded-xl bg-ink/90 px-4 py-3 text-sm text-white" role="status"><strong className="block font-semibold">{hovered.code}</strong><span className="mt-1 block text-xs text-white/75">{hovered.ref?`${selectionCopy.open} →`:selectionCopy.planOnly}</span></div>}
           {!ready&&!failed&&<p className="absolute inset-0 grid place-items-center text-ink">{c.loading}</p>}
           {failed&&<div className="absolute inset-0 flex flex-col items-center justify-center gap-5 bg-[#e8e5de] p-10 text-center text-ink"><p>{c.error}</p><button className={`${button} border-ink/30`} onClick={()=>setAttempt(a=>a+1)}>{c.retry}</button></div>}
           <div className="absolute bottom-4 left-4 right-4 flex flex-wrap justify-between gap-2">
@@ -373,9 +400,9 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
       </div>
       <p className="mt-3 text-sm text-white/80">{selectionCopy.hint}</p>
       <nav aria-label={selectionCopy.list} className="mt-4 flex flex-wrap gap-2">
-          {listedYassamineLots(lots).filter(lot=>lot.block.startsWith(block)&&(floor===null||lot.floor===floor)).map(lot=><Link key={lot.ref} prefetch={false} href={yassamineApartmentHref(locale,lot.ref)} className={`${button} border-white/20 hover:border-gold-400 hover:text-gold-300`} aria-label={`${selectionCopy.open} ${lot.code}`}>{lot.code} ↗</Link>)}
+          {listedYassamineLots(lots).filter(lot=>lot.block.startsWith(block)&&(block!=='A5'||a5Block==='all'||lot.block===a5Block)&&(floor===null||lot.floor===floor)).map(lot=><Link key={lot.ref} prefetch={false} href={yassamineApartmentHref(locale,lot.ref)} className={`${button} border-white/20 hover:border-gold-400 hover:text-gold-300`} aria-label={`${selectionCopy.open} ${lot.code}`}>{lot.code} ↗</Link>)}
       </nav>
-        {block === 'A5' && <p className="mt-3 text-xs text-white/60">{selectionCopy.unavailable}</p>}
+        {block === 'A5' && a5Block !== 'A5.a' && <p className="mt-3 text-xs text-white/60">{selectionCopy.unavailable}</p>}
       <p className="mt-2 max-w-3xl text-sm text-white/65">{c.note}</p>
       <div className="mt-9"><h3 className="font-display text-2xl">{c.plans} · {floor===null||floor===0?c.ground:`R+${floor}`}</h3>
         <div className="mt-5 grid gap-5 md:grid-cols-2">{selectedPlans.map(p=><article key={p.id} className="overflow-hidden rounded-xl bg-ivory text-ink"><PlanBrand project="Diar El Yassamine" document={`${p.block} · ${floor===null||floor===0?c.ground:`R+${floor}`}`} {...planContact} /><div className="flex items-center justify-between gap-3 p-4"><strong>{p.block}</strong><a className="text-sm underline underline-offset-4" href={p.pdf.replace('/models/yassamine/', '/models/yassamine/presentation/')} download>{c.download}</a></div><img src={p.plan.replace('/models/yassamine/', '/models/yassamine/presentation/')} alt={`${c.plans} ${p.block}`} loading="lazy" className="h-[340px] w-full bg-white object-contain p-3" /></article>)}</div>

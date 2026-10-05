@@ -2,7 +2,8 @@ import type { Lot, Project } from './types';
 
 /** Areas transcribed from the individual A6.a/A6.b sales sheets supplied by IMF.
  * grossArea = "surface hors-oeuvre"; sellableArea = "surface du plancher".
- * The sheets do not establish availability or prices.
+ * IMF confirmed the listed apartments are available; the admin may change
+ * each status later. The sheets do not establish prices.
  */
 const A6_FACTS = [
   ['A6.a', 0, 1, 'S+3', 79.04, 89.97, 78],
@@ -51,7 +52,7 @@ export const YASSAMINE_A6_LOTS: Lot[] = A6_FACTS.map(([block, floor, number, typ
     sellableArea,
     ...(gardenArea ? { gardenArea } : {}),
     ...(terraceArea ? { terraceArea } : {}),
-    status: 'unconfirmed',
+    status: 'available',
     planUrl: `/plans/diar-al-yassamine/presentation/${ref}.pdf`,
     planImage: `/plans/diar-al-yassamine/presentation/${ref}.webp`,
   };

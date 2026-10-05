@@ -1,8 +1,9 @@
 /** Locations supplied by the owner; resolved from the shared Google Maps links. */
 const locations: Record<string, { query: string; url: string; featureId?: string }> = {
   'residence-la-gloire': {
-    query: '36.863450,10.264675',
-    url: 'https://goo.gl/maps/w5Ddij5XnhBE3Y4W9',
+    query: '36.8633877,10.2647763',
+    url: 'https://maps.app.goo.gl/NTaTbdw559ZGenQk9?g_st=iw',
+    featureId: '0x12e2b5004a0b1b4b:0xed212026a4e3b79d',
   },
   'diar-al-yassamine': {
     query: 'QQ8V+2PG Diar al yassamine, Sidi Mansour',

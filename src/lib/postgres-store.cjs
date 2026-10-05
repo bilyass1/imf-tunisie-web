@@ -51,6 +51,23 @@ async function ensureSchema(pool) {
     INSERT INTO imf_schema_migrations(version) VALUES(1),(2),(3) ON CONFLICT DO NOTHING;
     `];
     for (const statement of statements[0].split(';').map(s => s.trim()).filter(Boolean)) await pool.query(statement);
+    // IMF confirmed that every Diar Al Yassamine apartment currently listed
+    // online is available. Apply this correction once to older PostgreSQL
+    // snapshots; later admin sales/reservations must remain authoritative.
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query('SELECT revision FROM imf_revision WHERE id=1 FOR UPDATE');
+      const migration = await client.query('INSERT INTO imf_schema_migrations(version) VALUES(4) ON CONFLICT DO NOTHING RETURNING version');
+      if (migration.rows.length) {
+        const updated = await client.query("UPDATE imf_lots SET status='available', data=jsonb_set(data,'{status}',to_jsonb('available'::text),true) WHERE project_slug='diar-al-yassamine' AND status <> 'available'");
+        if (updated.rowCount) await client.query('UPDATE imf_revision SET revision=revision+1 WHERE id=1');
+      }
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally { client.release(); }
   })();
   await schemaReady;
 }

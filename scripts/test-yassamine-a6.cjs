@@ -21,7 +21,7 @@ assert.equal(YASSAMINE_A6_LOTS.filter(lot => lot.block === 'A6.b').length, 12);
 assert.equal(listedYassamineLots(YASSAMINE_A6_LOTS).length, 32);
 
 for (const lot of YASSAMINE_A6_LOTS) {
-  assert.equal(lot.status, 'unconfirmed');
+  assert.equal(lot.status, 'available');
   assert.equal(lot.price, undefined);
   assert.ok(lot.sellableArea > lot.grossArea);
   assert.ok(fs.statSync(`public${lot.planUrl}`).size > 1000, lot.planUrl);
@@ -43,4 +43,4 @@ assert.equal(existing.planUrl, YASSAMINE_A6_LOTS[0].planUrl);
 includeYassamineA6Lots(project);
 assert.equal(project.lots.length, 32);
 assert.equal(project.blocks.length, 2);
-console.log('PASS: A6.a/A6.b have 32 unique sheets, floor plans and unconfirmed status; existing commercial data is preserved.');
+console.log('PASS: A6.a/A6.b have 32 unique sheets, floor plans and available default status; existing commercial data is preserved.');

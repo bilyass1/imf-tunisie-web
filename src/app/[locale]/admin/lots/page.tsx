@@ -9,16 +9,17 @@ import { applyDemoAction, resetStatusesAction } from '@/lib/actions';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
 import LotRow from '@/components/admin/LotRow';
+import LotCompositionEditor from '@/components/admin/LotCompositionEditor';
 
 export default async function AdminLotsPage({
   params,
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ project?: string; block?: string }>;
+  searchParams: Promise<{ project?: string; block?: string; lot?: string }>;
 }) {
   const { locale: raw } = await params;
-  const { project: projectParam, block: blockParam } = await searchParams;
+  const { project: projectParam, block: blockParam, lot: lotParam } = await searchParams;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
@@ -49,6 +50,7 @@ export default async function AdminLotsPage({
   const blocks = Array.from(new Set(project.lots.map((l) => l.block)));
   const activeBlock = blocks.includes(blockParam ?? '') ? (blockParam as string) : blocks[0];
   const lots = project.lots.filter((l) => l.block === activeBlock);
+  const selectedLot = lots.find((lot) => lot.ref === lotParam);
   const stats = lotStats(project.lots);
 
   return (
@@ -108,6 +110,8 @@ export default async function AdminLotsPage({
         </div>
       )}
 
+      {selectedLot && <LotCompositionEditor key={selectedLot.ref} lot={selectedLot} projectSlug={project.slug} locale={locale} />}
+
       {/* Table */}
       <div className="mt-5 overflow-hidden rounded-2xl border border-ink/8 bg-white">
         <div className="overflow-x-auto">
@@ -120,6 +124,7 @@ export default async function AdminLotsPage({
                 <th className="px-4 py-3 text-start font-semibold">{dict.availability.table.sellable}</th>
                 <th className="px-4 py-3 text-start font-semibold">{dict.availability.table.status}</th>
                 <th className="px-4 py-3 text-start font-semibold">{dict.availability.table.price}</th>
+                <th className="px-4 py-3 text-start font-semibold">{dict.apartment.composition}</th>
               </tr>
             </thead>
             <tbody>
@@ -131,6 +136,8 @@ export default async function AdminLotsPage({
                   floorText={floorLabel(lot.floor, locale)}
                   areaText={formatArea(lot.sellableArea, locale)}
                   statusLabels={dict.availability.legend}
+                  compositionHref={`/${locale}/admin/lots?project=${encodeURIComponent(project.slug)}&block=${encodeURIComponent(activeBlock)}&lot=${encodeURIComponent(lot.ref)}#composition-editor`}
+                  compositionLabel={locale === 'ar' ? 'تعديل' : locale === 'en' ? 'Edit' : 'Modifier'}
                 />
               ))}
             </tbody>

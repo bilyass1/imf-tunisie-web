@@ -49,6 +49,8 @@ export interface Lot {
   planImage?: string;
   /** Pièces de l'appartement, pour la visite 360° */
   rooms?: Room[];
+  /** Composition affichée sur la fiche, modifiable sans changer les pièces de la visite 360°. */
+  composition?: Localized[];
   /** Orientation (N, NE, E…) */
   orientation?: string;
   /**

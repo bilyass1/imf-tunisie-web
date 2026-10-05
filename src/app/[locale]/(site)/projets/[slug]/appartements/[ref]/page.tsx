@@ -22,6 +22,7 @@ import LazyMount from '@/components/site/LazyMount';
 import CreditSimulator from '@/components/site/CreditSimulator';
 import { IconArrow, IconArrowLeft, IconCheck, IconPhone, IconPin } from '@/components/Icons';
 import { publicFileExists, panoramaAssets } from '@/lib/assets';
+import { visibleComposition } from '@/lib/lot-composition';
 
 export const dynamicParams = true;
 
@@ -101,6 +102,7 @@ export default async function ApartmentPage({
   if (!project || !lot) notFound();
 
   const rooms = lot.rooms ?? [];
+  const composition = visibleComposition(lot);
   const tourRooms = rooms.map(r => {
     const assets = panoramaAssets(r.panorama);
     if (assets.available) return { id: r.id, label: t(r.label, locale), ...assets };
@@ -348,16 +350,16 @@ export default async function ApartmentPage({
               </dl>
             </div>
 
-            {rooms.length > 0 && (
+            {composition.length > 0 && (
               <div className="mt-6 rounded-2xl border border-ink/8 bg-ivory p-6">
                 <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
                   {dict.apartment.composition}
                 </h3>
                 <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
-                  {rooms.map((room) => (
-                    <li key={room.id} className="flex items-center gap-2.5 text-[13.5px] text-ink/70">
+                  {composition.map((label, index) => (
+                    <li key={`${index}-${label.fr}`} className="flex items-center gap-2.5 text-[13.5px] text-ink/70">
                       <IconCheck className="h-4 w-4 shrink-0 text-gold-500" />
-                      {t(room.label, locale)}
+                      {t(label, locale)}
                     </li>
                   ))}
                 </ul>

@@ -14,6 +14,7 @@ import type {
   DealStage,
   Lot,
   LotStatus,
+  Localized,
   Project,
   User,
 } from './types';
@@ -244,6 +245,15 @@ export async function updateLotPrice(projectSlug: string, lotRef: string, price:
   if (!lot) return false;
   lot.price = price;
   (await writeDb(db));
+  return true;
+}
+
+export async function updateLotComposition(projectSlug: string, lotRef: string, composition: Localized[]): Promise<boolean> {
+  const db = await readDb();
+  const lot = db.projects.find((p) => p.slug === projectSlug)?.lots.find((item) => item.ref === lotRef);
+  if (!lot) return false;
+  lot.composition = composition;
+  await writeDb(db);
   return true;
 }
 

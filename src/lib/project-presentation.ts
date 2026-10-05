@@ -83,9 +83,16 @@ function presentationPlan(path: string | undefined, slug: string): string | unde
   if (!directory) return path;
   const prefix = `/plans/${directory}/`;
   // Uploaded documents and original DWGs keep their own URLs.
-  if (!path.startsWith(prefix) || path.slice(prefix.length).includes('/')) return path;
-  if (!/\.(pdf|webp)(?:\?.*)?$/i.test(path)) return path;
-  return `${prefix}presentation/${path.slice(prefix.length)}`;
+  if (!path.startsWith(prefix)) return path;
+  const relative = path.slice(prefix.length);
+  if (!relative.startsWith('presentation/') && (relative.includes('/') || !/\.(pdf|webp)(?:\?.*)?$/i.test(relative))) return path;
+  const presented = relative.startsWith('presentation/') ? path : `${prefix}presentation/${relative}`;
+  // The October 2026 landscape copies need a new URL so previously cached
+  // sideways images and PDFs cannot survive the deployment in a browser/CDN.
+  if (slug === 'diar-al-yassamine' && /\/presentation\/(?:A5[0-4][1-4]|A5b[0-4][1-5]|A6[ab][0-4][1-4])\.(?:webp|pdf)$/i.test(presented.split('?')[0])) {
+    return `${presented.split('?')[0]}?v=20261005-upright`;
+  }
+  return presented;
 }
 
 // Apply confirmed presentation corrections to existing databases as well as seeds.

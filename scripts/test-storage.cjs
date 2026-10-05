@@ -8,9 +8,13 @@ const load=id=>id==='server-only'?{}:id==='next/cache'?{unstable_noStore:()=>{}}
  vm.runInNewContext(code,{module:moduleBox,exports:moduleBox.exports,require:load,process:{cwd:()=>temp,env},structuredClone});
  const db=moduleBox.exports;
  const original=await db.readDb();original.users.push({id:'client'});
+ original.projects.push({slug:'residence',lots:[{ref:'A1',rooms:[{id:'salon',label:{fr:'Séjour',en:'Living room',ar:'غرفة المعيشة'}}]}]});
  const stale=await db.readDb();
  assert.equal((await db.readDb()).users.length,0);
  await db.writeCommercialDb(original);assert.equal((await db.readDb()).users.length,1);
+ assert.equal(await db.updateLotComposition('residence','A1',[{fr:'Cuisine',en:'Kitchen',ar:'مطبخ'}]),true);
+ assert.equal((await db.readDb()).projects[0].lots[0].composition[0].fr,'Cuisine');
+ assert.equal(await db.updateLotComposition('residence','missing',[]),false);
  await assert.rejects(()=>db.writeDb(stale));
  env.VERCEL='1';await assert.rejects(()=>db.writeDb(original));delete env.VERCEL;
  fs.writeFileSync(path.join(temp,'data','db.json'),'invalid JSON');

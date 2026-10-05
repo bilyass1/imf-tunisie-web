@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Link from 'next/link';
 import type { Lot } from '@/lib/types';
 import { updateLotStatusAction, updateLotPriceAction } from '@/lib/actions';
 
@@ -10,12 +11,16 @@ export default function LotRow({
   floorText,
   areaText,
   statusLabels,
+  compositionHref,
+  compositionLabel,
 }: {
   lot: Lot;
   projectSlug: string;
   floorText: string;
   areaText: string;
   statusLabels: Record<Lot['status'], string>;
+  compositionHref: string;
+  compositionLabel: string;
 }) {
   const statusForm = useRef<HTMLFormElement>(null);
 
@@ -67,6 +72,11 @@ export default function LotRow({
             OK
           </button>
         </form>
+      </td>
+      <td className="px-4 py-2.5">
+        <Link href={compositionHref} className="rounded-lg border border-ink/12 px-3 py-2 text-[11px] font-semibold text-ink/65 hover:border-gold-400 hover:text-gold-600">
+          {compositionLabel}
+        </Link>
       </td>
     </tr>
   );

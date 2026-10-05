@@ -20,11 +20,13 @@ import {
   toggleTask,
   updateDeal,
   updateLotPrice,
+  updateLotComposition,
   updateLotStatus,
   writeDb,
 } from './db';
 import { createSession, destroySession, getSession } from './session';
 import type { ActivityType, ContactSource, DealStage, LotStatus } from './types';
+import { parseCompositionColumns } from './lot-composition';
 import { validVisitRequest, type VisitRequest } from './visit-request';
 
 export interface FormState {
@@ -136,6 +138,22 @@ export async function updateLotPriceAction(formData: FormData): Promise<void> {
   if(raw && (!Number.isFinite(Number(raw)) || Number(raw)<0)) throw new Error('Invalid price');
   (await updateLotPrice(projectSlug, lotRef, raw ? Number(raw) : undefined));
   revalidatePath('/', 'layout');
+}
+
+export async function updateLotCompositionAction(_previous: FormState, formData: FormData): Promise<FormState> {
+  await requireAdmin();
+  const projectSlug = String(formData.get('projectSlug') ?? '');
+  const lotRef = String(formData.get('lotRef') ?? '');
+  if (!projectSlug || !lotRef) return { ok: false, error: 'missing' };
+  const composition = parseCompositionColumns(
+    String(formData.get('compositionFr') ?? ''),
+    String(formData.get('compositionEn') ?? ''),
+    String(formData.get('compositionAr') ?? ''),
+  );
+  if (!composition) return { ok: false, error: 'invalid' };
+  if (!await updateLotComposition(projectSlug, lotRef, composition)) return { ok: false, error: 'missing' };
+  revalidatePath('/', 'layout');
+  return { ok: true, done: true };
 }
 
 export async function applyDemoAction(formData: FormData): Promise<void> {

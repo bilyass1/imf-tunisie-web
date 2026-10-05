@@ -185,6 +185,9 @@ def process_image(source: Path, group: str, template: str, project: str, sample:
     image_path, pdf_path = destinations(group, source.stem, sample)
     box = YASSAMINE_RDC_BOXES[source.stem] if template == "yassamine_a123_floor" else BOXES[template]
     image = stamped_image(source, box, project, template == "yassamine_a5_lot")
+    upright = template == "yassamine_a5_lot"
+    if upright:
+        image = image.rotate(90, expand=True)
     save_webp(image, image_path)
     if original_pdf and template == "yassamine_a5_lot":
         # Render the vector master at higher resolution for the PDF copy. This
@@ -194,7 +197,7 @@ def process_image(source: Path, group: str, template: str, project: str, sample:
         position = (round(x * rendered.width), round(top * rendered.height))
         panel = card(round(width * rendered.width), round(height * rendered.height), project, rotated=True)
         rendered.paste(panel, position)
-        image_pdf(rendered, original_pdf, pdf_path)
+        image_pdf(rendered.rotate(90, expand=True), None, pdf_path)
     else:
         image_pdf(image, original_pdf, pdf_path)
     print(f"{source.name} -> {image_path.relative_to(ROOT)}")
@@ -226,8 +229,9 @@ def process_a6_apartment(source: Path, sample: bool) -> None:
     x, top, width, height = BOXES["yassamine_a5_lot"]
     position = (round(x * rendered.width), round(top * rendered.height))
     rendered.paste(card(round(width * rendered.width), round(height * rendered.height), "Diar El Yassamine", rotated=True), position)
+    rendered = rendered.rotate(90, expand=True)
     save_webp(rendered, image_path)
-    image_pdf(rendered, source, pdf_path)
+    image_pdf(rendered, None, pdf_path)
     print(f"{source.name} -> {pdf_path.relative_to(ROOT)}")
 
 
@@ -242,8 +246,9 @@ def process_a5b_apartment(source: Path, sample: bool) -> None:
     x, top, width, height = BOXES["yassamine_a5_lot"]
     position = (round(x * rendered.width), round(top * rendered.height))
     rendered.paste(card(round(width * rendered.width), round(height * rendered.height), "Diar El Yassamine", rotated=True), position)
+    rendered = rendered.rotate(90, expand=True)
     save_webp(rendered, image_path)
-    image_pdf(rendered, source, pdf_path)
+    image_pdf(rendered, None, pdf_path)
     print(f"{source.name} -> {pdf_path.relative_to(ROOT)}")
 
 

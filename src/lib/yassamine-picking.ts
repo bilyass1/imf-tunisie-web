@@ -20,15 +20,15 @@ const upper: Point[][] = [
   [[407,723],[686,723],[686,605],[830,605],[830,818],[1057,818],[1057,1167],[460,1167],[460,921],[407,921]],
 ];
 
-// A5.b labels are printed on the supplied floor drawings, but no individual
-// sales sheets or published lot records exist for this block. These conservative
-// interior masks identify a label on hover only; they do not create listings.
+// A5.b apartment boundaries on the supplied floor drawings. These conservative
+// interior masks exclude the stairwell, landing, courtyard and parking ramp.
 // Coordinates refer to A5b-0.webp (1269 × 1098) and A5b-1.webp (1266 × 1099).
 const a5bGround: ReadonlyArray<readonly [number, Point[]]> = [
-  [1, [[0,0],[605,0],[605,320],[580,400],[380,400],[380,525],[220,525],[220,300],[0,300]]],
-  [2, [[0,535],[215,535],[215,750],[375,750],[375,735],[510,735],[510,1020],[350,1020],[350,1098],[0,1098]]],
-  [3, [[805,410],[1269,410],[1269,1098],[600,1098],[600,930],[700,930],[700,550],[805,550]]],
+  [1, [[0,535],[215,535],[215,750],[375,750],[375,735],[510,735],[510,1020],[350,1020],[350,1098],[0,1098]]],
+  [2, [[660,665],[1269,665],[1269,1098],[605,1098],[605,930],[660,930]]],
+  [3, [[805,410],[1269,410],[1269,650],[700,650],[700,550],[805,550]]],
   [4, [[610,0],[1269,0],[1269,180],[880,180],[880,335],[800,410],[700,410],[610,320]]],
+  [5, [[0,0],[605,0],[605,320],[580,400],[380,400],[380,525],[220,525],[220,300],[0,300]]],
 ];
 const a5bUpper: ReadonlyArray<readonly [number, Point[]]> = [
   [1, [[0,535],[215,535],[215,750],[375,750],[375,735],[645,735],[645,925],[365,925],[365,1099],[0,1099]]],
@@ -56,6 +56,7 @@ export function mappedYassamineLots(lots: readonly MaquetteLot[]) {
 /** Lots with individual sales sheets; A6 is navigable even where 3D hit regions are unavailable. */
 export function listedYassamineLots(lots: readonly MaquetteLot[]) {
   return lots.filter(lot => mappedYassamineLots([lot]).length > 0
+    || (lot.block === 'A5.b' && /^A5\.b-[0-4]\.[1-5]$/.test(lot.code))
     || (/^A6\.[ab]$/.test(lot.block) && /^A6\.[ab]-[0-4]\.[1-4]$/.test(lot.code)));
 }
 
@@ -70,7 +71,7 @@ export function yassamineLotAtPoint(level: PickingLevel, x: number, z: number, l
   return mappedYassamineLots(lots).find(lot=>lot.floor===level.floor && lot.code===`A5-${level.floor}.${index+1}`);
 }
 
-/** Printed A5.b plan label only; never infer a listing, status or sales link. */
+/** Printed A5.b plan label, resolved to a link only against a listed lot. */
 export function yassamineA5bPlanCodeAtPoint(level: PickingLevel, x: number, z: number): string | undefined {
   if (level.block !== 'A5.b' || !Number.isInteger(level.floor) || level.floor < 0 || level.floor > 4) return undefined;
   const [[x0,z0],[x1,z1]]=level.textureBounds;

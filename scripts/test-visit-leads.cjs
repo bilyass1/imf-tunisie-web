@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('nod
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'imf-visit-test-'));
 const box={exports:{}};
 const fixture=()=>({projects:[{slug:'test',lots:[{ref:'A1',code:'A 1',status:'available'},{ref:'A2',status:'sold'},{ref:'A3',status:'reserved'}]}],users:[],news:[],contacts:[],deals:[],activities:[],tasks:[]});
-const localRequire=id=>id==='server-only'?{}:id==='next/cache'?{unstable_noStore(){}}:id==='./postgres-store.cjs'?{}:id==='./seed'?{buildSeed:fixture}:id==='./yassamine-catalog'?{includeYassamineApartments:x=>x}:id==='./yassamine-a6'?{includeYassamineA6Lots:x=>x}:id==='./project-presentation'?{projectPresentation:x=>x}:id==='./types'?{}:require(id);
+const localRequire=id=>id==='server-only'?{}:id==='next/cache'?{unstable_noStore(){}}:id==='./postgres-store.cjs'?{}:id==='./seed'?{buildSeed:fixture}:id==='./yassamine-catalog'?{includeYassamineApartments:x=>x}:id==='./yassamine-a5b'?{includeYassamineA5bLots:x=>x}:id==='./yassamine-a6'?{includeYassamineA6Lots:x=>x}:id==='./project-presentation'?{projectPresentation:x=>x}:id==='./types'?{}:require(id);
 vm.runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/db.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,{module:box,exports:box.exports,require:localRequire,process:{cwd:()=>temp,env:{}},structuredClone});
 (async()=>{try{
   const db=box.exports;

@@ -21,6 +21,7 @@ import { DEAL_STAGES, PIPELINE_STAGES } from './types';
 import { buildSeed } from './seed';
 import { applyYassamineA5aFacts, includeYassamineApartments } from './yassamine-catalog';
 import { includeYassamineA6Lots } from './yassamine-a6';
+import { includeYassamineA5bLots } from './yassamine-a5b';
 import { projectPresentation } from './project-presentation';
 import { getStore, type MediaWrite } from './postgres-store.cjs';
 
@@ -81,7 +82,7 @@ export async function readDb(): Promise<Database> {
   if (process.env.DATABASE_URL && !isBuild) {
     const data = await getStore(buildSeed).read();
     const project = data.projects.find(item => item.slug === 'diar-al-yassamine');
-    if (project) includeYassamineA6Lots(applyYassamineA5aFacts(project));
+    if (project) includeYassamineA6Lots(includeYassamineA5bLots(applyYassamineA5aFacts(project)));
     return data;
   }
   if (resolveMode() === 'memory') {
@@ -95,7 +96,7 @@ export async function readDb(): Promise<Database> {
       const raw = fs.readFileSync(dbFile, 'utf8');
       const data = includeYassamineApartments(JSON.parse(raw) as Database);
       const project = data.projects.find(item => item.slug === 'diar-al-yassamine');
-      if (project) includeYassamineA6Lots(project);
+      if (project) includeYassamineA6Lots(includeYassamineA5bLots(project));
       cache = { data, mtime, size:stat.size };
     }
     const data = structuredClone(cache.data);
@@ -165,7 +166,7 @@ export const getPublicData = requestCache(async () => {
   if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') {
     const data = await getStore(buildSeed).readPublic();
     const project = data.projects.find((item: Project) => item.slug === 'diar-al-yassamine');
-    if (project) includeYassamineA6Lots(applyYassamineA5aFacts(project));
+    if (project) includeYassamineA6Lots(includeYassamineA5bLots(applyYassamineA5aFacts(project)));
     return data;
   }
   const { projects, company, news } = await readDb();

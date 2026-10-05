@@ -53,7 +53,7 @@ export async function generateMetadata({
   if (!project || !lot) return {};
   const l = (isLocale(locale) ? locale : 'fr') as Locale;
   const area = lot.sellableArea
-    ? `${formatArea(lot.sellableArea, l)}${project.slug === 'diar-al-yassamine' && (lot.block === 'A5.a' || lot.block.startsWith('A6.'))
+    ? `${formatArea(lot.sellableArea, l)}${project.slug === 'diar-al-yassamine' && (lot.block.startsWith('A5.') || lot.block.startsWith('A6.'))
       ? l === 'ar' ? ' (تقريبية)' : l === 'en' ? ' (approx.)' : ' (approx.)'
       : ''}`
     : '';
@@ -123,7 +123,7 @@ export default async function ApartmentPage({
 
   const contactHref = `/${locale}/contact?project=${project.slug}&lot=${encodeURIComponent(lot.code)}`;
   const a5PlanArea = project.slug === 'diar-al-yassamine' && lot.block === 'A5.a';
-  const approximatePlanArea = a5PlanArea || (project.slug === 'diar-al-yassamine' && lot.block.startsWith('A6.'));
+  const approximatePlanArea = a5PlanArea || (project.slug === 'diar-al-yassamine' && (lot.block === 'A5.b' || lot.block.startsWith('A6.')));
   const a5AreaPending = a5PlanArea && !lot.sellableArea;
   const pendingAreaLabel = locale === 'ar' ? 'بانتظار التأكيد' : locale === 'en' ? 'To be confirmed' : 'À confirmer';
   const saleAreaLabel = approximatePlanArea
@@ -136,7 +136,9 @@ export default async function ApartmentPage({
   const a5FloorSheet = a5AreaPending && (lot.floor === 0 || lot.floor === 1)
     ? `/models/yassamine/presentation/A5a-${lot.floor}`
     : undefined;
-  const a6FloorSheet = lot.block === 'A6.a'
+  const linkedFloorSheet = lot.block === 'A5.b'
+    ? `/models/yassamine/presentation/A5b-${lot.floor === 0 ? 0 : 1}`
+    : lot.block === 'A6.a'
     ? `/models/yassamine/presentation/A6a-${lot.floor === 4 ? 4 : lot.floor === 0 ? 0 : 1}`
     : lot.block === 'A6.b'
       ? `/models/yassamine/presentation/A6b-${lot.floor <= 1 ? lot.floor : 2}`
@@ -320,7 +322,7 @@ export default async function ApartmentPage({
               {a5FloorSheet && !individualPlanExists && <p className="mt-3 text-sm text-ink/60">
                 {locale === 'ar' ? 'مخطط الطابق الكامل للعمارة A5.a؛ ابحث عن مرجع الشقة على الرسم.' : locale === 'en' ? 'Full floor plan for block A5.a; locate the apartment reference on the drawing.' : 'Plan de l’étage complet du bloc A5.a ; repérez la référence de l’appartement sur le dessin.'}
               </p>}
-              {a6FloorSheet && <a className="mt-5 inline-block text-sm font-semibold text-gold-700 underline underline-offset-4" href={`${a6FloorSheet}.pdf`} target="_blank" rel="noreferrer">
+              {linkedFloorSheet && <a className="mt-5 inline-block text-sm font-semibold text-gold-700 underline underline-offset-4" href={`${linkedFloorSheet}.pdf`} target="_blank" rel="noreferrer">
                 {locale === 'ar' ? 'عرض مخطط الطابق الكامل' : locale === 'en' ? 'View the full floor plan' : 'Voir le plan complet de l’étage'} ↗
               </a>}
               {lot.planDwgUrl && <div className="mt-5 flex flex-wrap items-center gap-4 text-sm">

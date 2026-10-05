@@ -57,10 +57,10 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
   navigation.current = { locale, lots, router };
   const [hovered, setHovered] = useState<{ code: string; ref?: string } | null>(null);
   const selectionCopy = locale === 'ar'
-    ? { hint: 'اختر الطابق ثم مرّر المؤشر فوق الشقة لمعرفة رقمها. اضغط على شقق A5.a لفتح صفحتها.', list: 'صفحات الشقق', unavailable: 'أرقام شقق A5.b مأخوذة من المخطط؛ صفحات البيع غير منشورة.', open: 'فتح صفحة الشقة', planOnly: 'الرقم من المخطط · لا توجد صفحة بيع', filter: 'تصفية العمارة', both: 'A5.a + A5.b' }
+    ? { hint: 'اختر الطابق ثم مرّر المؤشر فوق الشقة لمعرفة رقمها. اضغط لفتح صفحتها.', list: 'صفحات الشقق', open: 'فتح صفحة الشقة', planOnly: 'الرقم من المخطط · لا توجد صفحة بيع', filter: 'تصفية العمارة', both: 'A5.a + A5.b' }
     : locale === 'en'
-    ? { hint: 'Choose a floor, then hover to see the apartment number. Click A5.a apartments to open their details.', list: 'Apartment details', unavailable: 'A5.b apartment numbers come from the floor plan; sales pages are not published.', open: 'Open apartment', planOnly: 'Number on plan · no sales page', filter: 'Filter block', both: 'A5.a + A5.b' }
-    : { hint: 'Choisissez un étage, puis survolez un appartement pour voir son numéro. Cliquez sur A5.a pour ouvrir sa fiche.', list: 'Fiches des appartements', unavailable: 'Les numéros A5.b proviennent du plan ; les fiches de vente ne sont pas publiées.', open: 'Ouvrir la fiche', planOnly: 'Numéro du plan · fiche non publiée', filter: 'Filtrer le bloc', both: 'A5.a + A5.b' };
+    ? { hint: 'Choose a floor, then hover to see the apartment number. Click to open its details.', list: 'Apartment details', open: 'Open apartment', planOnly: 'Number on plan · no sales page', filter: 'Filter block', both: 'A5.a + A5.b' }
+    : { hint: 'Choisissez un étage, puis survolez un appartement pour voir son numéro. Cliquez pour ouvrir sa fiche.', list: 'Fiches des appartements', open: 'Ouvrir la fiche', planOnly: 'Numéro du plan · fiche non publiée', filter: 'Filtrer le bloc', both: 'A5.a + A5.b' };
   const c = copy[locale as keyof typeof copy] ?? copy.fr;
   const [block, setBlock] = useState<'A5'|'A6'>('A5');
   const [a5Block, setA5Block] = useState<'all' | 'A5.a' | 'A5.b'>('all');
@@ -293,7 +293,9 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
         const lot=yassamineLotAtPoint(target,hit.point.x,hit.point.z,navigation.current.lots);
         if(lot)return {code:lot.code,ref:lot.ref};
         const code=yassamineA5bPlanCodeAtPoint(target,hit.point.x,hit.point.z);
-        return code?{code}:undefined;
+        if (!code) return undefined;
+        const listed=navigation.current.lots.find(lot=>lot.block==='A5.b'&&lot.code===code);
+        return {code,ref:listed?.ref};
       };
       let gesture:{id:number;x:number;y:number;moved:boolean}|null=null;
       const pointers=new Set<number>();
@@ -402,7 +404,6 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
       <nav aria-label={selectionCopy.list} className="mt-4 flex flex-wrap gap-2">
           {listedYassamineLots(lots).filter(lot=>lot.block.startsWith(block)&&(block!=='A5'||a5Block==='all'||lot.block===a5Block)&&(floor===null||lot.floor===floor)).map(lot=><Link key={lot.ref} prefetch={false} href={yassamineApartmentHref(locale,lot.ref)} className={`${button} border-white/20 hover:border-gold-400 hover:text-gold-300`} aria-label={`${selectionCopy.open} ${lot.code}`}>{lot.code} ↗</Link>)}
       </nav>
-        {block === 'A5' && a5Block !== 'A5.a' && <p className="mt-3 text-xs text-white/60">{selectionCopy.unavailable}</p>}
       <p className="mt-2 max-w-3xl text-sm text-white/65">{c.note}</p>
       <div className="mt-9"><h3 className="font-display text-2xl">{c.plans} · {floor===null||floor===0?c.ground:`R+${floor}`}</h3>
         <div className="mt-5 grid gap-5 md:grid-cols-2">{selectedPlans.map(p=><article key={p.id} className="overflow-hidden rounded-xl bg-ivory text-ink"><PlanBrand project="Diar El Yassamine" document={`${p.block} · ${floor===null||floor===0?c.ground:`R+${floor}`}`} {...planContact} /><div className="flex items-center justify-between gap-3 p-4"><strong>{p.block}</strong><a className="text-sm underline underline-offset-4" href={p.pdf.replace('/models/yassamine/', '/models/yassamine/presentation/')} download>{c.download}</a></div><img src={p.plan.replace('/models/yassamine/', '/models/yassamine/presentation/')} alt={`${c.plans} ${p.block}`} loading="lazy" className="h-[340px] w-full bg-white object-contain p-3" /></article>)}</div>

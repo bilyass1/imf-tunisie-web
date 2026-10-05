@@ -5,6 +5,7 @@ Usage:
   python scripts/rebrand-sale-plans.py --all
   python scripts/rebrand-sale-plans.py --yassamine-rdc
   python scripts/rebrand-sale-plans.py --a6-source "C:/path/to/imf a6 a et b"
+  python scripts/rebrand-sale-plans.py --a5b-source "E:/5-PROJET__DIAR AL YASSAMINE/VENTE__PARCELLE A5/A5.b"
 
 The template regions below cover only the previous IMF contact panels. The
 original PDF/DWG/WebP files remain available for technical and legal reference.
@@ -16,6 +17,7 @@ import argparse
 from io import BytesIO
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import tempfile
 
@@ -162,8 +164,12 @@ def image_pdf(image: Image.Image, original_pdf: Path | None, destination: Path) 
 def render_pdf(source: Path) -> Image.Image:
     with tempfile.TemporaryDirectory() as directory:
         prefix = Path(directory) / "plan"
+        # Poppler cannot always access the source drive under the workspace
+        # sandbox; stage a read-only copy inside its local temporary directory.
+        staged = Path(directory) / "source.pdf"
+        shutil.copyfile(source, staged)
         subprocess.run([str(POPPM), "-f", "1", "-l", "1", "-scale-to", "3200",
-                        "-singlefile", "-png", str(source), str(prefix)], check=True, stdout=subprocess.DEVNULL)
+                        "-singlefile", "-png", str(staged), str(prefix)], check=True, stdout=subprocess.DEVNULL)
         with Image.open(prefix.with_suffix(".png")) as image:
             return image.convert("RGB")
 
@@ -225,6 +231,22 @@ def process_a6_apartment(source: Path, sample: bool) -> None:
     print(f"{source.name} -> {pdf_path.relative_to(ROOT)}")
 
 
+def process_a5b_apartment(source: Path, sample: bool) -> None:
+    """Make a branded copy of an A5.b sheet without obscuring its area table."""
+    match = re.fullmatch(r"A5\.b-App ([0-4])\.([1-5])", source.stem)
+    if not match:
+        raise ValueError(f"Unexpected A5.b apartment sheet: {source.name}")
+    ref = f"A5b{match[1]}{match[2]}"
+    image_path, pdf_path = destinations("plans/diar-al-yassamine", ref, sample)
+    rendered = render_pdf(source)
+    x, top, width, height = BOXES["yassamine_a5_lot"]
+    position = (round(x * rendered.width), round(top * rendered.height))
+    rendered.paste(card(round(width * rendered.width), round(height * rendered.height), "Diar El Yassamine", rotated=True), position)
+    save_webp(rendered, image_path)
+    image_pdf(rendered, source, pdf_path)
+    print(f"{source.name} -> {pdf_path.relative_to(ROOT)}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     mode = parser.add_mutually_exclusive_group()
@@ -232,8 +254,17 @@ def main() -> None:
     mode.add_argument("--all", action="store_true")
     mode.add_argument("--yassamine-rdc", action="store_true")
     parser.add_argument("--a6-source", type=Path, metavar="DIRECTORY")
+    parser.add_argument("--a5b-source", type=Path, metavar="DIRECTORY")
     args = parser.parse_args()
     sample = args.sample
+    if args.a5b_source:
+        sources = sorted(args.a5b_source.glob("A5.b-App *.pdf"))
+        expected = {f"A5.b-App {floor}.{number}.pdf" for floor in range(5) for number in range(1, 6)}
+        if {source.name for source in sources} != expected:
+            raise ValueError(f"Expected all 25 A5.b sales sheets, found {len(sources)}")
+        for source in (sources[:1] if sample else sources):
+            process_a5b_apartment(source, sample)
+        return
     if args.a6_source:
         sources = sorted(args.a6_source.rglob("A6.[ab]-App *.pdf"))
         if len(sources) != 32:
@@ -247,7 +278,7 @@ def main() -> None:
             process_image(source, "plans/diar-al-yassamine", "yassamine_a123_floor", "Diar El Yassamine", False)
         return
     if not (args.sample or args.all):
-        parser.error("choose --sample, --all, --yassamine-rdc or provide --a6-source")
+        parser.error("choose --sample, --all, --yassamine-rdc or provide --a5b-source/--a6-source")
     gloire = PUBLIC / "plans/la-gloire"
     source = list(sorted(gloire.glob("[ABCD][0-9][0-9].webp")))
     if len(source) != 102:

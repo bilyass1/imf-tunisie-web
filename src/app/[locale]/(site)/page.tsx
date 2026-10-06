@@ -33,6 +33,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   const projects = (await getProjects());
   const ongoing = projects.filter((p) => p.status === 'ongoing');
+  const featuredOrder: Record<string, number> = { 'residence-la-gloire': 0, 'diar-al-yassamine': 1 };
+  const featuredProjects = [...ongoing].sort((a, b) => (featuredOrder[a.slug] ?? 2) - (featuredOrder[b.slug] ?? 2));
   const delivered = projects.filter((p) => p.status === 'delivered');
   const hero = ongoing[0] ?? projects[0];
 
@@ -163,10 +165,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             }
           />
 
-          <div className={`mt-14 grid gap-6 sm:grid-cols-2 ${ongoing.length > 2 ? 'lg:grid-cols-3' : ''}`}>
-            {ongoing.map((project, i) => (
+          <div dir="ltr" className={`mt-14 grid gap-6 sm:grid-cols-2 ${featuredProjects.length > 2 ? 'lg:grid-cols-3' : ''}`}>
+            {featuredProjects.map((project, i) => (
               <Reveal key={project.slug} delay={i * 110}>
-                <ProjectCard project={project} locale={locale} dict={dict} priority={i === 0} />
+                <div dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+                  <ProjectCard project={project} locale={locale} dict={dict} priority={i === 0} />
+                </div>
               </Reveal>
             ))}
           </div>

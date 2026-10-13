@@ -1,6 +1,11 @@
 // Runs actual PostgreSQL SQL in an isolated in-memory PGlite database.
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
+const ts=require('typescript'),vm=require('node:vm');
+const deletionModule={exports:{}};
+const deletionCode=ts.transpileModule(fs.readFileSync('src/lib/client-deletion.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+vm.runInNewContext(deletionCode,{module:deletionModule,exports:deletionModule.exports,require:id=>id==='server-only'?{}:require(id),Buffer});
+const {deleteClientDossier}=deletionModule.exports;
 const {PGlite}=require('@electric-sql/pglite');
 const {createStore,configuration}=require('../src/lib/postgres-store.cjs');
 const {importData}=require('./postgres-common.cjs');
@@ -13,7 +18,7 @@ const {importData}=require('./postgres-common.cjs');
   await engine.exec(fs.readFileSync('database/003-rate-limits.sql','utf8'));
   const query=(sql,params)=>engine.query(sql,params);
   const pool={connect:async()=>({query,release(){}}),query};
-  const fixture={projects:[{slug:'a-p',name:'Test',progress:[{label:{fr:'Façades',en:'Facades',ar:'الواجهات'},percent:70,done:false}],lots:[{ref:'A',status:'available'},{ref:'B',status:'available'}]},
+  const fixture={projects:[{slug:'a-p',name:'Test',progress:[{label:{fr:'Façades',en:'Facades',ar:'الواجهات'},percent:70,done:false}],lots:[{ref:'A',status:'available',reservationNote:'Private reservation note'},{ref:'B',status:'available'}]},
    {slug:'diar-al-yassamine',name:'Diar Al Yassamine',lots:[{ref:'Y1',status:'sold'},{ref:'Y2',status:'reserved'}]}],
    users:[{id:'admin',email:'admin@example.test',name:'Admin',role:'admin',passwordHash:'hash'},
     {id:'client',email:'client@example.test',name:'Client',role:'client',passwordHash:'hash',projectSlug:'a-p',lotRef:'A',properties:[{projectSlug:'a-p',lotRef:'A'},{projectSlug:'a-p',lotRef:'B'}],messages:[],documents:[]}],
@@ -21,6 +26,8 @@ const {importData}=require('./postgres-common.cjs');
   await importData({query},fixture);
   const store=createStore(pool);
   const publicInstance=createStore(pool); // separate Vercel function with its own warm cache
+  assert.equal((await store.readPublic()).projects[0].lots[0].reservationNote,undefined,'PostgreSQL public reads exclude reservation notes');
+  assert.equal((await store.read()).projects[0].lots[0].reservationNote,'Private reservation note','Admin snapshot retains private note');
   assert.deepEqual((await store.readPublic()).projects[1].lots.map(lot=>lot.status),['available','available'],'One-time availability correction reaches old PostgreSQL lots');
   assert.equal((await query('SELECT count(*)::int AS count FROM imf_schema_migrations WHERE version=4')).rows[0].count,1);
   const afterMigration=await store.read();
@@ -96,6 +103,37 @@ const {importData}=require('./postgres-common.cjs');
   persisted=await store.read();persisted.company={legalName:'Test',email:'test@example.test',phone:'123',address:'Test',city:'Tunis',about:'Test'};await store.write(persisted);
   assert.equal((await store.read()).company.legalName,'Test');
   assert.equal((await publicInstance.readPublic()).company.legalName,'Test','Other server instances must see company edits');
+  persisted=await store.read();
+  const account=persisted.users.find(user=>user.id==='client');
+  account.paymentSchedules=[{projectSlug:'a-p',lotRef:'A',totalAmount:10000.125}];
+  account.payments=[{id:'partial-payment',projectSlug:'a-p',lotRef:'A',label:{fr:'Échéance',en:'Instalment',ar:'قسط'},dueDate:'2026-12-01',amount:3000.125,paid:false,receipts:[{id:'receipt',date:'2026-10-01',amount:1000.125,reference:'client-only-reference'}]}];
+  account.constructionPhotos=[{src:'/api/media/aabbccdd-0000-4000-8000-000000000009',caption:{fr:'Photo privée client',en:'Private client photo',ar:'صورة خاصة'},projectSlug:'a-p',lotRef:'A'}];
+  await store.write(persisted);
+  const refreshedAccount=await createStore(pool).readUserById('client');
+  assert.equal(refreshedAccount.paymentSchedules[0].totalAmount,10000.125);
+  assert.equal(refreshedAccount.payments[0].receipts[0].amount,1000.125);
+  assert.equal(refreshedAccount.constructionPhotos[0].caption.fr,'Photo privée client');
+  const publicData=JSON.stringify(await publicInstance.readPublic());
+  assert(!publicData.includes('client-only-reference'));
+  assert(!publicData.includes('Photo privée client'));
+  console.log('PASS: PostgreSQL preserves apartment totals, partial receipts and client-specific photos across instances; public reads exclude private client data.');
+  const failedDelete=await store.read();deleteClientDossier(failedDelete,'client');
+  const originalConnect=pool.connect;
+  pool.connect=async()=>{const connection=await originalConnect();return {...connection,query:async(sql,params)=>{if(sql==='DELETE FROM imf_media WHERE id=$1')throw new Error('Simulated media deletion failure');return connection.query(sql,params);}};};
+  await assert.rejects(()=>store.write(failedDelete),/Simulated media deletion failure/);
+  pool.connect=originalConnect;
+  assert.equal((await createStore(pool).readUserById('client')).id,'client','Failed file deletion rolls back the account and dossier');
+  assert.equal(Buffer.from(await store.readMedia(id)).toString(),'%PDF-test');
+  assert.equal((await store.readMediaMetadata(id)).clientId,'client');
+  const erased=await store.read();deleteClientDossier(erased,'client');await store.write(erased);
+  assert.equal(await createStore(pool).readUserById('client'),undefined);
+  assert.equal(await createStore(pool).readAuthUser('id','client'),undefined);
+  assert.equal(await store.readMediaMetadata(id),undefined);
+  assert.equal(await store.readMedia(id),undefined);
+  assert.equal((await query('SELECT count(*)::int AS count FROM imf_documents WHERE client_id=$1',['client'])).rows[0].count,0);
+  assert.equal((await query('SELECT count(*)::int AS count FROM imf_messages WHERE client_id=$1',['client'])).rows[0].count,0);
+  assert.equal((await createStore(pool).readAuthUser('id','admin')).id,'admin');
+  console.log('PASS: atomic PostgreSQL dossier deletion removes account, active/archived documents, messages and private file bytes; a cleanup failure rolls the transaction back.');
   const config=configuration({DATABASE_URL:'postgresql://u:p@db.example.test/app?sslmode=require'});
   assert.equal(config.ssl.rejectUnauthorized,true);assert.ok(!config.connectionString.includes('sslmode'));
   console.log('PASS: PostgreSQL round trip, public gallery/progress/panorama updates, stale-write rejection, atomic rollback, unique email, private media, document archive, auth version and company settings.');

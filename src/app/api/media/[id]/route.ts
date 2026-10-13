@@ -17,7 +17,8 @@ export async function GET(_: Request, {params}: {params: Promise<{id:string}>}) 
       const lot=project?.lots.find(l=>l.ref===property.lotRef);
       return [...(project?.constructionPhotos??[]),...(lot?.constructionPhotos??[])].some(p=>p.src===`/api/media/${id}`);
     });
-    const allowed=user && (user.role==='admin' || (file.clientId===user.id && user.documents?.some(d=>d.href===`/api/media/${id}`)) || (!file.clientId && hasConstructionAccess));
+    const ownsClientMedia=file.clientId===user?.id && (user?.documents?.some(d=>d.href===`/api/media/${id}`) || user?.constructionPhotos?.some(photo=>photo.src===`/api/media/${id}`));
+    const allowed=user && (user.role==='admin' || ownsClientMedia || (!file.clientId && hasConstructionAccess));
     if(!allowed) return new Response(null,{status:404,headers:{'Cache-Control':'private, no-store'}});
   }
   try {

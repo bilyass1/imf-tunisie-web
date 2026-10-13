@@ -3,10 +3,15 @@ const assert = require('node:assert/strict');
 const vm = require('node:vm');
 const ts = require('typescript');
 const mapping = require('../src/lib/gallery-photo-refresh.json');
-const box = { exports: {} };
-const js = ts.transpileModule(fs.readFileSync('src/lib/project-presentation.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
-vm.runInNewContext(js, { module: box, exports: box.exports, require: name => name === './gallery-photo-refresh.json' ? mapping : require(name) });
-const { projectPresentation } = box.exports;
+function load(file) {
+  const box = { exports: {} };
+  const js = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
+  const localRequire = name => name === './gallery-photo-refresh.json' ? mapping
+    : name === './marassim-presentation' ? load('src/lib/marassim-presentation.ts') : require(name);
+  vm.runInNewContext(js, { module: box, exports: box.exports, require: localRequire });
+  return box.exports;
+}
+const { projectPresentation } = load('src/lib/project-presentation.ts');
 const projects = [['marassim','complexe-marassim',16],['zephyr','residence-zephyr',18],['diar-al-andalous-1','diar-al-andalous-1',12],['diar-al-andalous-2','diar-al-andalous-2',12]];
 async function main() {
   assert.equal(Object.keys(mapping).length, 58);

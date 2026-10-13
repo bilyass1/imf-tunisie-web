@@ -3,9 +3,10 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireAdminUser } from '@/lib/auth';
-import { getProjects, lotStats } from '@/lib/db';
+import { readDb, lotStats } from '@/lib/db';
 import { formatArea, floorLabel } from '@/lib/format';
-import { applyDemoAction, resetStatusesAction } from '@/lib/actions';
+import { projectPresentation } from '@/lib/project-presentation';
+import { clientProperties } from '@/lib/client-properties';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
 import LotRow from '@/components/admin/LotRow';
@@ -25,7 +26,11 @@ export default async function AdminLotsPage({
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const projects = (await getProjects()).filter((p) => p.lots.length > 0);
+  const db=await readDb();
+  const clients=db.users.filter(user=>user.role==='client');
+  const clientOptions=clients.map(client=>({id:client.id,name:client.name,email:client.email}));
+  const owners=new Map(clients.flatMap(client=>clientProperties(client).map(item=>[JSON.stringify([item.projectSlug,item.lotRef]),clientOptions.find(option=>option.id===client.id)!] as const)));
+  const projects=db.projects.map(projectPresentation).filter(project=>project.lots.length>0);
   const project = projects.find((p) => p.slug === projectParam) ?? projects[0];
 
   if (!project) {
@@ -133,6 +138,8 @@ export default async function AdminLotsPage({
                   key={lot.ref}
                   lot={lot}
                   projectSlug={project.slug}
+                  owner={owners.get(JSON.stringify([project.slug,lot.ref]))}
+                  clients={clientOptions}
                   floorText={floorLabel(lot.floor, locale)}
                   areaText={formatArea(lot.sellableArea, locale)}
                   statusLabels={dict.availability.legend}
@@ -145,25 +152,6 @@ export default async function AdminLotsPage({
         </div>
       </div>
 
-      {/* Outils de présentation */}
-      <div className="mt-6 rounded-2xl border border-dashed border-ink/15 bg-white/60 p-6">
-        <h3 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink/45">{dict.admin.demoTools}</h3>
-        <p className="mt-2 text-[13px] text-ink/50">{dict.admin.demoHint}</p>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <form action={applyDemoAction}>
-            <input type="hidden" name="projectSlug" value={project.slug} />
-            <button type="submit" className="btn-ghost !py-2.5 !text-[11px]">
-              {dict.admin.applyDemo}
-            </button>
-          </form>
-          <form action={resetStatusesAction}>
-            <input type="hidden" name="projectSlug" value={project.slug} />
-            <button type="submit" className="btn-ghost !py-2.5 !text-[11px]">
-              {dict.admin.resetDemo}
-            </button>
-          </form>
-        </div>
-      </div>
     </PortalShell>
   );
 }

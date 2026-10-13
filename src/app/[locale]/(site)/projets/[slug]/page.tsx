@@ -1,4 +1,7 @@
 import Link from 'next/link';
+import { displayedAmenities } from '@/lib/amenities';
+import MarassimSpaces from '@/components/site/MarassimSpaces';
+import { MARASSIM_PRESENTATION } from '@/lib/marassim-presentation';
 import LaGloirePlanLibrary from '@/components/site/LaGloirePlanLibrary';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -94,6 +97,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   const sectionLabel = (key: keyof NonNullable<typeof project.presentationLabels>, fallback: string) =>
     project.presentationLabels ? t(project.presentationLabels[key], locale) : fallback;
 
+  const amenities = displayedAmenities(project, locale, dict.amenities);
   const stats = lotStats(project.lots);
   const programme = project.slug === 'diar-al-yassamine' ? YASSAMINE_PROGRAMME : undefined;
   const all = (await getProjects());
@@ -102,6 +106,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   const sections = [
     { id: 'programme', label: sectionLabel('overview', dict.project.overview) },
     ...(['diar-al-yassamine', 'residence-zephyr'].includes(project.slug) ? [{ id: 'video', label: project.slug === 'residence-zephyr' ? zephyrVideo[locale].nav : yassamineVideo[locale].nav }] : []),
+    ...(project.slug === 'complexe-marassim' ? [{ id: 'espaces', label: t(MARASSIM_PRESENTATION.nav, locale) }] : []),
     { id: 'galerie', label: sectionLabel('gallery', dict.project.gallery) },
     ...((project.slug === 'diar-al-yassamine' || (project.massing && project.lots.length)) ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
     ...(project.lots.length ? [{ id: 'disponibilite', label: dict.project.availability }] : []),
@@ -115,7 +120,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
     <>
       <PageHero
         eyebrow={t(project.subtitle, locale)}
-        title={project.name}
+        title={project.slug === 'complexe-marassim' ? 'COMPLEXE MARASSIM' : project.name}
         subtitle={t(project.address, locale)}
         image={project.heroImage}
         breadcrumb={[
@@ -216,18 +221,18 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               </ul>
             </Reveal>
 
-            {project.amenities.length > 0 && (
+            {amenities.length > 0 && (
               <Reveal delay={250}>
                 <h3 className="mt-10 text-[12px] font-semibold uppercase tracking-[0.2em] text-ink/45">
                   {sectionLabel('amenities', dict.project.amenities)}
                 </h3>
                 <div className="mt-5 flex flex-wrap gap-2.5">
-                  {project.amenities.map((a) => {
-                    const Icon = AMENITY_ICONS[a];
-                    const label = (dict.amenities as Record<string, string>)[a] ?? a;
+                  {amenities.map((amenity) => {
+                    const Icon = AMENITY_ICONS[amenity.icon];
+                    const label = amenity.label;
                     return (
                       <span
-                        key={a}
+                        key={amenity.id}
                         className="flex items-center gap-2 rounded-full border border-ink/10 bg-white px-4 py-2 text-[12.5px] text-ink/65"
                       >
                         {Icon && <Icon className="h-4 w-4 text-gold-500" />}
@@ -295,6 +300,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
           </Reveal>
         </div>
       </section>
+
+      {project.slug === 'complexe-marassim' && <MarassimSpaces locale={locale} />}
 
       {project.slug === 'diar-al-yassamine' && (
         <section id="video" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">

@@ -1,3 +1,4 @@
+import { PLAN_ROTATION } from '@/lib/plan-rotation';
 import type { Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import PlanViewer from './PlanViewer';
@@ -29,7 +30,7 @@ export default function ApartmentInterior({ locale, image, reference, pdf }: { l
         <h2 className="h-display mt-4 text-3xl sm:text-4xl">{labels.title} · {reference}</h2>
         <p className="mb-8 mt-4 max-w-2xl text-sm leading-relaxed text-ink/60">{labels.body}</p>
         <div className="mx-auto max-w-5xl">
-          <PlanViewer image={image} pdf={pdf} alt={`${labels.title} ${reference}`} labels={getDictionary(locale).plan} exists />
+          <PlanViewer image={image} pdf={pdf} alt={`${labels.title} ${reference}`} labels={getDictionary(locale).plan} rotation={PLAN_ROTATION[locale]} exists />
         </div>
       </div>
     </section>

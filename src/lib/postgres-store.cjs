@@ -195,7 +195,7 @@ function createStore(pool, seedFactory) {
       // accounts, messages, documents, contacts or optimistic-write snapshots.
       const result = await pool.query(`SELECT
         (SELECT COALESCE(jsonb_agg(data || jsonb_build_object('slug',slug) ORDER BY slug),'[]'::jsonb) FROM imf_projects) AS projects,
-        (SELECT COALESCE(jsonb_agg(jsonb_build_object('project',project_slug,'lot',data || jsonb_build_object('ref',ref,'status',status)) ORDER BY project_slug,ref),'[]'::jsonb) FROM imf_lots) AS lots,
+        (SELECT COALESCE(jsonb_agg(jsonb_build_object('project',project_slug,'lot',(data - 'reservationNote') || jsonb_build_object('ref',ref,'status',status)) ORDER BY project_slug,ref),'[]'::jsonb) FROM imf_lots) AS lots,
         (SELECT COALESCE(jsonb_agg(data ORDER BY position,id),'[]'::jsonb) FROM imf_records WHERE collection='news') AS news,
         (SELECT data FROM imf_records WHERE collection='settings' AND id='company') AS company,
         (SELECT revision FROM imf_revision WHERE id=1) AS revision`);
@@ -265,6 +265,9 @@ function createStore(pool, seedFactory) {
     const snapshot=snapshots.get(data);
     if (!snapshot) throw new Error('Rechargez les données avant de les modifier.');
     const next=flatten(data);
+    const removedMediaIds=[...snapshot.rows.imf_records.entries()]
+      .filter(([key,row])=>row.collection==='uploads' && !next.imf_records.has(key) && /^[a-f0-9-]{36}$/.test(row.id))
+      .map(([,row])=>row.id);
     const client=await pool.connect();
     try {
       await client.query('BEGIN');
@@ -284,6 +287,7 @@ function createStore(pool, seedFactory) {
         if (!data.uploads?.some(u=>u.id===media.id)) throw new Error('Métadonnées du fichier manquantes.');
         await client.query('INSERT INTO imf_media(id,bytes) VALUES($1,$2)',[media.id,media.bytes]);
       }
+      for (const id of removedMediaIds) await client.query('DELETE FROM imf_media WHERE id=$1',[id]);
       const updated=await client.query('UPDATE imf_revision SET revision=revision+1 WHERE id=1 RETURNING revision');
       await client.query('COMMIT');
       cache=undefined;

@@ -1,3 +1,4 @@
+import { PLAN_ROTATION } from '@/lib/plan-rotation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -46,7 +47,7 @@ export default async function BuildingPlanPage({ params }: { params: Promise<{ l
       <p className="eyebrow mt-8">La Gloire · {t.title}</p>
       <h1 className="h-display mt-3 text-3xl sm:text-5xl">{plan.label[locale]}</h1>
       <p className="mb-7 mt-4 text-sm text-ink/60">{t.hint}</p>
-      <PlanViewer image={`${base}.webp`} pdf={`${base}.pdf`} alt={`La Gloire · ${plan.label[locale]}`} labels={getDictionary(locale).plan} exists={publicFileExists(`${base}.webp`)} brand={{ project: 'Résidence La Gloire', document: plan.label[locale], phone: SITE.office.phones[0], email: SITE.email, website: SITE.url }} />
+      <PlanViewer image={`${base}.webp`} pdf={`${base}.pdf`} alt={`La Gloire · ${plan.label[locale]}`} labels={getDictionary(locale).plan} rotation={PLAN_ROTATION[locale]} exists={publicFileExists(`${base}.webp`)} brand={{ project: 'Résidence La Gloire', document: plan.label[locale], phone: SITE.office.phones[0], email: SITE.email, website: SITE.url }} />
       <nav aria-label={t.back} className="mt-8 flex flex-wrap gap-3">
         {LA_GLOIRE_DOCUMENTS.map(item => <Link key={item.file} href={`/${locale}/projets/residence-la-gloire/plans/${item.file}`} aria-current={item.file === document ? 'page' : undefined} className={`rounded-lg border px-4 py-3 text-sm ${item.file === document ? 'border-gold-500 bg-white text-gold-700' : 'border-ink/10 hover:border-gold-500'}`}>{item.label[locale]}</Link>)}
       </nav>

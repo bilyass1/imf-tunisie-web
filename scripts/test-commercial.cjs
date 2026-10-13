@@ -14,20 +14,21 @@ let db = { users: [{id:'staff',role:'admin',email:'staff@example.test'}], projec
 let session = {sub:'staff'};
 let persistent = true;
 const mediaBytes=new Map();
-const database = {readDb:async()=>structuredClone(db),writeCommercialDb:async(value,media)=>{db=value;if(media)mediaBytes.set(media.id,media.bytes);},isPersistent:()=>persistent,readMedia:async id=>mediaBytes.get(id),getMediaMetadata:async id=>db.uploads?.find(file=>file.id===id)};
+const rateChecks=[];
+const database = {readDb:async()=>structuredClone(db),writeCommercialDb:async(value,media)=>{for(const file of db.uploads??[])if(!(value.uploads??[]).some(next=>next.id===file.id))mediaBytes.delete(file.id);db=value;if(media)mediaBytes.set(media.id,media.bytes);},isPersistent:()=>persistent,readMedia:async id=>mediaBytes.get(id),getMediaMetadata:async id=>db.uploads?.find(file=>file.id===id)};
 function load(relative) {
   const module = {exports:{}};
   const code = ts.transpileModule(fs.readFileSync(path.join(root,relative),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
-  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='./rate-limit'?{allowRequest:()=>true}:id==='./project-presentation'?{projectPresentation:project=>project}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
-  vm.runInNewContext(code,{module,exports:module.exports,require:localRequire,Buffer,File,Response,FormData,structuredClone,process:{cwd:()=>temp,env:{}},console},{filename:relative});
+  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='server-only'?{}:id==='./lot-commercial'?load('src/lib/lot-commercial.ts'):id==='./client-deletion'?load('src/lib/client-deletion.ts'):id==='./payments'?load('src/lib/payments.ts'):id==='./amenities'?load('src/lib/amenities.ts'):id==='./rate-limit'?{allowRequest:(...args)=>{rateChecks.push(args);return true;}}:id==='./project-presentation'?{projectPresentation:project=>project}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
+  vm.runInNewContext(code,{module,exports:module.exports,require:localRequire,Buffer,File,Response,FormData,structuredClone,Date,Intl,process:{cwd:()=>temp,env:{}},console},{filename:relative});
   return module.exports;
 }
 const {commercialAction} = load('src/lib/commercial-actions.ts');
-const {clientProperties,clientPaymentsForProperty,selectedClientProperty,resolvedClientProperties}=load('src/lib/client-properties.ts');
+const {clientProperties,clientPaymentsForProperty,clientConstructionPhotos,selectedClientProperty,resolvedClientProperties}=load('src/lib/client-properties.ts');
 const {sendChatMessage} = load('src/lib/chat-actions.ts');
 async function chat(values) {const form=new FormData();for(const [k,v] of Object.entries(values)) form.set(k,v);return sendChatMessage({ok:false,message:''},form);}
 const {GET} = load('src/app/api/media/[id]/route.ts');
-async function act(values) {const form=new FormData(); for(const [k,v] of Object.entries(values)) form.set(k,v); return commercialAction({ok:false,message:''},form);}
+async function act(values) {const form=new FormData(); for(const [k,v] of Object.entries(values)) { if(Array.isArray(v)) v.forEach(item=>form.append(k,item)); else form.set(k,v); } return commercialAction({ok:false,message:''},form);}
 const property={operation:'property',project:'residence',lot:'A1',progress:'65',status:'reserved'};
 const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id})});
 (async()=>{
@@ -63,12 +64,82 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal(db.projects[0].progressPercent,74);
   assert.equal(db.projects[0].progress[1].percent,76);
   assert.deepEqual(db.projects[0].amenities,['garden']);
-  const client={operation:'client',project:'residence',lot:'A1',name:'Test Client',email:'client@example.test',password:'test-password-1234'};
+  const {displayedAmenities,parseCustomAmenities} = load('src/lib/amenities.ts');
+  const wifi={id:'custom-wifi',icon:'security',label:{fr:'Wi-Fi haut débit',en:'High-speed Wi-Fi',ar:'واي فاي عالي السرعة'}};
+  const customContent={...content,customAmenities:JSON.stringify([wifi]),amenities:['garden',wifi.id]};
+  session=null;
+  assert.equal((await act(customContent)).ok,false,'Anonymous users cannot publish custom amenities');
+  session={sub:'staff'};
+  assert.equal((await act(customContent)).ok,true);
+  assert.equal(JSON.stringify(db.projects[0].customAmenities),JSON.stringify([wifi]));
+  assert.equal(db.projects[0].amenities.join(','),'garden,custom-wifi');
+  for(const locale of ['fr','en','ar']) {
+    const badges=displayedAmenities(db.projects[0],locale,{garden:'Garden'});
+    assert.equal(badges[1].label,wifi.label[locale]);
+    assert.equal(badges[1].icon,'security');
+  }
+  const validSnapshot=JSON.stringify(db);
+  for(const invalid of ['{','null','[null]',JSON.stringify([wifi,wifi]),JSON.stringify([{...wifi,icon:'__proto__'}]),JSON.stringify([{...wifi,id:'parking'}]),JSON.stringify([{...wifi,label:{fr:'   '}}]),JSON.stringify([{...wifi,label:{fr:'x'.repeat(121)}}]),JSON.stringify(Array.from({length:21},(_,i)=>({...wifi,id:`custom-${i}`})))]) {
+    assert.equal((await act({...customContent,customAmenities:invalid})).ok,false,'Invalid custom definitions must be rejected');
+    assert.equal(JSON.stringify(db),validSnapshot,'Invalid forms must not write partial changes');
+  }
+  assert.equal((await act({...customContent,amenities:['custom-another-project']})).ok,false,'Custom selections must belong to the current project');
+  assert.equal(JSON.stringify(db),validSnapshot);
+  assert.equal(parseCustomAmenities(JSON.stringify([{...wifi,label:{fr:' Wi-Fi ',en:'',ar:''}}]))[0].label.ar,'Wi-Fi','Missing translations use the French label');
+  assert.equal((await act({...content,amenities:[wifi.id]})).ok,true,'Older forms preserve stored custom definitions');
+  assert.equal(db.projects[0].customAmenities[0].id,wifi.id);
+  assert.equal((await act({...customContent,customAmenities:JSON.stringify([{...wifi,label:{...wifi.label,fr:'Internet rapide'}}]),amenities:[]})).ok,true,'Definitions can be edited and deselected');
+  assert.equal(db.projects[0].customAmenities[0].label.fr,'Internet rapide');
+  assert.equal(db.projects[0].amenities.length,0);
+  assert.equal((await act({...content,customAmenities:'[]'})).ok,true,'Custom definitions can be removed');
+  assert.equal(db.projects[0].customAmenities.length,0);
+  assert.equal(db.projects[0].amenities.join(','),'garden');
+  console.log('PASS: custom amenity publication, translation/icon rendering, edits, deselection, removal, fallback languages, limits, authorization and invalid-form rollback.');
+  const sale={operation:'lot-status',project:'residence',lot:'A2',status:'sold'};
+  let beforeSale=JSON.stringify(db);
+  assert.equal((await act(sale)).ok,false,'A sale requires a linked client');assert.equal(JSON.stringify(db),beforeSale);
+  assert.equal((await act({...sale,clientMode:'existing',client:'staff'})).ok,false,'An admin is not a client');
+  const newSale={...sale,clientMode:'new',name:'Acheteur A2',email:'a2@example.test',password:'secure-password-1234'};
+  assert.equal((await act({...newSale,password:'short'})).ok,false);assert.equal(JSON.stringify(db),beforeSale);
+  assert.equal((await act(newSale)).ok,true);
+  const buyerA2=db.users.find(user=>user.email==='a2@example.test');
+  assert.equal(db.projects[0].lots[1].status,'sold');assert.equal(clientProperties(buyerA2)[0].lotRef,'A2');
+  for(const status of ['available','reserved','unconfirmed']) {
+    const snapshot=JSON.stringify(db);
+    for(const statusPin of ['', '22201010','22201011x']) {
+      assert.equal((await act({...sale,status,statusPin})).ok,false);assert.equal(JSON.stringify(db),snapshot,'Wrong PIN has no partial effects');
+      assert.equal((await act({operation:'property',project:'residence',lot:'A2',status,statusPin,progress:'30'})).ok,false);assert.equal(JSON.stringify(db),snapshot,'Progress editing cannot bypass the sold gate');
+    }
+  }
+  assert.equal((await act({...sale,status:'reserved',statusPin:'22201011',reservationNote:'Réservé pour A2'})).ok,true);
+  assert.equal(db.projects[0].lots[1].reservationNote,'Réservé pour A2');
+  assert.equal(resolvedClientProperties(db.users.find(user=>user.id===buyerA2.id),db.projects)[0].lot.status,'reserved');
+  assert.equal((await act({...sale,status:'reserved',reservationNote:'x'.repeat(2001)})).ok,false);
+  assert.equal((await act({...sale,status:'sold'})).ok,true);
+  assert.equal(db.projects[0].lots[1].reservationNote,undefined);
+  // Account creation and all selected apartment statuses commit together.
+  db.projects.push({slug:'multi',lots:[{ref:'M1',status:'available'},{ref:'M2',status:'available'},{ref:'M3',status:'sold'},{ref:'M4',status:'available'}],gallery:[]});
+  const multi={operation:'client',name:'Client multiple',email:'multi@example.test',password:'secure-password-1234',properties:JSON.stringify([{projectSlug:'multi',lotRef:'M1',status:'sold'},{projectSlug:'multi',lotRef:'M2',status:'reserved',reservationNote:'Note privée'}])};
+  assert.equal((await act({...multi,properties:JSON.stringify([{projectSlug:'multi',lotRef:'M1',status:'sold'},{projectSlug:'residence',lotRef:'A2',status:'sold'}])})).ok,false);
+  assert.equal(db.projects.at(-1).lots[0].status,'available');assert(!db.users.some(user=>user.email===multi.email));
+  assert.equal((await act(multi)).ok,true);
+  const multiOwner=db.users.find(user=>user.email===multi.email);
+  assert.equal(clientProperties(multiOwner).length,2);assert.equal(db.projects.at(-1).lots[0].status,'sold');assert.equal(db.projects.at(-1).lots[1].status,'reserved');assert.equal(db.projects.at(-1).lots[1].reservationNote,'Note privée');
+  const oldSold={operation:'client-property-add',client:multiOwner.id,project:'multi',lot:'M3',status:'reserved'};
+  assert.equal((await act(oldSold)).ok,false);assert.equal(clientProperties(db.users.find(user=>user.id===multiOwner.id)).length,2);
+  assert.equal((await act({...oldSold,statusPin:'22201011'})).ok,true);
+  const lateBuyer={operation:'client',name:'Acheteur existant',email:'legacy@example.test',password:'secure-password-1234',properties:JSON.stringify([{projectSlug:'multi',lotRef:'M4',status:'reserved'}])};
+  db.projects.at(-1).lots[3].status='sold';
+  assert.equal((await act(lateBuyer)).ok,false);assert(!db.users.some(user=>user.email===lateBuyer.email));
+  assert.equal((await act({...lateBuyer,statusPin:'22201011'})).ok,true);
+  assert(rateChecks.some(([scope,,limit])=>scope==='commercial-status-pin'&&limit===5));
+  console.log('PASS: atomic client creation with multiple apartment statuses, private reservation notes, mandatory buyer, sold PIN protection through every commercial entry point and live dossier status synchronization.');
+  const client={operation:'client',project:'residence',lot:'A1',status:'reserved',name:'Test Client',email:'client@example.test',password:'test-password-1234'};
   assert.equal((await act(client)).ok,true);
   const owner=db.users.find(u=>u.email===client.email);
   assert.notEqual(owner.passwordHash,client.password); assert.equal(await bcrypt.compare(client.password,owner.passwordHash),true);
   assert.equal(JSON.stringify(clientProperties(owner)),JSON.stringify([{projectSlug:'residence',lotRef:'A1'}]));
-  const addProperty={operation:'client-property-add',client:owner.id,project:'second-residence',lot:'B1'};
+  const addProperty={operation:'client-property-add',client:owner.id,project:'second-residence',lot:'B1',status:'reserved'};
   assert.equal((await act(addProperty)).ok,true);
   assert.equal((await act(addProperty)).ok,false);
   assert.equal(JSON.stringify(clientProperties(db.users.find(u=>u.id===owner.id))),JSON.stringify([{projectSlug:'residence',lotRef:'A1'},{projectSlug:'second-residence',lotRef:'B1'}]));
@@ -80,6 +151,76 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal(clientPaymentsForProperty(db.users.find(u=>u.id===owner.id),{projectSlug:'residence',lotRef:'A1'}).length,1);
   assert.equal(clientPaymentsForProperty(db.users.find(u=>u.id===owner.id),{projectSlug:'second-residence',lotRef:'B1'}).length,0);
   assert.equal((await act({operation:'client-property-primary',client:owner.id,project:'residence',lot:'A1'})).ok,true);
+  const {paymentToday,paymentSummary,parsePaymentAmount,validPaymentDate}=load('src/lib/payments.ts');
+  assert.equal(paymentToday(new Date('2026-10-13T23:30:00Z')),'2026-10-14','Payment dates use Tunis time');
+  assert.equal(paymentSummary([{amount:0.1,paid:true},{amount:0.2,paid:false}]).remaining,0.2);
+  assert.equal(paymentSummary([{amount:0.1,paid:true},{amount:0.2,paid:false}]).total,0.3);
+  assert.equal(parsePaymentAmount('12,345'),12.345);
+  assert(validPaymentDate('2028-02-29'));assert(!validPaymentDate('2026-02-29'));
+  const schedule={operation:'payment-create',client:owner.id,project:'residence',lot:'A1',paymentLabelFr:'Premier versement',paymentLabelEn:'First instalment',paymentLabelAr:'القسط الأول',dueDate:'2026-10-20',amount:'1250.125',paymentStatus:'pending'};
+  session=null;assert.equal((await act(schedule)).ok,false);
+  session={sub:owner.id};assert.equal((await act(schedule)).ok,false,'Clients cannot modify their own schedule');
+  session={sub:'staff'};
+  assert.equal((await act(schedule)).ok,false,'New schedules require the apartment total first');
+  assert.equal((await act({operation:'payment-total',client:owner.id,project:'residence',lot:'A1',totalAmount:'5000'})).ok,true);
+  assert.equal((await act({operation:'payment-total',client:owner.id,project:'second-residence',lot:'B1',totalAmount:'1000'})).ok,true);
+  assert.equal(db.projects[0].lots[0].price,undefined,'Client contract total must not change the public apartment price');
+  assert.equal((await act({...schedule,client:'missing'})).ok,false);
+  assert.equal((await act({...schedule,lot:'A2'})).ok,false,'Cannot assign a schedule to an unrelated apartment');
+  assert.equal((await act(schedule)).ok,true);
+  const created=db.users.find(u=>u.id===owner.id).payments.at(-1);
+  assert.equal(created.amount,1250.125);assert.equal(created.projectSlug,'residence');assert.equal(created.lotRef,'A1');assert.equal(created.paid,false);
+  assert.equal((await act({...schedule,project:'second-residence',lot:'B1',paymentLabelFr:'Deuxième bien',paymentLabelEn:'',paymentLabelAr:'',amount:'300.001'})).ok,true);
+  const secondSchedule=db.users.find(u=>u.id===owner.id).payments.at(-1);
+  assert.equal(secondSchedule.label.ar,'Deuxième bien');
+  assert.equal(clientPaymentsForProperty(db.users.find(u=>u.id===owner.id),{projectSlug:'second-residence',lotRef:'B1'}).length,1);
+  const editSchedule={...schedule,operation:'payment-update',payment:created.id,paymentStatus:'paid',paidAt:paymentToday(),amount:'1260.125',paymentLabelFr:'Versement confirmé'};
+  assert.equal((await act(editSchedule)).ok,true);
+  let edited=db.users.find(u=>u.id===owner.id).payments.find(p=>p.id===created.id);
+  assert.equal(edited.paid,true);assert.equal(edited.paidAt,paymentToday());assert.equal(edited.amount,1260.125);
+  const scheduleSnapshot=JSON.stringify(db);
+  for(const invalid of [{amount:'0'},{amount:'-10'},{amount:'NaN'},{amount:'1e3'},{amount:'12.1234'},{amount:'1000000001'},{dueDate:'2026-02-30'},{dueDate:'0000-01-01'},{paymentLabelFr:''},{paymentStatus:'invalid'},{paidAt:''},{paidAt:'9999-01-01'},{paidAt:'2026-02-30'},{payment:'missing'},{project:'second-residence',lot:'B1'}]) {
+    assert.equal((await act({...editSchedule,...invalid})).ok,false,'Invalid schedule modifications must fail');
+    assert.equal(JSON.stringify(db),scheduleSnapshot,'Invalid schedule must not change stored amounts or other data');
+  }
+  assert.equal((await act({...editSchedule,paymentStatus:'pending',paidAt:''})).ok,true);
+  edited=db.users.find(u=>u.id===owner.id).payments.find(p=>p.id===created.id);
+  assert.equal(edited.paid,false);assert.equal(edited.paidAt,undefined,'Unmarking paid clears the payment date');
+  const legacyPayment=db.users.find(u=>u.id===owner.id).payments.find(p=>p.id==='pay-1');delete legacyPayment.projectSlug;delete legacyPayment.lotRef;
+  assert.equal((await act({...schedule,operation:'payment-update',payment:'pay-1',amount:'1000.005',dueDate:'2026-10-22'})).ok,true,'Legacy primary-apartment payments remain editable');
+  assert.equal(db.users.find(u=>u.id===owner.id).payments.find(p=>p.id==='pay-1').lotRef,'A1');
+  const ordered=clientPaymentsForProperty(db.users.find(u=>u.id===owner.id),{projectSlug:'residence',lotRef:'A1'});
+  assert.equal(ordered[0].id,created.id,'Client schedules are sorted by due date');
+  console.log('PASS: payment creation/update, client and apartment ownership, paid dates, millime precision, calendar validation, invalid-write rollback, legacy schedules and Tunis timezone.');
+  const {paymentPaidAmount,clientPaymentTotal,clientPaymentSummary}=load('src/lib/payments.ts');
+  const receiptForm={operation:'payment-receipt-create',client:owner.id,project:'residence',lot:'A1',payment:created.id,receiptAmount:'300.001',receiptDate:paymentToday(),receiptReference:'Virement 1'};
+  session={sub:owner.id};assert.equal((await act(receiptForm)).ok,false);
+  session={sub:'staff'};
+  assert.equal((await act(receiptForm)).ok,true);
+  let withReceipts=db.users.find(u=>u.id===owner.id).payments.find(p=>p.id===created.id);
+  assert.equal(withReceipts.paid,false);assert.equal(paymentPaidAmount(withReceipts),300.001);
+  const firstReceipt=withReceipts.receipts[0];
+  assert.equal((await act({...receiptForm,receiptAmount:'960.124',receiptReference:'Virement 2'})).ok,true);
+  withReceipts=db.users.find(u=>u.id===owner.id).payments.find(p=>p.id===created.id);
+  assert.equal(withReceipts.paid,true);assert.equal(paymentPaidAmount(withReceipts),1260.125);assert.equal(withReceipts.receipts.length,2);
+  const total=clientPaymentTotal(db.users.find(u=>u.id===owner.id),{projectSlug:'residence',lotRef:'A1'});
+  assert.equal(total,5000);
+  assert.equal(paymentSummary(clientPaymentsForProperty(db.users.find(u=>u.id===owner.id),{projectSlug:'residence',lotRef:'A1'}),total).remaining,3739.875);
+  const receiptSnapshot=JSON.stringify(db);
+  for(const invalid of [{receiptAmount:'0'},{receiptAmount:'0.001'},{receiptAmount:'-1'},{receiptDate:'2026-02-30'},{receiptDate:'9999-01-01'},{receiptReference:'x'.repeat(161)},{project:'second-residence',lot:'B1'},{payment:'missing'}]) {
+    assert.equal((await act({...receiptForm,...invalid})).ok,false,'Overpayments and invalid receipts must be rejected');
+    assert.equal(JSON.stringify(db),receiptSnapshot);
+  }
+  assert.equal((await act({...receiptForm,operation:'payment-receipt-update',receipt:firstReceipt.id,receiptAmount:'250.001'})).ok,true);
+  withReceipts=db.users.find(u=>u.id===owner.id).payments.find(p=>p.id===created.id);
+  assert.equal(withReceipts.paid,false);assert.equal(withReceipts.paidAt,undefined);assert.equal(paymentPaidAmount(withReceipts),1210.125);
+  assert.equal((await act({...editSchedule,amount:'1'})).ok,false,'An instalment cannot fall below its recorded payments');
+  assert.equal((await act({...receiptForm,operation:'payment-receipt-update',receipt:'missing',receiptAmount:'250'})).ok,false);
+  assert.equal((await act({...schedule,amount:'5000'})).ok,false,'Scheduled instalments cannot exceed the apartment total');
+  assert.equal((await act({operation:'payment-total',client:owner.id,project:'residence',lot:'A1',totalAmount:'100'})).ok,false,'Contract total cannot fall below planned instalments');
+  assert.equal(clientPaymentSummary(db.users.find(u=>u.id===owner.id),db.projects).total,6000,'Each apartment has its own total');
+  assert.equal(clientPaymentSummary(db.users.find(u=>u.id===owner.id),db.projects).remaining,4789.875);
+  console.log('PASS: multiple partial receipts, full settlement, corrections, independent apartment totals, outstanding balances, overpayment/overplanning protection and authorization.');
   assert.equal((await act(client)).ok,false);
   assert.equal((await act({...client,email:'other@example.test'})).ok,false);
   const contract={operation:'upload',kind:'contract',client:owner.id,label:'Contrat test',file:new File(['%PDF-1.4\n%%EOF'],'test.pdf',{type:'application/pdf'})};
@@ -93,19 +234,27 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   session={sub:owner.id}; assert.equal((await media(pdfId)).status,200);
   assert.equal((await act(property)).ok,false);
   db.users.push({id:'other',role:'client',projectSlug:'residence',lotRef:'A2',email:'other@example.test'});
+  assert.equal((await act({...editSchedule,client:'other',lot:'A2'})).ok,false,'Payment ids are scoped to their client');
   session={sub:'staff'};
   assert.equal((await act({...addProperty,client:'other'})).ok,false);
   session={sub:'other'}; assert.equal((await media(pdfId)).status,404);
   session={sub:'staff'};
   const bytes=await sharp({create:{width:4,height:4,channels:3,background:'#bbaa77'}}).png().toBuffer();
-  const photo={operation:'upload',kind:'construction',project:'residence',lot:'A1',label:'Chantier',file:new File([bytes],'photo.png',{type:'image/png'})};
+  const photo={operation:'upload',kind:'construction',client:owner.id,constructionProperty:'0',project:'residence',lot:'A1',label:'Chantier',file:new File([bytes],'photo.png',{type:'image/png'})};
+  const photoSnapshot=JSON.stringify(db);
+  for(const invalid of [{client:''},{client:'missing'},{client:'staff'},{constructionProperty:''},{constructionProperty:'99'},{constructionProperty:'-1'},{constructionProperty:'0.5'}]){assert.equal((await act({...photo,...invalid})).ok,false);assert.equal(JSON.stringify(db),photoSnapshot);}
   assert.equal((await act(photo)).ok,true); const privateId=db.uploads.at(-1).id;
   session={sub:'other'}; assert.equal((await media(privateId)).status,404);
   session={sub:owner.id}; assert.equal((await media(privateId)).status,200);
-  session={sub:'staff'}; assert.equal((await act({...photo,lot:''})).ok,true); const sharedId=db.uploads.at(-1).id;
-  session={sub:'other'}; assert.equal((await media(sharedId)).status,200);
+  assert.equal(db.uploads.at(-1).clientId,owner.id);assert.equal(db.uploads.at(-1).public,false);
+  assert.equal(db.projects[0].lots[0].constructionPhotos?.length??0,0,'A recipient photo must not be added to shared project/lot photos');
+  session=null;assert.equal((await media(privateId)).status,404);
+  session={sub:'staff'};assert.equal((await media(privateId)).status,200);
+  assert.equal((await act({...photo,constructionProperty:'all'})).ok,true);const generalPhotoId=db.uploads.at(-1).id;
+  session={sub:'other'};assert.equal((await media(generalPhotoId)).status,404);
+  session={sub:owner.id};assert.equal((await media(generalPhotoId)).status,200);
   session={sub:'staff'};
-  assert.equal((await act({...photo,project:'second-residence',lot:'B1',label:'Deuxième chantier'})).ok,true);
+  assert.equal((await act({...photo,constructionProperty:'1',project:'second-residence',lot:'B1',label:'Deuxième chantier'})).ok,true);
   const secondPrivateId=db.uploads.at(-1).id;
   session={sub:owner.id}; assert.equal((await media(secondPrivateId)).status,200);
   session={sub:'other'}; assert.equal((await media(secondPrivateId)).status,404);
@@ -113,9 +262,18 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   const removeProperty={operation:'client-property-remove',client:owner.id,project:'second-residence',lot:'B1',confirm:'yes'};
   assert.equal((await act({...removeProperty,confirm:''})).ok,false);
   assert.equal((await act(removeProperty)).ok,true);
-  session={sub:owner.id}; assert.equal((await media(secondPrivateId)).status,404);
+  session={sub:owner.id};assert.equal((await media(secondPrivateId)).status,200,'A client-directed photo remains private to its recipient after property removal');
+  assert(!clientConstructionPhotos(db.users.find(u=>u.id===owner.id),{projectSlug:'residence',lotRef:'A1'}).some(photo=>photo.src===`/api/media/${secondPrivateId}`),'Property-specific photos are shown only under the selected property');
   session={sub:'staff'};
   assert.equal((await act({...addProperty,client:'other'})).ok,true);
+  session={sub:'other'};assert.equal((await media(secondPrivateId)).status,404,'Another owner of the apartment cannot access the former client’s private photo');session={sub:'staff'};
+  const legacyPhotoId='11111111-1111-4111-8111-111111111111';
+  db.uploads.push({id:legacyPhotoId,mime:'image/png',name:'legacy.png',public:false});mediaBytes.set(legacyPhotoId,bytes);db.projects[0].constructionPhotos=[{src:`/api/media/${legacyPhotoId}`,caption:progressLabel('Ancienne photo partagée')}];
+  session={sub:owner.id};assert.equal((await media(legacyPhotoId)).status,200);session={sub:'other'};assert.equal((await media(legacyPhotoId)).status,200);session=null;assert.equal((await media(legacyPhotoId)).status,404);session={sub:'staff'};
+  db.users.push({id:'no-property',role:'client',email:'unlinked@example.test',name:'Unlinked'});
+  assert.equal((await act({...photo,client:'no-property',constructionProperty:'all'})).ok,true);const noPropertyPhoto=db.uploads.at(-1).id;
+  session={sub:'no-property'};assert.equal((await media(noPropertyPhoto)).status,200);session={sub:owner.id};assert.equal((await media(noPropertyPhoto)).status,404);session={sub:'staff'};
+  console.log('PASS: client-selected construction photos, private owner/admin access, linked/general destinations, recipient validation, property isolation and legacy shared photos.');
   assert.equal((await act(addProperty)).ok,false);
   assert.equal((await act({...addProperty,lot:'B2',status:'invalid'})).ok,false);
   assert.equal((await act({...addProperty,lot:'B2',status:'sold'})).ok,true);
@@ -228,4 +386,31 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   console.log('PASS: client → commercial → client conversation, recipient spoof protection, anonymous rejection, empty/oversize validation and storage failure.');
   console.log('PASS: client edits, uniqueness, credential preservation, sent-message edits, client reply protection, document removal/restoration and access revocation.');
   console.log('PASS: commercial authorization, client creation, password hashing, validation, property progress/status, contracts, private/public photo access, messages and company updates.');
+  const {validClientDeletionPin,deleteClientDossier}=load('src/lib/client-deletion.ts');
+  assert.equal(validClientDeletionPin('22201011'),true);
+  assert.equal(validClientDeletionPin('22201010'),false);
+  assert.equal(validClientDeletionPin('22201011x'),false);
+  const sharedFixture={users:[{id:'target',role:'client',documents:[{href:`/api/media/${pdfId}`}]},{id:'peer',role:'client',documents:[{href:`/api/media/${pdfId}`}]}],projects:[],news:[],uploads:[{id:pdfId,clientId:'target',public:false}]};
+  deleteClientDossier(sharedFixture,'target');assert.equal(sharedFixture.uploads.length,1,'Shared references must protect file bytes used by another dossier');
+  const removeClient={operation:'client-delete',client:owner.id,deletePin:'22201011',confirm:'yes'};
+  const deletionSnapshot=JSON.stringify(db);
+  for(const identity of [null,{sub:owner.id},{sub:'missing'}]) {session=identity;assert.equal((await act(removeClient)).ok,false);assert.equal(JSON.stringify(db),deletionSnapshot);}
+  session={sub:'staff'};
+  for(const invalid of [{deletePin:''},{deletePin:'22201010'},{deletePin:'22201011x'},{confirm:''},{client:'staff'},{client:'missing'}]) {assert.equal((await act({...removeClient,...invalid})).ok,false);assert.equal(JSON.stringify(db),deletionSnapshot);}
+  const accountBefore=db.users.find(user=>user.id===owner.id);
+  accountBefore.archivedDocuments.push({id:'archived-copy',href:`/api/media/${pdfId}`,label:progressLabel('Copie archivée')});
+  const publicBefore=JSON.stringify(db.projects);
+  const otherBefore=JSON.stringify(db.users.filter(user=>user.id!==owner.id));
+  assert.equal((await act(removeClient)).ok,true);
+  assert.equal(rateChecks.at(-1)[2],5,'Client deletion PIN checks are rate-limited more strictly');
+  assert(!db.users.some(user=>user.id===owner.id));
+  assert(!db.uploads.some(file=>file.clientId===owner.id));
+  for(const id of [pdfId,privateId,generalPhotoId,secondPrivateId])assert(!mediaBytes.has(id),'All exclusive client-file bytes are removed');
+  assert.equal(JSON.stringify(db.projects),publicBefore,'Deleting a client must not delete apartments or change sale statuses');
+  assert.equal(JSON.stringify(db.users),otherBefore,'Other accounts and dossiers are preserved');
+  assert(mediaBytes.has(publicId));assert(mediaBytes.has(noPropertyPhoto));assert(mediaBytes.has(legacyPhotoId));
+  session={sub:owner.id};assert.equal((await media(pdfId)).status,404);assert.equal((await media(privateId)).status,404);
+  assert.equal((await chat({body:'Account deleted'})).ok,false,'Old sessions cannot use client actions after deletion');
+  session={sub:'staff'};assert.equal((await act(removeClient)).ok,false,'Deleting the same dossier twice is rejected');
+  console.log('PASS: PIN-gated client dossier deletion, admin-only authorization, invalid PIN rollback, documents/archive/photos/payments removal, file cleanup, revoked access and preservation of other accounts/projects.');
 })().catch(error=>{console.error(error);process.exitCode=1;}).finally(()=>fs.rmSync(temp,{recursive:true,force:true}));

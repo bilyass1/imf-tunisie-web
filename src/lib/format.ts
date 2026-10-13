@@ -16,9 +16,9 @@ export function formatArea(value: number | undefined, locale: Locale): string {
   }).format(value)} m²`;
 }
 
-export function formatMoney(value: number | undefined, locale: Locale): string {
+export function formatMoney(value: number | undefined, locale: Locale, maximumFractionDigits = 0): string {
   if (value === undefined || value === null) return '—';
-  return `${new Intl.NumberFormat(intlLocale[locale], { maximumFractionDigits: 0 }).format(value)} TND`;
+  return `${new Intl.NumberFormat(intlLocale[locale], { maximumFractionDigits }).format(value)} TND`;
 }
 
 export function formatDate(iso: string, locale: Locale): string {

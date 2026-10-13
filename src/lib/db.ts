@@ -23,6 +23,7 @@ import { buildSeed } from './seed';
 import { applyYassamineA5aFacts, includeYassamineApartments } from './yassamine-catalog';
 import { includeYassamineA6Lots } from './yassamine-a6';
 import { includeYassamineA5bLots } from './yassamine-a5b';
+import { changeLotStatus } from './lot-commercial';
 import { projectPresentation } from './project-presentation';
 import { getStore, type MediaWrite } from './postgres-store.cjs';
 
@@ -130,6 +131,9 @@ export async function writeCommercialDb(data: Database, media?: MediaWrite): Pro
   if (!isPersistent()) throw new Error('Stockage durable indisponible.');
   const before = fs.statSync(dbFile);
   if (localVersions.get(data) !== `${before.mtimeMs}/${before.size}`) throw new Error('Les données ont changé. Réessayez.');
+  const previousUploads: NonNullable<Database['uploads']> = JSON.parse(fs.readFileSync(dbFile,'utf8')).uploads ?? [];
+  const remainingMedia = new Set((data.uploads ?? []).map(file=>file.id));
+  const removedMedia = previousUploads.filter(file=>!remainingMedia.has(file.id) && /^[a-f0-9-]{36}$/.test(file.id)).map(file=>file.id);
   let mediaFile: string | undefined;
   if (media) {
     const directory=path.join(LOCAL_DIR,'uploads'); fs.mkdirSync(directory,{recursive:true});
@@ -142,6 +146,8 @@ export async function writeCommercialDb(data: Database, media?: MediaWrite): Pro
   } catch(error) { if(mediaFile) fs.rmSync(mediaFile,{force:true}); throw error; }
   const stat=fs.statSync(dbFile); cache = { data:structuredClone(data), mtime:stat.mtimeMs, size:stat.size };
   localVersions.set(data, `${stat.mtimeMs}/${stat.size}`);
+  try { for (const id of removedMedia) fs.rmSync(path.join(LOCAL_DIR,'uploads',id),{force:true}); }
+  catch { throw new Error('Le dossier est supprimé, mais le nettoyage de certains fichiers a échoué.'); }
 }
 
 export async function readMedia(id: string): Promise<Buffer | undefined> {
@@ -171,7 +177,7 @@ export const getPublicData = requestCache(async () => {
     return data;
   }
   const { projects, company, news } = await readDb();
-  return { projects, company, news };
+  return { projects: projects.map(project=>({...project,lots:project.lots.map(({reservationNote: _note,...lot})=>lot)})), company, news };
 });
 /** A small cross-instance signal for already-open public pages. */
 export async function getPublicRevision(): Promise<string> {
@@ -228,12 +234,12 @@ export function lotStats(lots: Lot[]): LotStats {
   };
 }
 
-export async function updateLotStatus(projectSlug: string, lotRef: string, status: LotStatus): Promise<boolean> {
+export async function updateLotStatus(projectSlug: string, lotRef: string, status: LotStatus, pin = '', note?: string): Promise<boolean> {
   const db = (await readDb());
   const project = db.projects.find((p) => p.slug === projectSlug);
   const lot = project?.lots.find((l) => l.ref === lotRef);
   if (!lot) return false;
-  lot.status = status;
+  changeLotStatus(db,projectSlug,lot,status,pin,note);
   (await writeDb(db));
   return true;
 }
@@ -527,26 +533,12 @@ export async function getNewsItem(slug: string) {
 /* --------------------- Jeu de démonstration ------------------------ */
 
 /**
- * Applique un jeu de statuts de démonstration (pour les présentations
- * clients). Réversible via resetLotStatuses().
+ * Legacy bulk demo entry points stay blocked to preserve client and PIN rules.
  */
-export async function applyDemoStatuses(projectSlug: string): Promise<void> {
-  const db = (await readDb());
-  const project = db.projects.find((p) => p.slug === projectSlug);
-  if (!project) return;
-  project.lots.forEach((lot, i) => {
-    const m = i % 7;
-    lot.status = m === 0 || m === 3 ? 'sold' : m === 5 ? 'reserved' : 'available';
-  });
-  (await writeDb(db));
+export async function applyDemoStatuses(_projectSlug: string): Promise<void> {
+  throw new Error('Les statuts de démonstration sont désactivés : gérez les ventes avec un compte client.');
 }
 
-export async function resetLotStatuses(projectSlug: string): Promise<void> {
-  const db = (await readDb());
-  const project = db.projects.find((p) => p.slug === projectSlug);
-  if (!project) return;
-  project.lots.forEach((lot) => {
-    lot.status = 'available';
-  });
-  (await writeDb(db));
+export async function resetLotStatuses(_projectSlug: string): Promise<void> {
+  throw new Error('La réinitialisation globale est désactivée : modifiez chaque appartement avec son contrôle PIN.');
 }

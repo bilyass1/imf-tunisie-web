@@ -121,12 +121,13 @@ async function requireAdmin() {
 }
 
 export async function updateLotStatusAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
   const projectSlug = String(formData.get('projectSlug') ?? '');
   const lotRef = String(formData.get('lotRef') ?? '');
   const status = String(formData.get('status') ?? 'available') as LotStatus;
   if(!['available','reserved','sold','unconfirmed'].includes(status)) throw new Error('Invalid status');
-  (await updateLotStatus(projectSlug, lotRef, status));
+  if(formData.has('statusPin') && !await allowRequest('commercial-status-pin',actor.sub,5,60000)) throw new Error('Trop de tentatives de PIN.');
+  (await updateLotStatus(projectSlug, lotRef, status, String(formData.get('statusPin')??''), formData.has('reservationNote')?String(formData.get('reservationNote')??''):undefined));
   revalidatePath('/', 'layout');
 }
 

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { PLAN_ROTATION } from '@/lib/plan-rotation';
 import type { Locale } from '@/i18n/config';
 import PlanViewer from './PlanViewer';
 import type { PlanLabels } from './PlanViewer';
@@ -39,7 +40,7 @@ export default function InteriorExplorer({ locale, references, labels }: { local
         <a href={`/plans/la-gloire/presentation/${reference}.pdf`} download className="mt-4 block text-xs underline underline-offset-4">{t.plan}</a>
         <p className="mt-6 text-xs leading-relaxed text-ink/50">{t.note}</p>
       </div>
-      <PlanViewer key={reference} image={`/interiors/la-gloire/${reference}.webp`} alt={`${t.apartment} ${reference} · 3D`} labels={labels} exists />
+      <PlanViewer key={reference} image={`/interiors/la-gloire/${reference}.webp`} alt={`${t.apartment} ${reference} · 3D`} labels={labels} rotation={PLAN_ROTATION[locale]} exists />
     </div>
   </div>;
 }

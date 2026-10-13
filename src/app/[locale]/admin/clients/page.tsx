@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { clientPaymentSummary } from '@/lib/payments';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
@@ -16,7 +18,8 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
   const user = await requireAdminUser(locale);
 
   const clients = (await getClients());
-  const projectNames = new Map((await getProjects()).map((p) => [p.slug, p.name]));
+  const projects = await getProjects();
+  const projectNames = new Map(projects.map((p) => [p.slug, p.name]));
 
   return (
     <PortalShell
@@ -45,13 +48,12 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
                   <th className="px-6 py-3 text-start font-semibold">{dict.admin.table.lot}</th>
                   <th className="px-6 py-3 text-end font-semibold">{dict.client.summary.paid}</th>
                   <th className="px-6 py-3 text-end font-semibold">{dict.client.summary.remaining}</th>
+                  <th className="px-6 py-3 text-start font-semibold">{dict.admin.table.actions}</th>
                 </tr>
               </thead>
               <tbody>
                 {clients.map((c) => {
-                  const payments = c.payments ?? [];
-                  const total = payments.reduce((s, p) => s + p.amount, 0);
-                  const paid = payments.filter((p) => p.paid).reduce((s, p) => s + p.amount, 0);
+                  const { paid, remaining } = clientPaymentSummary(c, projects);
                   return (
                     <tr key={c.id} className="border-t border-ink/6">
                       <td className="px-6 py-4 font-medium text-ink">{c.name}</td>
@@ -65,8 +67,9 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
                         {clientProperties(c).map(item=>projectNames.get(item.projectSlug)??item.projectSlug).join(' · ') || '—'}
                       </td>
                       <td className="px-6 py-4 font-semibold text-ink">{clientProperties(c).map(item=>item.lotRef).join(' · ') || '—'}</td>
-                      <td className="px-6 py-4 text-end text-emerald-600">{formatMoney(paid, locale)}</td>
-                      <td className="px-6 py-4 text-end text-gold-600">{formatMoney(total - paid, locale)}</td>
+                      <td className="px-6 py-4 text-end text-emerald-600">{formatMoney(paid, locale, 3)}</td>
+                      <td className="px-6 py-4 text-end text-gold-600">{formatMoney(remaining, locale, 3)}</td>
+                      <td className="px-6 py-4"><Link href={`/${locale}/admin/gestion?client=${encodeURIComponent(c.id)}#client-${c.id}`} className="text-sm font-semibold text-gold-700 underline underline-offset-4">{dict.admin.manageSchedule}</Link></td>
                     </tr>
                   );
                 })}

@@ -80,7 +80,7 @@ export default function ProjectCard({
               )}
             </>
           ) : (
-            <span className="text-ink/40">{project.status === 'delivered' ? dict.projects.sold : t(project.subtitle, locale)}</span>
+            <span className="text-ink/40">{project.slug === 'complexe-marassim' ? t(project.highlights[0], locale) : project.status === 'delivered' ? dict.projects.sold : t(project.subtitle, locale)}</span>
           )}
         </div>
 

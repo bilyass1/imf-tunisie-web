@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import { MARASSIM_PROJECT_CONTENT } from './marassim-presentation';
 import type { Activity, Contact, CrmTask, Database, Deal, Lot, Localized, Project, Room } from './types';
 import { LA_GLOIRE_LOTS, YASSAMINE_A5A_LOTS } from './lots-la-gloire';
 import { LA_GLOIRE_FOOTPRINTS, LA_GLOIRE_SITE } from './la-gloire-footprints';
@@ -135,7 +136,7 @@ const laGloire: Project = {
   year: 2026,
   deliveryLabel: L('Livraison prévue 2027', 'Delivery scheduled 2027', 'التسليم المتوقّع 2027'),
   heroImage: '/media/la-gloire/facade-sunset-1.jpg',
-  cover: '/media/la-gloire/facade-jour-1.jpg',
+  cover: '/media/la-gloire/facade-client-20261013.webp',
   gallery: [
     { src: '/media/la-gloire/facade-jour-1.jpg', caption: L('Façade principale', 'Main façade', 'الواجهة الرئيسية') },
     { src: '/media/la-gloire/facade-jour-2.jpg', caption: L('Angle sud', 'South corner', 'الزاوية الجنوبية') },
@@ -420,7 +421,6 @@ const andalous1: Project = {
 const marassim: Project = {
   slug: 'complexe-marassim',
   name: 'Complexe Marassim',
-  subtitle: L('Salle des fêtes et restaurant', 'Reception hall and restaurant', 'قاعة أفراح ومطعم'),
   city: 'Sfax',
   address: L('Sfax', 'Sfax', 'صفاقس'),
   status: 'delivered',
@@ -445,22 +445,7 @@ const marassim: Project = {
     { src: '/media/marassim/resto-2.jpg', caption: L('Espace lounge', 'Lounge area', 'فضاء الاستراحة') },
     { src: '/media/marassim/reel-1.jpg', caption: L('Complexe en exploitation', 'Complex in operation', 'المركّب قيد الاستغلال') },
   ],
-  description: L(
-    "Sortant du logement, IMF a conçu et réalisé le Complexe Marassim : une salle des fêtes, un restaurant et des espaces de réception pensés pour les grands événements sfaxiens. Volumes généreux, hall d'honneur, éclairage scénographique et parvis d'accueil composent un équipement complet, aujourd'hui en exploitation.",
-    'Moving beyond housing, IMF designed and built Complexe Marassim: a reception hall, a restaurant and event spaces conceived for large Sfax celebrations. Generous volumes, a grand hall, scenographic lighting and a welcoming forecourt make up a complete venue, now in operation.',
-    'خارج مجال السكن، صمّمت IMF وأنجزت مركّب مراسم: قاعة أفراح ومطعم وفضاءات استقبال مهيّأة للمناسبات الكبرى بصفاقس. كتل واسعة وبهو فخم وإنارة مسرحية وساحة استقبال تُكوّن مرفقًا متكاملًا قيد الاستغلال اليوم.',
-  ),
-  highlights: [
-    L('Salle des fêtes grande capacité', 'Large-capacity reception hall', 'قاعة أفراح بسعة كبيرة'),
-    L('Restaurant et espaces lounge', 'Restaurant and lounge areas', 'مطعم وفضاءات استراحة'),
-    L('Hall d’honneur et parvis', 'Grand hall and forecourt', 'بهو فخم وساحة أمامية'),
-  ],
-  specs: [
-    { label: L('Nature', 'Type', 'الطبيعة'), value: L('Équipement événementiel', 'Event venue', 'مرفق للمناسبات') },
-    { label: L('Statut', 'Status', 'الحالة'), value: L('Livré · en exploitation', 'Delivered · in operation', 'مُسلَّم · قيد الاستغلال') },
-    { label: L('Livraison', 'Delivery', 'التسليم'), value: L('2017', '2017', '2017') },
-  ],
-  amenities: ['parking', 'security', 'lift'],
+  ...MARASSIM_PROJECT_CONTENT,
   blocks: [],
   lots: [],
   mapQuery: 'Complexe Marassim, Sfax',

@@ -297,6 +297,7 @@
     "progress": "Site progress",
     "messages": "Messages",
     "noLot": "No apartment is linked to your account yet. Please contact the sales department.",
+    "paymentsEmpty": "No payment instalments have been recorded for this apartment yet.",
     "summary": {
       "paid": "Already paid",
       "remaining": "Remaining",
@@ -305,6 +306,9 @@
       "progress": "Overall progress"
     },
     "paymentsTable": {
+      "receipts": "Recorded payments",
+      "partial": "Partially paid",
+      "paidOn": "Paid on",
       "label": "Instalment",
       "due": "Date",
       "amount": "Amount",
@@ -333,6 +337,7 @@
     "team": "IMF sales department"
   },
   "admin": {
+    "manageSchedule": "Manage payment schedule",
     "title": "IMF administration",
     "dashboard": "Dashboard",
     "projects": "Projects",
@@ -367,6 +372,7 @@
     "clientsEmpty": "No client registered.",
     "saved": "Change saved.",
     "table": {
+      "actions": "Actions",
       "date": "Date",
       "name": "Name",
       "contact": "Contact",

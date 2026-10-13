@@ -1,3 +1,4 @@
+import { PLAN_ROTATION } from '@/lib/plan-rotation';
 import Link from 'next/link';
 import Image from 'next/image';
 import PropertyActions from '@/components/site/PropertySelection';
@@ -312,6 +313,7 @@ export default async function ApartmentPage({
                 pdf={planPdf}
                 alt={a5FloorSheet && !individualPlanExists ? `${dict.apartment.plan} · ${floorLabel(lot.floor, locale)} · ${lot.code}` : `${dict.apartment.plan} ${lot.code}`}
                 labels={dict.plan}
+                rotation={project.slug === 'residence-la-gloire' ? PLAN_ROTATION[locale] : undefined}
                 exists={publicFileExists(planImage)}
                 brand={planImage ? {
                   project: project.name,

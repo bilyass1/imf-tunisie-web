@@ -297,6 +297,7 @@
     "progress": "Chantier",
     "messages": "Messages",
     "noLot": "Aucun appartement n’est encore rattaché à votre compte. Contactez le service commercial.",
+    "paymentsEmpty": "Aucune échéance n’a encore été enregistrée pour cet appartement.",
     "summary": {
       "paid": "Déjà réglé",
       "remaining": "Reste à payer",
@@ -305,6 +306,9 @@
       "progress": "Avancement global"
     },
     "paymentsTable": {
+      "receipts": "Versements reçus",
+      "partial": "Partiellement réglé",
+      "paidOn": "Réglé le",
       "label": "Échéance",
       "due": "Date",
       "amount": "Montant",
@@ -333,6 +337,7 @@
     "team": "Service commercial IMF"
   },
   "admin": {
+    "manageSchedule": "Gérer l’échéancier",
     "title": "Administration IMF",
     "dashboard": "Tableau de bord",
     "projects": "Projets",
@@ -367,6 +372,7 @@
     "clientsEmpty": "Aucun client enregistré.",
     "saved": "Modification enregistrée.",
     "table": {
+      "actions": "Actions",
       "date": "Date",
       "name": "Nom",
       "contact": "Contact",

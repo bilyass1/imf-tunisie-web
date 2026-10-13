@@ -1,3 +1,4 @@
+import { clientPaymentTotal, paymentPaidAmount, paymentSummary, paymentToday } from '@/lib/payments';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
@@ -20,9 +21,8 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
   const selected=selectedClientProperty(properties,await searchParams);
   const payments=clientPaymentsForProperty(user,selected ? {projectSlug:selected.project.slug,lotRef:selected.lot.ref} : undefined);
 
-  const today = new Date().toISOString().slice(0, 10);
-  const total = payments.reduce((s, p) => s + p.amount, 0);
-  const paid = payments.filter((p) => p.paid).reduce((s, p) => s + p.amount, 0);
+  const today = paymentToday();
+  const { total, paid, remaining } = paymentSummary(payments, clientPaymentTotal(user, selected ? {projectSlug:selected.project.slug,lotRef:selected.lot.ref} : undefined, selected?.lot.price));
 
   return (
     <PortalShell
@@ -38,9 +38,9 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
       <ClientPropertyTabs locale={locale} basePath={`/${locale}/espace-client/paiements`} properties={properties} selected={selected}/>
       <div className="grid gap-4 sm:grid-cols-3">
         {[
-          { label: dict.client.summary.total, value: formatMoney(total, locale) },
-          { label: dict.client.summary.paid, value: formatMoney(paid, locale), accent: 'text-emerald-600' },
-          { label: dict.client.summary.remaining, value: formatMoney(total - paid, locale), accent: 'text-gold-600' },
+          { label: dict.client.summary.total, value: formatMoney(total, locale, 3) },
+          { label: dict.client.summary.paid, value: formatMoney(paid, locale, 3), accent: 'text-emerald-600' },
+          { label: dict.client.summary.remaining, value: formatMoney(remaining, locale, 3), accent: 'text-gold-600' },
         ].map((kpi) => (
           <div key={kpi.label} className="rounded-2xl border border-ink/8 bg-white p-6">
             <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink/40">{kpi.label}</p>
@@ -53,23 +53,31 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-ink/8 bg-white">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[620px] text-[13.5px]">
+          <table className="w-full min-w-[850px] text-[13.5px]">
             <thead>
               <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-ink/50">
                 <th className="px-6 py-3 text-start font-semibold">{dict.client.paymentsTable.label}</th>
                 <th className="px-6 py-3 text-start font-semibold">{dict.client.paymentsTable.due}</th>
                 <th className="px-6 py-3 text-end font-semibold">{dict.client.paymentsTable.amount}</th>
+                <th className="px-6 py-3 text-end font-semibold">{dict.client.summary.paid}</th>
+                <th className="px-6 py-3 text-end font-semibold">{dict.client.summary.remaining}</th>
                 <th className="px-6 py-3 text-end font-semibold">{dict.client.paymentsTable.status}</th>
               </tr>
             </thead>
             <tbody>
               {payments.map((p) => {
+                const received = paymentPaidAmount(p);
+                const lineRemaining = paymentSummary([p]).remaining;
                 const late = !p.paid && p.dueDate < today;
                 return (
                   <tr key={p.id} className="border-t border-ink/6">
-                    <td className="px-6 py-4 font-medium text-ink">{t(p.label, locale)}</td>
+                    <td className="px-6 py-4 font-medium text-ink">{t(p.label, locale)}
+                      {!!p.receipts?.length && <details className="mt-3 text-xs font-normal text-ink/60"><summary className="cursor-pointer">{dict.client.paymentsTable.receipts} ({p.receipts.length})</summary><ul className="mt-2 space-y-2">{p.receipts.map(receipt => <li key={receipt.id}>{formatDate(receipt.date, locale)} · {formatMoney(receipt.amount, locale, 3)}{receipt.reference ? ` · ${receipt.reference}` : ''}</li>)}</ul></details>}
+                    </td>
                     <td className="px-6 py-4 text-ink/60">{formatDate(p.dueDate, locale)}</td>
-                    <td className="px-6 py-4 text-end font-semibold text-ink">{formatMoney(p.amount, locale)}</td>
+                    <td className="px-6 py-4 text-end font-semibold text-ink">{formatMoney(p.amount, locale, 3)}</td>
+                    <td className="px-6 py-4 text-end text-emerald-700">{formatMoney(received, locale, 3)}</td>
+                    <td className="px-6 py-4 text-end text-gold-700">{formatMoney(lineRemaining, locale, 3)}</td>
                     <td className="px-6 py-4 text-end">
                       <span
                         className={`chip ${
@@ -83,18 +91,21 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
                         {p.paid ? <IconCheck className="h-3 w-3" /> : <IconClock className="h-3 w-3" />}
                         {p.paid
                           ? dict.client.paymentsTable.paid
-                          : late
+                          : received > 0
+                            ? `${dict.client.paymentsTable.partial}${late ? ` · ${dict.client.paymentsTable.late}` : ''}`
+                            : late
                             ? dict.client.paymentsTable.late
                             : dict.client.paymentsTable.pending}
                       </span>
+                      {p.paid && p.paidAt && <p className="mt-2 text-xs text-ink/50">{dict.client.paymentsTable.paidOn} {formatDate(p.paidAt, locale)}</p>}
                     </td>
                   </tr>
                 );
               })}
               {payments.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-ink/45">
-                    {dict.client.noLot}
+                  <td colSpan={6} className="px-6 py-12 text-center text-ink/45">
+                    {selected ? dict.client.paymentsEmpty : dict.client.noLot}
                   </td>
                 </tr>
               )}

@@ -1,3 +1,5 @@
+import type { AmenityIcon } from './amenities';
+
 export type LotStatus = 'available' | 'reserved' | 'sold' | 'unconfirmed';
 export type ProjectStatus = 'ongoing' | 'delivered' | 'upcoming';
 
@@ -5,6 +7,12 @@ export interface Localized {
   fr: string;
   en: string;
   ar: string;
+}
+
+export interface CustomAmenity {
+  id: string;
+  label: Localized;
+  icon: AmenityIcon;
 }
 
 /** Une pièce de l'appartement, support de la visite 360° */
@@ -39,6 +47,8 @@ export interface Lot {
   gardenArea?: number;
   terraceArea?: number;
   status: LotStatus;
+  /** Private administration note; excluded from all public project reads. */
+  reservationNote?: string;
   /** Prix indicatif en TND (saisi au back-office) */
   price?: number;
   /** PDF du plan présenté sur le site (original ou copie commerciale). */
@@ -120,6 +130,8 @@ export interface Project {
   highlights: Localized[];
   specs: { label: Localized; value: Localized }[];
   amenities: string[];
+  /** Project-specific badge definitions; selected ids are stored in amenities. */
+  customAmenities?: CustomAmenity[];
   blocks: ProjectBlock[];
   lots: Lot[];
   foprolos?: boolean;
@@ -226,6 +238,21 @@ export interface PaymentLine {
   paidAt?: string;
   projectSlug?: string;
   lotRef?: string;
+  /** Individual recorded instalment payments; legacy paid/paidAt remain supported. */
+  receipts?: PaymentReceipt[];
+}
+
+export interface PaymentReceipt {
+  id: string;
+  amount: number;
+  date: string;
+  reference?: string;
+}
+
+export interface PaymentSchedule {
+  projectSlug: string;
+  lotRef: string;
+  totalAmount: number;
 }
 
 export interface ClientDocument {
@@ -259,6 +286,8 @@ export interface User {
   /** Tous les biens rattachés au compte. Les deux champs ci-dessus restent le bien principal historique. */
   properties?: { projectSlug: string; lotRef: string }[];
   payments?: PaymentLine[];
+  paymentSchedules?: PaymentSchedule[];
+  constructionPhotos?: { src: string; caption: Localized; projectSlug?: string; lotRef?: string }[];
   documents?: ClientDocument[];
   archivedDocuments?: ClientDocument[];
   messages?: ClientMessage[];

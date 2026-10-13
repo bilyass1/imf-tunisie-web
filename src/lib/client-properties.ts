@@ -30,7 +30,8 @@ export function clientPaymentsForProperty(user: Pick<User, 'payments' | 'project
   if (!property) return [];
   return (user.payments ?? []).filter(payment => payment.projectSlug && payment.lotRef
     ? payment.projectSlug === property.projectSlug && payment.lotRef === property.lotRef
-    : user.projectSlug === property.projectSlug && user.lotRef === property.lotRef);
+    : user.projectSlug === property.projectSlug && user.lotRef === property.lotRef)
+    .sort((a, b) => (a.dueDate ?? '').localeCompare(b.dueDate ?? '') || a.id.localeCompare(b.id));
 }
 
 export function resolvedClientProperties(user: Pick<User, 'properties' | 'projectSlug' | 'lotRef'>, projects: Project[]) {
@@ -50,4 +51,9 @@ export function selectedClientProperty(
 
 export function clientPropertyQuery(projectSlug: string, lotRef: string) {
   return `?project=${encodeURIComponent(projectSlug)}&lot=${encodeURIComponent(lotRef)}`;
+}
+
+export function clientConstructionPhotos(user: Pick<User, 'constructionPhotos'>, property?: ClientProperty) {
+  return (user.constructionPhotos ?? []).filter(photo => !photo.projectSlug && !photo.lotRef
+    || !!property && photo.projectSlug === property.projectSlug && photo.lotRef === property.lotRef);
 }

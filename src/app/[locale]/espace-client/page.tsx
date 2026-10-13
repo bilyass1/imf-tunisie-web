@@ -1,3 +1,4 @@
+import { clientPaymentTotal, paymentSummary } from '@/lib/payments';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
@@ -24,9 +25,7 @@ export default async function ClientDashboard({ params, searchParams }: { params
   const lot=selected?.lot;
   const payments = clientPaymentsForProperty(user,selected ? {projectSlug:project.slug,lotRef:lot.ref} : undefined);
 
-  const total = payments.reduce((s, p) => s + p.amount, 0);
-  const paid = payments.filter((p) => p.paid).reduce((s, p) => s + p.amount, 0);
-  const remaining = total - paid;
+  const { total, paid, remaining } = paymentSummary(payments, clientPaymentTotal(user, selected ? {projectSlug:selected.project.slug,lotRef:selected.lot.ref} : undefined, lot?.price));
   const nextDue = payments.find((p) => !p.paid);
   const pct = total > 0 ? Math.round((paid / total) * 100) : 0;
 
@@ -55,9 +54,9 @@ export default async function ClientDashboard({ params, searchParams }: { params
           {/* ---- KPI ---- */}
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {[
-              { label: dict.client.summary.total, value: formatMoney(total, locale) },
-              { label: dict.client.summary.paid, value: formatMoney(paid, locale), accent: 'text-emerald-600' },
-              { label: dict.client.summary.remaining, value: formatMoney(remaining, locale), accent: 'text-gold-600' },
+              { label: dict.client.summary.total, value: formatMoney(total, locale, 3) },
+              { label: dict.client.summary.paid, value: formatMoney(paid, locale, 3), accent: 'text-emerald-600' },
+              { label: dict.client.summary.remaining, value: formatMoney(remaining, locale, 3), accent: 'text-gold-600' },
               {
                 label: dict.client.summary.nextDue,
                 value: nextDue ? formatDate(nextDue.dueDate, locale) : '—',

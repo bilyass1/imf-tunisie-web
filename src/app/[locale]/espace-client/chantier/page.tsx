@@ -3,7 +3,7 @@ import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireClient } from '@/lib/auth';
 import { getProjects } from '@/lib/db';
-import { resolvedClientProperties, selectedClientProperty } from '@/lib/client-properties';
+import { clientConstructionPhotos, resolvedClientProperties, selectedClientProperty } from '@/lib/client-properties';
 import { t } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { clientNav } from '@/components/portal/clientNav';
@@ -22,7 +22,7 @@ export default async function ProgressPage({ params, searchParams }: { params: P
   const project=selected?.project;
   const steps = project?.progress ?? [];
   const lot=selected?.lot;
-  const photos = [...(project?.constructionPhotos??[]),...(lot?.constructionPhotos??[])];
+  const photos = [...(project?.constructionPhotos??[]),...(lot?.constructionPhotos??[]),...clientConstructionPhotos(user,selected ? {projectSlug:selected.project.slug,lotRef:selected.lot.ref} : undefined)];
 
   return (
     <PortalShell

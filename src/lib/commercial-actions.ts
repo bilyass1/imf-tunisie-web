@@ -5,10 +5,14 @@ import sharp from 'sharp';
 import { revalidatePath } from 'next/cache';
 import { getSession, createSession } from './session';
 import { readDb, writeCommercialDb as writeDb, isPersistent } from './db';
-import type { Database, Localized } from './types';
+import type { Database, Localized, User } from './types';
 import { projectPresentation } from './project-presentation';
 import { allowRequest } from './rate-limit';
-import { clientProperties, setClientProperties } from './client-properties';
+import { deleteClientDossier, validClientDeletionPin } from './client-deletion';
+import { attachClientLot, changeLotStatus, lotClient } from './lot-commercial';
+import { clientProperties, clientPaymentsForProperty, setClientProperties } from './client-properties';
+import { parseCustomAmenities, selectedAmenities } from './amenities';
+import { clientPaymentTotal, parsePaymentAmount, paymentPaidAmount, paymentSummary, paymentToday, updatePaymentStatus, validPaymentDate } from './payments';
 
 export type CommercialState = { ok: boolean; message: string; publicPath?: string };
 const localize = (s: string): Localized => ({ fr:s, en:s, ar:s });
@@ -57,6 +61,62 @@ function target(db: Database, form: FormData) {
   if (ref && !lot) throw new Error('Appartement introuvable.');
   return {project,lot};
 }
+type SelectedLot = { projectSlug: string; lotRef: string; status: string; reservationNote?: string };
+function selectedClientLots(form: FormData): SelectedLot[] {
+  const raw=value(form,'properties');
+  if (!raw) return [{projectSlug:value(form,'project'),lotRef:value(form,'lot'),status:value(form,'status'),reservationNote:value(form,'reservationNote')}];
+  if(raw.length>250000) throw new Error('Sélection d’appartements trop longue.');
+  let entries: unknown;
+  try { entries=JSON.parse(raw); } catch { throw new Error('Sélection d’appartements invalide.'); }
+  if(!Array.isArray(entries) || !entries.length || entries.length>100) throw new Error('Sélectionnez entre 1 et 100 appartements.');
+  const seen=new Set<string>();
+  return entries.map(item=>{
+    if(!item || typeof item!=='object' || typeof item.projectSlug!=='string' || typeof item.lotRef!=='string' || !['reserved','sold'].includes(item.status) || (item.reservationNote!==undefined && typeof item.reservationNote!=='string')) throw new Error('Sélection d’appartements invalide.');
+    const key=JSON.stringify([item.projectSlug,item.lotRef]);
+    if(seen.has(key)) throw new Error('Un appartement est sélectionné plusieurs fois.');
+    seen.add(key); return item as SelectedLot;
+  });
+}
+async function createClient(db: Database, form: FormData, selected=selectedClientLots(form)): Promise<User> {
+  const email=text(form,'email').toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Adresse e-mail invalide.');
+  if(db.users.some(user=>user.email.toLowerCase()===email)) throw new Error('Cette adresse possède déjà un compte.');
+  const password=String(form.get('password')??'');
+  if(password.length<12 || Buffer.byteLength(password)>72) throw new Error('Mot de passe : au moins 12 caractères et au maximum 72 octets.');
+  const phone=value(form,'phone');
+  if(phone.length>80) throw new Error('Téléphone trop long.');
+  const client: User={id:randomUUID(),name:text(form,'name'),email,phone,passwordHash:await bcrypt.hash(password,12),role:'client',properties:[],documents:[],messages:[],payments:[]};
+  db.users.push(client);
+  for(const item of selected) {
+    const project=db.projects.find(project=>project.slug===item.projectSlug);
+    const lot=project?.lots.find(lot=>lot.ref===item.lotRef);
+    if(!project || !lot) throw new Error('Appartement introuvable.');
+    if(!['reserved','sold'].includes(item.status)) throw new Error('Choisissez réservé ou vendu pour chaque appartement.');
+    if(lotClient(db,project.slug,lot.ref)) throw new Error('Cet appartement possède déjà un compte client.');
+    attachClientLot(db,client,project.slug,lot.ref);
+    changeLotStatus(db,project.slug,lot,item.status,value(form,'statusPin'),item.reservationNote);
+  }
+  return client;
+}
+async function applyLotForm(db: Database, form: FormData) {
+  const {project,lot}=target(db,form);
+  if(!lot) throw new Error('Sélectionnez un appartement.');
+  const status=value(form,'status');
+  if(!['available','reserved','sold','unconfirmed'].includes(status)) throw new Error('Statut invalide.');
+  const owner=lotClient(db,project.slug,lot.ref);
+  const clientId=value(form,'client');
+  if(owner && clientId && owner.id!==clientId) throw new Error('Cet appartement possède déjà un autre compte client.');
+  if(status==='sold' && !owner) {
+    if(value(form,'clientMode')==='new') await createClient(db,form,[{projectSlug:project.slug,lotRef:lot.ref,status:'sold'}]);
+    else {
+      const client=db.users.find(user=>user.id===clientId && user.role==='client');
+      if(!client) throw new Error('Créez ou sélectionnez un compte client pour la vente.');
+      attachClientLot(db,client,project.slug,lot.ref);
+    }
+  }
+  changeLotStatus(db,project.slug,lot,status,value(form,'statusPin'),form.has('reservationNote')?value(form,'reservationNote'):undefined);
+  return {project,lot};
+}
 export async function commercialAction(_: CommercialState, form: FormData): Promise<CommercialState> {
 
   try {
@@ -64,7 +124,8 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
     const operation=value(form,'operation');
     let publicPath: string | undefined;
     const actor=await getSession();
-    if(!await allowRequest(`commercial-${operation}`,actor!.sub,operation.startsWith('password-')?10:60,60000)) throw new Error('Trop de demandes. Réessayez dans une minute.');
+    if(!await allowRequest(`commercial-${operation}`,actor!.sub,operation==='client-delete'?5:operation.startsWith('password-')?10:60,60000)) throw new Error('Trop de demandes. Réessayez dans une minute.');
+    if(form.has('statusPin') && !await allowRequest('commercial-status-pin',actor!.sub,5,60000)) throw new Error('Trop de tentatives de PIN. Réessayez dans une minute.');
     if(operation==='password-self' || operation==='password-client') {
       const session=await getSession();
       const operator=(await readDb()).users.find(u=>u.id===session?.sub && u.role==='admin');
@@ -84,17 +145,9 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       (await writeDb(db));
       if(operation==='password-self') await createSession({sub:user.id,email:user.email,name:user.name,role:user.role});
     } else if (operation==='client') {
-      const email=text(form,'email').toLowerCase();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Adresse e-mail invalide.');
-      const password=String(form.get('password')??'');
-      if(password.length<12 || Buffer.byteLength(password)>72) throw new Error('Mot de passe : au moins 12 caractères et au maximum 72 octets.');
-      const passwordHash=await bcrypt.hash(password,12);
-      const db=(await readDb()); const {project,lot}=target(db,form);
-      if (!lot) throw new Error('Sélectionnez un appartement.');
-      if(db.users.some(u=>u.email.toLowerCase()===email)) throw new Error('Cette adresse possède déjà un compte.');
-      if(db.users.some(u=>u.role==='client' && clientProperties(u).some(item=>item.projectSlug===project.slug && item.lotRef===lot.ref))) throw new Error('Cet appartement possède déjà un compte client.');
-      db.users.push({id:randomUUID(),name:text(form,'name'),email,phone:value(form,'phone'),passwordHash,role:'client',projectSlug:project.slug,lotRef:lot.ref,properties:[{projectSlug:project.slug,lotRef:lot.ref}],documents:[],messages:[],payments:[]});
-      (await writeDb(db));
+      const db=await readDb();
+      await createClient(db,form);
+      await writeDb(db);
     } else if(operation==='upload') {
       const file=form.get('file');
       const kind=value(form,'kind');
@@ -123,16 +176,21 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       }
       if(bytes.length>3*1024*1024) throw new Error('Le fichier optimisé dépasse 3 Mo. Réduisez sa résolution.');
       const db=(await readDb()); const id=randomUUID(); const href=`/api/media/${id}`;
-      const recipient=kind==='contract' ? db.users.find(u=>u.id===value(form,'client') && u.role==='client') : undefined;
-      if(kind==='contract' && !recipient) throw new Error('Client introuvable.');
+      const recipient=kind==='contract'||kind==='construction' ? db.users.find(u=>u.id===value(form,'client') && u.role==='client') : undefined;
+      if((kind==='contract'||kind==='construction') && !recipient) throw new Error('Sélectionnez un client destinataire.');
       if(recipient) {
         const properties=clientProperties(recipient);
-        const propertyIndex=value(form,'contractProperty');
+        const propertyIndex=value(form,kind==='contract'?'contractProperty':'constructionProperty');
+        const general=kind==='construction' && propertyIndex==='all';
         const index=propertyIndex ? Number(propertyIndex) : 0;
-        if(!Number.isInteger(index) || index<0 || (propertyIndex && index>=properties.length)) throw new Error('Appartement du contrat invalide.');
-        const property=properties[index];
-        (recipient.documents??=[]).push({id,label:localize(label),kind:'contract',date:new Date().toISOString(),href,...property});
-        (recipient.messages??=[]).push({id:randomUUID(),from:'imf',date:new Date().toISOString(),body:`Un document est disponible dans votre espace Documents : ${label}`});
+        if(kind==='construction' && !propertyIndex) throw new Error('Choisissez un appartement ou le dossier général du client.');
+        if(!general && (!Number.isInteger(index) || index<0 || (propertyIndex && index>=properties.length))) throw new Error('Appartement du destinataire invalide.');
+        const property=general ? undefined : properties[index];
+        if(kind==='construction' && property && !db.projects.find(project=>project.slug===property.projectSlug)?.lots.some(lot=>lot.ref===property.lotRef)) throw new Error('Cet appartement n’est plus disponible dans le dossier. Rechargez la page.');
+        if(kind==='contract') {
+          (recipient.documents??=[]).push({id,label:localize(label),kind:'contract',date:new Date().toISOString(),href,...property});
+          (recipient.messages??=[]).push({id:randomUUID(),from:'imf',date:new Date().toISOString(),body:`Un document est disponible dans votre espace Documents : ${label}`});
+        } else (recipient.constructionPhotos??=[]).push({src:href,caption,...property});
       } else {
         const {project,lot}=target(db,form); const dest=lot??project; const photo={src:href,caption};
         if(kind==='panorama') {
@@ -153,14 +211,18 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
           gallery.splice(position,0,{...photo,...(!lot ? {category:galleryCategory(form)} : {})});
           if(!lot) project.galleryEdited=true;
           publicPath=`/projets/${project.slug}${lot?`/appartements/${lot.ref}#galerie`:'#galerie'}`;
-        } else (dest.constructionPhotos??=[]).push(photo);
+        }
       }
 
       (db.uploads??=[]).push({id,mime,name:label+(kind==='contract'?'.pdf':'.webp'),clientId:recipient?.id,public:kind==='gallery'||kind==='panorama'});
       await writeDb(db,{id,bytes});
     } else {
       const db=(await readDb());
-      if(operation==='client-edit') {
+      if(operation==='client-delete') {
+        if(value(form,'confirm')!=='yes') throw new Error('Confirmez la suppression définitive du dossier client.');
+        if(!validClientDeletionPin(value(form,'deletePin'))) throw new Error('Code PIN incorrect.');
+        deleteClientDossier(db,value(form,'client'));
+      } else if(operation==='client-edit') {
         const client=db.users.find(u=>u.id===value(form,'client') && u.role==='client');
         if(!client) throw new Error('Client introuvable.');
         const email=text(form,'email').toLowerCase();
@@ -179,12 +241,10 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
           if(exists) throw new Error('Cet appartement est déjà lié au client.');
           if(db.users.some(u=>u.id!==client.id && u.role==='client' && clientProperties(u).some(item=>item.projectSlug===project.slug && item.lotRef===lot.ref))) throw new Error('Cet appartement possède déjà un autre compte client.');
           const status=value(form,'status');
-          if(!['','reserved','sold'].includes(status)) throw new Error('Statut de vente invalide.');
-          setClientProperties(client,[...current,{projectSlug:project.slug,lotRef:lot.ref}]);
-          if(status) {
-            lot.status=status as typeof lot.status;
-            publicPath=`/projets/${project.slug}/appartements/${lot.ref}`;
-          }
+          if(!['reserved','sold'].includes(status)) throw new Error('Statut de vente invalide.');
+          attachClientLot(db,client,project.slug,lot.ref);
+          changeLotStatus(db,project.slug,lot,status,value(form,'statusPin'),value(form,'reservationNote'));
+          publicPath=`/projets/${project.slug}/appartements/${lot.ref}`;
         } else {
           if(!exists) throw new Error('Cet appartement n’est pas lié au client.');
           if(operation==='client-property-remove') {
@@ -206,10 +266,72 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         if(index<0) throw new Error('Document introuvable pour ce client.');
         const [document]=source.splice(index,1);
         (restoring?(client.documents??=[]):(client.archivedDocuments??=[])).push(document);
+      } else if(operation==='payment-total' || operation==='payment-receipt-create' || operation==='payment-receipt-update') {
+        const client=db.users.find(user=>user.id===value(form,'client') && user.role==='client');
+        if(!client) throw new Error('Client introuvable.');
+        const {project,lot}=target(db,form);
+        if(!lot || !clientProperties(client).some(property=>property.projectSlug===project.slug && property.lotRef===lot.ref)) throw new Error('Sélectionnez un appartement rattaché à ce client.');
+        const property={projectSlug:project.slug,lotRef:lot.ref};
+        if(operation==='payment-total') {
+          const totalAmount=parsePaymentAmount(value(form,'totalAmount'));
+          if(Math.round(totalAmount*1000)<Math.round(paymentSummary(clientPaymentsForProperty(client,property)).scheduled*1000)) throw new Error('Le montant total ne peut pas être inférieur aux échéances déjà prévues.');
+          const existing=client.paymentSchedules?.find(schedule=>schedule.projectSlug===project.slug && schedule.lotRef===lot.ref);
+          if(existing) existing.totalAmount=totalAmount;
+          else (client.paymentSchedules??=[]).push({...property,totalAmount});
+        } else {
+          const payment=clientPaymentsForProperty(client,property).find(item=>item.id===value(form,'payment'));
+          if(!payment) throw new Error('Échéance introuvable pour ce client et cet appartement.');
+          const receipt=operation==='payment-receipt-update' ? payment.receipts?.find(item=>item.id===value(form,'receipt')) : undefined;
+          if(operation==='payment-receipt-update' && !receipt) throw new Error('Versement introuvable.');
+          if(operation==='payment-receipt-create' && (payment.receipts?.length??0)>=1000) throw new Error('Cette échéance est limitée à 1 000 versements.');
+          const amount=parsePaymentAmount(value(form,'receiptAmount'));
+          const date=value(form,'receiptDate');
+          if(!validPaymentDate(date) || date>paymentToday()) throw new Error('Saisissez une date de versement valide, au plus tard aujourd’hui.');
+          const reference=value(form,'receiptReference');
+          if(reference.length>160) throw new Error('La référence du versement est limitée à 160 caractères.');
+          const nextPaid=Math.round(paymentPaidAmount(payment)*1000)-Math.round((receipt?.amount??0)*1000)+Math.round(amount*1000);
+          if(nextPaid>Math.round(payment.amount*1000)) throw new Error('Les versements ne peuvent pas dépasser le montant de cette échéance.');
+          const next={id:receipt?.id??randomUUID(),amount,date,reference:reference||undefined};
+          if(receipt) Object.assign(receipt,next);
+          else (payment.receipts??=[]).push(next);
+          updatePaymentStatus(payment);
+        }
+      } else if(operation==='payment-create' || operation==='payment-update') {
+        const client=db.users.find(user=>user.id===value(form,'client') && user.role==='client');
+        if(!client) throw new Error('Client introuvable.');
+        const {project,lot}=target(db,form);
+        if(!lot || !clientProperties(client).some(property=>property.projectSlug===project.slug && property.lotRef===lot.ref)) throw new Error('Sélectionnez un appartement rattaché à ce client.');
+        const existing=operation==='payment-update' ? client.payments?.find(payment=>payment.id===value(form,'payment')) : undefined;
+        if(operation==='payment-update' && (!existing || (existing.projectSlug??client.projectSlug)!==project.slug || (existing.lotRef??client.lotRef)!==lot.ref)) throw new Error('Échéance introuvable pour ce client et cet appartement.');
+        if(operation==='payment-create' && (client.payments?.length??0)>=1000) throw new Error('L’échéancier est limité à 1 000 échéances par client.');
+        const labelFr=text(form,'paymentLabelFr',160);
+        const labelEn=value(form,'paymentLabelEn')||labelFr;
+        const labelAr=value(form,'paymentLabelAr')||labelFr;
+        if(labelEn.length>160 || labelAr.length>160) throw new Error('Les intitulés des échéances sont limités à 160 caractères.');
+        const dueDate=value(form,'dueDate');
+        if(!validPaymentDate(dueDate)) throw new Error('Date d’échéance invalide.');
+        const amount=parsePaymentAmount(value(form,'amount'));
+        const property={projectSlug:project.slug,lotRef:lot.ref};
+        const totalAmount=clientPaymentTotal(client,property,lot.price);
+        if(operation==='payment-create' && totalAmount===undefined) throw new Error('Renseignez d’abord le montant total de cet appartement.');
+        const nextScheduled=Math.round(paymentSummary(clientPaymentsForProperty(client,property)).scheduled*1000)-Math.round((existing?.amount??0)*1000)+Math.round(amount*1000);
+        if(totalAmount!==undefined && nextScheduled>Math.round(totalAmount*1000)) throw new Error('Les échéances ne peuvent pas dépasser le montant total de cet appartement.');
+        if(existing?.receipts?.length && Math.round(amount*1000)<Math.round(paymentPaidAmount(existing)*1000)) throw new Error('Le montant de l’échéance ne peut pas être inférieur aux versements déjà reçus.');
+        const status=value(form,'paymentStatus');
+        if(!['pending','paid'].includes(status)) throw new Error('Statut de paiement invalide.');
+        const paid=status==='paid';
+        const paidAt=paid ? value(form,'paidAt') : undefined;
+        if(paid && !existing?.receipts?.length && (!paidAt || !validPaymentDate(paidAt) || paidAt>paymentToday())) throw new Error('Saisissez une date de règlement valide, au plus tard aujourd’hui.');
+        const payment={id:existing?.id??randomUUID(),label:{fr:labelFr,en:labelEn,ar:labelAr},dueDate,amount,paid,paidAt,projectSlug:project.slug,lotRef:lot.ref};
+        if(existing) { Object.assign(existing,payment); updatePaymentStatus(existing); }
+        else (client.payments??=[]).push(payment);
+      } else if(operation==='lot-status') {
+        const {project,lot}=await applyLotForm(db,form);
+        publicPath=`/projets/${project.slug}/appartements/${lot.ref}`;
       } else if(operation==='property') {
         const {project,lot}=target(db,form); (lot??project).progressPercent=percent(form);
-        if(lot) { const status=value(form,'status'); if(!['available','reserved','sold','unconfirmed'].includes(status)) throw new Error('Statut invalide.'); lot.status=status as typeof lot.status; }
-        else if(project.progress?.length && form.has('step-0')) project.progress=project.progress.map((step,index)=>{
+        if(lot && form.has('status')) await applyLotForm(db,form);
+        else if(!lot && project.progress?.length && form.has('step-0')) project.progress=project.progress.map((step,index)=>{
           const next=percentValue(value(form,`step-${index}`));
           return {...step,percent:next,done:next===100};
         });
@@ -236,7 +358,8 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         project.highlights=highlights.fr.map((fr,index)=>({fr,en:highlights.en[index],ar:highlights.ar[index]}));
         project.specs=project.specs.map((_,index)=>({label:translated(form,`specLabel${index}`,120),value:translated(form,`specValue${index}`,240)}));
         project.progress=project.progress?.map((step,index)=>({label:translated(form,`progressLabel${index}`,120),percent:percentValue(value(form,`step-${index}`)),done:value(form,`step-${index}`)==='100'}));
-        project.amenities=form.getAll('amenities').map(String).filter(item=>/^[a-z-]{1,40}$/.test(item));
+        project.customAmenities=form.has('customAmenities') ? parseCustomAmenities(value(form,'customAmenities')) : project.customAmenities??[];
+        project.amenities=selectedAmenities(form.getAll('amenities').map(String),project.customAmenities);
         project.presentationEdited=true;
         publicPath=`/projets/${project.slug}#programme`;
       } else if(operation==='gallery-edit' || operation==='gallery-remove') {
@@ -273,7 +396,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       (await writeDb(db));
     }
     revalidatePath('/','layout');
-    return {ok:true,publicPath,message:operation==='client'?'Compte créé. Communiquez les identifiants au client par votre canal habituel.':operation==='upload' && publicPath?.endsWith('#visite-360')?'Panorama ajouté à la visite 360° de cet appartement.':operation==='upload' && publicPath?'Photo WebP ajoutée à la galerie publique.':operation==='upload'?'Publication enregistrée. Le destinataire peut la consulter dans son espace.':'Modifications enregistrées.'};
+    return {ok:true,publicPath,message:operation==='client-delete'?'Compte client et dossier supprimés définitivement.':operation==='client'?'Compte créé. Communiquez les identifiants au client par votre canal habituel.':operation==='upload' && publicPath?.endsWith('#visite-360')?'Panorama ajouté à la visite 360° de cet appartement.':operation==='upload' && publicPath?'Photo WebP ajoutée à la galerie publique.':operation==='upload'?'Publication enregistrée. Le destinataire peut la consulter dans son espace.':'Modifications enregistrées.'};
   } catch(error) {
 
     return {ok:false,message:error instanceof Error ? error.message : 'Enregistrement impossible.'};

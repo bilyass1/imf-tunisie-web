@@ -1,11 +1,17 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),vm=require('node:vm'),ts=require('typescript');
+function commercialModule(file) {
+ const box={exports:{}};
+ const code=ts.transpileModule(fs.readFileSync('src/lib/'+file+'.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
+ vm.runInNewContext(code,{module:box,exports:box.exports,require:id=>id==='server-only'?{}:id.startsWith('./')?commercialModule(id.slice(2)):require(id),Buffer});
+ return box.exports;
+}
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'imf-storage-test-'));
 const moduleBox={exports:{}};
 const env={};
 const code=ts.transpileModule(fs.readFileSync('src/lib/db.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
-const load=id=>id==='server-only'?{}:id==='next/cache'?{unstable_noStore:()=>{}}:id==='./postgres-store.cjs'?{}:id==='./seed'?{buildSeed:()=>({users:[],projects:[],contacts:[],deals:[],tasks:[],activities:[]})}:id==='./yassamine-catalog'?{includeYassamineApartments:x=>x}:id==='./yassamine-a5b'?{includeYassamineA5bLots:x=>x}:id==='./yassamine-a6'?{includeYassamineA6Lots:x=>x}:id==='./project-presentation'?{projectPresentation:x=>x}:id==='./types'?{}:require(id);
+const load=id=>id==='./lot-commercial'?commercialModule('lot-commercial'):id==='server-only'?{}:id==='next/cache'?{unstable_noStore:()=>{}}:id==='./postgres-store.cjs'?{}:id==='./seed'?{buildSeed:()=>({users:[],projects:[],contacts:[],deals:[],tasks:[],activities:[]})}:id==='./yassamine-catalog'?{includeYassamineApartments:x=>x}:id==='./yassamine-a5b'?{includeYassamineA5bLots:x=>x}:id==='./yassamine-a6'?{includeYassamineA6Lots:x=>x}:id==='./project-presentation'?{projectPresentation:x=>x}:id==='./types'?{}:require(id);
 (async()=>{try {
- vm.runInNewContext(code,{module:moduleBox,exports:moduleBox.exports,require:load,process:{cwd:()=>temp,env},structuredClone});
+ vm.runInNewContext(code,{module:moduleBox,exports:moduleBox.exports,require:load,process:{cwd:()=>temp,env},structuredClone,Buffer});
  const db=moduleBox.exports;
  const original=await db.readDb();original.users.push({id:'client'});
  original.projects.push({slug:'residence',lots:[{ref:'A1',rooms:[{id:'salon',label:{fr:'Séjour',en:'Living room',ar:'غرفة المعيشة'}}]}]});
@@ -16,6 +22,22 @@ const load=id=>id==='server-only'?{}:id==='next/cache'?{unstable_noStore:()=>{}}
  assert.equal((await db.readDb()).projects[0].lots[0].composition[0].fr,'Cuisine');
  assert.equal(await db.updateLotComposition('residence','missing',[]),false);
  await assert.rejects(()=>db.writeDb(stale));
+ let reservation=await db.readDb();reservation.projects[0].lots[0].status='reserved';reservation.projects[0].lots[0].reservationNote='Confidential';await db.writeDb(reservation);
+ assert.equal((await db.readDb()).projects[0].lots[0].reservationNote,'Confidential');
+ assert.equal((await db.getPublicData()).projects[0].lots[0].reservationNote,undefined,'Private notes excluded from local public reads');
+ await assert.rejects(()=>db.updateLotStatus('residence','A1','sold'));
+ await assert.rejects(()=>db.applyDemoStatuses('residence'));
+ await assert.rejects(()=>db.resetLotStatuses('residence'));
+ const privateId='aabbccdd-0000-4000-8000-000000000001';
+ let withFile=await db.readDb();withFile.uploads=[{id:privateId,mime:'image/png',name:'private.png',clientId:'client',public:false}];
+ await db.writeCommercialDb(withFile,{id:privateId,bytes:Buffer.from('private-bytes')});
+ assert.equal(Buffer.from(await db.readMedia(privateId)).toString(),'private-bytes');
+ const staleDeletion=await db.readDb();
+ let newer=await db.readDb();newer.users.push({id:'other'});await db.writeCommercialDb(newer);
+ staleDeletion.uploads=[];await assert.rejects(()=>db.writeCommercialDb(staleDeletion));assert.equal(Buffer.from(await db.readMedia(privateId)).toString(),'private-bytes','Stale deletion must not erase file bytes');
+ let removed=await db.readDb();removed.uploads=[];removed.users=removed.users.filter(user=>user.id!=='client');await db.writeCommercialDb(removed);
+ assert.equal(await db.readMedia(privateId),undefined);assert.equal(fs.existsSync(path.join(temp,'data','uploads',privateId)),false);
+ console.log('PASS: local private-file removal and stale-write protection.');
  env.VERCEL='1';await assert.rejects(()=>db.writeDb(original));delete env.VERCEL;
  fs.writeFileSync(path.join(temp,'data','db.json'),'invalid JSON');
  await assert.rejects(()=>db.readDb());

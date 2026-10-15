@@ -340,6 +340,8 @@ export async function captureWebLead(input: {
       email: input.email || undefined,
       phone: input.phone,
       source: 'website',
+      projectSlug:db.projects.some(project=>project.slug===input.projectSlug)?input.projectSlug:undefined,
+      lotRef:db.projects.find(project=>project.slug===input.projectSlug)?.lots.find(lot=>lot.ref===input.lotRef)?.ref,
       budget: input.budget || undefined,
       tags: [],
     };

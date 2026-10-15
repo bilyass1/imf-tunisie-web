@@ -7,6 +7,8 @@ import { getSession, createSession } from './session';
 import { readDb, writeCommercialDb as writeDb, isPersistent } from './db';
 import type { Database, Localized, User } from './types';
 import { projectPresentation } from './project-presentation';
+import { parseContactInput } from './contact-input';
+import { galleryPhotoCategory, parseGalleryFilters, projectGalleryFilters } from './gallery-filters';
 import { allowRequest } from './rate-limit';
 import { deleteClientDossier, validClientDeletionPin } from './client-deletion';
 import { attachClientLot, changeLotStatus, lotClient } from './lot-commercial';
@@ -14,9 +16,9 @@ import { clientProperties, clientPaymentsForProperty, setClientProperties } from
 import { parseCustomAmenities, selectedAmenities } from './amenities';
 import { clientPaymentTotal, parsePaymentAmount, paymentPaidAmount, paymentSummary, paymentToday, updatePaymentStatus, validPaymentDate } from './payments';
 
-export type CommercialState = { ok: boolean; message: string; publicPath?: string };
+export type PaymentSnapshot = {clientId:string; payments:NonNullable<User['payments']>; paymentSchedules:NonNullable<User['paymentSchedules']>};
+export type CommercialState = { ok: boolean; message: string; publicPath?: string; paymentSnapshot?:PaymentSnapshot };
 const localize = (s: string): Localized => ({ fr:s, en:s, ar:s });
-const galleryCategories = ['','perspectives','works','interiors'] as const;
 const value = (form: FormData, key: string) => String(form.get(key) ?? '').trim();
 function text(form: FormData, key: string, max = 200) { const s=value(form,key); if (!s || s.length>max) throw new Error(`Champ ${key} manquant ou trop long.`); return s; }
 function percentValue(raw: string) { const n=Number(raw); if (!raw || !Number.isInteger(n) || n<0 || n>100) throw new Error('L’avancement doit être un entier compris entre 0 et 100.'); return n; }
@@ -43,10 +45,10 @@ function galleryPosition(form: FormData, maximum: number): number {
   if(!raw || !Number.isInteger(number) || number<1 || number>maximum) throw new Error(`La position doit être comprise entre 1 et ${maximum}.`);
   return number-1;
 }
-function galleryCategory(form: FormData) {
+function galleryCategory(form: FormData, project: Database['projects'][number]) {
   const category=value(form,'category');
-  if(!galleryCategories.includes(category as typeof galleryCategories[number])) throw new Error('Emplacement de galerie invalide.');
-  return category ? category as 'perspectives'|'works'|'interiors' : undefined;
+  if(category && !projectGalleryFilters(project).some(filter=>filter.id===category)) throw new Error('Emplacement de galerie invalide.');
+  return category || 'general';
 }
 async function staff() {
   const session=await getSession();
@@ -123,6 +125,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
     await staff();
     const operation=value(form,'operation');
     let publicPath: string | undefined;
+    let paymentSnapshot: PaymentSnapshot | undefined;
     const actor=await getSession();
     if(!await allowRequest(`commercial-${operation}`,actor!.sub,operation==='client-delete'?5:operation.startsWith('password-')?10:60,60000)) throw new Error('Trop de demandes. Réessayez dans une minute.');
     if(form.has('statusPin') && !await allowRequest('commercial-status-pin',actor!.sub,5,60000)) throw new Error('Trop de tentatives de PIN. Réessayez dans une minute.');
@@ -208,7 +211,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
           if(!lot && !project.galleryEdited) project.gallery=projectPresentation(project).gallery;
           const gallery=dest.gallery??=[];
           const position=value(form,'position') ? galleryPosition(form,gallery.length+1) : gallery.length;
-          gallery.splice(position,0,{...photo,...(!lot ? {category:galleryCategory(form)} : {})});
+          gallery.splice(position,0,{...photo,...(!lot ? {category:galleryCategory(form,project)} : {})});
           if(!lot) project.galleryEdited=true;
           publicPath=`/projets/${project.slug}${lot?`/appartements/${lot.ref}#galerie`:'#galerie'}`;
         }
@@ -218,7 +221,15 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       await writeDb(db,{id,bytes});
     } else {
       const db=(await readDb());
-      if(operation==='client-delete') {
+      if(operation==='contact-save') {
+        const input=parseContactInput(form,db.projects);
+        const id=value(form,'contact');
+        if(id) {
+          const contact=db.contacts.find(contact=>contact.id===id);
+          if(!contact) throw new Error('Contact introuvable.');
+          Object.assign(contact,input);
+        } else db.contacts.unshift({...input,id:randomUUID(),createdAt:new Date().toISOString().slice(0,10)});
+      } else if(operation==='client-delete') {
         if(value(form,'confirm')!=='yes') throw new Error('Confirmez la suppression définitive du dossier client.');
         if(!validClientDeletionPin(value(form,'deletePin'))) throw new Error('Code PIN incorrect.');
         deleteClientDossier(db,value(form,'client'));
@@ -362,6 +373,14 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         project.amenities=selectedAmenities(form.getAll('amenities').map(String),project.customAmenities);
         project.presentationEdited=true;
         publicPath=`/projets/${project.slug}#programme`;
+      } else if(operation==='gallery-filters') {
+        const {project,lot}=target(db,form);
+        if(lot) throw new Error('Sélectionnez une résidence.');
+        const filters=parseGalleryFilters(value(form,'galleryFilters'));
+        const previous=projectGalleryFilters(project);
+        project.gallery=projectPresentation(project).gallery.map(photo=>({...photo,category:filters.some(filter=>filter.id===galleryPhotoCategory(photo,previous))?galleryPhotoCategory(photo,previous):'general'}));
+        project.galleryFilters=filters;project.galleryEdited=true;
+        publicPath=`/projets/${project.slug}#galerie`;
       } else if(operation==='gallery-edit' || operation==='gallery-remove') {
         const {project,lot}=target(db,form);
         if(lot) throw new Error('Sélectionnez une résidence.');
@@ -380,7 +399,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         else {
           const [photo]=project.gallery.splice(index,1);
           photo.caption=translated(form,'caption',200);
-          photo.category=galleryCategory(form);
+          photo.category=galleryCategory(form,project);
           project.gallery.splice(galleryPosition(form,project.gallery.length+1),0,photo);
         }
         project.galleryEdited=true;
@@ -394,9 +413,13 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         (client.messages??=[]).push({id:randomUUID(),date:new Date().toISOString(),from:'imf',body:text(form,'body',4000)});
       } else throw new Error('Opération inconnue.');
       (await writeDb(db));
+      if(operation.startsWith('payment-')) {
+        const client=db.users.find(client=>client.id===value(form,'client') && client.role==='client');
+        if(client) paymentSnapshot={clientId:client.id,payments:client.payments??[],paymentSchedules:client.paymentSchedules??[]};
+      }
     }
     revalidatePath('/','layout');
-    return {ok:true,publicPath,message:operation==='client-delete'?'Compte client et dossier supprimés définitivement.':operation==='client'?'Compte créé. Communiquez les identifiants au client par votre canal habituel.':operation==='upload' && publicPath?.endsWith('#visite-360')?'Panorama ajouté à la visite 360° de cet appartement.':operation==='upload' && publicPath?'Photo WebP ajoutée à la galerie publique.':operation==='upload'?'Publication enregistrée. Le destinataire peut la consulter dans son espace.':'Modifications enregistrées.'};
+    return {ok:true,publicPath,paymentSnapshot,message:operation==='client-delete'?'Compte client et dossier supprimés définitivement.':operation==='client'?'Compte créé. Communiquez les identifiants au client par votre canal habituel.':operation==='upload' && publicPath?.endsWith('#visite-360')?'Panorama ajouté à la visite 360° de cet appartement.':operation==='upload' && publicPath?'Photo WebP ajoutée à la galerie publique.':operation==='upload'?'Publication enregistrée. Le destinataire peut la consulter dans son espace.':'Modifications enregistrées.'};
   } catch(error) {
 
     return {ok:false,message:error instanceof Error ? error.message : 'Enregistrement impossible.'};

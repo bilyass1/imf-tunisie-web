@@ -8,7 +8,7 @@ import { useImmersiveViewer } from './useImmersiveViewer';
 export interface GalleryItem {
   src: string;
   caption: string;
-  category?: 'perspectives' | 'works' | 'interiors';
+  category?: string;
 }
 
 export default function Gallery({

@@ -1,3 +1,4 @@
+import type { GalleryFilter } from './gallery-filters';
 import type { AmenityIcon } from './amenities';
 
 export type LotStatus = 'available' | 'reserved' | 'sold' | 'unconfirmed';
@@ -105,6 +106,7 @@ export interface Project {
   presentationEdited?: boolean;
   /** Preserve the administrator's chosen gallery order and captions. */
   galleryEdited?: boolean;
+  galleryFilters?: GalleryFilter[];
   presentationLabels?: {
     overview: Localized;
     highlights: Localized;
@@ -125,7 +127,7 @@ export interface Project {
   deliveryLabel?: Localized;
   heroImage: string;
   cover: string;
-  gallery: { src: string; caption: Localized; category?: 'perspectives' | 'works' | 'interiors' }[];
+  gallery: { src: string; caption: Localized; category?: string }[];
   description: Localized;
   highlights: Localized[];
   specs: { label: Localized; value: Localized }[];
@@ -175,6 +177,8 @@ export interface Contact {
   tags: string[];
   ownerId?: string;
   notes?: string;
+  projectSlug?: string;
+  lotRef?: string;
   /** Enregistrement du jeu de démonstration (effaçable en un clic depuis le CRM) */
   demo?: boolean;
 }

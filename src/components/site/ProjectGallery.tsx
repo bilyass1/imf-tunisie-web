@@ -1,40 +1,19 @@
 'use client';
-
 import { useState, type ComponentProps } from 'react';
 import Gallery from './Gallery';
 import type { Locale } from '@/i18n/config';
+import { DEFAULT_GALLERY_FILTERS, galleryPhotoCategory, type GalleryFilter } from '@/lib/gallery-filters';
 
-const copy = {
-  fr: { all: 'Toutes les photos', perspectives: 'Perspectives 3D', works: 'Chantier et réalisations', interiors: 'Intérieurs', label: 'Catégories de la galerie' },
-  en: { all: 'All photos', perspectives: '3D perspectives', works: 'Construction and completed works', interiors: 'Interiors', label: 'Gallery categories' },
-  ar: { all: 'كل الصور', perspectives: 'تصورات ثلاثية الأبعاد', works: 'الأشغال والمنجزات', interiors: 'المساحات الداخلية', label: 'أقسام معرض الصور' },
-};
-type Category = 'all' | 'perspectives' | 'works' | 'interiors';
-
-export default function ProjectGallery({ items, labels, locale, projectSlug }: ComponentProps<typeof Gallery> & { locale: Locale; projectSlug: string }) {
-  const [selected, setSelected] = useState<Category>('all');
-  const hasCategories = projectSlug === 'diar-al-yassamine' || items.some(item => item.category);
-  const category = (item: typeof items[number]): Category => {
-    if (item.category) return item.category;
-    if (projectSlug !== 'diar-al-yassamine') return 'all';
-    const path = item.src.split('?')[0];
-    if (/\/int-\d+\./.test(path)) return 'interiors';
-    if (/\/reel-\d+\./.test(path)) return 'works';
-    if (/\/diar-al-yassamine\/(?:3d-\d+|bloc-a\d+|hero)\./.test(path)) return 'perspectives';
-    return 'all';
-  };
-  const c = copy[locale];
-  if (!hasCategories) return <Gallery items={items} labels={labels} />;
-  const categories: Category[] = ['all', 'perspectives', 'works', 'interiors'];
-  const visible = selected === 'all' ? items : items.filter(item => category(item) === selected);
+const copy={fr:{all:'Toutes les photos',label:'Catégories de la galerie',empty:'Aucune photo dans cette rubrique pour le moment.'},en:{all:'All photos',label:'Gallery categories',empty:'No photos in this category yet.'},ar:{all:'كل الصور',label:'أقسام معرض الصور',empty:'لا توجد صور في هذا القسم حاليًا.'}};
+export default function ProjectGallery({items,labels,locale,filters=DEFAULT_GALLERY_FILTERS}: ComponentProps<typeof Gallery> & {locale:Locale;projectSlug:string;filters?:GalleryFilter[]}) {
+  const [selection,setSelection]=useState('');
+  const selected=filters.some(filter=>filter.id===selection)?selection:'';
+  const visible=selected?items.filter(item=>galleryPhotoCategory(item,filters)===selected):items;
+  const c=copy[locale];
   return <>
     <div role="group" aria-label={c.label} className="mb-7 flex flex-wrap gap-2">
-      {categories.filter(key => key === 'all' || items.some(item => category(item) === key)).map(key =>
-        <button key={key} type="button" aria-pressed={selected === key} onClick={() => setSelected(key)}
-          className={`rounded-full border px-4 py-3 text-sm transition-colors ${selected === key ? 'border-ink bg-ink text-white' : 'border-ink/20 bg-white text-ink hover:border-gold-500'}`}>
-          {c[key]}
-        </button>)}
+      {[{id:'',label:{fr:c.all,en:c.all,ar:c.all}},...filters].map(filter=><button key={filter.id} type="button" aria-pressed={selected===filter.id} onClick={()=>setSelection(filter.id)} className={`rounded-full border px-4 py-3 text-sm transition-colors ${selected===filter.id?'border-ink bg-ink text-white':'border-ink/20 bg-white text-ink hover:border-gold-500'}`}>{filter.label[locale]||filter.label.fr}</button>)}
     </div>
-    <Gallery key={selected} items={visible} labels={labels} />
+    {visible.length?<Gallery key={selected} items={visible} labels={labels}/>:<p role="status" className="rounded-xl border border-dashed border-ink/15 p-8 text-center text-ink/60">{c.empty}</p>}
   </>;
 }

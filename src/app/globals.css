@@ -157,7 +157,19 @@ canvas { display: block; }
 }
 
 /* Keep portal content within its column, including long emails and messages. */
-.portal-shell { min-height: 100dvh; overflow-wrap: anywhere; }
+.portal-shell { min-height: 100dvh; overflow-wrap: normal; word-break: normal; }
+.portal-content :is(p, dd, h1, h2, h3, li) { overflow-wrap: break-word; }
+.portal-content table { table-layout: auto; }
+.portal-content :is(th, td) { word-break: normal; overflow-wrap: normal; vertical-align: top; }
+.portal-content th { white-space: nowrap; }
+.portal-content td { min-width: 7rem; }
+.portal-content td:first-child { min-width: 11rem; }
+.portal-content :is(td a[href^="tel:"], td a[href^="mailto:"], td:last-child a) { white-space: nowrap; }
+.portal-shell :is(button, .btn, .btn-gold, .btn-ghost) { flex-shrink: 0; max-width: 100%; white-space: normal; overflow-wrap: normal; word-break: normal; line-height: 1.5; }
+.portal-content :is(.btn-gold, .btn-ghost) { letter-spacing: .06em; text-transform: none; }
+.portal-content .grid > * { min-width: 0; }
+.portal-content form :is(.flex-1) { min-width: 9rem; }
+
 .portal-content .grid > *, .portal-content form, .portal-content label { min-width: 0; }
 .portal-shell :is(input:not([type='checkbox']):not([type='radio']), select, textarea) {
   min-width: 0;

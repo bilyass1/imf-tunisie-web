@@ -19,7 +19,7 @@ const database = {readDb:async()=>structuredClone(db),writeCommercialDb:async(va
 function load(relative) {
   const module = {exports:{}};
   const code = ts.transpileModule(fs.readFileSync(path.join(root,relative),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
-  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='server-only'?{}:id==='./lot-commercial'?load('src/lib/lot-commercial.ts'):id==='./client-deletion'?load('src/lib/client-deletion.ts'):id==='./payments'?load('src/lib/payments.ts'):id==='./amenities'?load('src/lib/amenities.ts'):id==='./rate-limit'?{allowRequest:(...args)=>{rateChecks.push(args);return true;}}:id==='./project-presentation'?{projectPresentation:project=>project}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
+  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='server-only'?{}:id==='./contact-input'?load('src/lib/contact-input.ts'):id==='./gallery-filters'?load('src/lib/gallery-filters.ts'):id==='./lot-commercial'?load('src/lib/lot-commercial.ts'):id==='./client-deletion'?load('src/lib/client-deletion.ts'):id==='./payments'?load('src/lib/payments.ts'):id==='./amenities'?load('src/lib/amenities.ts'):id==='./rate-limit'?{allowRequest:(...args)=>{rateChecks.push(args);return true;}}:id==='./project-presentation'?{projectPresentation:project=>project}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
   vm.runInNewContext(code,{module,exports:module.exports,require:localRequire,Buffer,File,Response,FormData,structuredClone,Date,Intl,process:{cwd:()=>temp,env:{}},console},{filename:relative});
   return module.exports;
 }
@@ -28,7 +28,7 @@ const {clientProperties,clientPaymentsForProperty,clientConstructionPhotos,selec
 const {sendChatMessage} = load('src/lib/chat-actions.ts');
 async function chat(values) {const form=new FormData();for(const [k,v] of Object.entries(values)) form.set(k,v);return sendChatMessage({ok:false,message:''},form);}
 const {GET} = load('src/app/api/media/[id]/route.ts');
-async function act(values) {const form=new FormData(); for(const [k,v] of Object.entries(values)) { if(Array.isArray(v)) v.forEach(item=>form.append(k,item)); else form.set(k,v); } return commercialAction({ok:false,message:''},form);}
+async function act(values) {const form=new FormData(); for(const [k,v] of Object.entries(values)) { if(Array.isArray(v)) v.forEach(item=>form.append(k,item)); else form.set(k,v); } const result=await commercialAction({ok:false,message:''},form);if(values.operation.startsWith('payment-')&&result.ok){assert.equal(result.paymentSnapshot.clientId,values.client);assert.equal(JSON.stringify(result.paymentSnapshot.payments),JSON.stringify(db.users.find(u=>u.id===values.client).payments??[]));}return result;}
 const property={operation:'property',project:'residence',lot:'A1',progress:'65',status:'reserved'};
 const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id})});
 (async()=>{
@@ -38,6 +38,27 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal((await act({...property,progress:'101'})).ok,false);
   assert.equal((await act({...property,status:'invalid'})).ok,false);
   assert.equal(db.projects[0].lots[0].status,'available');
+  db.contacts=[];
+  const newContact={operation:'contact-save',name:'Contact CRM',phone:'22123456',email:'crm@example.test',source:'website',tags:'S+3, Investisseur, S+3',notes:'Rappeler le client',project:'residence',lot:'A1'};
+  session=null;assert.equal((await act(newContact)).ok,false);session={sub:'staff'};
+  assert.equal((await act({...newContact,lot:'B1'})).ok,false);assert.equal(db.contacts.length,0);
+  assert.equal((await act(newContact)).ok,true);const contactId=db.contacts[0].id;assert.equal(db.contacts[0].notes,'Rappeler le client');assert.equal(db.contacts[0].tags.length,2);assert.equal(db.contacts[0].lotRef,'A1');
+  assert.equal((await act({...newContact,contact:contactId,project:'second-residence',lot:'B2',notes:'Visite confirmée'})).ok,true);assert.equal(db.contacts.length,1);assert.equal(db.contacts[0].projectSlug,'second-residence');assert.equal(db.contacts[0].notes,'Visite confirmée');
+  const {parseGalleryFilters,projectGalleryFilters,galleryPhotoCategory}=load('src/lib/gallery-filters.ts');
+  const filters=Array.from({length:7},(_,i)=>({id:'filter-'+i,label:{fr:'Rubrique '+i,en:'',ar:''}}));
+  const filterForm={operation:'gallery-filters',project:'residence',galleryFilters:JSON.stringify(filters)};
+  assert.equal((await act({...filterForm,galleryFilters:JSON.stringify([...filters,{id:'extra',label:{fr:'Extra'}}])})).ok,false);
+  assert.equal((await act({...filterForm,galleryFilters:JSON.stringify([filters[0],filters[0]])})).ok,false);
+  session=null;assert.equal((await act(filterForm)).ok,false);session={sub:'staff'};
+  db.projects[0].gallery=[{src:'/media/test.jpg',caption:progressLabel('Test'),category:'perspectives'}];
+  assert.equal((await act(filterForm)).ok,true);assert.equal(db.projects[0].galleryFilters.length,7);assert.equal(db.projects[0].galleryFilters[0].label.en,'Rubrique 0');assert.equal(db.projects[0].gallery.length,1);assert.equal(galleryPhotoCategory(db.projects[0].gallery[0],db.projects[0].galleryFilters),'');
+  const editPhoto={operation:'gallery-edit',project:'residence',photo:'/media/test.jpg',captionFr:'Photo test',captionEn:'Test photo',captionAr:'صورة',position:'1',category:'filter-6'};
+  assert.equal((await act(editPhoto)).ok,true);assert.equal(db.projects[0].gallery[0].category,'filter-6');
+  assert.equal((await act({...editPhoto,category:'unknown'})).ok,false);
+  assert.equal((await act({...filterForm,galleryFilters:JSON.stringify(filters.slice(0,6))})).ok,true);assert.equal(db.projects[0].gallery.length,1);assert.equal(galleryPhotoCategory(db.projects[0].gallery[0],db.projects[0].galleryFilters),'');
+  assert.equal((await act({...filterForm,galleryFilters:JSON.stringify(projectGalleryFilters({}))})).ok,true);
+  db.projects[0].gallery=[];
+  console.log('PASS: contact notes/tags/project/apartment creation and edits, ownership validation; seven gallery filters, translations, category edits, removed category photo preservation and admin authorization.');
   const propertyResult=await act(property);
   assert.equal(propertyResult.ok,true); assert.equal(propertyResult.publicPath,'/projets/residence/appartements/A1');
   assert.equal(db.projects[0].lots[0].progressPercent,65);
@@ -153,6 +174,17 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal((await act({operation:'client-property-primary',client:owner.id,project:'residence',lot:'A1'})).ok,true);
   const {paymentToday,paymentSummary,parsePaymentAmount,validPaymentDate}=load('src/lib/payments.ts');
   assert.equal(paymentToday(new Date('2026-10-13T23:30:00Z')),'2026-10-14','Payment dates use Tunis time');
+  assert.equal(paymentSummary([{amount:1000,paid:true,receipts:[]}],160000).paid,1000,'An empty receipt list must not erase an explicitly paid legacy instalment');
+  assert.equal(paymentSummary([{amount:1000,paid:true,receipts:[]}],160000).remaining,159000);
+  const emptyReceipt={amount:1000,paid:true,receipts:[]};load('src/lib/payments.ts').updatePaymentStatus(emptyReceipt);assert.equal(emptyReceipt.paid,true);
+  const legacyBuyer=db.users.find(user=>user.id===buyerA2.id);
+  legacyBuyer.paymentSchedules=[{projectSlug:'residence',lotRef:'A2',totalAmount:160000}];
+  legacyBuyer.payments=[{id:'legacy-empty',projectSlug:'residence',lotRef:'A2',label:progressLabel('Échéance historique'),amount:100000,dueDate:'2026-10-12',paid:false,receipts:[]}];
+  const legacyUpdate={operation:'payment-update',client:buyerA2.id,project:'residence',lot:'A2',payment:'legacy-empty',paymentLabelFr:'Échéance historique',amount:'100000',dueDate:'2026-10-12',paymentStatus:'paid',paidAt:'2026-10-12'};
+  assert.equal((await act(legacyUpdate)).ok,true);
+  let corrected=db.users.find(user=>user.id===buyerA2.id).payments[0];assert.equal(corrected.paid,true);assert.equal(paymentSummary([corrected],160000).remaining,60000);
+  assert.equal((await act({...legacyUpdate,amount:'120000'})).ok,true);
+  corrected=db.users.find(user=>user.id===buyerA2.id).payments[0];assert.equal(paymentSummary([corrected],160000).remaining,40000);
   assert.equal(paymentSummary([{amount:0.1,paid:true},{amount:0.2,paid:false}]).remaining,0.2);
   assert.equal(paymentSummary([{amount:0.1,paid:true},{amount:0.2,paid:false}]).total,0.3);
   assert.equal(parsePaymentAmount('12,345'),12.345);

@@ -26,6 +26,7 @@ import {
 } from './db';
 import { createSession, destroySession, getSession } from './session';
 import type { ActivityType, ContactSource, DealStage, LotStatus } from './types';
+import { parseContactInput } from './contact-input';
 import { parseCompositionColumns } from './lot-composition';
 import { validVisitRequest, type VisitRequest } from './visit-request';
 
@@ -207,21 +208,7 @@ export async function addActivityAction(formData: FormData): Promise<void> {
 
 export async function addContactAction(formData: FormData): Promise<void> {
   await requireAdmin();
-  const name = String(formData.get('name') ?? '').trim();
-  const phone = String(formData.get('phone') ?? '').trim();
-  if (!name || !phone) return;
-  (await addContact({
-    name,
-    phone,
-    email: String(formData.get('email') ?? '') || undefined,
-    city: String(formData.get('city') ?? '') || undefined,
-    source: (String(formData.get('source') ?? 'phone') as ContactSource) || 'phone',
-    budget: String(formData.get('budget') ?? '') || undefined,
-    tags: String(formData.get('tags') ?? '')
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean),
-  }));
+  await addContact(parseContactInput(formData,(await readDb()).projects));
   revalidatePath('/', 'layout');
 }
 

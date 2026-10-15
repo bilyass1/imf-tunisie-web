@@ -1,4 +1,4 @@
-import { clientPaymentTotal, paymentPaidAmount, paymentSummary, paymentToday } from '@/lib/payments';
+import { paymentIsPaid, clientPaymentTotal, paymentPaidAmount, paymentSummary, paymentToday } from '@/lib/payments';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
@@ -68,7 +68,7 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
               {payments.map((p) => {
                 const received = paymentPaidAmount(p);
                 const lineRemaining = paymentSummary([p]).remaining;
-                const late = !p.paid && p.dueDate < today;
+                const late = !paymentIsPaid(p) && p.dueDate < today;
                 return (
                   <tr key={p.id} className="border-t border-ink/6">
                     <td className="px-6 py-4 font-medium text-ink">{t(p.label, locale)}
@@ -81,15 +81,15 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
                     <td className="px-6 py-4 text-end">
                       <span
                         className={`chip ${
-                          p.paid
+                          paymentIsPaid(p)
                             ? 'bg-emerald-50 text-emerald-700'
                             : late
                               ? 'bg-red-50 text-red-700'
                               : 'bg-sand text-ink/55'
                         }`}
                       >
-                        {p.paid ? <IconCheck className="h-3 w-3" /> : <IconClock className="h-3 w-3" />}
-                        {p.paid
+                        {paymentIsPaid(p) ? <IconCheck className="h-3 w-3" /> : <IconClock className="h-3 w-3" />}
+                        {paymentIsPaid(p)
                           ? dict.client.paymentsTable.paid
                           : received > 0
                             ? `${dict.client.paymentsTable.partial}${late ? ` · ${dict.client.paymentsTable.late}` : ''}`
@@ -97,7 +97,7 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
                             ? dict.client.paymentsTable.late
                             : dict.client.paymentsTable.pending}
                       </span>
-                      {p.paid && p.paidAt && <p className="mt-2 text-xs text-ink/50">{dict.client.paymentsTable.paidOn} {formatDate(p.paidAt, locale)}</p>}
+                      {paymentIsPaid(p) && p.paidAt && <p className="mt-2 text-xs text-ink/50">{dict.client.paymentsTable.paidOn} {formatDate(p.paidAt, locale)}</p>}
                     </td>
                   </tr>
                 );

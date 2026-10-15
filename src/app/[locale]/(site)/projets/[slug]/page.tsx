@@ -362,6 +362,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
           />
           <div className="mt-12">
             <ProjectGallery
+              filters={project.galleryFilters}
               locale={locale}
               projectSlug={project.slug}
               items={project.gallery.map((g) => ({ src: g.src, caption: t(g.caption, locale), category: g.category }))}

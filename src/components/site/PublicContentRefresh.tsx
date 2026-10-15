@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-/** Refresh server-rendered public content after a commercial edit in any tab or instance. */
+/** Refresh public and client pages after a commercial edit in any tab or instance. */
 export default function PublicContentRefresh({ initialRevision }: { initialRevision: string }) {
   const router = useRouter();
   useEffect(() => {

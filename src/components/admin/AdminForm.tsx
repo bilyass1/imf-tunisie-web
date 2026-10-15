@@ -1,17 +1,18 @@
 'use client';
 
-import { useActionState, useEffect, type ReactNode } from 'react';
+import { useActionState, useEffect, useRef, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { commercialAction } from '@/lib/commercial-actions';
+import { commercialAction, type CommercialState } from '@/lib/commercial-actions';
 import { showCommercialPublicPreview } from './CommercialPublicPreview';
 
-export default function AdminForm({ operation, title, children }: { operation: string; title: string; children: ReactNode }) {
+export default function AdminForm({ operation, title, children, onSaved }: { operation: string; title: string; children: ReactNode; onSaved?:(state:CommercialState)=>void }) {
   const [state, action, pending] = useActionState(commercialAction, { ok: false, message: '' });
+  const savedCallback=useRef(onSaved);savedCallback.current=onSaved;
   const router = useRouter();
   const { locale } = useParams<{ locale: string }>();
   useEffect(() => {
-    if (state.ok) { router.refresh(); if (state.publicPath) showCommercialPublicPreview(state.publicPath, true); }
+    if (state.ok) { savedCallback.current?.(state); router.refresh(); if (state.publicPath) showCommercialPublicPreview(state.publicPath, true); }
   }, [state, router]);
   const buttonLabel = operation === 'client-delete' ? 'Supprimer définitivement le dossier'
     : operation === 'payment-total' ? 'Enregistrer le montant total'

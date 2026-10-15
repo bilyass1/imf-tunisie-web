@@ -1,4 +1,4 @@
-import { clientPaymentTotal, paymentSummary } from '@/lib/payments';
+import { clientPaymentTotal, paymentIsPaid, paymentSummary } from '@/lib/payments';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
@@ -26,7 +26,7 @@ export default async function ClientDashboard({ params, searchParams }: { params
   const payments = clientPaymentsForProperty(user,selected ? {projectSlug:project.slug,lotRef:lot.ref} : undefined);
 
   const { total, paid, remaining } = paymentSummary(payments, clientPaymentTotal(user, selected ? {projectSlug:selected.project.slug,lotRef:selected.lot.ref} : undefined, lot?.price));
-  const nextDue = payments.find((p) => !p.paid);
+  const nextDue = payments.find((p) => !paymentIsPaid(p));
   const pct = total > 0 ? Math.round((paid / total) * 100) : 0;
 
   const avgProgress = project?.progress?.length

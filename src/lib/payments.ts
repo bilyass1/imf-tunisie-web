@@ -23,7 +23,7 @@ export function paymentToday(now = new Date()): string {
 
 /** Add integer millimes to avoid decimal rounding errors in the schedule. */
 export function paymentPaidAmount(payment: Pick<PaymentLine, 'amount' | 'paid' | 'receipts'>) {
-  return payment.receipts !== undefined
+  return !!payment.receipts?.length
     ? payment.receipts.reduce((sum, receipt) => sum + Math.round(receipt.amount * 1000), 0) / 1000
     : payment.paid ? payment.amount : 0;
 }
@@ -41,8 +41,12 @@ export function clientPaymentTotal(user: Pick<User, 'paymentSchedules'>, propert
   return total !== undefined ? total : lotPrice && lotPrice > 0 ? lotPrice : undefined;
 }
 
+export function paymentIsPaid(payment: Pick<PaymentLine,'amount'|'paid'|'receipts'>) {
+  return Math.round(paymentPaidAmount(payment)*1000) >= Math.round(payment.amount*1000);
+}
+
 export function updatePaymentStatus(payment: PaymentLine) {
-  if (payment.receipts === undefined) return;
+  if (!payment.receipts?.length) return;
   payment.paid = Math.round(paymentPaidAmount(payment) * 1000) === Math.round(payment.amount * 1000);
   payment.paidAt = payment.paid ? payment.receipts.map(receipt => receipt.date).sort().at(-1) : undefined;
 }

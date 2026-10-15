@@ -7,6 +7,7 @@ import { getActivitiesForContact, getContact, getDealsForContact, getProjects } 
 import { formatDate, formatMoney } from '@/lib/format';
 import { DEAL_STAGES } from '@/lib/types';
 import { addActivityAction, addTaskAction, setDealStageAction, updateDealAction } from '@/lib/actions';
+import ContactEditor from '@/components/admin/ContactEditor';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
 import { IconArrowLeft, IconMail, IconPhone, IconPin } from '@/components/Icons';
@@ -27,7 +28,8 @@ export default async function ContactDetailPage({
 
   const deals = (await getDealsForContact(id));
   const activities = (await getActivitiesForContact(id));
-  const projectNames = new Map((await getProjects()).map((p) => [p.slug, p.name]));
+  const projects=await getProjects();
+  const projectNames = new Map(projects.map((p) => [p.slug, p.name]));
 
   return (
     <PortalShell
@@ -112,6 +114,7 @@ export default async function ContactDetailPage({
         </aside>
 
         <div className="min-w-0 space-y-6">
+          <ContactEditor key={JSON.stringify(contact)} contact={contact} projects={projects.map(project=>({slug:project.slug,name:project.name,lots:project.lots.map(lot=>({ref:lot.ref,code:lot.code}))}))} locale={locale} sources={dict.crm.sources}/>
           {/* ---- Opportunités ---- */}
           <section className="overflow-hidden rounded-2xl border border-ink/8 bg-white">
             <h2 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink/50">

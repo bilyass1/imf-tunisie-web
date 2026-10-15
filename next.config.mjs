@@ -1,13 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  serverExternalPackages: ['pdf-lib'],
+  outputFileTracingExcludes: {'/*':['./source-assets/**/*','./qa/**/*']},
+  outputFileTracingIncludes: {'/*':['./src/lib/pdf-validator-worker.cjs','./node_modules/pdf-lib/**/*','./node_modules/@pdf-lib/**/*','./node_modules/pako/**/*','./node_modules/tslib/**/*']},
   // Allow a clean preview/build alongside a checkout with locked OneDrive cache files.
   distDir: process.env.IMF_BUILD_DIR || '.next',
   compress: true,
   poweredByHeader: false,
   async headers() {
     return [
-      {source:'/:path*',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'SAMEORIGIN'},{key:'Content-Security-Policy',value:"object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self'"},{key:'Permissions-Policy',value:'camera=(), microphone=(), geolocation=()'}]},
+      {source:'/:path*',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'SAMEORIGIN'},...(process.env.NODE_ENV==='production'?[{key:'Strict-Transport-Security',value:'max-age=31536000'}]:[]),{key:'Permissions-Policy',value:'camera=(), microphone=(), geolocation=()'}]},
+      ...['/models/:path*','/draco/:path*','/plans/:path*'].map(source=>({source,headers:[{key:'Cache-Control',value:'public, max-age=86400, stale-while-revalidate=604800'}]})),
       {source:'/sw.js',headers:[{key:'Cache-Control',value:'no-cache, no-store, must-revalidate'},{key:'Content-Type',value:'application/javascript; charset=utf-8'},{key:'Service-Worker-Allowed',value:'/'}]},
     ];
   },
@@ -19,7 +23,7 @@ const nextConfig = {
     // Les visuels ne changent pas : on les garde un an dans le cache du navigateur.
     minimumCacheTTL: 31536000,
   },
-  eslint: { ignoreDuringBuilds: true },
+
   experimental: {
     serverActions: { bodySizeLimit: '10mb' },
   },

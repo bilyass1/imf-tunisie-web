@@ -1,5 +1,6 @@
 'use client';
 
+import { loadModelBytes, modelPixelRatio } from './model-runtime';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import PlanBrand, { type PlanBrandDetails } from './PlanBrand';
@@ -84,9 +85,9 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
   useEffect(() => {
     const controller = new AbortController();
     setFailed(false);
-    fetch('/models/yassamine/model.json', { signal: controller.signal })
-      .then(r => { if (!r.ok) throw new Error('Model unavailable'); return r.json(); })
-      .then(setModel).catch(e => { if (e.name !== 'AbortError') setFailed(true); });
+    loadModelBytes('/models/yassamine/model.json',{signal:controller.signal,maximumBytes:8*1024*1024})
+      .then(bytes=>JSON.parse(new TextDecoder().decode(bytes)))
+      .then(setModel).catch(() => { if (!controller.signal.aborted) setFailed(true); });
     return () => controller.abort();
   }, [attempt]);
 
@@ -103,13 +104,14 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
       const { mergeGeometries } = await import('three/examples/jsm/utils/BufferGeometryUtils.js');
       if (cancelled) return;
       const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-      renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+      renderer.setPixelRatio(modelPixelRatio(host.clientWidth,host.clientHeight));
+      dispose=()=>{renderer.dispose();renderer.domElement.remove();};
       renderer.setSize(host.clientWidth, host.clientHeight);
       renderer.setClearColor(0xe8e5de);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.15;
-      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.enabled = (navigator.hardwareConcurrency??4)>4 && !window.matchMedia('(pointer: coarse)').matches;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.shadowMap.autoUpdate = false;
       renderer.shadowMap.needsUpdate = true;

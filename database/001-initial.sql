@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS imf_schema_migrations (version integer PRIMARY KEY, a
 CREATE TABLE IF NOT EXISTS imf_projects (slug text PRIMARY KEY, data jsonb NOT NULL CHECK(jsonb_typeof(data)='object'));
 CREATE TABLE IF NOT EXISTS imf_lots (
  project_slug text NOT NULL REFERENCES imf_projects(slug), ref text NOT NULL,
- status text NOT NULL CHECK(status IN ('available','reserved','sold')), data jsonb NOT NULL,
+ status text NOT NULL CHECK(status IN ('available','reserved','sold','unconfirmed')), data jsonb NOT NULL,
  PRIMARY KEY(project_slug,ref)
 );
 CREATE TABLE IF NOT EXISTS imf_users (

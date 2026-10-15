@@ -2,11 +2,11 @@
 /**
  * Convertit les plans de vente PDF (export AutoCAD) en images web.
  *
- *   public/plans/<projet>/A11.pdf   →   public/plans/<projet>/A11.webp
+ *   source-assets/plans/<projet>/A11.pdf   →   public/plans/<projet>/A11.webp
  *
  * Utilisation :
- *   1. Copier les PDF de vente dans public/plans/la-gloire/ et
- *      public/plans/diar-al-yassamine/ en gardant le nom du lot (A11.pdf…).
+ *   1. Copier les PDF de vente dans source-assets/plans/la-gloire/ et
+ *      source-assets/plans/diar-al-yassamine/ en gardant le nom du lot (A11.pdf…).
  *   2. npm run plans
  *
  * Prérequis : Poppler (pdftoppm) ou ImageMagick.
@@ -21,7 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 
-const ROOT = path.resolve(process.cwd(), 'public', 'plans');
+const ROOT = path.resolve(process.cwd(), 'source-assets', 'plans');
 const DPI = process.env.PLAN_DPI ?? '160';
 
 function has(cmd) {
@@ -45,7 +45,7 @@ if (!hasPdftoppm && !magick) {
 
 if (!fs.existsSync(ROOT)) {
   console.error(`✖ Dossier introuvable : ${ROOT}`);
-  console.error('  Créez-le et déposez-y les PDF, par projet : public/plans/la-gloire/A11.pdf');
+  console.error('  Créez-le et déposez-y les PDF, par projet : source-assets/plans/la-gloire/A11.pdf');
   process.exit(1);
 }
 
@@ -63,7 +63,8 @@ for (const project of fs.readdirSync(ROOT)) {
 
   for (const file of pdfs) {
     const name = path.basename(file, path.extname(file));
-    const out = path.join(dir, `${name}.webp`);
+    const out = path.join(process.cwd(),'public','plans',project, `${name}.webp`);
+    fs.mkdirSync(path.dirname(out),{recursive:true});
 
     if (fs.existsSync(out)) {
       skipped += 1;
@@ -84,7 +85,7 @@ for (const project of fs.readdirSync(ROOT)) {
           fs.rmSync(png, { force: true });
         } else {
           // Pas d'ImageMagick : on garde le PNG sous l'extension attendue
-          fs.renameSync(png, path.join(dir, `${name}.png`));
+          fs.renameSync(png, path.join(path.dirname(out), `${name}.png`));
           console.log(`   ${name} → ${name}.png (installez ImageMagick pour le WebP)`);
           converted += 1;
           continue;

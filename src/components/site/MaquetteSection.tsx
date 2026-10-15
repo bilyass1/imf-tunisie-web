@@ -42,7 +42,7 @@ export default function MaquetteSection({
 }) {
   const router = useRouter();
   const isLaGloire = projectSlug === 'residence-la-gloire';
-  const [view, setView] = useState<'architect' | 'availability'>('architect');
+  const [view, setView] = useState<'architect' | 'availability'>('availability');
   const [apartmentRef, setApartmentRef] = useState(selectedRef ?? lots[0]?.ref ?? '');
   const apartmentCopy = locale === 'en'
     ? { label: 'Apartment', open: 'Open apartment details', pick: 'Select on the interactive plan' }

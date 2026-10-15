@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata, Viewport } from 'next';
 import PwaInstall from '@/components/site/PwaInstall';
 import type { ReactNode } from 'react';

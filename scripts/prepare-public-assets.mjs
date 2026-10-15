@@ -18,7 +18,7 @@ for (const file of before.filter(f=>f.startsWith(path.join(root,'360')) && /\.(p
   const output = file.replace(/\.[^.]+$/,'.optimized.webp');
   const original = await sharp(source).metadata();
   const exists = await fs.stat(output).catch(()=>null);
-  if (!exists || exists.mtimeMs < (await fs.stat(source)).mtimeMs) {
+  if (!exists || process.env.REBUILD_PUBLIC_MEDIA==='1') {
     await sharp(source).resize({width:Math.min(original.width,4096),withoutEnlargement:true}).webp({quality:88,effort:4}).toFile(output);
   }
   optimized.push({ url:'/'+path.relative(root,output).replaceAll('\\','/'), originalBytes:(await fs.stat(source)).size, webBytes:(await fs.stat(output)).size });

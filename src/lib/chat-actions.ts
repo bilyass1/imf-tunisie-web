@@ -1,4 +1,5 @@
 'use server';
+import { withAudit } from './audit';
 import { randomUUID } from 'node:crypto';
 import { revalidatePath } from 'next/cache';
 import { getSession } from './session';
@@ -18,7 +19,7 @@ export async function sendChatMessage(_: {ok:boolean;message:string}, form:FormD
     const body=String(form.get('body')??'').trim();
     if(!body || body.length>4000) throw new Error('Écrivez un message de 1 à 4 000 caractères.');
     (client.messages??=[]).push({id:randomUUID(),from:sender.role==='admin'?'imf':'client',date:new Date().toISOString(),body});
-    (await writeCommercialDb(db));
+    (await withAudit({actorId:sender.id,operation:'chat-send'},()=>writeCommercialDb(db)));
     revalidatePath('/','layout');
     return {ok:true,message:'Message envoyé.'};
   } catch(error) {return {ok:false,message:error instanceof Error?error.message:'Envoi impossible. Réessayez.'};}

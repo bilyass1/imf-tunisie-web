@@ -42,7 +42,7 @@ for (const lot of existing) {
   assert.equal(lot.planImage, `/plans/diar-al-yassamine/${lot.ref}.webp`);
   const record = source.plans.find(item => item.ref === lot.ref);
   assert.ok(record, `Missing source ${lot.ref}`);
-  const pdf = fs.readFileSync(`public${lot.planUrl}`);
+  const pdf = fs.readFileSync(`source-assets${lot.planUrl}`);
   assert.equal(crypto.createHash('sha256').update(pdf).digest('hex'), record.pdfSha256);
   assert.ok(fs.statSync(`public${lot.planImage}`).size > 1000);
 }

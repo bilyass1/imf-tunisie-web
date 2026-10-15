@@ -5,9 +5,9 @@ import PasswordField from '@/components/auth/PasswordField';
 export type LotOwner = { id: string; name: string; email: string };
 export const saleStatusLabels = {available:'Disponible',reserved:'Réservé',sold:'Vendu',unconfirmed:'À confirmer'};
 
-export function StatusPinField() {
-  return <label className="block text-sm">Code PIN pour modifier un appartement vendu
-    <input name="statusPin" type="password" inputMode="numeric" pattern="[0-9]{8}" minLength={8} maxLength={8} autoComplete="off" required className="field mt-2"/>
+export function SensitivePasswordField() {
+  return <label className="block text-sm">Votre mot de passe administrateur pour modifier un appartement vendu
+    <input name="sensitivePassword" type="password" maxLength={72} autoComplete="current-password" required className="field mt-2"/>
   </label>;
 }
 
@@ -22,7 +22,7 @@ export default function LotStatusFields({ currentStatus, note, owner, clients = 
       {Object.entries(saleStatusLabels).filter(([value])=>!limited || value==='reserved'||value==='sold').map(([value,label])=><option key={value} value={value}>{label}</option>)}
     </select></label>
     {status==='reserved' && <label className="block text-sm">Note de réservation (administration)<textarea name="reservationNote" rows={3} maxLength={2000} value={reservationNote} onChange={event=>setReservationNote(event.target.value)} className="field mt-2"/></label>}
-    {currentStatus==='sold' && status!=='sold' && <StatusPinField/>}
+    {currentStatus==='sold' && status!=='sold' && <SensitivePasswordField/>}
     {owner && <p className="text-sm text-ink/65">Compte lié : {owner.name} · {owner.email}</p>}
     {status==='sold' && !owner && !limited && <fieldset className="space-y-3 rounded-xl border border-gold-300 p-3">
       <legend className="px-1 text-sm font-semibold">Compte client obligatoire</legend>

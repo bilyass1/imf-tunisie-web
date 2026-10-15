@@ -24,12 +24,12 @@ for (const lot of YASSAMINE_A6_LOTS) {
   assert.equal(lot.status, 'available');
   assert.equal(lot.price, undefined);
   assert.ok(lot.sellableArea > lot.grossArea);
-  assert.ok(fs.statSync(`public${lot.planUrl}`).size > 1000, lot.planUrl);
+  assert.ok(fs.statSync(`source-assets${lot.planUrl}`).size > 1000, lot.planUrl);
   assert.ok(fs.statSync(`public${lot.planImage}`).size > 1000, lot.planImage);
   const floorSheet = lot.block === 'A6.a'
     ? `A6a-${lot.floor === 4 ? 4 : lot.floor === 0 ? 0 : 1}`
     : `A6b-${lot.floor <= 1 ? lot.floor : 2}`;
-  assert.ok(fs.statSync(`public/models/yassamine/presentation/${floorSheet}.pdf`).size > 1000);
+  assert.ok(fs.statSync(`source-assets/models/yassamine/presentation/${floorSheet}.pdf`).size > 1000);
 }
 
 const existing = { ...YASSAMINE_A6_LOTS[0], status: 'sold', price: 155000, planUrl: '/old.pdf' };

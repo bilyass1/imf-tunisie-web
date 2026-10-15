@@ -26,6 +26,8 @@ import {
 } from './db';
 import { createSession, destroySession, getSession } from './session';
 import type { ActivityType, ContactSource, DealStage, LotStatus } from './types';
+import { withAudit } from './audit';
+import { verifyAdminPassword } from './sensitive-actions';
 import { parseContactInput } from './contact-input';
 import { parseCompositionColumns } from './lot-composition';
 import { validVisitRequest, type VisitRequest } from './visit-request';
@@ -123,27 +125,32 @@ async function requireAdmin() {
 
 export async function updateLotStatusAction(formData: FormData): Promise<void> {
   const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'updateLotStatusAction'},async()=>{
   const projectSlug = String(formData.get('projectSlug') ?? '');
   const lotRef = String(formData.get('lotRef') ?? '');
   const status = String(formData.get('status') ?? 'available') as LotStatus;
   if(!['available','reserved','sold','unconfirmed'].includes(status)) throw new Error('Invalid status');
-  if(formData.has('statusPin') && !await allowRequest('commercial-status-pin',actor.sub,5,60000)) throw new Error('Trop de tentatives de PIN.');
-  (await updateLotStatus(projectSlug, lotRef, status, String(formData.get('statusPin')??''), formData.has('reservationNote')?String(formData.get('reservationNote')??''):undefined));
+  const authorized=formData.has('sensitivePassword')?await verifyAdminPassword(await readDb(),actor.sub,String(formData.get('sensitivePassword')??'')):false;
+  (await updateLotStatus(projectSlug, lotRef, status, authorized, formData.has('reservationNote')?String(formData.get('reservationNote')??''):undefined));
   revalidatePath('/', 'layout');
+  });
 }
 
 export async function updateLotPriceAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'updateLotPriceAction'},async()=>{
   const projectSlug = String(formData.get('projectSlug') ?? '');
   const lotRef = String(formData.get('lotRef') ?? '');
   const raw = String(formData.get('price') ?? '').trim();
   if(raw && (!Number.isFinite(Number(raw)) || Number(raw)<0)) throw new Error('Invalid price');
   (await updateLotPrice(projectSlug, lotRef, raw ? Number(raw) : undefined));
   revalidatePath('/', 'layout');
+  });
 }
 
 export async function updateLotCompositionAction(_previous: FormState, formData: FormData): Promise<FormState> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'updateLotCompositionAction'},async()=>{
   const projectSlug = String(formData.get('projectSlug') ?? '');
   const lotRef = String(formData.get('lotRef') ?? '');
   if (!projectSlug || !lotRef) return { ok: false, error: 'missing' };
@@ -156,44 +163,54 @@ export async function updateLotCompositionAction(_previous: FormState, formData:
   if (!await updateLotComposition(projectSlug, lotRef, composition)) return { ok: false, error: 'missing' };
   revalidatePath('/', 'layout');
   return { ok: true, done: true };
+  });
 }
 
 export async function applyDemoAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'applyDemoAction'},async()=>{
   (await applyDemoStatuses(String(formData.get('projectSlug') ?? '')));
   revalidatePath('/', 'layout');
+  });
 }
 
 export async function resetStatusesAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'resetStatusesAction'},async()=>{
   (await resetLotStatuses(String(formData.get('projectSlug') ?? '')));
   revalidatePath('/', 'layout');
+  });
 }
 
 /* ------------------------------- CRM -------------------------------- */
 
 export async function setDealStageAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'setDealStageAction'},async()=>{
   (await setDealStage(
     String(formData.get('dealId') ?? ''),
     String(formData.get('stage') ?? 'new') as DealStage,
     String(formData.get('lostReason') ?? '') || undefined,
   ));
   revalidatePath('/', 'layout');
+  });
 }
 
 export async function updateDealAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'updateDealAction'},async()=>{
   const rawValue = String(formData.get('value') ?? '').trim();
   (await updateDeal(String(formData.get('dealId') ?? ''), {
     value: rawValue ? Number(rawValue) : undefined,
     expectedCloseDate: String(formData.get('expectedCloseDate') ?? '') || undefined,
   }));
   revalidatePath('/', 'layout');
+  });
 }
 
 export async function addActivityAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'addActivityAction'},async()=>{
   const body = String(formData.get('body') ?? '').trim();
   if (!body) return;
   (await addActivity({
@@ -204,16 +221,20 @@ export async function addActivityAction(formData: FormData): Promise<void> {
     body,
   }));
   revalidatePath('/', 'layout');
+  });
 }
 
 export async function addContactAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'addContactAction'},async()=>{
   await addContact(parseContactInput(formData,(await readDb()).projects));
   revalidatePath('/', 'layout');
+  });
 }
 
 export async function addTaskAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'addTaskAction'},async()=>{
   const title = String(formData.get('title') ?? '').trim();
   if (!title) return;
   (await addTask({
@@ -223,16 +244,21 @@ export async function addTaskAction(formData: FormData): Promise<void> {
     dealId: String(formData.get('dealId') ?? '') || undefined,
   }));
   revalidatePath('/', 'layout');
+  });
 }
 
 export async function toggleTaskAction(formData: FormData): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'toggleTaskAction'},async()=>{
   (await toggleTask(String(formData.get('taskId') ?? '')));
   revalidatePath('/', 'layout');
+  });
 }
 
 export async function clearDemoCrmAction(): Promise<void> {
-  await requireAdmin();
+  const actor=await requireAdmin();
+  return withAudit({actorId:actor.sub,operation:'clearDemoCrmAction'},async()=>{
   (await clearDemoCrm());
   revalidatePath('/', 'layout');
+  });
 }

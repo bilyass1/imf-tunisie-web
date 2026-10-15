@@ -64,12 +64,6 @@ export default async function ClientLoginPage({ params }: { params: Promise<{ lo
               }}
             />
           </div>
-
-          <div className="mt-10 rounded-xl border border-dashed border-ink/15 bg-white/60 px-5 py-4 text-[12px] text-ink/50">
-            <p className="font-semibold uppercase tracking-[0.14em] text-ink/40">{dict.auth.demoTitle}</p>
-            <p className="mt-2">{dict.auth.demoClient}</p>
-            <p className="mt-1">{dict.auth.demoAdmin}</p>
-          </div>
         </div>
       </div>
     </main>

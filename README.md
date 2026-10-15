@@ -1,5 +1,8 @@
 # IMF — Site web & espace client
 
+> Mise à jour sécurité et performances : voir [docs/SECURITY-REMEDIATION.md](docs/SECURITY-REMEDIATION.md). Aucun compte existant n’est réinitialisé. Les nouveaux PDF contractuels exigent un service ClamAV en production. Les sources techniques sont conservées dans `source-assets/` ; seules les présentations approuvées sont publiées. Sur une installation vierge, créer le premier administrateur avec `npm run admin:create` et des identifiants fournis dans un environnement privé.
+
+
 Site officiel d'**IMF — Immobilière Mseddi Frères**, promoteur immobilier à Sfax et Tunis.
 Application **Next.js 15** (App Router, TypeScript, Tailwind CSS), trilingue **FR / EN / AR** avec support RTL complet.
 
@@ -116,7 +119,6 @@ Authentification par e-mail + mot de passe (JWT signé, cookie `httpOnly`).
 - Chantier : avancement par lot de travaux + photos
 - Messages : conversation avec le service commercial
 
-**Compte de démonstration :** `client@demo.tn` / `demo2026`
 
 ### CRM commercial — `/fr/admin-connexion`
 
@@ -141,7 +143,6 @@ situation, effaçable par le bouton « Vider les données de démonstration » d
 Côté disponibilité, le bouton « appliquer un jeu de statuts de démonstration » colore le plan
 et la maquette de façon réaliste, avec remise à zéro.
 
-**Compte administrateur :** `admin@imf-tunisie.com.tn` / `imf2026`
 > ⚠️ **Changer ces deux mots de passe avant la mise en ligne** (voir §5).
 
 ---
@@ -201,7 +202,6 @@ Pour un hébergement 100 % autonome : déposer les `.woff2` dans `public/fonts/`
    ```bash
    node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
    ```
-2. **Changer les mots de passe** des comptes `admin@imf-tunisie.com.tn` et `client@demo.tn` (ou supprimer le compte de démonstration) — modifier `src/lib/seed.ts` puis régénérer `data/db.json`, ou éditer directement les `passwordHash` avec `bcrypt.hashSync('nouveau-mot-de-passe', 10)`.
 3. **Valider le contenu** avec IMF : voir `CONTENU-A-VALIDER.md`.
 4. **Formulaire de contact** : les demandes sont enregistrées en base et visibles dans le back-office. Pour recevoir aussi une notification e-mail, ajouter l'envoi dans `submitLeadAction` (`src/lib/actions.ts`) avec Nodemailer ou Resend.
 5. **Plans PDF** : le bouton « Télécharger le plan » pointe vers `/plans/la-gloire/<REF>.pdf`. Copier les PDF de vente dans `public/plans/la-gloire/` en les nommant `A11.pdf`, `B23.pdf`, etc.

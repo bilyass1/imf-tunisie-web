@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { clientProperties } from '@/lib/client-properties';
-import { StatusPinField } from './LotStatusFields';
+import { SensitivePasswordField } from './LotStatusFields';
 
 type Project = {slug:string;name:string;lots:{ref:string;code:string;status:string;reservationNote?:string}[]};
 type Client = {properties?:{projectSlug:string;lotRef:string}[];projectSlug?:string;lotRef?:string};
@@ -13,7 +13,7 @@ export default function ClientApartmentSelection({projects,clients}: {projects:P
   const occupied=clients.flatMap(clientProperties);
   const project=projects.find(project=>project.slug===slug);
   const available=project?.lots.filter(lot=>![...occupied,...selected].some(item=>item.projectSlug===slug && item.lotRef===lot.ref))??[];
-  const needsPin=selected.some(item=>item.status!=='sold' && projects.find(project=>project.slug===item.projectSlug)?.lots.find(lot=>lot.ref===item.lotRef)?.status==='sold');
+  const needsPassword=selected.some(item=>item.status!=='sold' && projects.find(project=>project.slug===item.projectSlug)?.lots.find(lot=>lot.ref===item.lotRef)?.status==='sold');
   function update(index:number,patch:Partial<Selection>) {setSelected(items=>items.map((item,i)=>i===index?{...item,...patch}:item));}
   return <fieldset className="space-y-4 rounded-xl border border-ink/10 p-4">
     <legend className="px-1 font-semibold">Appartements à rattacher au compte</legend>
@@ -35,7 +35,7 @@ export default function ClientApartmentSelection({projects,clients}: {projects:P
         {item.status==='reserved' && <label className="block text-sm">Note de réservation (administration)<textarea className="field mt-2" rows={3} maxLength={2000} value={item.reservationNote} onChange={event=>update(index,{reservationNote:event.target.value})}/></label>}
       </div>;
     })}
-    {needsPin && <StatusPinField/>}
+    {needsPassword && <SensitivePasswordField/>}
     <p className="text-sm text-ink/55">La création du compte mettra à jour tous les appartements sélectionnés dans Lots et disponibilité.</p>
   </fieldset>;
 }

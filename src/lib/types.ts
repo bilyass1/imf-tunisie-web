@@ -1,3 +1,4 @@
+import type { AuditEvent } from './audit';
 import type { GalleryFilter } from './gallery-filters';
 import type { AmenityIcon } from './amenities';
 
@@ -298,6 +299,7 @@ export interface User {
 }
 
 export interface Database {
+  auditEvents?: AuditEvent[];
   company?: { legalName: string; email: string; phone: string; address: string; city: string; about: string };
   uploads?: { id: string; mime: string; name: string; clientId?: string; public: boolean }[];
   projects: Project[];

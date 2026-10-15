@@ -1,4 +1,3 @@
-import bcrypt from 'bcryptjs';
 import { MARASSIM_PROJECT_CONTENT } from './marassim-presentation';
 import type { Activity, Contact, CrmTask, Database, Deal, Lot, Localized, Project, Room } from './types';
 import { LA_GLOIRE_LOTS, YASSAMINE_A5A_LOTS } from './lots-la-gloire';
@@ -571,7 +570,6 @@ const CRM_TASKS: CrmTask[] = [
 ];
 
 export function buildSeed(): Database {
-  const hash = (pwd: string) => bcrypt.hashSync(pwd, 10);
 
   return {
     projects: PROJECTS,
@@ -580,42 +578,6 @@ export function buildSeed(): Database {
     deals: CRM_DEALS,
     activities: CRM_ACTIVITIES,
     tasks: CRM_TASKS,
-    users: [
-      {
-        id: 'u-admin',
-        email: 'admin@imf-tunisie.com.tn',
-        passwordHash: hash('imf2026'),
-        name: 'Administration IMF',
-        role: 'admin',
-      },
-      {
-        id: 'u-demo',
-        email: 'client@demo.tn',
-        passwordHash: hash('demo2026'),
-        name: 'Client démonstration',
-        phone: '+216 20 000 000',
-        role: 'client',
-        projectSlug: 'residence-la-gloire',
-        lotRef: 'B13',
-        payments: [
-          { id: 'p1', label: L('Acompte de réservation', 'Reservation deposit', 'تسبقة الحجز'), dueDate: '2026-03-05', amount: 25000, paid: true, paidAt: '2026-03-04' },
-          { id: 'p2', label: L('1ʳᵉ tranche — signature', '1st instalment — signature', 'القسط الأول — الإمضاء'), dueDate: '2026-05-15', amount: 60000, paid: true, paidAt: '2026-05-12' },
-          { id: 'p3', label: L('2ᵉ tranche — gros œuvre', '2nd instalment — structure', 'القسط الثاني — الأشغال الكبرى'), dueDate: '2026-10-15', amount: 60000, paid: false },
-          { id: 'p4', label: L('3ᵉ tranche — façades', '3rd instalment — façades', 'القسط الثالث — الواجهات'), dueDate: '2027-02-15', amount: 55000, paid: false },
-          { id: 'p5', label: L('Solde à la livraison', 'Balance on delivery', 'الرصيد عند التسليم'), dueDate: '2027-09-30', amount: 45000, paid: false },
-        ],
-        documents: [
-          { id: 'd1', label: L('Contrat de réservation', 'Reservation contract', 'عقد الحجز'), kind: 'contract', date: '2026-03-04', href: '#' },
-          { id: 'd2', label: L('Plan de l’appartement B 1-3', 'Apartment B 1-3 plan', 'مخطط الشقة B 1-3'), kind: 'plan', date: '2026-03-04', href: '#' },
-          { id: 'd3', label: L('Reçu acompte', 'Deposit receipt', 'وصل التسبقة'), kind: 'receipt', date: '2026-03-05', href: '#' },
-          { id: 'd4', label: L('Reçu 1ʳᵉ tranche', '1st instalment receipt', 'وصل القسط الأول'), kind: 'receipt', date: '2026-05-12', href: '#' },
-        ],
-        messages: [
-          { id: 'm1', from: 'imf', date: '2026-05-13', body: 'Bonjour, nous confirmons la réception de votre 1ʳᵉ tranche. Le reçu est disponible dans vos documents.' },
-          { id: 'm2', from: 'client', date: '2026-08-20', body: 'Merci. Où en est l’avancement des façades du bloc B ?' },
-          { id: 'm3', from: 'imf', date: '2026-08-21', body: 'Les façades du bloc B sont à 70 %. Les photos d’avancement sont mises à jour dans votre espace chaque mois.' },
-        ],
-      },
-    ],
+    users: [],
   };
 }

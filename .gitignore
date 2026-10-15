@@ -15,3 +15,7 @@ next-env.d.ts
 .vercel
 tsconfig.tsbuildinfo
 tmp/
+
+.imf-source-assets/
+public/**/*.preview.webp
+public/**/*.web.pdf

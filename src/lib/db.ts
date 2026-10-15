@@ -23,6 +23,7 @@ import { buildSeed } from './seed';
 import { applyYassamineA5aFacts, includeYassamineApartments } from './yassamine-catalog';
 import { includeYassamineA6Lots } from './yassamine-a6';
 import { includeYassamineA5bLots } from './yassamine-a5b';
+import { createAuditEvent } from './audit';
 import { changeLotStatus } from './lot-commercial';
 import { projectPresentation } from './project-presentation';
 import { getStore, type MediaWrite } from './postgres-store.cjs';
@@ -122,7 +123,7 @@ export function isPersistent(): boolean {
 /** Commercial records must never silently fall back to volatile memory. */
 export async function writeCommercialDb(data: Database, media?: MediaWrite): Promise<void> {
   if (process.env.DATABASE_URL) {
-    try { await getStore(buildSeed).write(data, media); return; }
+    try { const before=await getStore(buildSeed).read(); await getStore(buildSeed).write(data, media,createAuditEvent(before,data)); return; }
     catch (error) {
       if (error && typeof error === 'object' && 'code' in error) throw new Error('Enregistrement PostgreSQL impossible. Réessayez ou contactez l’administrateur.');
       throw error;
@@ -131,7 +132,10 @@ export async function writeCommercialDb(data: Database, media?: MediaWrite): Pro
   if (!isPersistent()) throw new Error('Stockage durable indisponible.');
   const before = fs.statSync(dbFile);
   if (localVersions.get(data) !== `${before.mtimeMs}/${before.size}`) throw new Error('Les données ont changé. Réessayez.');
-  const previousUploads: NonNullable<Database['uploads']> = JSON.parse(fs.readFileSync(dbFile,'utf8')).uploads ?? [];
+  const previous:Database=JSON.parse(fs.readFileSync(dbFile,'utf8'));
+  const event=createAuditEvent(previous,data);
+  data.auditEvents=[...(previous.auditEvents??[]),event];
+  const previousUploads: NonNullable<Database['uploads']> = previous.uploads ?? [];
   const remainingMedia = new Set((data.uploads ?? []).map(file=>file.id));
   const removedMedia = previousUploads.filter(file=>!remainingMedia.has(file.id) && /^[a-f0-9-]{36}$/.test(file.id)).map(file=>file.id);
   let mediaFile: string | undefined;
@@ -177,7 +181,7 @@ export const getPublicData = requestCache(async () => {
     return data;
   }
   const { projects, company, news } = await readDb();
-  return { projects: projects.map(project=>({...project,lots:project.lots.map(({reservationNote: _note,...lot})=>lot)})), company, news };
+  return { projects: projects.map(project=>({...project,lots:project.lots.map(({reservationNote: _note,planDwgUrl:_dwg,...lot})=>lot)})), company, news };
 });
 /** A small cross-instance signal for already-open public pages. */
 export async function getPublicRevision(): Promise<string> {
@@ -234,12 +238,12 @@ export function lotStats(lots: Lot[]): LotStats {
   };
 }
 
-export async function updateLotStatus(projectSlug: string, lotRef: string, status: LotStatus, pin = '', note?: string): Promise<boolean> {
+export async function updateLotStatus(projectSlug: string, lotRef: string, status: LotStatus, authorized = false, note?: string): Promise<boolean> {
   const db = (await readDb());
   const project = db.projects.find((p) => p.slug === projectSlug);
   const lot = project?.lots.find((l) => l.ref === lotRef);
   if (!lot) return false;
-  changeLotStatus(db,projectSlug,lot,status,pin,note);
+  changeLotStatus(db,projectSlug,lot,status,authorized,note);
   (await writeDb(db));
   return true;
 }
@@ -543,4 +547,26 @@ export async function applyDemoStatuses(_projectSlug: string): Promise<void> {
 
 export async function resetLotStatuses(_projectSlug: string): Promise<void> {
   throw new Error('La réinitialisation globale est désactivée : modifiez chaque appartement avec son contrôle PIN.');
+}
+
+/** Narrow queries used by polling and private-file authorization. */
+export async function getConversationRevision(userId:string,admin:boolean):Promise<string> {
+  if(process.env.DATABASE_URL) return getStore(buildSeed).conversationRevision(userId,admin);
+  const {createHash}=await import('node:crypto');
+  const users=(await readDb()).users.filter(user=>admin?user.role==='client':user.id===userId);
+  return createHash('sha256').update(JSON.stringify(users.map(user=>({id:user.id,name:user.name,messages:user.messages})))).digest('hex');
+}
+export async function canReadPrivateMedia(id:string,userId:string):Promise<boolean> {
+  if(process.env.DATABASE_URL) return getStore(buildSeed).canReadMedia(id,userId);
+  const db=await readDb(),user=db.users.find(user=>user.id===userId),file=db.uploads?.find(file=>file.id===id);
+  if(!user || !file) return false;
+  if(user.role==='admin') return true;
+  if(user.role!=='client') return false;
+  const href=`/api/media/${id}`;
+  if(file.clientId) return file.clientId===user.id && (!!user.documents?.some(document=>document.href===href)||!!user.constructionPhotos?.some(photo=>photo.src===href));
+  const {clientProperties}=await import('./client-properties');
+  return clientProperties(user).some(property=>{const project=db.projects.find(project=>project.slug===property.projectSlug),lot=project?.lots.find(lot=>lot.ref===property.lotRef);return [...(project?.constructionPhotos??[]),...(lot?.constructionPhotos??[])].some(photo=>photo.src===href);});
+}
+export async function getAuditEvents() {
+  return process.env.DATABASE_URL?getStore(buildSeed).readAudit():[...(await readDb()).auditEvents??[]].reverse().slice(0,100);
 }

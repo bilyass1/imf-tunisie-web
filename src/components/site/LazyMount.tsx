@@ -62,6 +62,7 @@ export default function LazyMount({
       {shown ? children : <div role="status" className="grid min-h-[var(--viewer-height)] place-content-center gap-4 rounded-2xl bg-ink/5 p-8 text-center text-ink/60 sm:min-h-[var(--viewer-desktop-height)]">
         <span aria-hidden="true" className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gold-300/30 border-t-gold-400 motion-reduce:animate-none" />
         {loadingLabel && <p className="text-sm">{loadingLabel}</p>}
+        <button type="button" className="btn-gold mx-auto" onClick={()=>setShown(true)}>{loadingLabel && /[\u0600-\u06ff]/.test(loadingLabel)?'فتح العرض':loadingLabel?.startsWith('Loading')?'Open interactive view':'Ouvrir la vue interactive'}</button>
       </div>}
     </div>
   );

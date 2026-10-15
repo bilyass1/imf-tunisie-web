@@ -6,9 +6,9 @@ import type { User } from './types';
 
 export async function requireClient(locale: string): Promise<User> {
   const session = await getSession();
-  if (!session) redirect(`/${locale}/connexion`);
+  if (!session || session.role !== 'client') redirect(`/${locale}/connexion`);
   const user = (await getUserById(session.sub));
-  if (!user) redirect(`/${locale}/connexion`);
+  if (!user || user.role !== 'client') redirect(`/${locale}/connexion`);
   return user;
 }
 

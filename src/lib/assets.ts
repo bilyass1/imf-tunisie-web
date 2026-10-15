@@ -1,6 +1,7 @@
 import 'server-only';
 import fs from 'node:fs';
 import path from 'node:path';
+import publicDocuments from './public-documents.json';
 import bundledAssets from './public-assets.json';
 
 /**
@@ -17,6 +18,8 @@ const bundled = new Set(bundledAssets);
 
 export function publicFileExists(url?: string | null): boolean {
   if (!url || !url.startsWith('/')) return false;
+  const source=url.split('?')[0];
+  url=(publicDocuments.redirects as Record<string,string>)[source]??url;
   if (bundled.has(url.split('?')[0])) return true;
   const cached = cache.get(url);
   if (cached !== undefined) return cached;

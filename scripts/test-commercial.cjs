@@ -7,20 +7,21 @@ const vm = require('node:vm');
 const ts = require('typescript');
 const sharp = require('sharp');
 const bcrypt = require('bcryptjs');
+const sensitivePassword=require('node:crypto').randomBytes(24).toString('base64');
 const root = path.resolve(__dirname, '..');
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'imf-commercial-test-'));
 const progressLabel=name=>({fr:name,en:name,ar:name});
-let db = { users: [{id:'staff',role:'admin',email:'staff@example.test'}], projects: [{slug:'residence',progress:[{label:progressLabel('Gros œuvre'),percent:100,done:true},{label:progressLabel('Façades'),percent:70,done:false}],lots:[{ref:'A1',status:'available',rooms:[{id:'salon',label:progressLabel('Séjour'),panorama:'/360/residence/A1/salon.jpg'}]},{ref:'A2',status:'available'}],gallery:[]},{slug:'second-residence',lots:[{ref:'B1',status:'available'},{ref:'B2',status:'available'}],gallery:[]}] };
+let db = { users: [{id:'staff',role:'admin',email:'staff@example.test',passwordHash:bcrypt.hashSync(sensitivePassword,4)}], projects: [{slug:'residence',progress:[{label:progressLabel('Gros œuvre'),percent:100,done:true},{label:progressLabel('Façades'),percent:70,done:false}],lots:[{ref:'A1',status:'available',rooms:[{id:'salon',label:progressLabel('Séjour'),panorama:'/360/residence/A1/salon.jpg'}]},{ref:'A2',status:'available'}],gallery:[]},{slug:'second-residence',lots:[{ref:'B1',status:'available'},{ref:'B2',status:'available'}],gallery:[]}] };
 let session = {sub:'staff'};
 let persistent = true;
 const mediaBytes=new Map();
 const rateChecks=[];
-const database = {readDb:async()=>structuredClone(db),writeCommercialDb:async(value,media)=>{for(const file of db.uploads??[])if(!(value.uploads??[]).some(next=>next.id===file.id))mediaBytes.delete(file.id);db=value;if(media)mediaBytes.set(media.id,media.bytes);},isPersistent:()=>persistent,readMedia:async id=>mediaBytes.get(id),getMediaMetadata:async id=>db.uploads?.find(file=>file.id===id)};
+const database = {canReadPrivateMedia:async(id,userId)=>{const saved=db.users.find(user=>user.id===userId),file=db.uploads?.find(item=>item.id===id);if(!saved||!file)return false;if(saved.role==='admin')return true;const href=`/api/media/${id}`;if(file.clientId)return file.clientId===userId && (!!saved.documents?.some(item=>item.href===href)||!!saved.constructionPhotos?.some(item=>item.src===href));return clientProperties(saved).some(property=>{const project=db.projects.find(item=>item.slug===property.projectSlug),lot=project?.lots.find(item=>item.ref===property.lotRef);return [...project?.constructionPhotos??[],...lot?.constructionPhotos??[]].some(item=>item.src===href);});},readDb:async()=>structuredClone(db),writeCommercialDb:async(value,media)=>{for(const file of db.uploads??[])if(!(value.uploads??[]).some(next=>next.id===file.id))mediaBytes.delete(file.id);db=value;if(media)mediaBytes.set(media.id,media.bytes);},isPersistent:()=>persistent,readMedia:async id=>mediaBytes.get(id),getMediaMetadata:async id=>db.uploads?.find(file=>file.id===id)};
 function load(relative) {
   const module = {exports:{}};
   const code = ts.transpileModule(fs.readFileSync(path.join(root,relative),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
-  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='server-only'?{}:id==='./contact-input'?load('src/lib/contact-input.ts'):id==='./gallery-filters'?load('src/lib/gallery-filters.ts'):id==='./lot-commercial'?load('src/lib/lot-commercial.ts'):id==='./client-deletion'?load('src/lib/client-deletion.ts'):id==='./payments'?load('src/lib/payments.ts'):id==='./amenities'?load('src/lib/amenities.ts'):id==='./rate-limit'?{allowRequest:(...args)=>{rateChecks.push(args);return true;}}:id==='./project-presentation'?{projectPresentation:project=>project}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
-  vm.runInNewContext(code,{module,exports:module.exports,require:localRequire,Buffer,File,Response,FormData,structuredClone,Date,Intl,process:{cwd:()=>temp,env:{}},console},{filename:relative});
+  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='server-only'?{}:id==='./commercial-payments'?load('src/lib/commercial-payments.ts'):id==='./commercial-input'?load('src/lib/commercial-input.ts'):id==='./sensitive-actions'?load('src/lib/sensitive-actions.ts'):id==='./audit'?load('src/lib/audit.ts'):id==='./pdf-validation'?load('src/lib/pdf-validation.ts'):id==='./contact-input'?load('src/lib/contact-input.ts'):id==='./gallery-filters'?load('src/lib/gallery-filters.ts'):id==='./lot-commercial'?load('src/lib/lot-commercial.ts'):id==='./client-deletion'?load('src/lib/client-deletion.ts'):id==='./payments'?load('src/lib/payments.ts'):id==='./amenities'?load('src/lib/amenities.ts'):id==='./rate-limit'?{allowRequest:(...args)=>{rateChecks.push(args);return true;}}:id==='./project-presentation'?{projectPresentation:project=>project}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
+  vm.runInNewContext(code,{module,exports:module.exports,require:localRequire,Buffer,setTimeout,clearTimeout,File,Response,Headers,FormData,structuredClone,Date,Intl,process:{cwd:()=>root,env:{}},console},{filename:relative});
   return module.exports;
 }
 const {commercialAction} = load('src/lib/commercial-actions.ts');
@@ -32,6 +33,7 @@ async function act(values) {const form=new FormData(); for(const [k,v] of Object
 const property={operation:'property',project:'residence',lot:'A1',progress:'65',status:'reserved'};
 const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id})});
 (async()=>{
+  const pdfDocument=await require('pdf-lib').PDFDocument.create();pdfDocument.addPage();const validPdf=await pdfDocument.save();
   session=null; assert.equal((await act(property)).ok,false);
   session={sub:'missing',role:'admin'}; assert.equal((await act(property)).ok,false);
   session={sub:'staff'}; persistent=false; assert.equal((await act(property)).ok,false); persistent=true;
@@ -127,12 +129,12 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal(db.projects[0].lots[1].status,'sold');assert.equal(clientProperties(buyerA2)[0].lotRef,'A2');
   for(const status of ['available','reserved','unconfirmed']) {
     const snapshot=JSON.stringify(db);
-    for(const statusPin of ['', '22201010','22201011x']) {
-      assert.equal((await act({...sale,status,statusPin})).ok,false);assert.equal(JSON.stringify(db),snapshot,'Wrong PIN has no partial effects');
-      assert.equal((await act({operation:'property',project:'residence',lot:'A2',status,statusPin,progress:'30'})).ok,false);assert.equal(JSON.stringify(db),snapshot,'Progress editing cannot bypass the sold gate');
+    for(const wrongPassword of ['', 'incorrect-password','malformed-password']) {
+      assert.equal((await act({...sale,status,sensitivePassword:wrongPassword})).ok,false);assert.equal(JSON.stringify(db),snapshot,'Wrong PIN has no partial effects');
+      assert.equal((await act({operation:'property',project:'residence',lot:'A2',status,sensitivePassword:wrongPassword,progress:'30'})).ok,false);assert.equal(JSON.stringify(db),snapshot,'Progress editing cannot bypass the sold gate');
     }
   }
-  assert.equal((await act({...sale,status:'reserved',statusPin:'22201011',reservationNote:'Réservé pour A2'})).ok,true);
+  assert.equal((await act({...sale,status:'reserved',sensitivePassword,reservationNote:'Réservé pour A2'})).ok,true);
   assert.equal(db.projects[0].lots[1].reservationNote,'Réservé pour A2');
   assert.equal(resolvedClientProperties(db.users.find(user=>user.id===buyerA2.id),db.projects)[0].lot.status,'reserved');
   assert.equal((await act({...sale,status:'reserved',reservationNote:'x'.repeat(2001)})).ok,false);
@@ -148,13 +150,13 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal(clientProperties(multiOwner).length,2);assert.equal(db.projects.at(-1).lots[0].status,'sold');assert.equal(db.projects.at(-1).lots[1].status,'reserved');assert.equal(db.projects.at(-1).lots[1].reservationNote,'Note privée');
   const oldSold={operation:'client-property-add',client:multiOwner.id,project:'multi',lot:'M3',status:'reserved'};
   assert.equal((await act(oldSold)).ok,false);assert.equal(clientProperties(db.users.find(user=>user.id===multiOwner.id)).length,2);
-  assert.equal((await act({...oldSold,statusPin:'22201011'})).ok,true);
+  assert.equal((await act({...oldSold,sensitivePassword})).ok,true);
   const lateBuyer={operation:'client',name:'Acheteur existant',email:'legacy@example.test',password:'secure-password-1234',properties:JSON.stringify([{projectSlug:'multi',lotRef:'M4',status:'reserved'}])};
   db.projects.at(-1).lots[3].status='sold';
   assert.equal((await act(lateBuyer)).ok,false);assert(!db.users.some(user=>user.email===lateBuyer.email));
-  assert.equal((await act({...lateBuyer,statusPin:'22201011'})).ok,true);
-  assert(rateChecks.some(([scope,,limit])=>scope==='commercial-status-pin'&&limit===5));
-  console.log('PASS: atomic client creation with multiple apartment statuses, private reservation notes, mandatory buyer, sold PIN protection through every commercial entry point and live dossier status synchronization.');
+  assert.equal((await act({...lateBuyer,sensitivePassword})).ok,true);
+  assert(rateChecks.some(([scope,,limit])=>scope==='admin-reauth'&&limit===5));
+  console.log('PASS: atomic client creation with multiple apartment statuses, private reservation notes, mandatory buyer, sold status reauthentication through every commercial entry point and live dossier status synchronization.');
   const client={operation:'client',project:'residence',lot:'A1',status:'reserved',name:'Test Client',email:'client@example.test',password:'test-password-1234'};
   assert.equal((await act(client)).ok,true);
   const owner=db.users.find(u=>u.email===client.email);
@@ -255,7 +257,7 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   console.log('PASS: multiple partial receipts, full settlement, corrections, independent apartment totals, outstanding balances, overpayment/overplanning protection and authorization.');
   assert.equal((await act(client)).ok,false);
   assert.equal((await act({...client,email:'other@example.test'})).ok,false);
-  const contract={operation:'upload',kind:'contract',client:owner.id,label:'Contrat test',file:new File(['%PDF-1.4\n%%EOF'],'test.pdf',{type:'application/pdf'})};
+  const contract={operation:'upload',kind:'contract',client:owner.id,label:'Contrat test',file:new File([validPdf],'test.pdf',{type:'application/pdf'})};
   assert.equal((await act({...contract,file:new File(['bad'],'bad.pdf')})).ok,false);
   assert.equal((await act({...contract,contractProperty:'2'})).ok,false);
   assert.equal((await act({...contract,contractProperty:'1'})).ok,true);
@@ -418,17 +420,14 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   console.log('PASS: client → commercial → client conversation, recipient spoof protection, anonymous rejection, empty/oversize validation and storage failure.');
   console.log('PASS: client edits, uniqueness, credential preservation, sent-message edits, client reply protection, document removal/restoration and access revocation.');
   console.log('PASS: commercial authorization, client creation, password hashing, validation, property progress/status, contracts, private/public photo access, messages and company updates.');
-  const {validClientDeletionPin,deleteClientDossier}=load('src/lib/client-deletion.ts');
-  assert.equal(validClientDeletionPin('22201011'),true);
-  assert.equal(validClientDeletionPin('22201010'),false);
-  assert.equal(validClientDeletionPin('22201011x'),false);
+  const {deleteClientDossier}=load('src/lib/client-deletion.ts');
   const sharedFixture={users:[{id:'target',role:'client',documents:[{href:`/api/media/${pdfId}`}]},{id:'peer',role:'client',documents:[{href:`/api/media/${pdfId}`}]}],projects:[],news:[],uploads:[{id:pdfId,clientId:'target',public:false}]};
   deleteClientDossier(sharedFixture,'target');assert.equal(sharedFixture.uploads.length,1,'Shared references must protect file bytes used by another dossier');
-  const removeClient={operation:'client-delete',client:owner.id,deletePin:'22201011',confirm:'yes'};
+  const removeClient={operation:'client-delete',client:owner.id,sensitivePassword:change.password,confirm:'yes'};
   const deletionSnapshot=JSON.stringify(db);
   for(const identity of [null,{sub:owner.id},{sub:'missing'}]) {session=identity;assert.equal((await act(removeClient)).ok,false);assert.equal(JSON.stringify(db),deletionSnapshot);}
   session={sub:'staff'};
-  for(const invalid of [{deletePin:''},{deletePin:'22201010'},{deletePin:'22201011x'},{confirm:''},{client:'staff'},{client:'missing'}]) {assert.equal((await act({...removeClient,...invalid})).ok,false);assert.equal(JSON.stringify(db),deletionSnapshot);}
+  for(const invalid of [{sensitivePassword:''},{sensitivePassword:'incorrect-password'},{sensitivePassword:'malformed-password'},{confirm:''},{client:'staff'},{client:'missing'}]) {assert.equal((await act({...removeClient,...invalid})).ok,false);assert.equal(JSON.stringify(db),deletionSnapshot);}
   const accountBefore=db.users.find(user=>user.id===owner.id);
   accountBefore.archivedDocuments.push({id:'archived-copy',href:`/api/media/${pdfId}`,label:progressLabel('Copie archivée')});
   const publicBefore=JSON.stringify(db.projects);
@@ -444,5 +443,5 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   session={sub:owner.id};assert.equal((await media(pdfId)).status,404);assert.equal((await media(privateId)).status,404);
   assert.equal((await chat({body:'Account deleted'})).ok,false,'Old sessions cannot use client actions after deletion');
   session={sub:'staff'};assert.equal((await act(removeClient)).ok,false,'Deleting the same dossier twice is rejected');
-  console.log('PASS: PIN-gated client dossier deletion, admin-only authorization, invalid PIN rollback, documents/archive/photos/payments removal, file cleanup, revoked access and preservation of other accounts/projects.');
+  console.log('PASS: Password-confirmed client dossier deletion, admin-only authorization, invalid password rollback, documents/archive/photos/payments removal, file cleanup, revoked access and preservation of other accounts/projects.');
 })().catch(error=>{console.error(error);process.exitCode=1;}).finally(()=>fs.rmSync(temp,{recursive:true,force:true}));

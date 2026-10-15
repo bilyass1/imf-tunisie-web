@@ -1,7 +1,6 @@
 import 'server-only';
 import type { Database, Lot, LotStatus, User } from './types';
 import { clientProperties, setClientProperties } from './client-properties';
-import { validClientDeletionPin } from './client-deletion';
 
 export function lotClient(db: Database, projectSlug: string, lotRef: string): User | undefined {
   return db.users.find(user => user.role === 'client' && clientProperties(user).some(property => property.projectSlug === projectSlug && property.lotRef === lotRef));
@@ -17,11 +16,11 @@ export function attachClientLot(db: Database, client: User, projectSlug: string,
 }
 
 /** All admin entry points use the lot as the single source of sale status. */
-export function changeLotStatus(db: Database, projectSlug: string, lot: Lot, rawStatus: string, pin: string, note?: string) {
+export function changeLotStatus(db: Database, projectSlug: string, lot: Lot, rawStatus: string, authorized: boolean, note?: string) {
   if (!['available', 'reserved', 'sold', 'unconfirmed'].includes(rawStatus)) throw new Error('Statut invalide.');
   const status = rawStatus as LotStatus;
-  if (lot.status === 'sold' && status !== 'sold' && !validClientDeletionPin(pin)) {
-    throw new Error('Code PIN requis ou incorrect pour modifier un appartement vendu.');
+  if (lot.status === 'sold' && status !== 'sold' && authorized !== true) {
+    throw new Error('Mot de passe administrateur requis pour modifier un appartement vendu.');
   }
   if (status === 'sold' && !lotClient(db, projectSlug, lot.ref)) throw new Error('Créez ou rattachez un compte client avant de marquer cet appartement vendu.');
   if (note !== undefined && note.length > 2000) throw new Error('La note de réservation est limitée à 2 000 caractères.');

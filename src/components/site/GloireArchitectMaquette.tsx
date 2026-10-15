@@ -1,5 +1,7 @@
 'use client';
 
+import { loadModelBytes, modelPixelRatio } from './model-runtime';
+import { publicAssetUrl } from '@/lib/public-asset-url';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MaquetteLabels } from './Maquette3D';
 import { useImmersiveViewer } from './useImmersiveViewer';
@@ -39,19 +41,19 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
     const host = mount.current;
     if (!host) return;
     let cancelled = false;
+    const download=new AbortController();
     let cleanup = () => {};
     setReady(false); setFailed(false); setProgress(0);
     (async () => {
-      const THREE = await import('three');
-      const [{ OrbitControls }, { GLTFLoader }, { DRACOLoader }, { RoomEnvironment }] = await Promise.all([
+      const [THREE,[{ OrbitControls }, { GLTFLoader }, { DRACOLoader }, { RoomEnvironment }],bytes] = await Promise.all([import('three'),Promise.all([
         import('three/examples/jsm/controls/OrbitControls.js'),
         import('three/examples/jsm/loaders/GLTFLoader.js'),
         import('three/examples/jsm/loaders/DRACOLoader.js'),
         import('three/examples/jsm/environments/RoomEnvironment.js'),
-      ]);
+      ]),loadModelBytes(modelUrl,{signal:download.signal,onProgress:setProgress})]);
       if (cancelled) return;
       const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-      const restingPixelRatio = Math.min(devicePixelRatio, 1.25);
+      const restingPixelRatio = modelPixelRatio(host.clientWidth,host.clientHeight);
       renderer.setPixelRatio(restingPixelRatio);
       renderer.setSize(host.clientWidth, host.clientHeight);
       renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -77,12 +79,12 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
       orbit.enableDamping = true; orbit.dampingFactor = .075; orbit.autoRotateSpeed = .38;
       orbit.maxPolarAngle = Math.PI * .495;
 
-      const draco = new DRACOLoader(); draco.setDecoderPath('/draco/');
+      const draco = new DRACOLoader(); draco.setDecoderPath(publicAssetUrl('/draco/'));draco.setWorkerLimit(2);draco.preload();
+      cleanup=()=>{orbit.dispose();draco.dispose();environment.dispose();renderer.dispose();renderer.domElement.remove();};
       const loader = new GLTFLoader(); loader.setDRACOLoader(draco);
-      const gltf = await loader.loadAsync(modelUrl, event => {
-          if (event.total) setProgress(Math.min(99, Math.round(event.loaded / event.total * 100)));
-      });
-      if (cancelled) { draco.dispose(); return; }
+      const gltf = await loader.parseAsync(bytes,publicAssetUrl('/models/la-gloire/'));
+      if (cancelled) { cleanup(); return; }
+      setProgress(100);
       const building = gltf.scene;
       building.rotation.x = -Math.PI / 2;
       scene.add(building);
@@ -248,7 +250,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         disposedMaterials.forEach(material => material.dispose()); environment.dispose(); renderer.dispose(); renderer.domElement.remove();
       };
     })().catch(() => { cleanup(); if (!cancelled) setFailed(true); });
-    return () => { cancelled = true; cleanup(); };
+    return () => { cancelled = true; download.abort(); cleanup(); };
   }, [attempt, lots]);
 
   const button = 'viewer-control';

@@ -33,6 +33,10 @@ const tables = [
 let schemaReady;
 async function ensureSchema(pool) {
   if (!schemaReady) schemaReady = (async () => {
+    const schemaClient=await pool.connect();
+    try {
+    await schemaClient.query('BEGIN');
+    await schemaClient.query('SELECT pg_advisory_xact_lock(834921)');
     const statements = [`
     CREATE TABLE IF NOT EXISTS imf_schema_migrations (version integer PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now());
     CREATE TABLE IF NOT EXISTS imf_projects (slug text PRIMARY KEY, data jsonb NOT NULL);
@@ -50,24 +54,27 @@ async function ensureSchema(pool) {
     CREATE INDEX IF NOT EXISTS imf_rate_limits_expires_at ON imf_rate_limits(expires_at);
     INSERT INTO imf_schema_migrations(version) VALUES(1),(2),(3) ON CONFLICT DO NOTHING;
     `];
-    for (const statement of statements[0].split(';').map(s => s.trim()).filter(Boolean)) await pool.query(statement);
-    // IMF confirmed that every Diar Al Yassamine apartment currently listed
-    // online is available. Apply this correction once to older PostgreSQL
-    // snapshots; later admin sales/reservations must remain authoritative.
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-      await client.query('SELECT revision FROM imf_revision WHERE id=1 FOR UPDATE');
-      const migration = await client.query('INSERT INTO imf_schema_migrations(version) VALUES(4) ON CONFLICT DO NOTHING RETURNING version');
-      if (migration.rows.length) {
-        const updated = await client.query("UPDATE imf_lots SET status='available', data=jsonb_set(data,'{status}',to_jsonb('available'::text),true) WHERE project_slug='diar-al-yassamine' AND status <> 'available'");
-        if (updated.rowCount) await client.query('UPDATE imf_revision SET revision=revision+1 WHERE id=1');
-      }
-      await client.query('COMMIT');
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      throw error;
-    } finally { client.release(); }
+    for (const statement of statements[0].split(';').map(s => s.trim()).filter(Boolean)) await schemaClient.query(statement);
+    const upgrade=await schemaClient.query('INSERT INTO imf_schema_migrations(version) VALUES(5) ON CONFLICT DO NOTHING RETURNING version');
+    if(upgrade.rows.length) {
+    await schemaClient.query("CREATE TABLE IF NOT EXISTS imf_audit_events (id text PRIMARY KEY, at timestamptz NOT NULL, actor_id text NOT NULL, operation text NOT NULL, data jsonb NOT NULL)");
+    await schemaClient.query("CREATE INDEX IF NOT EXISTS imf_audit_at ON imf_audit_events(at DESC)");
+    await schemaClient.query(`CREATE OR REPLACE FUNCTION imf_audit_append_only() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'Audit records are append only'; END $$`);
+    await schemaClient.query('DROP TRIGGER IF EXISTS imf_audit_immutable ON imf_audit_events');
+    await schemaClient.query('CREATE TRIGGER imf_audit_immutable BEFORE UPDATE OR DELETE ON imf_audit_events FOR EACH ROW EXECUTE FUNCTION imf_audit_append_only()');
+    await schemaClient.query("ALTER TABLE imf_lots DROP CONSTRAINT IF EXISTS imf_lots_status_check");
+    await schemaClient.query("ALTER TABLE imf_lots ADD CONSTRAINT imf_lots_status_check CHECK(status IN ('available','reserved','sold','unconfirmed')) NOT VALID");
+    await schemaClient.query('ALTER TABLE imf_lots VALIDATE CONSTRAINT imf_lots_status_check');
+    await schemaClient.query('CREATE TABLE IF NOT EXISTS imf_conversation_revisions (client_id text PRIMARY KEY, revision bigint NOT NULL DEFAULT 0)');
+    await schemaClient.query(`CREATE OR REPLACE FUNCTION imf_message_revision() RETURNS trigger LANGUAGE plpgsql AS $$ DECLARE target text; BEGIN IF TG_OP='DELETE' THEN target:=OLD.client_id; ELSE target:=NEW.client_id; END IF; INSERT INTO imf_conversation_revisions(client_id,revision) VALUES(target,1) ON CONFLICT(client_id) DO UPDATE SET revision=imf_conversation_revisions.revision+1; RETURN NULL; END $$`);
+    await schemaClient.query('DROP TRIGGER IF EXISTS imf_messages_revision ON imf_messages');
+    await schemaClient.query('CREATE TRIGGER imf_messages_revision AFTER INSERT OR UPDATE OR DELETE ON imf_messages FOR EACH ROW EXECUTE FUNCTION imf_message_revision()');
+    await schemaClient.query('CREATE INDEX IF NOT EXISTS imf_messages_conversation ON imf_messages(client_id,sent_at,id)');
+    }
+    // Retire migration 4 without changing any existing sales or reservations.
+    await schemaClient.query('INSERT INTO imf_schema_migrations(version) VALUES(4) ON CONFLICT DO NOTHING');
+    await schemaClient.query('COMMIT');
+    } catch(error) {await schemaClient.query('ROLLBACK').catch(()=>{});throw error;}finally{schemaClient.release();}
   })();
   await schemaReady;
 }
@@ -104,7 +111,8 @@ async function bootstrapIfEmpty(pool, seedFactory) {
   const check = await pool.query('SELECT 1 FROM imf_projects LIMIT 1');
   if (check.rows.length) return;
   if (typeof seedFactory !== 'function') return;
-  const rows = flatten(seedFactory());
+  const seed=seedFactory();
+  const rows = flatten({...seed,users:[],contacts:[],deals:[],activities:[],tasks:[],uploads:[]});
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
@@ -195,7 +203,7 @@ function createStore(pool, seedFactory) {
       // accounts, messages, documents, contacts or optimistic-write snapshots.
       const result = await pool.query(`SELECT
         (SELECT COALESCE(jsonb_agg(data || jsonb_build_object('slug',slug) ORDER BY slug),'[]'::jsonb) FROM imf_projects) AS projects,
-        (SELECT COALESCE(jsonb_agg(jsonb_build_object('project',project_slug,'lot',(data - 'reservationNote') || jsonb_build_object('ref',ref,'status',status)) ORDER BY project_slug,ref),'[]'::jsonb) FROM imf_lots) AS lots,
+        (SELECT COALESCE(jsonb_agg(jsonb_build_object('project',project_slug,'lot',(data - 'reservationNote' - 'planDwgUrl') || jsonb_build_object('ref',ref,'status',status)) ORDER BY project_slug,ref),'[]'::jsonb) FROM imf_lots) AS lots,
         (SELECT COALESCE(jsonb_agg(data ORDER BY position,id),'[]'::jsonb) FROM imf_records WHERE collection='news') AS news,
         (SELECT data FROM imf_records WHERE collection='settings' AND id='company') AS company,
         (SELECT revision FROM imf_revision WHERE id=1) AS revision`);
@@ -260,7 +268,7 @@ function createStore(pool, seedFactory) {
     } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
     finally { client.release(); }
   }
-  async function write(data, media) {
+  async function write(data, media, audit) {
     await ensureSchema(pool);
     const snapshot=snapshots.get(data);
     if (!snapshot) throw new Error('Rechargez les données avant de les modifier.');
@@ -288,6 +296,7 @@ function createStore(pool, seedFactory) {
         await client.query('INSERT INTO imf_media(id,bytes) VALUES($1,$2)',[media.id,media.bytes]);
       }
       for (const id of removedMediaIds) await client.query('DELETE FROM imf_media WHERE id=$1',[id]);
+      if(audit) await client.query('INSERT INTO imf_audit_events(id,at,actor_id,operation,data) VALUES($1,$2,$3,$4,$5)',[audit.id,audit.at,audit.actorId,audit.operation,audit]);
       const updated=await client.query('UPDATE imf_revision SET revision=revision+1 WHERE id=1 RETURNING revision');
       await client.query('COMMIT');
       cache=undefined;
@@ -308,7 +317,23 @@ function createStore(pool, seedFactory) {
     const result = await pool.query("SELECT data FROM imf_records WHERE collection='uploads' AND id=$1 LIMIT 1", [id]);
     return result.rows[0]?.data;
   }
-  return {read,readPublic,revision,write,readMedia,readMediaMetadata,consumeRateLimit,readAuthUser,readUserById};
+  async function readAudit() {await ensureSchema(pool);return (await pool.query('SELECT data FROM imf_audit_events ORDER BY at DESC,id DESC LIMIT 100')).rows.map(row=>row.data);}
+  async function conversationRevision(id,admin) {
+    await ensureSchema(pool);
+    const result=admin?await pool.query('SELECT revision::text FROM imf_revision WHERE id=1'):await pool.query("SELECT COALESCE((SELECT revision FROM imf_conversation_revisions WHERE client_id=$1),0)::text AS revision",[id]);
+    return result.rows[0].revision;
+  }
+  async function canReadMedia(id,userId) {
+    const row=(await pool.query("SELECT role,project_slug,lot_ref,data->'properties' AS properties,data->'constructionPhotos' AS construction_photos FROM imf_users WHERE id=$1",[userId])).rows[0]; if(!row)return false;if(row.role==='admin')return true;if(row.role!=='client')return false;const user={properties:row.properties,constructionPhotos:row.construction_photos,projectSlug:row.project_slug,lotRef:row.lot_ref};
+    const file=await readMediaMetadata(id);if(!file)return false;const href=`/api/media/${id}`;
+    if(file.clientId) return file.clientId===userId && (!!(await pool.query("SELECT 1 FROM imf_documents WHERE client_id=$1 AND archived=false AND data->>'href'=$2 LIMIT 1",[userId,href])).rows.length||!!user.constructionPhotos?.some(photo=>photo.src===href));
+    const properties=user.properties??(user.projectSlug&&user.lotRef?[{projectSlug:user.projectSlug,lotRef:user.lotRef}]:[]);
+    for(const property of properties) {
+      const rows=await pool.query(`SELECT p.data->'constructionPhotos' AS project_photos,l.data->'constructionPhotos' AS lot_photos FROM imf_projects p JOIN imf_lots l ON l.project_slug=p.slug WHERE p.slug=$1 AND l.ref=$2`,[property.projectSlug,property.lotRef]);
+      if(rows.rows.some(row=>[...(row.project_photos??[]),...(row.lot_photos??[])].some(photo=>photo.src===href)))return true;
+    }return false;
+  }
+  return {readAudit,conversationRevision,canReadMedia,read,readPublic,revision,write,readMedia,readMediaMetadata,consumeRateLimit,readAuthUser,readUserById};
 }
 let store;
 function getStore(seedFactory) {

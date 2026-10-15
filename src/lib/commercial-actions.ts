@@ -10,17 +10,19 @@ import { projectPresentation } from './project-presentation';
 import { parseContactInput } from './contact-input';
 import { galleryPhotoCategory, parseGalleryFilters, projectGalleryFilters } from './gallery-filters';
 import { allowRequest } from './rate-limit';
-import { deleteClientDossier, validClientDeletionPin } from './client-deletion';
+import { deleteClientDossier } from './client-deletion';
+import { validateContractPdf } from './pdf-validation';
+import { withAudit } from './audit';
+import { verifyAdminPassword } from './sensitive-actions';
 import { attachClientLot, changeLotStatus, lotClient } from './lot-commercial';
 import { clientProperties, clientPaymentsForProperty, setClientProperties } from './client-properties';
 import { parseCustomAmenities, selectedAmenities } from './amenities';
-import { clientPaymentTotal, parsePaymentAmount, paymentPaidAmount, paymentSummary, paymentToday, updatePaymentStatus, validPaymentDate } from './payments';
+import { applyPaymentOperation } from './commercial-payments';
+import { formValue as value, requiredText as text, propertyTarget as target } from './commercial-input';
 
 export type PaymentSnapshot = {clientId:string; payments:NonNullable<User['payments']>; paymentSchedules:NonNullable<User['paymentSchedules']>};
 export type CommercialState = { ok: boolean; message: string; publicPath?: string; paymentSnapshot?:PaymentSnapshot };
 const localize = (s: string): Localized => ({ fr:s, en:s, ar:s });
-const value = (form: FormData, key: string) => String(form.get(key) ?? '').trim();
-function text(form: FormData, key: string, max = 200) { const s=value(form,key); if (!s || s.length>max) throw new Error(`Champ ${key} manquant ou trop long.`); return s; }
 function percentValue(raw: string) { const n=Number(raw); if (!raw || !Number.isInteger(n) || n<0 || n>100) throw new Error('L’avancement doit être un entier compris entre 0 et 100.'); return n; }
 function percent(form: FormData) { return percentValue(value(form,'progress')); }
 function translated(form: FormData, prefix: string, max = 200): Localized {
@@ -56,13 +58,7 @@ async function staff() {
   if (!session || db.users.find(u=>u.id===session.sub)?.role!=='admin') throw new Error('Accès commercial requis.');
   if (!isPersistent()) throw new Error('Un stockage durable doit être configuré avant de modifier les dossiers sur cet hébergement.');
 }
-function target(db: Database, form: FormData) {
-  const project=db.projects.find(p=>p.slug===value(form,'project'));
-  if (!project) throw new Error('Résidence introuvable.');
-  const ref=value(form,'lot'); const lot=ref ? project.lots.find(l=>l.ref===ref) : undefined;
-  if (ref && !lot) throw new Error('Appartement introuvable.');
-  return {project,lot};
-}
+
 type SelectedLot = { projectSlug: string; lotRef: string; status: string; reservationNote?: string };
 function selectedClientLots(form: FormData): SelectedLot[] {
   const raw=value(form,'properties');
@@ -79,7 +75,7 @@ function selectedClientLots(form: FormData): SelectedLot[] {
     seen.add(key); return item as SelectedLot;
   });
 }
-async function createClient(db: Database, form: FormData, selected=selectedClientLots(form)): Promise<User> {
+async function createClient(db: Database, form: FormData, selected=selectedClientLots(form), authorized=false): Promise<User> {
   const email=text(form,'email').toLowerCase();
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Adresse e-mail invalide.');
   if(db.users.some(user=>user.email.toLowerCase()===email)) throw new Error('Cette adresse possède déjà un compte.');
@@ -96,11 +92,11 @@ async function createClient(db: Database, form: FormData, selected=selectedClien
     if(!['reserved','sold'].includes(item.status)) throw new Error('Choisissez réservé ou vendu pour chaque appartement.');
     if(lotClient(db,project.slug,lot.ref)) throw new Error('Cet appartement possède déjà un compte client.');
     attachClientLot(db,client,project.slug,lot.ref);
-    changeLotStatus(db,project.slug,lot,item.status,value(form,'statusPin'),item.reservationNote);
+    changeLotStatus(db,project.slug,lot,item.status,authorized,item.reservationNote);
   }
   return client;
 }
-async function applyLotForm(db: Database, form: FormData) {
+async function applyLotForm(db: Database, form: FormData, authorized=false) {
   const {project,lot}=target(db,form);
   if(!lot) throw new Error('Sélectionnez un appartement.');
   const status=value(form,'status');
@@ -109,14 +105,14 @@ async function applyLotForm(db: Database, form: FormData) {
   const clientId=value(form,'client');
   if(owner && clientId && owner.id!==clientId) throw new Error('Cet appartement possède déjà un autre compte client.');
   if(status==='sold' && !owner) {
-    if(value(form,'clientMode')==='new') await createClient(db,form,[{projectSlug:project.slug,lotRef:lot.ref,status:'sold'}]);
+    if(value(form,'clientMode')==='new') await createClient(db,form,[{projectSlug:project.slug,lotRef:lot.ref,status:'sold'}],authorized);
     else {
       const client=db.users.find(user=>user.id===clientId && user.role==='client');
       if(!client) throw new Error('Créez ou sélectionnez un compte client pour la vente.');
       attachClientLot(db,client,project.slug,lot.ref);
     }
   }
-  changeLotStatus(db,project.slug,lot,status,value(form,'statusPin'),form.has('reservationNote')?value(form,'reservationNote'):undefined);
+  changeLotStatus(db,project.slug,lot,status,authorized,form.has('reservationNote')?value(form,'reservationNote'):undefined);
   return {project,lot};
 }
 export async function commercialAction(_: CommercialState, form: FormData): Promise<CommercialState> {
@@ -127,8 +123,9 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
     let publicPath: string | undefined;
     let paymentSnapshot: PaymentSnapshot | undefined;
     const actor=await getSession();
+    return await withAudit({actorId:actor!.sub,operation},async()=>{
     if(!await allowRequest(`commercial-${operation}`,actor!.sub,operation==='client-delete'?5:operation.startsWith('password-')?10:60,60000)) throw new Error('Trop de demandes. Réessayez dans une minute.');
-    if(form.has('statusPin') && !await allowRequest('commercial-status-pin',actor!.sub,5,60000)) throw new Error('Trop de tentatives de PIN. Réessayez dans une minute.');
+    const authorized=form.has('sensitivePassword') ? await verifyAdminPassword((await readDb()),actor!.sub,String(form.get('sensitivePassword')??'')) : false;
     if(operation==='password-self' || operation==='password-client') {
       const session=await getSession();
       const operator=(await readDb()).users.find(u=>u.id===session?.sub && u.role==='admin');
@@ -149,7 +146,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       if(operation==='password-self') await createSession({sub:user.id,email:user.email,name:user.name,role:user.role});
     } else if (operation==='client') {
       const db=await readDb();
-      await createClient(db,form);
+      await createClient(db,form,selectedClientLots(form),authorized);
       await writeDb(db);
     } else if(operation==='upload') {
       const file=form.get('file');
@@ -161,7 +158,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       if(caption.en.length>200 || caption.ar.length>200) throw new Error('Titre de photo trop long.');
       if(!['contract','gallery','construction','panorama'].includes(kind)) throw new Error('Type de publication invalide.');
       let bytes=Buffer.from(await file.arrayBuffer()); let mime='application/pdf';
-      if(kind==='contract') { if(bytes.subarray(0,5).toString()!=='%PDF-') throw new Error('Le contrat doit être un fichier PDF.'); }
+      if(kind==='contract') { await validateContractPdf(bytes); }
       else {
         const metadata=await sharp(bytes,{limitInputPixels:40000000}).metadata();
         if(!['jpeg','png','webp'].includes(metadata.format??'')) throw new Error('Formats photo acceptés : JPEG, PNG et WebP.');
@@ -231,7 +228,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         } else db.contacts.unshift({...input,id:randomUUID(),createdAt:new Date().toISOString().slice(0,10)});
       } else if(operation==='client-delete') {
         if(value(form,'confirm')!=='yes') throw new Error('Confirmez la suppression définitive du dossier client.');
-        if(!validClientDeletionPin(value(form,'deletePin'))) throw new Error('Code PIN incorrect.');
+        if(!authorized) throw new Error('Mot de passe administrateur requis ou incorrect.');
         deleteClientDossier(db,value(form,'client'));
       } else if(operation==='client-edit') {
         const client=db.users.find(u=>u.id===value(form,'client') && u.role==='client');
@@ -254,7 +251,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
           const status=value(form,'status');
           if(!['reserved','sold'].includes(status)) throw new Error('Statut de vente invalide.');
           attachClientLot(db,client,project.slug,lot.ref);
-          changeLotStatus(db,project.slug,lot,status,value(form,'statusPin'),value(form,'reservationNote'));
+          changeLotStatus(db,project.slug,lot,status,authorized,value(form,'reservationNote'));
           publicPath=`/projets/${project.slug}/appartements/${lot.ref}`;
         } else {
           if(!exists) throw new Error('Cet appartement n’est pas lié au client.');
@@ -277,71 +274,14 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         if(index<0) throw new Error('Document introuvable pour ce client.');
         const [document]=source.splice(index,1);
         (restoring?(client.documents??=[]):(client.archivedDocuments??=[])).push(document);
-      } else if(operation==='payment-total' || operation==='payment-receipt-create' || operation==='payment-receipt-update') {
-        const client=db.users.find(user=>user.id===value(form,'client') && user.role==='client');
-        if(!client) throw new Error('Client introuvable.');
-        const {project,lot}=target(db,form);
-        if(!lot || !clientProperties(client).some(property=>property.projectSlug===project.slug && property.lotRef===lot.ref)) throw new Error('Sélectionnez un appartement rattaché à ce client.');
-        const property={projectSlug:project.slug,lotRef:lot.ref};
-        if(operation==='payment-total') {
-          const totalAmount=parsePaymentAmount(value(form,'totalAmount'));
-          if(Math.round(totalAmount*1000)<Math.round(paymentSummary(clientPaymentsForProperty(client,property)).scheduled*1000)) throw new Error('Le montant total ne peut pas être inférieur aux échéances déjà prévues.');
-          const existing=client.paymentSchedules?.find(schedule=>schedule.projectSlug===project.slug && schedule.lotRef===lot.ref);
-          if(existing) existing.totalAmount=totalAmount;
-          else (client.paymentSchedules??=[]).push({...property,totalAmount});
-        } else {
-          const payment=clientPaymentsForProperty(client,property).find(item=>item.id===value(form,'payment'));
-          if(!payment) throw new Error('Échéance introuvable pour ce client et cet appartement.');
-          const receipt=operation==='payment-receipt-update' ? payment.receipts?.find(item=>item.id===value(form,'receipt')) : undefined;
-          if(operation==='payment-receipt-update' && !receipt) throw new Error('Versement introuvable.');
-          if(operation==='payment-receipt-create' && (payment.receipts?.length??0)>=1000) throw new Error('Cette échéance est limitée à 1 000 versements.');
-          const amount=parsePaymentAmount(value(form,'receiptAmount'));
-          const date=value(form,'receiptDate');
-          if(!validPaymentDate(date) || date>paymentToday()) throw new Error('Saisissez une date de versement valide, au plus tard aujourd’hui.');
-          const reference=value(form,'receiptReference');
-          if(reference.length>160) throw new Error('La référence du versement est limitée à 160 caractères.');
-          const nextPaid=Math.round(paymentPaidAmount(payment)*1000)-Math.round((receipt?.amount??0)*1000)+Math.round(amount*1000);
-          if(nextPaid>Math.round(payment.amount*1000)) throw new Error('Les versements ne peuvent pas dépasser le montant de cette échéance.');
-          const next={id:receipt?.id??randomUUID(),amount,date,reference:reference||undefined};
-          if(receipt) Object.assign(receipt,next);
-          else (payment.receipts??=[]).push(next);
-          updatePaymentStatus(payment);
-        }
-      } else if(operation==='payment-create' || operation==='payment-update') {
-        const client=db.users.find(user=>user.id===value(form,'client') && user.role==='client');
-        if(!client) throw new Error('Client introuvable.');
-        const {project,lot}=target(db,form);
-        if(!lot || !clientProperties(client).some(property=>property.projectSlug===project.slug && property.lotRef===lot.ref)) throw new Error('Sélectionnez un appartement rattaché à ce client.');
-        const existing=operation==='payment-update' ? client.payments?.find(payment=>payment.id===value(form,'payment')) : undefined;
-        if(operation==='payment-update' && (!existing || (existing.projectSlug??client.projectSlug)!==project.slug || (existing.lotRef??client.lotRef)!==lot.ref)) throw new Error('Échéance introuvable pour ce client et cet appartement.');
-        if(operation==='payment-create' && (client.payments?.length??0)>=1000) throw new Error('L’échéancier est limité à 1 000 échéances par client.');
-        const labelFr=text(form,'paymentLabelFr',160);
-        const labelEn=value(form,'paymentLabelEn')||labelFr;
-        const labelAr=value(form,'paymentLabelAr')||labelFr;
-        if(labelEn.length>160 || labelAr.length>160) throw new Error('Les intitulés des échéances sont limités à 160 caractères.');
-        const dueDate=value(form,'dueDate');
-        if(!validPaymentDate(dueDate)) throw new Error('Date d’échéance invalide.');
-        const amount=parsePaymentAmount(value(form,'amount'));
-        const property={projectSlug:project.slug,lotRef:lot.ref};
-        const totalAmount=clientPaymentTotal(client,property,lot.price);
-        if(operation==='payment-create' && totalAmount===undefined) throw new Error('Renseignez d’abord le montant total de cet appartement.');
-        const nextScheduled=Math.round(paymentSummary(clientPaymentsForProperty(client,property)).scheduled*1000)-Math.round((existing?.amount??0)*1000)+Math.round(amount*1000);
-        if(totalAmount!==undefined && nextScheduled>Math.round(totalAmount*1000)) throw new Error('Les échéances ne peuvent pas dépasser le montant total de cet appartement.');
-        if(existing?.receipts?.length && Math.round(amount*1000)<Math.round(paymentPaidAmount(existing)*1000)) throw new Error('Le montant de l’échéance ne peut pas être inférieur aux versements déjà reçus.');
-        const status=value(form,'paymentStatus');
-        if(!['pending','paid'].includes(status)) throw new Error('Statut de paiement invalide.');
-        const paid=status==='paid';
-        const paidAt=paid ? value(form,'paidAt') : undefined;
-        if(paid && !existing?.receipts?.length && (!paidAt || !validPaymentDate(paidAt) || paidAt>paymentToday())) throw new Error('Saisissez une date de règlement valide, au plus tard aujourd’hui.');
-        const payment={id:existing?.id??randomUUID(),label:{fr:labelFr,en:labelEn,ar:labelAr},dueDate,amount,paid,paidAt,projectSlug:project.slug,lotRef:lot.ref};
-        if(existing) { Object.assign(existing,payment); updatePaymentStatus(existing); }
-        else (client.payments??=[]).push(payment);
+      } else if(operation.startsWith('payment-')) {
+        applyPaymentOperation(db,form);
       } else if(operation==='lot-status') {
-        const {project,lot}=await applyLotForm(db,form);
+        const {project,lot}=await applyLotForm(db,form,authorized);
         publicPath=`/projets/${project.slug}/appartements/${lot.ref}`;
       } else if(operation==='property') {
         const {project,lot}=target(db,form); (lot??project).progressPercent=percent(form);
-        if(lot && form.has('status')) await applyLotForm(db,form);
+        if(lot && form.has('status')) await applyLotForm(db,form,authorized);
         else if(!lot && project.progress?.length && form.has('step-0')) project.progress=project.progress.map((step,index)=>{
           const next=percentValue(value(form,`step-${index}`));
           return {...step,percent:next,done:next===100};
@@ -420,6 +360,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
     }
     revalidatePath('/','layout');
     return {ok:true,publicPath,paymentSnapshot,message:operation==='client-delete'?'Compte client et dossier supprimés définitivement.':operation==='client'?'Compte créé. Communiquez les identifiants au client par votre canal habituel.':operation==='upload' && publicPath?.endsWith('#visite-360')?'Panorama ajouté à la visite 360° de cet appartement.':operation==='upload' && publicPath?'Photo WebP ajoutée à la galerie publique.':operation==='upload'?'Publication enregistrée. Le destinataire peut la consulter dans son espace.':'Modifications enregistrées.'};
+    });
   } catch(error) {
 
     return {ok:false,message:error instanceof Error ? error.message : 'Enregistrement impossible.'};

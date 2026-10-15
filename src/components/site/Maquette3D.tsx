@@ -1,5 +1,6 @@
 'use client';
 
+import { modelPixelRatio } from './model-runtime';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Lot, Massing } from '@/lib/types';
 import { useImmersiveViewer } from './useImmersiveViewer';
@@ -304,7 +305,7 @@ export default function Maquette3D({
 
       const camera = new THREE.PerspectiveCamera(38, mount.clientWidth / mount.clientHeight, 0.5, span * 14);
       const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-      const pixelRatio = () => Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(3200000 / Math.max(1, mount.clientWidth * mount.clientHeight)));
+      const pixelRatio = () => modelPixelRatio(mount.clientWidth,mount.clientHeight);
       renderer.setPixelRatio(pixelRatio());
       renderer.setSize(mount.clientWidth, mount.clientHeight);
       renderer.shadowMap.enabled = true;

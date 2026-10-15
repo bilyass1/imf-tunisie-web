@@ -1,28 +1,29 @@
 
 
-import { getMediaMetadata, readDb, readMedia } from '@/lib/db';
+import { getMediaMetadata, canReadPrivateMedia, readMedia } from '@/lib/db';
 import { getSession } from '@/lib/session';
-import { clientProperties } from '@/lib/client-properties';
 export const runtime='nodejs';
-export async function GET(_: Request, {params}: {params: Promise<{id:string}>}) {
+export async function GET(request: Request, {params}: {params: Promise<{id:string}>}) {
   const {id}=await params;
   if(!/^[a-f0-9-]{36}$/.test(id)) return new Response(null,{status:404});
   const file=await getMediaMetadata(id);
   if(!file) return new Response(null,{status:404});
   if(!file.public) {
-    const db=await readDb();
-    const session=await getSession(); const user=session ? db.users.find(u=>u.id===session.sub) : undefined;
-    const hasConstructionAccess=user?.role==='client' && clientProperties(user).some(property=>{
-      const project=db.projects.find(p=>p.slug===property.projectSlug);
-      const lot=project?.lots.find(l=>l.ref===property.lotRef);
-      return [...(project?.constructionPhotos??[]),...(lot?.constructionPhotos??[])].some(p=>p.src===`/api/media/${id}`);
-    });
-    const ownsClientMedia=file.clientId===user?.id && (user?.documents?.some(d=>d.href===`/api/media/${id}`) || user?.constructionPhotos?.some(photo=>photo.src===`/api/media/${id}`));
-    const allowed=user && (user.role==='admin' || ownsClientMedia || (!file.clientId && hasConstructionAccess));
+    const session=await getSession();
+    const allowed=session && await canReadPrivateMedia(id,session.sub);
     if(!allowed) return new Response(null,{status:404,headers:{'Cache-Control':'private, no-store'}});
   }
   try {
     const bytes=await readMedia(id); if(!bytes) return new Response(null,{status:404});
-    return new Response(bytes,{headers:{'Content-Type':file.mime,'Content-Disposition':`${file.mime==='application/pdf'?'attachment':'inline'}; filename*=UTF-8''${encodeURIComponent(file.name)}`,'Cache-Control':file.public?'public, max-age=3600':'private, no-store','X-Content-Type-Options':'nosniff','X-Robots-Tag':file.public?'index':'noindex'}});
+    const headers=new Headers({'Content-Type':file.mime,'Content-Disposition':`${file.mime==='application/pdf'?'attachment':'inline'}; filename*=UTF-8''${encodeURIComponent(file.name)}`,'Cache-Control':file.public?'public, max-age=3600':'private, no-store','X-Content-Type-Options':'nosniff','X-Robots-Tag':file.public?'index':'noindex','Accept-Ranges':'bytes'});
+    const range=request.headers.get('range');
+    if(range) {
+      const match=/^bytes=(\d*)-(\d*)$/.exec(range);
+      let start=match?.[1]?Number(match[1]):0,end=match?.[2]?Number(match[2]):bytes.length-1;
+      if(match&&!match[1]&&match[2]){start=Math.max(0,bytes.length-Number(match[2]));end=bytes.length-1;}
+      if(!match||(!match[1]&&!match[2])||!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||start>=bytes.length||end<start){headers.set('Content-Range',`bytes */${bytes.length}`);return new Response(null,{status:416,headers});}
+      end=Math.min(end,bytes.length-1);headers.set('Content-Range',`bytes ${start}-${end}/${bytes.length}`);headers.set('Content-Length',String(end-start+1));return new Response(bytes.subarray(start,end+1),{status:206,headers});
+    }
+    headers.set('Content-Length',String(bytes.length));return new Response(bytes,{headers});
   } catch {return new Response(null,{status:404});}
 }

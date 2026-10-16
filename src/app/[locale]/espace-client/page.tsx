@@ -46,7 +46,7 @@ export default async function ClientDashboard({ params, searchParams }: { params
     >
       <ClientPropertyTabs locale={locale} basePath={`/${locale}/espace-client`} properties={properties} selected={selected}/>
       {!project || !lot ? (
-        <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center text-ink/55">
+        <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center text-muted">
           {dict.client.noLot}
         </div>
       ) : (
@@ -63,7 +63,7 @@ export default async function ClientDashboard({ params, searchParams }: { params
               },
             ].map((kpi) => (
               <div key={kpi.label} className="rounded-2xl border border-ink/8 bg-white p-6">
-                <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink/40">{kpi.label}</p>
+                <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted">{kpi.label}</p>
                 <p className={`mt-3 font-display text-[26px] font-light leading-none ${kpi.accent ?? 'text-ink'}`}>
                   {kpi.value}
                 </p>
@@ -75,14 +75,14 @@ export default async function ClientDashboard({ params, searchParams }: { params
           <div className="rounded-2xl border border-ink/8 bg-white p-7">
             <div className="flex items-end justify-between">
               <div>
-                <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink/40">
+                <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted">
                   {dict.client.summary.progress}
                 </p>
                 <p className="mt-2 font-display text-[34px] font-light leading-none">{pct}%</p>
               </div>
               <Link
                 href={`/${locale}/espace-client/paiements${selected ? clientPropertyQuery(project.slug,lot.ref) : ''}`}
-                className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-ink/50 transition hover:text-gold-600"
+                className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:text-gold-600"
               >
                 {dict.client.payments}
                 <IconArrow className="h-4 w-4 rtl:rotate-180" />
@@ -97,7 +97,7 @@ export default async function ClientDashboard({ params, searchParams }: { params
           <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
             <div className="overflow-hidden rounded-2xl border border-ink/8 bg-white">
               <div className="flex items-center justify-between border-b border-ink/8 px-6 py-4">
-                <h2 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink/50">{dict.client.myLot}</h2>
+                <h2 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-muted">{dict.client.myLot}</h2>
                 <Link
                   href={`/${locale}/projets/${project.slug}`}
                   className="text-[12px] font-semibold uppercase tracking-[0.12em] text-gold-600"
@@ -118,7 +118,7 @@ export default async function ClientDashboard({ params, searchParams }: { params
                   ...(lot.gardenArea ? [{ k: dict.availability.table.garden, v: formatArea(lot.gardenArea, locale) }] : []),
                 ].map((row) => (
                   <div key={row.k} className="flex items-center justify-between gap-4 py-3.5">
-                    <dt className="text-[12px] uppercase tracking-[0.1em] text-ink/45">{row.k}</dt>
+                    <dt className="text-[12px] uppercase tracking-[0.1em] text-muted">{row.k}</dt>
                     <dd className="text-[14px] font-medium text-ink">{row.v}</dd>
                   </div>
                 ))}
@@ -129,7 +129,7 @@ export default async function ClientDashboard({ params, searchParams }: { params
             {project.progress && (
               <div className="rounded-2xl border border-ink/8 bg-white p-6">
                 <div className="flex items-baseline justify-between">
-                  <h2 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink/50">
+                  <h2 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-muted">
                     {dict.client.progress}
                   </h2>
                   {avgProgress !== null && (
@@ -144,7 +144,7 @@ export default async function ClientDashboard({ params, searchParams }: { params
                           {step.done && <IconCheck className="h-3.5 w-3.5 text-emerald-600" />}
                           {t(step.label, locale)}
                         </span>
-                        <span className="text-ink/45">{step.percent}%</span>
+                        <span className="text-muted">{step.percent}%</span>
                       </div>
                       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-sand">
                         <div className="h-full rounded-full bg-gold-gradient" style={{ width: `${step.percent}%` }} />

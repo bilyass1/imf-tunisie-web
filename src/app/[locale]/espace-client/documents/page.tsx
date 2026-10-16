@@ -28,7 +28,7 @@ export default async function DocumentsPage({ params }: { params: Promise<{ loca
       logoutLabel={dict.auth.logout}
     >
       {documents.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center text-ink/50">
+        <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center text-muted">
           {dict.client.noLot}
         </div>
       ) : (
@@ -44,12 +44,12 @@ export default async function DocumentsPage({ params }: { params: Promise<{ loca
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[14.5px] font-medium text-ink">{t(doc.label, locale)}</p>
-                  <p className="mt-1 text-[12px] text-ink/45">
+                  <p className="mt-1 text-[12px] text-muted">
                     {(dict.client.kinds as Record<string, string>)[doc.kind] ?? doc.kind} · {formatDate(doc.date, locale)}
                   </p>
                   {doc.projectSlug && doc.lotRef && <p className="mt-1 text-xs text-gold-600">{projects.find(item=>item.slug===doc.projectSlug)?.name??doc.projectSlug} · {projects.find(item=>item.slug===doc.projectSlug)?.lots.find(lot=>lot.ref===doc.lotRef)?.code??doc.lotRef}</p>}
                 </div>
-                <IconDownload className="h-5 w-5 shrink-0 text-ink/30 transition group-hover:text-gold-600" />
+                <IconDownload className="h-5 w-5 shrink-0 text-muted transition group-hover:text-gold-600" />
               </a>
             </li>
           ))}

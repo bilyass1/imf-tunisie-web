@@ -26,6 +26,6 @@ export default function MediaRecipientPicker({ clients, projects, kind }: { clie
         })}
       </select>
     </label>}
-    {kind === 'construction' && <p className="text-sm text-ink/55">La photo sera visible dans la rubrique Chantier du client sélectionné. Choisissez un appartement ou le dossier général de ce client.</p>}
+    {kind === 'construction' && <p className="text-sm text-muted">La photo sera visible dans la rubrique Chantier du client sélectionné. Choisissez un appartement ou le dossier général de ce client.</p>}
   </div>;
 }

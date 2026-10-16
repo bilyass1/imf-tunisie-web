@@ -15,8 +15,12 @@ function configuration(env = process.env) {
   }
   // Provider URLs often contain sslmode=require. Always verify the certificate.
   url.searchParams.delete('sslmode');
-  return { connectionString: url.toString(), max: 3, connectionTimeoutMillis: 10000,
-    idleTimeoutMillis: 10000, statement_timeout: 30000, allowExitOnIdle: true,
+  const integer=(name,fallback,min,max)=>{const value=env[name]===undefined?fallback:Number(env[name]);if(!Number.isSafeInteger(value)||value<min||value>max)throw new Error(`Configuration ${name} invalide.`);return value;};
+  const max=integer('PG_POOL_MAX',3,1,20),instances=integer('PG_MAX_INSTANCES',1,1,10000);
+  const budget=integer('PG_CONNECTION_BUDGET',100,2,100000),reserve=integer('PG_CONNECTION_RESERVE',20,1,99999);
+  if(max*instances>budget-reserve)throw new Error('Le budget global PostgreSQL est dépassé. Réduisez le pool/la concurrence ou configurez un pooler.');
+  return { connectionString: url.toString(), max, connectionTimeoutMillis: integer('PG_CONNECT_TIMEOUT_MS',5000,100,30000),
+    idleTimeoutMillis: 10000, statement_timeout: 15000, idle_in_transaction_session_timeout: 15000, application_name: 'imf-web', allowExitOnIdle: true,
     ssl: local ? false : { rejectUnauthorized: true, ...(env.PG_SSL_CA_FILE ? { ca: fs.readFileSync(env.PG_SSL_CA_FILE, 'utf8') } : {}) } };
 }
 
@@ -30,53 +34,16 @@ const tables = [
   ['imf_documents', ['client_id','id'], ['client_id','id','archived','data']],
   ['imf_records', ['collection','id'], ['collection','id','position','data']],
 ];
-let schemaReady;
+const validatedPools=new WeakMap();
 async function ensureSchema(pool) {
-  if (!schemaReady) schemaReady = (async () => {
-    const schemaClient=await pool.connect();
-    try {
-    await schemaClient.query('BEGIN');
-    await schemaClient.query('SELECT pg_advisory_xact_lock(834921)');
-    const statements = [`
-    CREATE TABLE IF NOT EXISTS imf_schema_migrations (version integer PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now());
-    CREATE TABLE IF NOT EXISTS imf_projects (slug text PRIMARY KEY, data jsonb NOT NULL);
-    CREATE TABLE IF NOT EXISTS imf_lots (project_slug text NOT NULL REFERENCES imf_projects(slug), ref text NOT NULL, status text NOT NULL, data jsonb NOT NULL, PRIMARY KEY(project_slug,ref));
-    CREATE TABLE IF NOT EXISTS imf_users (id text PRIMARY KEY, email text NOT NULL, role text NOT NULL, password_hash text NOT NULL, auth_version integer NOT NULL DEFAULT 0, project_slug text, lot_ref text, data jsonb NOT NULL);
-    CREATE UNIQUE INDEX IF NOT EXISTS imf_users_email_unique ON imf_users(lower(email));
-    CREATE UNIQUE INDEX IF NOT EXISTS imf_client_lot_unique ON imf_users(project_slug,lot_ref) WHERE role='client';
-    CREATE TABLE IF NOT EXISTS imf_messages (client_id text NOT NULL REFERENCES imf_users(id), id text NOT NULL, sender text NOT NULL, sent_at timestamptz NOT NULL, body text NOT NULL, PRIMARY KEY(client_id,id));
-    CREATE TABLE IF NOT EXISTS imf_documents (client_id text NOT NULL REFERENCES imf_users(id), id text NOT NULL, archived boolean NOT NULL DEFAULT false, data jsonb NOT NULL, PRIMARY KEY(client_id,id));
-    CREATE TABLE IF NOT EXISTS imf_records (collection text NOT NULL, id text NOT NULL, position integer NOT NULL, data jsonb NOT NULL, PRIMARY KEY(collection,id));
-    CREATE TABLE IF NOT EXISTS imf_revision (id integer PRIMARY KEY CHECK(id=1), revision bigint NOT NULL DEFAULT 0);
-    INSERT INTO imf_revision(id) VALUES(1) ON CONFLICT DO NOTHING;
-    CREATE TABLE IF NOT EXISTS imf_media (id text PRIMARY KEY, bytes bytea NOT NULL CHECK(octet_length(bytes) BETWEEN 1 AND 8388608));
-    CREATE TABLE IF NOT EXISTS imf_rate_limits (key text PRIMARY KEY, count integer NOT NULL CHECK(count > 0), expires_at timestamptz NOT NULL);
-    CREATE INDEX IF NOT EXISTS imf_rate_limits_expires_at ON imf_rate_limits(expires_at);
-    INSERT INTO imf_schema_migrations(version) VALUES(1),(2),(3) ON CONFLICT DO NOTHING;
-    `];
-    for (const statement of statements[0].split(';').map(s => s.trim()).filter(Boolean)) await schemaClient.query(statement);
-    const upgrade=await schemaClient.query('INSERT INTO imf_schema_migrations(version) VALUES(5) ON CONFLICT DO NOTHING RETURNING version');
-    if(upgrade.rows.length) {
-    await schemaClient.query("CREATE TABLE IF NOT EXISTS imf_audit_events (id text PRIMARY KEY, at timestamptz NOT NULL, actor_id text NOT NULL, operation text NOT NULL, data jsonb NOT NULL)");
-    await schemaClient.query("CREATE INDEX IF NOT EXISTS imf_audit_at ON imf_audit_events(at DESC)");
-    await schemaClient.query(`CREATE OR REPLACE FUNCTION imf_audit_append_only() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'Audit records are append only'; END $$`);
-    await schemaClient.query('DROP TRIGGER IF EXISTS imf_audit_immutable ON imf_audit_events');
-    await schemaClient.query('CREATE TRIGGER imf_audit_immutable BEFORE UPDATE OR DELETE ON imf_audit_events FOR EACH ROW EXECUTE FUNCTION imf_audit_append_only()');
-    await schemaClient.query("ALTER TABLE imf_lots DROP CONSTRAINT IF EXISTS imf_lots_status_check");
-    await schemaClient.query("ALTER TABLE imf_lots ADD CONSTRAINT imf_lots_status_check CHECK(status IN ('available','reserved','sold','unconfirmed')) NOT VALID");
-    await schemaClient.query('ALTER TABLE imf_lots VALIDATE CONSTRAINT imf_lots_status_check');
-    await schemaClient.query('CREATE TABLE IF NOT EXISTS imf_conversation_revisions (client_id text PRIMARY KEY, revision bigint NOT NULL DEFAULT 0)');
-    await schemaClient.query(`CREATE OR REPLACE FUNCTION imf_message_revision() RETURNS trigger LANGUAGE plpgsql AS $$ DECLARE target text; BEGIN IF TG_OP='DELETE' THEN target:=OLD.client_id; ELSE target:=NEW.client_id; END IF; INSERT INTO imf_conversation_revisions(client_id,revision) VALUES(target,1) ON CONFLICT(client_id) DO UPDATE SET revision=imf_conversation_revisions.revision+1; RETURN NULL; END $$`);
-    await schemaClient.query('DROP TRIGGER IF EXISTS imf_messages_revision ON imf_messages');
-    await schemaClient.query('CREATE TRIGGER imf_messages_revision AFTER INSERT OR UPDATE OR DELETE ON imf_messages FOR EACH ROW EXECUTE FUNCTION imf_message_revision()');
-    await schemaClient.query('CREATE INDEX IF NOT EXISTS imf_messages_conversation ON imf_messages(client_id,sent_at,id)');
-    }
-    // Retire migration 4 without changing any existing sales or reservations.
-    await schemaClient.query('INSERT INTO imf_schema_migrations(version) VALUES(4) ON CONFLICT DO NOTHING');
-    await schemaClient.query('COMMIT');
-    } catch(error) {await schemaClient.query('ROLLBACK').catch(()=>{});throw error;}finally{schemaClient.release();}
-  })();
-  await schemaReady;
+ if(!validatedPools.has(pool)) validatedPools.set(pool,(async()=>{
+  const result=await pool.query('SELECT max(version)::int AS version FROM imf_schema_migrations');
+  if(result.rows[0]?.version!==7) throw new Error('Schéma PostgreSQL incompatible. Exécutez npm run db:migrate avec le compte de migration avant le démarrage.');
+  const expected=['imf_users_role_valid','imf_users_auth_version_valid','imf_users_property_fk','imf_projects_data_object','imf_messages_sender_valid','imf_messages_body_valid','imf_records_collection_valid','imf_client_property_assignments_pkey'];
+  const constraints=(await pool.query('SELECT conname FROM pg_constraint WHERE connamespace=current_schema()::regnamespace AND conname=ANY($1::text[])',[expected])).rows;
+  if(constraints.length!==expected.length)throw new Error('Contraintes PostgreSQL incomplètes. Vérifiez les migrations.');
+ })().catch(error=>{validatedPools.delete(pool);throw error;}));
+ await validatedPools.get(pool);
 }
 function flatten(db) {
   const result = Object.fromEntries(tables.map(([table]) => [table, new Map()]));
@@ -107,31 +74,9 @@ function flatten(db) {
   if (db.company) add('imf_records', {collection:'settings', id:'company', position:0, data:db.company});
   return result;
 }
-async function bootstrapIfEmpty(pool, seedFactory) {
-  const check = await pool.query('SELECT 1 FROM imf_projects LIMIT 1');
-  if (check.rows.length) return;
-  if (typeof seedFactory !== 'function') return;
-  const seed=seedFactory();
-  const rows = flatten({...seed,users:[],contacts:[],deals:[],activities:[],tasks:[],uploads:[]});
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
-    const again = await client.query('SELECT 1 FROM imf_projects LIMIT 1');
-    if (!again.rows.length) {
-      for (const [table, keys, columns] of tables) {
-        for (const [, row] of rows[table]) {
-          await client.query(`INSERT INTO ${table}(${columns.join(',')}) VALUES(${columns.map((_,i)=>`$${i+1}`).join(',')}) ON CONFLICT DO NOTHING`, columns.map(k=>row[k]));
-        }
-      }
-      await client.query('UPDATE imf_revision SET revision=1 WHERE id=1');
-    }
-    await client.query('COMMIT');
-  } catch (error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
-  finally { client.release(); }
-}
-function createStore(pool, seedFactory) {
+function createStore(pool, _seedFactory) {
   const snapshots = new WeakMap();
-  let bootstrapReady;
+
   let cache;
   let publicCache;
   let publicRead;
@@ -150,8 +95,7 @@ function createStore(pool, seedFactory) {
   }
   async function readAuthUser(field, value) {
     await ensureSchema(pool);
-    if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
-    await bootstrapReady;
+
     const where = field === 'id' ? 'id=$1' : 'lower(email)=lower($1)';
     const result = await pool.query(`SELECT id,email,role,password_hash,auth_version,data->>'name' AS name
       FROM imf_users WHERE ${where} LIMIT 1`, [value]);
@@ -161,8 +105,7 @@ function createStore(pool, seedFactory) {
   }
   async function readUserById(id) {
     await ensureSchema(pool);
-    if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
-    await bootstrapReady;
+
     const client = await pool.connect();
     try {
       await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
@@ -185,16 +128,17 @@ function createStore(pool, seedFactory) {
   }
   async function revision() {
     await ensureSchema(pool);
-    if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
-    await bootstrapReady;
+
     const result = await pool.query('SELECT revision FROM imf_revision WHERE id=1');
     if (!result.rows.length) throw new Error('Import initial PostgreSQL requis.');
     return String(result.rows[0].revision);
   }
+  async function publicRevision() {await ensureSchema(pool);return String((await pool.query('SELECT revision FROM imf_public_revision WHERE id=1')).rows[0].revision);}
+  async function clientRevision(id) {await ensureSchema(pool);const row=(await pool.query('SELECT (SELECT revision FROM imf_public_revision WHERE id=1)::text AS public,COALESCE((SELECT revision FROM imf_client_revisions WHERE client_id=$1),0)::text AS private',[id])).rows[0];return row.public+'-'+row.private;}
   async function readPublic() {
     // Vercel runs admin actions and public pages in different instances. A
     // process-local TTL alone can show a sold lot as available after a write.
-    const currentRevision = await revision();
+    const currentRevision = await publicRevision();
     if (publicCache?.revision === currentRevision) return structuredClone(publicCache.data);
     if (publicRead?.revision === currentRevision) return structuredClone(await publicRead.promise);
     const version = publicVersion;
@@ -206,7 +150,7 @@ function createStore(pool, seedFactory) {
         (SELECT COALESCE(jsonb_agg(jsonb_build_object('project',project_slug,'lot',(data - 'reservationNote' - 'planDwgUrl') || jsonb_build_object('ref',ref,'status',status)) ORDER BY project_slug,ref),'[]'::jsonb) FROM imf_lots) AS lots,
         (SELECT COALESCE(jsonb_agg(data ORDER BY position,id),'[]'::jsonb) FROM imf_records WHERE collection='news') AS news,
         (SELECT data FROM imf_records WHERE collection='settings' AND id='company') AS company,
-        (SELECT revision FROM imf_revision WHERE id=1) AS revision`);
+        (SELECT revision FROM imf_public_revision WHERE id=1) AS revision`);
       const row = result.rows[0];
       if (!row?.projects?.length) throw new Error('Import initial PostgreSQL requis.');
       const projects = row.projects.map(p => ({...p,lots:[]}));
@@ -224,11 +168,10 @@ function createStore(pool, seedFactory) {
   }
   async function read() {
     await ensureSchema(pool);
-    if (!bootstrapReady) bootstrapReady = bootstrapIfEmpty(pool, seedFactory);
-    await bootstrapReady;
+
     if (cache && cache.revision === await revision()) {
       const data = structuredClone(cache.data);
-      snapshots.set(data,{revision:cache.revision,rows:flatten(structuredClone(data))});
+      snapshots.set(data,{revision:cache.revision,rows:flatten(structuredClone(data)),original:structuredClone(data)});
       return data;
     }
     const client = await pool.connect();
@@ -263,7 +206,7 @@ function createStore(pool, seedFactory) {
       await client.query('COMMIT');
       const currentRevision=String(revision.rows[0].revision);
       cache={data:structuredClone(data),revision:currentRevision};
-      snapshots.set(data,{revision:currentRevision, rows:flatten(structuredClone(data))});
+      snapshots.set(data,{revision:currentRevision, rows:flatten(structuredClone(data)),original:structuredClone(data)});
       return data;
     } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
     finally { client.release(); }
@@ -276,11 +219,19 @@ function createStore(pool, seedFactory) {
     const removedMediaIds=[...snapshot.rows.imf_records.entries()]
       .filter(([key,row])=>row.collection==='uploads' && !next.imf_records.has(key) && /^[a-f0-9-]{36}$/.test(row.id))
       .map(([,row])=>row.id);
+    let object;
     const client=await pool.connect();
     try {
       await client.query('BEGIN');
-      const version=await client.query('SELECT revision FROM imf_revision WHERE id=1 FOR UPDATE');
-      if (String(version.rows[0]?.revision)!==snapshot.revision) throw new Error('Un autre utilisateur vient de modifier les données. Réessayez.');
+      for(const [table,keys,columns] of tables) {
+        const changed=[...snapshot.rows[table].entries()].filter(([key,row])=>JSON.stringify(row)!==JSON.stringify(next[table].get(key))).sort(([a],[b])=>a.localeCompare(b));
+        for(const [,row] of changed) {
+          const current=(await client.query(`SELECT ${columns.join(',')} FROM ${table} WHERE ${keys.map((k,i)=>`${k}=$${i+1}`).join(' AND ')} FOR UPDATE`,keys.map(k=>row[k]))).rows[0];
+          const canonical=value=>value instanceof Date?value.toISOString():Array.isArray(value)?value.map(canonical):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])])):value;
+          const normalize=value=>JSON.stringify(canonical(value));
+          if(!current || columns.some(column=>normalize(current[column])!==normalize(row[column]))) throw new Error('Un autre utilisateur vient de modifier cet enregistrement. Réessayez.');
+        }
+      }
       for (const [table,keys] of [...tables].reverse()) {
         for (const [key,row] of snapshot.rows[table]) if (!next[table].has(key)) {
           await client.query(`DELETE FROM ${table} WHERE ${keys.map((k,i)=>`${k}=$${i+1}`).join(' AND ')}`, keys.map(k=>row[k]));
@@ -288,29 +239,84 @@ function createStore(pool, seedFactory) {
       }
       for (const [table,keys,columns] of tables) {
         for (const [key,row] of next[table]) if (JSON.stringify(snapshot.rows[table].get(key))!==JSON.stringify(row)) {
-          await client.query(`INSERT INTO ${table}(${columns.join(',')}) VALUES(${columns.map((_,i)=>`$${i+1}`).join(',')}) ON CONFLICT(${keys.join(',')}) DO UPDATE SET ${columns.filter(k=>!keys.includes(k)).map(k=>`${k}=EXCLUDED.${k}`).join(',')}`,columns.map(k=>row[k]));
+          await client.query(`INSERT INTO ${table}(${columns.join(',')}) VALUES(${columns.map((_,i)=>`$${i+1}`).join(',')}) ${snapshot.rows[table].has(key)?`ON CONFLICT(${keys.join(',')}) DO UPDATE SET ${columns.filter(k=>!keys.includes(k)).map(k=>`${k}=EXCLUDED.${k}`).join(',')}`:''}`,columns.map(k=>row[k]));
         }
       }
       if (media) {
+        if(process.env.MEDIA_S3_BUCKET)object=await require('./object-media.cjs').put(media.id,media.bytes);
         if (!data.uploads?.some(u=>u.id===media.id)) throw new Error('Métadonnées du fichier manquantes.');
-        await client.query('INSERT INTO imf_media(id,bytes) VALUES($1,$2)',[media.id,media.bytes]);
+        if(object)await client.query('INSERT INTO imf_media_objects(id,object_key,size,sha256) VALUES($1,$2,$3,$4)',[media.id,object.key,object.size,object.sha256]);
+        else await client.query('INSERT INTO imf_media(id,bytes) VALUES($1,$2)',[media.id,media.bytes]);
       }
-      for (const id of removedMediaIds) await client.query('DELETE FROM imf_media WHERE id=$1',[id]);
+      for (const id of removedMediaIds){await client.query('DELETE FROM imf_media WHERE id=$1',[id]);
+        await client.query('INSERT INTO imf_media_deletions(object_key) SELECT object_key FROM imf_media_objects WHERE id=$1 ON CONFLICT DO NOTHING',[id]);
+        await client.query('DELETE FROM imf_media_objects WHERE id=$1',[id]);}
       if(audit) await client.query('INSERT INTO imf_audit_events(id,at,actor_id,operation,data) VALUES($1,$2,$3,$4,$5)',[audit.id,audit.at,audit.actorId,audit.operation,audit]);
+      const changed=(table,filter=()=>true)=>[...new Set([...snapshot.rows[table].keys(),...next[table].keys()])].some(key=>filter(next[table].get(key)??snapshot.rows[table].get(key))&&JSON.stringify(snapshot.rows[table].get(key))!==JSON.stringify(next[table].get(key)));
+      if(changed('imf_projects')||changed('imf_lots')||changed('imf_records',row=>['news','settings'].includes(row.collection)))await client.query('UPDATE imf_public_revision SET revision=revision+1 WHERE id=1');
       const updated=await client.query('UPDATE imf_revision SET revision=revision+1 WHERE id=1 RETURNING revision');
       await client.query('COMMIT');
       cache=undefined;
       publicVersion++;
       publicCache=undefined;
       publicRead=undefined;
-      snapshots.set(data,{revision:String(updated.rows[0].revision),rows:flatten(structuredClone(data))});
-    } catch(error) { await client.query('ROLLBACK').catch(()=>{}); throw error; }
+      snapshots.set(data,{revision:String(updated.rows[0].revision),rows:flatten(structuredClone(data)),original:structuredClone(data)});
+    } catch(error) { await client.query('ROLLBACK').catch(()=>{});if(object){try{await require('./object-media.cjs').remove(object.key);}catch{await pool.query('INSERT INTO imf_media_deletions(object_key) VALUES($1) ON CONFLICT DO NOTHING',[object.key]).catch(()=>console.error('media_cleanup_pending'));}}throw error; }
     finally { client.release(); }
+    if(process.env.MEDIA_S3_BUCKET)await require('./object-media.cjs').drain(pool).catch(()=>console.error('media_cleanup_pending'));
   }
-  async function readMedia(id) {
+  async function mediaSize(id) {
     await ensureSchema(pool);
-    const result=await pool.query('SELECT bytes FROM imf_media WHERE id=$1',[id]);
+    const result=await pool.query('SELECT size FROM imf_media_objects WHERE id=$1 UNION ALL SELECT octet_length(bytes) AS size FROM imf_media WHERE id=$1 LIMIT 1',[id]);
+    return result.rows[0]?.size;
+  }
+  async function readMedia(id,start,end) {
+    await ensureSchema(pool);
+    const object=(await pool.query('SELECT object_key FROM imf_media_objects WHERE id=$1',[id])).rows[0];
+    if(object)return require('./object-media.cjs').read(object.object_key,start,end);
+    const result=await pool.query(start===undefined?'SELECT bytes FROM imf_media WHERE id=$1':'SELECT substring(bytes from $2::int for $3::int) AS bytes FROM imf_media WHERE id=$1',start===undefined?[id]:[id,start+1,end-start+1]);
     return result.rows[0]?.bytes;
+  }
+  async function streamMedia(id,start,end,signal) {
+    await ensureSchema(pool);
+    const object=(await pool.query('SELECT object_key FROM imf_media_objects WHERE id=$1',[id])).rows[0];
+    if(object)return require('./object-media.cjs').stream(object.object_key,start,end,signal);
+    return require('./media-stream.cjs').chunkStream(async(first,last)=>{
+      const result=await pool.query('SELECT substring(bytes from $2::int for $3::int) AS bytes FROM imf_media WHERE id=$1',[id,first+1,last-first+1]);
+      return result.rows[0]?.bytes;
+    },start,end,signal);
+  }
+  async function readCrmWorkspace(collection,id) {
+    await ensureSchema(pool);
+    if(!['contacts','deals','activities','tasks'].includes(collection))throw new Error('Invalid collection');
+    const rows=id?(await pool.query('SELECT data FROM imf_records WHERE collection=$1 AND id=$2',[collection,id])).rows:[];
+    const data={projects:[],users:[],news:[],contacts:[],deals:[],activities:[],tasks:[],uploads:[]};
+    data[collection]=rows.map(row=>row.data);
+    snapshots.set(data,{rows:flatten(structuredClone(data)),original:structuredClone(data)});return data;
+  }
+  async function readCrmRecord(collection,id,contactId) {
+    await ensureSchema(pool);
+    if(!['contacts','deals','activities','tasks'].includes(collection))throw new Error('Invalid collection');
+    return (await pool.query(`SELECT data FROM imf_records WHERE collection=$1 AND ($2::text IS NULL OR id=$2) AND ($3::text IS NULL OR data->>'contactId'=$3) ORDER BY data->>'date' DESC,id LIMIT 100`,[collection,id??null,contactId??null])).rows.map(row=>row.data);
+  }
+  async function readLotWorkspace(projectSlug,ref) {
+    await ensureSchema(pool);
+    const project=(await pool.query('SELECT slug,data FROM imf_projects WHERE slug=$1',[projectSlug])).rows[0];
+    const lot=(await pool.query('SELECT ref,status,data FROM imf_lots WHERE project_slug=$1 AND ref=$2',[projectSlug,ref])).rows[0];
+    const rows=(await pool.query('SELECT u.* FROM imf_users u JOIN imf_client_property_assignments a ON a.client_id=u.id WHERE a.project_slug=$1 AND a.lot_ref=$2',[projectSlug,ref])).rows;
+    const users=rows.map(row=>({...row.data,id:row.id,email:row.email,role:row.role,passwordHash:row.password_hash,authVersion:row.auth_version,projectSlug:row.project_slug??undefined,lotRef:row.lot_ref??undefined,documents:[],archivedDocuments:[],messages:[]}));
+    const data={projects:project?[{...project.data,slug:project.slug,lots:lot?[{...lot.data,ref:lot.ref,status:lot.status}]:[]}]:[],users,news:[],contacts:[],deals:[],activities:[],tasks:[],uploads:[]};
+    snapshots.set(data,{rows:flatten(structuredClone(data)),original:structuredClone(data)});return data;
+  }
+  async function readPaymentWorkspace(id) {
+    await ensureSchema(pool);
+    const row=(await pool.query("SELECT * FROM imf_users WHERE id=$1 AND role='client'",[id])).rows[0];if(!row)throw new Error('Client introuvable.');
+    const data={projects:[],users:[{...row.data,id:row.id,email:row.email,role:row.role,passwordHash:row.password_hash,authVersion:row.auth_version,projectSlug:row.project_slug??undefined,lotRef:row.lot_ref??undefined,documents:[],archivedDocuments:[],messages:[]}],news:[],contacts:[],deals:[],activities:[],tasks:[],uploads:[]};
+    const projects=(await pool.query('SELECT DISTINCT p.slug,p.data FROM imf_projects p JOIN imf_client_property_assignments a ON a.project_slug=p.slug WHERE a.client_id=$1',[id])).rows;
+    for(const project of projects)data.projects.push({...project.data,slug:project.slug,lots:[]});
+    const lots=(await pool.query('SELECT l.* FROM imf_lots l JOIN imf_client_property_assignments a ON a.project_slug=l.project_slug AND a.lot_ref=l.ref WHERE a.client_id=$1',[id])).rows;
+    for(const lot of lots)data.projects.find(project=>project.slug===lot.project_slug).lots.push({...lot.data,ref:lot.ref,status:lot.status});
+    snapshots.set(data,{rows:flatten(structuredClone(data)),original:structuredClone(data)});return data;
   }
   async function readMediaMetadata(id) {
     await ensureSchema(pool);
@@ -333,7 +339,7 @@ function createStore(pool, seedFactory) {
       if(rows.rows.some(row=>[...(row.project_photos??[]),...(row.lot_photos??[])].some(photo=>photo.src===href)))return true;
     }return false;
   }
-  return {readAudit,conversationRevision,canReadMedia,read,readPublic,revision,write,readMedia,readMediaMetadata,consumeRateLimit,readAuthUser,readUserById};
+  return {searchProperties:async(...args)=>{await ensureSchema(pool);return require('./property-repository.cjs').search(pool,...args);},readCrmWorkspace,readCrmRecord,crmList:async(...args)=>{await ensureSchema(pool);return require('./crm-repository.cjs').list(pool,...args);},crmStats:async()=>{await ensureSchema(pool);return require('./crm-repository.cjs').stats(pool);},crmDashboard:async()=>{await ensureSchema(pool);return require('./crm-repository.cjs').dashboard(pool);},streamMedia,readLotWorkspace,publicRevision,clientRevision,captureLead:async(input)=>{await ensureSchema(pool);return require('./scoped-leads.cjs').captureLead(pool,input);},postMessage:async(...args)=>{await ensureSchema(pool);return require('./scoped-chat.cjs').postMessage(pool,...args);},readPaymentWorkspace,mediaSize,securityQuery:async(sql,params)=>{await ensureSchema(pool);return pool.query(sql,params);},original:data=>structuredClone(snapshots.get(data)?.original),readAudit,conversationRevision,canReadMedia,read,readPublic,revision,write,readMedia,readMediaMetadata,consumeRateLimit,readAuthUser,readUserById};
 }
 let store;
 function getStore(seedFactory) {

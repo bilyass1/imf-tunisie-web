@@ -1,6 +1,6 @@
 
 
-import { getMediaMetadata, canReadPrivateMedia, readMedia } from '@/lib/db';
+import { getMediaSize, getMediaMetadata, canReadPrivateMedia, streamMedia } from '@/lib/db';
 import { getSession } from '@/lib/session';
 export const runtime='nodejs';
 export async function GET(request: Request, {params}: {params: Promise<{id:string}>}) {
@@ -14,16 +14,16 @@ export async function GET(request: Request, {params}: {params: Promise<{id:strin
     if(!allowed) return new Response(null,{status:404,headers:{'Cache-Control':'private, no-store'}});
   }
   try {
-    const bytes=await readMedia(id); if(!bytes) return new Response(null,{status:404});
+    const size=await getMediaSize(id); if(!size) return new Response(null,{status:404});
     const headers=new Headers({'Content-Type':file.mime,'Content-Disposition':`${file.mime==='application/pdf'?'attachment':'inline'}; filename*=UTF-8''${encodeURIComponent(file.name)}`,'Cache-Control':file.public?'public, max-age=3600':'private, no-store','X-Content-Type-Options':'nosniff','X-Robots-Tag':file.public?'index':'noindex','Accept-Ranges':'bytes'});
     const range=request.headers.get('range');
     if(range) {
       const match=/^bytes=(\d*)-(\d*)$/.exec(range);
-      let start=match?.[1]?Number(match[1]):0,end=match?.[2]?Number(match[2]):bytes.length-1;
-      if(match&&!match[1]&&match[2]){start=Math.max(0,bytes.length-Number(match[2]));end=bytes.length-1;}
-      if(!match||(!match[1]&&!match[2])||!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||start>=bytes.length||end<start){headers.set('Content-Range',`bytes */${bytes.length}`);return new Response(null,{status:416,headers});}
-      end=Math.min(end,bytes.length-1);headers.set('Content-Range',`bytes ${start}-${end}/${bytes.length}`);headers.set('Content-Length',String(end-start+1));return new Response(bytes.subarray(start,end+1),{status:206,headers});
+      let start=match?.[1]?Number(match[1]):0,end=match?.[2]?Number(match[2]):size-1;
+      if(match&&!match[1]&&match[2]){start=Math.max(0,size-Number(match[2]));end=size-1;}
+      if(!match||(!match[1]&&!match[2])||!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||start>=size||end<start){headers.set('Content-Range',`bytes */${size}`);return new Response(null,{status:416,headers});}
+      end=Math.min(end,size-1);headers.set('Content-Range',`bytes ${start}-${end}/${size}`);headers.set('Content-Length',String(end-start+1));const stream=await streamMedia(id,start,end,request.signal);return new Response(stream,{status:206,headers});
     }
-    headers.set('Content-Length',String(bytes.length));return new Response(bytes,{headers});
+    headers.set('Content-Length',String(size));const stream=await streamMedia(id,0,size-1,request.signal);return new Response(stream,{headers});
   } catch {return new Response(null,{status:404});}
 }

@@ -18,6 +18,7 @@ export default function InteriorExplorer({ locale, references, labels }: { local
   const t = copy[locale];
   if (!reference) return null;
   const block = reference[0];
+  const referencePath=encodeURIComponent(reference);
   return <div className="mb-16 overflow-hidden rounded-3xl border border-ink/10 bg-ivory">
     <div className="grid gap-8 p-6 sm:p-9 lg:grid-cols-[1fr_2fr]">
       <div>
@@ -26,21 +27,21 @@ export default function InteriorExplorer({ locale, references, labels }: { local
         <p className="mt-4 text-sm leading-relaxed text-ink/60">{t.body}</p>
         <div className="mt-7 grid grid-cols-2 gap-3">
           <label className="text-xs text-ink/60">{t.block}
-            <select value={block} onChange={e => setReference(references.find(ref => ref.startsWith(e.target.value))!)} className="mt-2 w-full rounded-lg border border-ink/15 bg-white p-3 text-sm text-ink focus:border-gold-500">
+            <select value={block} onChange={e => {const selected=references.find(ref=>ref.startsWith(e.target.value));if(selected)setReference(selected);}} className="mt-2 w-full rounded-lg border border-ink/15 bg-white p-3 text-sm text-ink focus:border-gold-500">
               {[...new Set(references.map(ref => ref[0]))].map(value => <option key={value}>{value}</option>)}
             </select>
           </label>
           <label className="text-xs text-ink/60">{t.apartment}
-            <select value={reference} onChange={e => setReference(e.target.value)} className="mt-2 w-full rounded-lg border border-ink/15 bg-white p-3 text-sm text-ink focus:border-gold-500">
+            <select value={reference} onChange={e => {const selected=references.find(ref=>ref===e.target.value);if(selected)setReference(selected);}} data-testid="interior-reference" className="mt-2 w-full rounded-lg border border-ink/15 bg-white p-3 text-sm text-ink focus:border-gold-500">
               {references.filter(ref => ref.startsWith(block)).map(ref => <option key={ref}>{ref}</option>)}
             </select>
           </label>
         </div>
-        <Link href={`/${locale}/projets/residence-la-gloire/appartements/${reference}#interieur`} className="btn-gold mt-6">{t.open}</Link>
-        <a href={`/plans/la-gloire/presentation/${reference}.pdf`} download className="mt-4 block text-xs underline underline-offset-4">{t.plan}</a>
-        <p className="mt-6 text-xs leading-relaxed text-ink/50">{t.note}</p>
+        <Link data-testid="interior-project-link" href={`/${locale}/projets/residence-la-gloire/appartements/${referencePath}#interieur`} className="btn-gold mt-6">{t.open}</Link>
+        <a href={`/plans/la-gloire/presentation/${referencePath}.pdf`} download className="mt-4 block text-xs underline underline-offset-4">{t.plan}</a>
+        <p className="mt-6 text-xs leading-relaxed text-muted">{t.note}</p>
       </div>
-      <PlanViewer key={reference} image={`/interiors/la-gloire/${reference}.webp`} alt={`${t.apartment} ${reference} · 3D`} labels={labels} rotation={PLAN_ROTATION[locale]} exists />
+      <PlanViewer key={reference} image={`/interiors/la-gloire/${referencePath}.webp`} alt={`${t.apartment} ${reference} · 3D`} labels={labels} rotation={PLAN_ROTATION[locale]} exists />
     </div>
   </div>;
 }

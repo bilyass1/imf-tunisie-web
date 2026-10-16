@@ -41,7 +41,7 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
       <section className="bg-ivory py-20 lg:py-28">
         <div className="container-lux">
           {news.length === 0 ? (
-            <p className="py-20 text-center text-ink/45">{dict.news.empty}</p>
+            <p className="py-20 text-center text-muted">{dict.news.empty}</p>
           ) : (
             <div className="grid gap-7 md:grid-cols-2 lg:grid-cols-3">
               {news.map((item, i) => (
@@ -65,7 +65,7 @@ export default async function NewsPage({ params }: { params: Promise<{ locale: s
                         {formatDate(item.date, locale)}
                       </p>
                       <h2 className="mt-3 font-display text-[24px] font-light leading-snug">{t(item.title, locale)}</h2>
-                      <p className="mt-3 flex-1 text-[14px] leading-[1.8] text-ink/55">{t(item.excerpt, locale)}</p>
+                      <p className="mt-3 flex-1 text-[14px] leading-[1.8] text-muted">{t(item.excerpt, locale)}</p>
                       <span className="mt-5 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-ink transition group-hover:text-gold-600">
                         {dict.news.readMore}
                         <IconArrow className="h-4 w-4 rtl:rotate-180" />

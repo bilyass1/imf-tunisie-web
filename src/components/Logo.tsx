@@ -16,7 +16,6 @@ export function LogoMark({ className = '', light = false }: { className?: string
       alt=""
       width={80}
       height={104}
-      priority
       className={`w-auto object-contain ${className}`}
       aria-hidden="true"
     />
@@ -46,7 +45,7 @@ export default function Logo({
   compact?: boolean;
 }) {
   return (
-    <Link href={`/${locale}`} className="group flex items-center gap-3" aria-label={SITE.legalName}>
+    <Link href={`/${locale}`} className="group flex items-center gap-3">
       <LogoMark className={compact ? 'h-8' : 'h-10'} light={light} />
       <span className="flex flex-col leading-none">
         <span
@@ -59,7 +58,7 @@ export default function Logo({
         {!compact && (
           <span
             className={`mt-1 hidden whitespace-nowrap text-[8.5px] font-medium uppercase tracking-[0.18em] sm:block ${
-              light ? 'text-white/65' : 'text-ink/55'
+              light ? 'text-white/85' : 'text-muted'
             }`}
           >
             Immobilière Mseddi Frères

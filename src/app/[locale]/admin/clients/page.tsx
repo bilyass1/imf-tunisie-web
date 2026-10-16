@@ -4,20 +4,22 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireAdminUser } from '@/lib/auth';
-import { getClients, getProjects } from '@/lib/db';
+import { getProjects } from '@/lib/db';
 import { clientProperties } from '@/lib/client-properties';
+import { clientDirectory } from '@/lib/client-directory';
 import { formatMoney } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
 
-export default async function AdminClientsPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function AdminClientsPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams:Promise<{after?:string}> }) {
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const clients = (await getClients());
+  const query=await searchParams;
+  const {items:clients,next}=await clientDirectory(query.after);
   const projects = await getProjects();
   const projectNames = new Map(projects.map((p) => [p.slug, p.name]));
 
@@ -33,7 +35,7 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
       accent="admin"
     >
       {clients.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-12 text-center text-ink/50">
+        <p className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-12 text-center text-muted">
           {dict.admin.clientsEmpty}
         </p>
       ) : (
@@ -41,7 +43,7 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] text-[13.5px]">
               <thead>
-                <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-ink/50">
+                <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-muted">
                   <th className="px-6 py-3 text-start font-semibold">{dict.admin.table.name}</th>
                   <th className="px-6 py-3 text-start font-semibold">{dict.admin.table.contact}</th>
                   <th className="px-6 py-3 text-start font-semibold">{dict.admin.table.project}</th>
@@ -57,13 +59,13 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
                   return (
                     <tr key={c.id} className="border-t border-ink/6">
                       <td className="px-6 py-4 font-medium text-ink">{c.name}</td>
-                      <td className="px-6 py-4 text-ink/55">
+                      <td className="px-6 py-4 text-muted">
                         <a href={`mailto:${c.email}`} className="block hover:text-gold-600">
                           {c.email}
                         </a>
-                        {c.phone && <span className="block text-ink/40">{c.phone}</span>}
+                        {c.phone && <span className="block text-muted">{c.phone}</span>}
                       </td>
-                      <td className="px-6 py-4 text-ink/55">
+                      <td className="px-6 py-4 text-muted">
                         {clientProperties(c).map(item=>projectNames.get(item.projectSlug)??item.projectSlug).join(' · ') || '—'}
                       </td>
                       <td className="px-6 py-4 font-semibold text-ink">{clientProperties(c).map(item=>item.lotRef).join(' · ') || '—'}</td>
@@ -78,6 +80,7 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
           </div>
         </div>
       )}
+      <nav aria-label="Pagination" className="mt-5 flex flex-wrap gap-4"><Link className="btn-ghost" href={`/${locale}/admin/clients`}>{locale==='ar'?'البداية':locale==='en'?'First page':'Première page'}</Link>{next&&<Link className="btn-ghost" href={`/${locale}/admin/clients?${new URLSearchParams({after:next})}`}>{locale==='ar'?'التالي':locale==='en'?'Next page':'Page suivante'}</Link>}</nav>
     </PortalShell>
   );
 }

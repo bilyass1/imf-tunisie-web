@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { submitLeadAction, type FormState } from '@/lib/actions';
 import { IconArrow, IconCheck } from '@/components/Icons';
@@ -37,8 +37,10 @@ export default function ContactForm({
   compact?: boolean;
   locale?: Locale;
 }) {
+  const success = useRef<HTMLDivElement>(null);
   const params = useSearchParams();
   const [state, action, pending] = useActionState(submitLeadAction, initial);
+  useEffect(() => { if (state.done) success.current?.focus(); }, [state.done]);
   const [project, setProject] = useState('');
   const [lot, setLot] = useState('');
   const [dateBounds, setDateBounds] = useState<{ min: string; max: string }>();
@@ -49,6 +51,9 @@ export default function ContactForm({
     ar: { date:'التاريخ المرغوب', time:'الوقت المرغوب (تونس)', mode:'نوع الزيارة', onsite:'في الموقع', video:'مكالمة فيديو', note:'هذا طلب موعد. سيتصل بك فريقنا لتأكيد الزيارة.', consent:'أوافق على الاتصال بي لتنظيم هذه الزيارة.', message:'أرغب في زيارة هذه الشقة.', error:'اختر موعداً مستقبلياً خلال ستة أشهر ووافق على الاتصال بك.', unavailable:'هذه الشقة لم تعد متاحة للزيارة. اختر عقاراً آخر أو اتصل بفريقنا.' },
   }[locale];
 
+  const [fields,setFields]=useState({name:'',phone:'',email:'',budget:'',message:visiting?visitLabels.message:''});
+  const change=(key:keyof typeof fields,value:string)=>setFields(current=>({...current,[key]:value}));
+
   useEffect(() => {
     setDateBounds(visitDateBounds());
     setProject(params.get('project') ?? '');
@@ -57,7 +62,7 @@ export default function ContactForm({
 
   if (state.done) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-8 py-12 text-center">
+      <div ref={success} tabIndex={-1} role="status" className="flex flex-col items-center gap-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-8 py-12 text-center">
         <span className="grid h-14 w-14 place-items-center rounded-full bg-emerald-500 text-white">
           <IconCheck className="h-7 w-7" />
         </span>
@@ -67,7 +72,7 @@ export default function ContactForm({
   }
 
   return (
-    <form action={action} className="grid gap-4 sm:grid-cols-2">
+    <form action={action} aria-describedby={state.error ? "contact-error" : undefined} className="grid gap-4 sm:grid-cols-2">
       <input type="hidden" name="intent" value={visiting ? 'visit' : 'contact'}/>
       <div className="hidden" aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off"/></label></div>
       {visiting && <fieldset className="grid gap-4 rounded-xl border border-gold-300 bg-gold-50 p-5 sm:col-span-2 sm:grid-cols-2">
@@ -82,21 +87,21 @@ export default function ContactForm({
         <label className="label" htmlFor="cf-name">
           {labels.name} *
         </label>
-        <input id="cf-name" name="name" required className="field" autoComplete="name" />
+        <input id="cf-name" name="name" value={fields.name} onChange={e=>change('name',e.target.value)} required className="field" autoComplete="name" />
       </div>
 
       <div>
         <label className="label" htmlFor="cf-phone">
           {labels.phone} *
         </label>
-        <input id="cf-phone" name="phone" required className="field" inputMode="tel" autoComplete="tel" placeholder="+216 …" />
+        <input id="cf-phone" name="phone" type="tel" value={fields.phone} onChange={e=>change('phone',e.target.value)} required className="field" inputMode="tel" autoComplete="tel" placeholder="+216 …" />
       </div>
 
       <div>
         <label className="label" htmlFor="cf-email">
           {labels.email}
         </label>
-        <input id="cf-email" name="email" type="email" className="field" autoComplete="email" />
+        <input id="cf-email" name="email" type="email" value={fields.email} onChange={e=>change('email',e.target.value)} className="field" autoComplete="email" />
       </div>
 
       <div>
@@ -137,7 +142,7 @@ export default function ContactForm({
         <label className="label" htmlFor="cf-budget">
           {labels.budget}
         </label>
-        <select id="cf-budget" name="budget" className="field">
+        <select id="cf-budget" name="budget" value={fields.budget} onChange={e=>change('budget',e.target.value)} className="field">
           <option value="">{labels.choose}</option>
           <option value="< 150 000 TND">&lt; 150 000 TND</option>
           <option value="150 000 – 250 000 TND">150 000 – 250 000 TND</option>
@@ -150,17 +155,17 @@ export default function ContactForm({
         <label className="label" htmlFor="cf-message">
           {labels.message} *
         </label>
-        <textarea key={visiting ? 'visit' : 'contact'} id="cf-message" name="message" required defaultValue={visiting ? visitLabels.message : ''} maxLength={4000} rows={compact ? 3 : 5} className="field resize-none" />
+        <textarea key={visiting ? 'visit' : 'contact'} id="cf-message" name="message" required value={fields.message} onChange={e=>change('message',e.target.value)} maxLength={4000} rows={compact ? 3 : 5} className="field resize-none" />
       </div>
 
       {state.error && (
-        <p role="alert" className="sm:col-span-2 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">
+        <p id="contact-error" role="alert" className="sm:col-span-2 rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">
           {state.error === 'required' ? labels.required : state.error === 'visit' ? visitLabels.error : state.error === 'unavailable' ? visitLabels.unavailable : labels.error}
         </p>
       )}
 
       <div className="sm:col-span-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="max-w-sm text-[11.5px] leading-relaxed text-ink/40">{labels.consent}</p>
+        <p className="max-w-sm text-[11.5px] leading-relaxed text-muted">{labels.consent}</p>
         <button type="submit" disabled={pending} className="btn-gold shrink-0 disabled:opacity-60">
           {pending ? labels.sending : labels.submit}
           {!pending && <IconArrow className="h-4 w-4 rtl:rotate-180" />}

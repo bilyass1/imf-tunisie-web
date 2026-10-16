@@ -35,7 +35,7 @@ export default function Header({
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
-  const menuPanel = useRef<HTMLDivElement>(null);
+  const menuPanel = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -50,25 +50,30 @@ export default function Header({
 
   useEffect(() => {
     if (!open) return;
+    const opener = menuButton.current;
+    const dialog = menuPanel.current;
+    if (!dialog) return;
+    dialog.showModal();
+    const trap=(event:KeyboardEvent)=>{
+      if(event.key!=='Tab')return;
+      const controls=Array.from(dialog.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),[tabindex="0"]')).filter(element=>element.getClientRects().length>0);
+      const first=controls[0],last=controls.at(-1);
+      if(!dialog.contains(document.activeElement)){event.preventDefault();first?.focus();}
+      else if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+    };
+    dialog.addEventListener('keydown',trap);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const close = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { setOpen(false); menuButton.current?.focus(); }
-      if (e.key === 'Tab') {
-        const items = [menuButton.current, ...Array.from(menuPanel.current?.querySelectorAll<HTMLElement>('a') ?? [])].filter(Boolean) as HTMLElement[];
-        const first = items[0], last = items[items.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    };
-    document.addEventListener('keydown', close);
     const desktop = window.matchMedia('(min-width: 1280px)');
     const onDesktop = () => { if (desktop.matches) setOpen(false); };
     desktop.addEventListener('change', onDesktop);
     return () => {
+      dialog.removeEventListener('keydown',trap);
+      dialog.close();
       document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', close);
       desktop.removeEventListener('change', onDesktop);
+      opener?.focus();
     };
   }, [open]);
 
@@ -95,7 +100,7 @@ export default function Header({
           solid ? 'border-b border-ink/8 bg-ivory/92 backdrop-blur-xl' : 'bg-gradient-to-b from-black/55 to-transparent'
         }`}
       >
-        <div dir="ltr" className="flex h-[76px] w-full items-center justify-between gap-4 px-5 sm:px-8 lg:h-[84px] lg:px-10">
+        <div dir="ltr" className="flex h-[76px] w-full items-center justify-between gap-2 px-5 sm:px-8 lg:h-[84px] lg:px-10">
           <div className="shrink-0">
             <Logo locale={locale} light={light} />
           </div>
@@ -155,7 +160,7 @@ export default function Header({
               aria-label={open ? labels.close : labels.menu}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              className={`grid h-10 w-10 place-items-center rounded-full border transition xl:hidden ${
+              className={`grid h-11 w-11 place-items-center rounded-full border transition xl:hidden ${
                 light ? 'border-white/25 text-white' : 'border-ink/15 text-ink'
               }`}
             >
@@ -166,20 +171,20 @@ export default function Header({
       </header>
 
       {/* Menu mobile */}
-      <div
+      <dialog
         ref={menuPanel}
         id="mobile-menu"
-        inert={!open}
-        aria-hidden={!open}
-        className={`fixed inset-0 z-40 overflow-y-auto bg-ink transition-all duration-500 xl:hidden ${
-          open ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
-        }`}
+        aria-label={labels.menu}
+        onCancel={() => setOpen(false)}
+        className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-y-auto border-0 bg-ink p-0 text-white backdrop:bg-black/60"
       >
+        <button type="button" onClick={() => setOpen(false)} aria-label={labels.close} className="absolute end-5 top-4 grid h-11 w-11 place-items-center rounded-full border border-white/50"><IconClose className="h-5 w-5" /></button>
         <div className="container-lux flex min-h-full flex-col justify-center gap-1 pb-8 pt-24">
           {links.map((link, i) => (
             <Link
               key={link.href}
               href={link.href}
+              aria-current={pathname===link.href?'page':undefined}
               onClick={() => setOpen(false)}
               style={{ transitionDelay: `${80 + i * 55}ms` }}
               className={`border-b border-white/10 py-3 font-display text-2xl font-light text-white transition-all duration-500 ${
@@ -201,7 +206,7 @@ export default function Header({
             </a>
           </div>
         </div>
-      </div>
+      </dialog>
     </>
   );
 }

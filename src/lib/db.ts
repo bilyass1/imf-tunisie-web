@@ -1,4 +1,5 @@
 import 'server-only';
+import { assertProductionStorage } from './runtime-security';
 import { cache as requestCache } from 'react';
 import { unstable_noStore as noStore } from 'next/cache';
 import type { VisitRequest } from './visit-request';
@@ -77,6 +78,7 @@ function ensureFile(): void {
 }
 
 export async function readDb(): Promise<Database> {
+  assertProductionStorage();
   // Next.js calls generateStaticParams during `next build`, before the
   // production database migration is guaranteed to have run. Use the local
   // seed only for that compilation pass; every runtime request still requires
@@ -117,13 +119,14 @@ export async function writeDb(data: Database): Promise<void> {
 
 /** Les écritures sont-elles durables ? Faux en hébergement serverless. */
 export function isPersistent(): boolean {
-  return Boolean(process.env.DATABASE_URL) || (!process.env.VERCEL && resolveMode() === 'file' && dataDir === LOCAL_DIR);
+  return Boolean(process.env.DATABASE_URL) || (process.env.NODE_ENV!=='production' && !process.env.VERCEL && resolveMode() === 'file' && dataDir === LOCAL_DIR);
 }
 
 /** Commercial records must never silently fall back to volatile memory. */
 export async function writeCommercialDb(data: Database, media?: MediaWrite): Promise<void> {
+  assertProductionStorage();
   if (process.env.DATABASE_URL) {
-    try { const before=await getStore(buildSeed).read(); await getStore(buildSeed).write(data, media,createAuditEvent(before,data)); return; }
+    try { const before=getStore(buildSeed).original(data);if(!before)throw new Error('Rechargez les données avant de les modifier.'); await getStore(buildSeed).write(data, media,createAuditEvent(before,data)); return; }
     catch (error) {
       if (error && typeof error === 'object' && 'code' in error) throw new Error('Enregistrement PostgreSQL impossible. Réessayez ou contactez l’administrateur.');
       throw error;
@@ -154,11 +157,22 @@ export async function writeCommercialDb(data: Database, media?: MediaWrite): Pro
   catch { throw new Error('Le dossier est supprimé, mais le nettoyage de certains fichiers a échoué.'); }
 }
 
-export async function readMedia(id: string): Promise<Buffer | undefined> {
+export async function readMedia(id: string,start?:number,end?:number): Promise<Buffer | undefined> {
   if (!/^[a-f0-9-]{36}$/.test(id)) return undefined;
-  if (process.env.DATABASE_URL) return getStore(buildSeed).readMedia(id);
-  try { return await fs.promises.readFile(path.join(LOCAL_DIR,'uploads',id)); }
+  if (process.env.DATABASE_URL) return getStore(buildSeed).readMedia(id,start,end);
+  try {
+    if(start===undefined)return await fs.promises.readFile(path.join(LOCAL_DIR,'uploads',id));
+    const file=await fs.promises.open(path.join(LOCAL_DIR,'uploads',id),'r');try{const buffer=Buffer.alloc(end!-start+1);const {bytesRead}=await file.read(buffer,0,buffer.length,start);return buffer.subarray(0,bytesRead);}finally{await file.close();}
+  }
   catch { return undefined; }
+}
+
+export async function streamMedia(id:string,start:number,end:number,signal?:AbortSignal):Promise<ReadableStream<Uint8Array>> {
+  assertProductionStorage();
+  if (!/^[a-f0-9-]{36}$/.test(id)) throw new Error('Invalid media');
+  if(process.env.DATABASE_URL)return getStore(buildSeed).streamMedia(id,start,end,signal);
+  const {chunkStream}=await import('./media-stream.cjs');
+  return chunkStream((first:number,last:number)=>readMedia(id,first,last),start,end,signal);
 }
 
 export async function getMediaMetadata(id: string): Promise<NonNullable<Database['uploads']>[number] | undefined> {
@@ -171,8 +185,14 @@ export async function getMediaMetadata(id: string): Promise<NonNullable<Database
 
 // Share public reads between metadata, layout, page and footer within one render.
 // Writes and authentication retain their independent, versioned reads.
+export const getCompanyData=requestCache(async()=>{
+ assertProductionStorage();noStore();
+ if(process.env.DATABASE_URL && process.env.NEXT_PHASE!=='phase-production-build')return (await getStore().securityQuery("SELECT data FROM imf_records WHERE collection='settings' AND id='company'")).rows[0]?.data as Database['company'];
+ return (await readDb()).company;
+});
 export const getPublicData = requestCache(async () => {
   // Prices and availability must be read at runtime, never frozen from build seed data.
+  assertProductionStorage();
   noStore();
   if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') {
     const data = await getStore(buildSeed).readPublic();
@@ -186,13 +206,18 @@ export const getPublicData = requestCache(async () => {
 /** A small cross-instance signal for already-open public pages. */
 export async function getPublicRevision(): Promise<string> {
   if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') {
-    return getStore(buildSeed).revision();
+    return getStore(buildSeed).publicRevision();
   }
   if (resolveMode() !== 'file') return 'memory';
   ensureFile();
   const stat = fs.statSync(dbFile);
   return `${stat.mtimeMs}/${stat.size}`;
 }
+export const getProjectLinks=requestCache(async():Promise<Pick<Project,'slug'|'name'>[]>=>{
+ assertProductionStorage();noStore();
+ if(process.env.DATABASE_URL&&process.env.NEXT_PHASE!=='phase-production-build')return (await getStore().securityQuery("SELECT slug,data->>'name' AS name FROM imf_projects ORDER BY slug")).rows;
+ return (await readDb()).projects.map(({slug,name})=>({slug,name}));
+});
 export async function getProjects(): Promise<Project[]> {
   return (await getPublicData()).projects.map(projectPresentation);
 }
@@ -239,7 +264,7 @@ export function lotStats(lots: Lot[]): LotStats {
 }
 
 export async function updateLotStatus(projectSlug: string, lotRef: string, status: LotStatus, authorized = false, note?: string): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readLotWorkspace(projectSlug,lotRef);
   const project = db.projects.find((p) => p.slug === projectSlug);
   const lot = project?.lots.find((l) => l.ref === lotRef);
   if (!lot) return false;
@@ -249,7 +274,7 @@ export async function updateLotStatus(projectSlug: string, lotRef: string, statu
 }
 
 export async function updateLotPrice(projectSlug: string, lotRef: string, price: number | undefined): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readLotWorkspace(projectSlug,lotRef);
   const project = db.projects.find((p) => p.slug === projectSlug);
   const lot = project?.lots.find((l) => l.ref === lotRef);
   if (!lot) return false;
@@ -259,7 +284,7 @@ export async function updateLotPrice(projectSlug: string, lotRef: string, price:
 }
 
 export async function updateLotComposition(projectSlug: string, lotRef: string, composition: Localized[]): Promise<boolean> {
-  const db = await readDb();
+  const db = await readLotWorkspace(projectSlug,lotRef);
   const lot = db.projects.find((p) => p.slug === projectSlug)?.lots.find((item) => item.ref === lotRef);
   if (!lot) return false;
   lot.composition = composition;
@@ -274,37 +299,54 @@ const uid = (prefix: string) =>
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+export async function readCrmWorkspace(collection:'contacts'|'deals'|'activities'|'tasks',id?:string):Promise<Database> {
+  assertProductionStorage();
+  return process.env.DATABASE_URL?getStore().readCrmWorkspace(collection,id):readDb();
+}
+
+/** Bounded compatibility read; use listCrm for cursor pagination. */
 export async function getContacts(): Promise<Contact[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('contacts');
   return (await readDb()).contacts;
 }
 
 export async function getContact(id: string): Promise<Contact | undefined> {
+  if(process.env.DATABASE_URL)return (await getStore().readCrmRecord('contacts',id))[0];
   return (await readDb()).contacts.find((c) => c.id === id);
 }
 
+/** Bounded compatibility read; use listCrm for cursor pagination. */
 export async function getDeals(): Promise<Deal[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('deals');
   return (await readDb()).deals;
 }
 
 export async function getDeal(id: string): Promise<Deal | undefined> {
+  if(process.env.DATABASE_URL)return (await getStore().readCrmRecord('deals',id))[0];
   return (await readDb()).deals.find((d) => d.id === id);
 }
 
 export async function getDealsForContact(contactId: string): Promise<Deal[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('deals',undefined,contactId);
   return (await readDb()).deals.filter((d) => d.contactId === contactId);
 }
 
+/** Bounded compatibility read; use listCrm for cursor pagination. */
 export async function getActivities(): Promise<Activity[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('activities');
   return (await readDb()).activities;
 }
 
 export async function getActivitiesForContact(contactId: string): Promise<Activity[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('activities',undefined,contactId);
   return (await readDb())
     .activities.filter((a) => a.contactId === contactId)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
+/** Bounded compatibility read; use listCrm for cursor pagination. */
 export async function getTasks(): Promise<CrmTask[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('tasks');
   return (await readDb()).tasks;
 }
 
@@ -322,6 +364,8 @@ export async function captureWebLead(input: {
   budget?: string;
   visit?: VisitRequest;
 }): Promise<{ contact: Contact; deal: Deal }> {
+  assertProductionStorage();
+  if(process.env.DATABASE_URL)return getStore().captureLead(input);
   const db = (await readDb());
   if (input.visit) {
     const property = db.projects.find(p => p.slug === input.projectSlug)?.lots.find(l => l.ref === input.lotRef || l.code === input.lotRef);
@@ -389,7 +433,7 @@ export async function captureWebLead(input: {
 }
 
 export async function setDealStage(id: string, stage: DealStage, lostReason?: string): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('deals',id);
   const deal = db.deals.find((d) => d.id === id);
   if (!deal) return false;
   deal.stage = stage;
@@ -409,7 +453,7 @@ export async function setDealStage(id: string, stage: DealStage, lostReason?: st
 }
 
 export async function updateDeal(id: string, patch: Partial<Pick<Deal, 'value' | 'expectedCloseDate' | 'title'>>): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('deals',id);
   const deal = db.deals.find((d) => d.id === id);
   if (!deal) return false;
   Object.assign(deal, patch);
@@ -419,7 +463,7 @@ export async function updateDeal(id: string, patch: Partial<Pick<Deal, 'value' |
 }
 
 export async function addActivity(input: Omit<Activity, 'id'>): Promise<Activity> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('activities');
   const created: Activity = { ...input, id: uid('a') };
   db.activities.unshift(created);
   (await writeDb(db));
@@ -427,7 +471,7 @@ export async function addActivity(input: Omit<Activity, 'id'>): Promise<Activity
 }
 
 export async function addContact(input: Omit<Contact, 'id' | 'createdAt' | 'tags'> & { tags?: string[] }): Promise<Contact> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('contacts');
   const created: Contact = { ...input, tags: input.tags ?? [], id: uid('c'), createdAt: today() };
   db.contacts.unshift(created);
   (await writeDb(db));
@@ -435,7 +479,7 @@ export async function addContact(input: Omit<Contact, 'id' | 'createdAt' | 'tags
 }
 
 export async function addTask(input: Omit<CrmTask, 'id' | 'createdAt' | 'done'>): Promise<CrmTask> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('tasks');
   const created: CrmTask = { ...input, id: uid('t'), createdAt: today(), done: false };
   db.tasks.unshift(created);
   (await writeDb(db));
@@ -443,7 +487,7 @@ export async function addTask(input: Omit<CrmTask, 'id' | 'createdAt' | 'done'>)
 }
 
 export async function toggleTask(id: string): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('tasks',id);
   const task = db.tasks.find((t) => t.id === id);
   if (!task) return false;
   task.done = !task.done;
@@ -473,6 +517,7 @@ export interface PipelineStats {
 }
 
 export async function pipelineStats(): Promise<PipelineStats> {
+  if(process.env.DATABASE_URL)return getStore().crmStats();
   const deals = (await getDeals());
   const byStage = DEAL_STAGES.reduce(
     (acc, stage) => {
@@ -569,4 +614,21 @@ export async function canReadPrivateMedia(id:string,userId:string):Promise<boole
 }
 export async function getAuditEvents() {
   return process.env.DATABASE_URL?getStore(buildSeed).readAudit():[...(await readDb()).auditEvents??[]].reverse().slice(0,100);
+}
+
+export async function getMediaSize(id:string):Promise<number|undefined> {
+ if(!/^[a-f0-9-]{36}$/.test(id))return undefined;
+ if(process.env.DATABASE_URL)return getStore().mediaSize(id);
+ return fs.promises.stat(path.join(LOCAL_DIR,'uploads',id)).then(stat=>stat.size).catch(()=>undefined);
+}
+export async function readPaymentWorkspace(id:string) {
+ assertProductionStorage();return process.env.DATABASE_URL?getStore().readPaymentWorkspace(id):readDb();
+}
+
+export async function getClientRevision(id:string):Promise<string> {
+  assertProductionStorage();return process.env.DATABASE_URL?getStore().clientRevision(id):getPublicRevision();
+}
+
+export async function readLotWorkspace(projectSlug:string,lotRef:string) {
+  assertProductionStorage();return process.env.DATABASE_URL?getStore().readLotWorkspace(projectSlug,lotRef):readDb();
 }

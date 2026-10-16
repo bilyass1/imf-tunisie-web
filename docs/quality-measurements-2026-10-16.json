@@ -1,0 +1,97 @@
+{
+  "commit": "96a31606d5d42fd1025e09a7e2ea0e4d1509714d",
+  "workflow": "https://github.com/bilyass1/imf-tunisie-web/actions/runs/38837195108",
+  "scope": "Production build on disposable synthetic PostgreSQL; lab measurements, not field p75 or WCAG certification",
+  "browserTestsPassed": 24,
+  "numberOfRunsPerUrlAndDevice": 5,
+  "lighthouse": {
+    "mobile": [
+      {
+        "path": "/ar",
+        "performanceMedian": 97,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 2547.1,
+        "clsMedian": 0
+      },
+      {
+        "path": "/en",
+        "performanceMedian": 97,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 2576.4,
+        "clsMedian": 0
+      },
+      {
+        "path": "/fr",
+        "performanceMedian": 97,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 2592.5,
+        "clsMedian": 0
+      },
+      {
+        "path": "/fr/contact",
+        "performanceMedian": 98,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 2351.1,
+        "clsMedian": 0
+      },
+      {
+        "path": "/fr/projets",
+        "performanceMedian": 98,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 2338.2,
+        "clsMedian": 0
+      },
+      {
+        "path": "/fr/recherche",
+        "performanceMedian": 98,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 2255.4,
+        "clsMedian": 0
+      }
+    ],
+    "desktop": [
+      {
+        "path": "/ar",
+        "performanceMedian": 100,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 659.2,
+        "clsMedian": 0
+      },
+      {
+        "path": "/en",
+        "performanceMedian": 100,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 615.1,
+        "clsMedian": 0
+      },
+      {
+        "path": "/fr",
+        "performanceMedian": 100,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 619.7,
+        "clsMedian": 0
+      },
+      {
+        "path": "/fr/contact",
+        "performanceMedian": 100,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 590.2,
+        "clsMedian": 0
+      },
+      {
+        "path": "/fr/projets",
+        "performanceMedian": 100,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 600.7,
+        "clsMedian": 0
+      },
+      {
+        "path": "/fr/recherche",
+        "performanceMedian": 100,
+        "accessibilityMinimum": 100,
+        "lcpMedianMs": 547.6,
+        "clsMedian": 0
+      }
+    ]
+  }
+}

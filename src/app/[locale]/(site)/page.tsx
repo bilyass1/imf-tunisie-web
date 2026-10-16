@@ -103,7 +103,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           ].map((s, i) => (
             <Reveal key={s.label} delay={i * 90} className="px-2 py-5 text-center sm:px-6">
               <p className="font-display text-[42px] font-light leading-none text-ink lg:text-[52px]">{s.value}</p>
-              <p className="mt-3 text-[11.5px] font-semibold uppercase tracking-[0.16em] text-ink/45">{s.label}</p>
+              <p className="mt-3 text-[11.5px] font-semibold uppercase tracking-[0.16em] text-muted">{s.label}</p>
             </Reveal>
           ))}
         </div>
@@ -124,7 +124,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </div>
             <div className="absolute -bottom-8 end-0 hidden w-56 rounded-2xl bg-ink p-6 text-white shadow-lux sm:block lg:-end-8">
               <p className="font-display text-[40px] font-light leading-none text-gold-300">{totalAvailable}</p>
-              <p className="mt-2 text-[11px] uppercase tracking-[0.14em] text-white/50">
+              <p className="mt-2 text-[11px] uppercase tracking-[0.14em] text-white/85">
                 {dict.projects.available} · {dict.projects.lots}
               </p>
             </div>
@@ -169,7 +169,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {featuredProjects.map((project, i) => (
               <Reveal key={project.slug} delay={i * 110}>
                 <div dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-                  <ProjectCard project={project} locale={locale} dict={dict} priority={i === 0} />
+                  <ProjectCard project={project} locale={locale} dict={dict} />
                 </div>
               </Reveal>
             ))}
@@ -181,7 +181,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="relative isolate overflow-hidden bg-ink py-24 lg:py-32">
         <div className="absolute inset-0 opacity-[0.14]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image src="/media/la-gloire/facade-nuit-1.jpg" alt="" fill priority sizes="100vw" quality={72} className="object-cover" />
+          <Image src="/media/la-gloire/facade-nuit-1.jpg" alt="" fill sizes="100vw" quality={72} className="object-cover" />
         </div>
         <div className="container-lux relative">
           <SectionHeading
@@ -201,7 +201,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                       <Icon className="h-5 w-5" />
                     </span>
                     <h3 className="mt-6 font-display text-[22px] font-light text-white">{item.title}</h3>
-                    <p className="mt-3 text-[13.5px] leading-[1.8] text-white/50">{item.body}</p>
+                    <p className="mt-3 text-[13.5px] leading-[1.8] text-white/85">{item.body}</p>
                   </div>
                 </Reveal>
               );
@@ -246,7 +246,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <Reveal>
             <span className="eyebrow !text-gold-300">{t(hero.subtitle, locale)}</span>
             <h2 className="h-display mt-4 max-w-xl text-[34px] text-white sm:text-[44px]">{dict.home.cta.title}</h2>
-            <p className="mt-5 max-w-md text-[15px] text-white/55">{dict.home.cta.body}</p>
+            <p className="mt-5 max-w-md text-[15px] text-white/85">{dict.home.cta.body}</p>
           </Reveal>
           <Reveal delay={120} className="flex flex-col gap-3 sm:flex-row">
             <Link href={`/${locale}/contact`} className="btn-gold">

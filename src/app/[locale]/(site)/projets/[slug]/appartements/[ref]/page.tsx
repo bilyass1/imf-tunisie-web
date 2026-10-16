@@ -190,15 +190,15 @@ export default async function ApartmentPage({
         </div>
 
         <div className="container-lux relative">
-          <nav className="mb-7 flex flex-wrap items-center gap-2 text-[12px] text-white/45">
+          <nav className="mb-7 flex flex-wrap items-center gap-2 text-[12px] text-white/85">
             <Link href={`/${locale}/projets`} className="transition hover:text-gold-300">
               {dict.nav.projects}
             </Link>
-            <span className="text-white/25">/</span>
+            <span className="text-white/85">/</span>
             <Link href={`/${locale}/projets/${project.slug}`} className="transition hover:text-gold-300">
               {project.name}
             </Link>
-            <span className="text-white/25">/</span>
+            <span className="text-white/85">/</span>
             <span className="text-white/70">{lot.code}</span>
           </nav>
 
@@ -206,7 +206,7 @@ export default async function ApartmentPage({
             <div>
               <span className="eyebrow !text-gold-300">{dict.apartment.eyebrow}</span>
               <h1 className="h-display mt-4 text-[52px] leading-none text-white sm:text-[68px]">{lot.code}</h1>
-              <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px] text-white/60">
+              <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[15px] text-white/85">
                 <span className="flex items-center gap-1.5">
                   <IconPin className="h-4 w-4 text-gold-400" />
                   {project.name} — {t(project.address, locale)}
@@ -252,7 +252,7 @@ export default async function ApartmentPage({
               >
                 {f.value}
               </p>
-              <p className="mt-2 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink/45">{f.label}</p>
+              <p className="mt-2 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted">{f.label}</p>
             </Reveal>
           ))}
         </div>
@@ -339,13 +339,13 @@ export default async function ApartmentPage({
 
           <Reveal delay={110}>
             <div className="overflow-hidden rounded-2xl border border-ink/8 bg-ivory">
-              <h3 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
+              <h3 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted">
                 {dict.apartment.specs}
               </h3>
               <dl className="divide-y divide-ink/6 px-6">
                 {specs.map((row) => (
                   <div key={row.k} className="flex items-center justify-between gap-4 py-3.5">
-                    <dt className="text-[12px] uppercase tracking-[0.1em] text-ink/45">{row.k}</dt>
+                    <dt className="text-[12px] uppercase tracking-[0.1em] text-muted">{row.k}</dt>
                     <dd className="text-[14px] font-medium text-ink">{row.v}</dd>
                   </div>
                 ))}
@@ -354,7 +354,7 @@ export default async function ApartmentPage({
 
             {composition.length > 0 && (
               <div className="mt-6 rounded-2xl border border-ink/8 bg-ivory p-6">
-                <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
+                <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-muted">
                   {dict.apartment.composition}
                 </h3>
                 <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
@@ -373,7 +373,7 @@ export default async function ApartmentPage({
 
       {/* ---- 3. Visite 360° ---- */}
       <div className="container-lux"><ProgressMeter value={lot.progressPercent} locale={locale}/></div>
-      {!!lot.gallery?.length && <section id="galerie" className="container-lux scroll-mt-28 py-12"><h2 className="h-display mb-6 text-3xl">{dict.project.gallery}</h2><Gallery items={lot.gallery.map(p=>({src:p.src,caption:t(p.caption,locale)}))} labels={{close:locale==='fr'?'Fermer':'Close',previous:locale==='fr'?'Précédent':'Previous',next:locale==='fr'?'Suivant':'Next',of:'/'}}/></section>}
+      {!!lot.gallery?.length && <section id="galerie" className="container-lux scroll-mt-28 py-12"><h2 className="h-display mb-6 text-3xl">{dict.project.gallery}</h2><Gallery locale={locale} items={lot.gallery.map(p=>({src:p.src,caption:t(p.caption,locale)}))} labels={dict.common}/></section>}
       {project.slug === 'residence-la-gloire' && publicFileExists(interiorImage) && (
         <ApartmentInterior locale={locale} image={interiorImage} reference={lot.ref} pdf={lot.planUrl} />
       )}
@@ -382,7 +382,7 @@ export default async function ApartmentPage({
           <div className="container-lux">
             <SectionHeading eyebrow={dict.apartment.tour360} title={dict.pano.title} subtitle={dict.pano.hint} />
             {tourRooms.some(room => room.source) && (
-              <p className="mt-4 max-w-3xl text-sm text-ink/55">
+              <p className="mt-4 max-w-3xl text-sm text-muted">
                 {locale === 'ar'
                   ? 'بعض المشاهد تصوّرات بانورامية مستوحاة من صور وتشطيبات الإقامة؛ مخطط الشقة الأصلي هو مرجع التوزيع والأبعاد.'
                   : locale === 'en'
@@ -438,11 +438,11 @@ export default async function ApartmentPage({
                     className="group block rounded-2xl border border-ink/8 bg-white p-6 transition hover:border-gold-300 hover:shadow-card"
                   >
                     <p className="font-display text-[26px] font-light leading-none text-ink">{s.code}</p>
-                    <p className="mt-2 text-[12px] uppercase tracking-[0.12em] text-ink/45">
+                    <p className="mt-2 text-[12px] uppercase tracking-[0.12em] text-muted">
                       {s.typology} · {floorLabel(s.floor, locale)}
                     </p>
                     <p className="mt-4 font-display text-[20px] text-gold-600">{formatArea(s.sellableArea, locale)}</p>
-                    <span className="mt-4 inline-flex items-center gap-2 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-ink/50 transition group-hover:text-gold-600">
+                    <span className="mt-4 inline-flex items-center gap-2 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-muted transition group-hover:text-gold-600">
                       {dict.projects.view}
                       <IconArrow className="h-3.5 w-3.5 rtl:rotate-180" />
                     </span>
@@ -461,12 +461,12 @@ export default async function ApartmentPage({
             {lot.status === 'sold' ? (
               <>
                 <h2 className="h-display text-[30px] text-white sm:text-[36px]">{dict.apartment.sold}</h2>
-                <p className="mt-4 max-w-md text-[15px] text-white/55">{dict.apartment.soldBody}</p>
+                <p className="mt-4 max-w-md text-[15px] text-white/85">{dict.apartment.soldBody}</p>
               </>
             ) : (
               <>
                 <h2 className="h-display text-[30px] text-white sm:text-[36px]">{dict.home.cta.title}</h2>
-                <p className="mt-4 max-w-md text-[15px] text-white/55">{dict.home.cta.body}</p>
+                <p className="mt-4 max-w-md text-[15px] text-white/85">{dict.home.cta.body}</p>
               </>
             )}
           </Reveal>

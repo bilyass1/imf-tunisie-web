@@ -14,6 +14,7 @@ export default function ProjectGallery({items,labels,locale,filters=DEFAULT_GALL
     <div role="group" aria-label={c.label} className="mb-7 flex flex-wrap gap-2">
       {[{id:'',label:{fr:c.all,en:c.all,ar:c.all}},...filters].map(filter=><button key={filter.id} type="button" aria-pressed={selected===filter.id} onClick={()=>setSelection(filter.id)} className={`rounded-full border px-4 py-3 text-sm transition-colors ${selected===filter.id?'border-ink bg-ink text-white':'border-ink/20 bg-white text-ink hover:border-gold-500'}`}>{filter.label[locale]||filter.label.fr}</button>)}
     </div>
-    {visible.length?<Gallery key={selected} items={visible} labels={labels}/>:<p role="status" className="rounded-xl border border-dashed border-ink/15 p-8 text-center text-ink/60">{c.empty}</p>}
+    <p role="status" className="sr-only">{visible.length} {locale==='ar'?'صورة':locale==='en'?'photos':'photos'}</p>
+    {visible.length?<Gallery locale={locale} key={selected} items={visible} labels={labels}/>:<p role="status" className="rounded-xl border border-dashed border-ink/15 p-8 text-center text-ink/60">{c.empty}</p>}
   </>;
 }

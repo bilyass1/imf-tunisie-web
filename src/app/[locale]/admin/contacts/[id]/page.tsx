@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireAdminUser } from '@/lib/auth';
-import { getActivitiesForContact, getContact, getDealsForContact, getProjects } from '@/lib/db';
+import { getContact, getProjects } from '@/lib/db';
+import { listCrm } from '@/lib/crm';
 import { formatDate, formatMoney } from '@/lib/format';
 import { DEAL_STAGES } from '@/lib/types';
 import { addActivityAction, addTaskAction, setDealStageAction, updateDealAction } from '@/lib/actions';
@@ -13,9 +14,10 @@ import { adminNav } from '@/components/portal/clientNav';
 import { IconArrowLeft, IconMail, IconPhone, IconPin } from '@/components/Icons';
 
 export default async function ContactDetailPage({
-  params,
+  params, searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams:Promise<{dealsAfter?:string;activitiesAfter?:string}>;
 }) {
   const { locale: raw, id } = await params;
   if (!isLocale(raw)) notFound();
@@ -26,8 +28,9 @@ export default async function ContactDetailPage({
   const contact = (await getContact(id));
   if (!contact) notFound();
 
-  const deals = (await getDealsForContact(id));
-  const activities = (await getActivitiesForContact(id));
+  const query=await searchParams;
+  const [dealsPage,activitiesPage]=await Promise.all([listCrm('deals',{contactId:id,after:query.dealsAfter}),listCrm('activities',{contactId:id,after:query.activitiesAfter})]);
+  const deals=dealsPage.items,activities=activitiesPage.items;
   const projects=await getProjects();
   const projectNames = new Map(projects.map((p) => [p.slug, p.name]));
 
@@ -45,7 +48,7 @@ export default async function ContactDetailPage({
     >
       <Link
         href={`/${locale}/admin/contacts`}
-        className="mb-6 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-ink/45 transition hover:text-gold-600"
+        className="mb-6 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:text-gold-600"
       >
         <IconArrowLeft className="h-4 w-4 rtl:rotate-180" />
         {dict.crm.contacts}
@@ -57,7 +60,7 @@ export default async function ContactDetailPage({
           <div className="overflow-hidden rounded-2xl border border-ink/8 bg-white">
             <div className="bg-ink px-6 py-6 text-white">
               <p className="font-display text-[28px] font-light leading-tight">{contact.name}</p>
-              <p className="mt-2 text-[12px] text-white/45">
+              <p className="mt-2 text-[12px] text-white/85">
                 {dict.crm.sources[contact.source] ?? contact.source} · {formatDate(contact.createdAt, locale)}
               </p>
               {contact.tags.length > 0 && (
@@ -94,7 +97,7 @@ export default async function ContactDetailPage({
               )}
               {contact.budget && (
                 <li className="flex items-center justify-between gap-3 py-3.5 text-[14px]">
-                  <span className="text-[12px] uppercase tracking-[0.1em] text-ink/45">{dict.crm.budget}</span>
+                  <span className="text-[12px] uppercase tracking-[0.1em] text-muted">{dict.crm.budget}</span>
                   <span className="text-ink/75">{contact.budget}</span>
                 </li>
               )}
@@ -103,7 +106,7 @@ export default async function ContactDetailPage({
 
           {/* ---- Nouvelle tâche ---- */}
           <form action={addTaskAction} className="mt-6 rounded-2xl border border-ink/8 bg-white p-5">
-            <h3 className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink/50">{dict.crm.addTask}</h3>
+            <h3 className="text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">{dict.crm.addTask}</h3>
             <input type="hidden" name="contactId" value={contact.id} />
             <input name="title" required placeholder={dict.crm.taskTitle} className="field mt-4" />
             <input name="dueDate" type="date" className="field mt-3" />
@@ -117,11 +120,11 @@ export default async function ContactDetailPage({
           <ContactEditor key={JSON.stringify(contact)} contact={contact} projects={projects.map(project=>({slug:project.slug,name:project.name,lots:project.lots.map(lot=>({ref:lot.ref,code:lot.code}))}))} locale={locale} sources={dict.crm.sources}/>
           {/* ---- Opportunités ---- */}
           <section className="overflow-hidden rounded-2xl border border-ink/8 bg-white">
-            <h2 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink/50">
+            <h2 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted">
               {dict.crm.dealsOf}
             </h2>
             {deals.length === 0 ? (
-              <p className="px-6 py-10 text-center text-ink/45">{dict.crm.noDeals}</p>
+              <p className="px-6 py-10 text-center text-muted">{dict.crm.noDeals}</p>
             ) : (
               <ul className="divide-y divide-ink/6">
                 {deals.map((deal) => (
@@ -129,7 +132,7 @@ export default async function ContactDetailPage({
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div>
                         <p className="font-display text-[21px] font-light text-ink">{deal.title}</p>
-                        <p className="mt-1.5 flex flex-wrap gap-x-4 text-[12.5px] text-ink/45">
+                        <p className="mt-1.5 flex flex-wrap gap-x-4 text-[12.5px] text-muted">
                           {deal.projectSlug && <span>{projectNames.get(deal.projectSlug) ?? deal.projectSlug}</span>}
                           {deal.lotRef && <span className="text-gold-600">{deal.lotRef}</span>}
                           <span>
@@ -203,7 +206,7 @@ export default async function ContactDetailPage({
 
           {/* ---- Activités ---- */}
           <section className="overflow-hidden rounded-2xl border border-ink/8 bg-white">
-            <h2 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink/50">
+            <h2 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted">
               {dict.crm.activities}
             </h2>
 
@@ -223,7 +226,7 @@ export default async function ContactDetailPage({
             </form>
 
             {activities.length === 0 ? (
-              <p className="px-6 py-10 text-center text-ink/45">{dict.crm.noActivities}</p>
+              <p className="px-6 py-10 text-center text-muted">{dict.crm.noActivities}</p>
             ) : (
               <ol className="relative space-y-6 p-6 ps-12">
                 <span className="absolute bottom-8 start-[30px] top-9 w-px bg-ink/10" />
@@ -234,7 +237,7 @@ export default async function ContactDetailPage({
                       <span className="font-semibold uppercase tracking-wider text-gold-600">
                         {dict.crm.types[a.type]}
                       </span>
-                      <span className="text-ink/40">{formatDate(a.date, locale)}</span>
+                      <span className="text-muted">{formatDate(a.date, locale)}</span>
                     </p>
                     <p className="mt-1.5 text-[14px] leading-relaxed text-ink/75">{a.body}</p>
                   </li>
@@ -244,6 +247,7 @@ export default async function ContactDetailPage({
           </section>
         </div>
       </div>
+      <nav aria-label="Pagination" className="mt-5 flex flex-wrap gap-4"><Link className="btn-ghost" href={`/${locale}/admin/contacts/${encodeURIComponent(id)}`}>{locale==='ar'?'البداية':locale==='en'?'First page':'Première page'}</Link>{([['dealsAfter',dealsPage.next,dict.crm.dealsOf],['activitiesAfter',activitiesPage.next,dict.crm.recentActivity]] as const).map(([key,next,label])=>next&&<Link key={key} className="btn-ghost" href={`/${locale}/admin/contacts/${encodeURIComponent(id)}?${new URLSearchParams({...Object.fromEntries(Object.entries(query).filter((entry):entry is [string,string]=>typeof entry[1]==='string')),[key]:next})}`}>{label} →</Link>)}</nav>
     </PortalShell>
   );
 }

@@ -1,4 +1,5 @@
 'use client';
+import { visibilityLoop } from './visibility-loop';
 
 import { loadModelBytes, modelPixelRatio } from './model-runtime';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -335,13 +336,11 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
         canvas.removeEventListener('pointerup',up,true);canvas.removeEventListener('pointercancel',cancel,true);canvas.removeEventListener('pointerleave',clearHover);
       };
       const resize=new ResizeObserver(()=>{if(!host.clientWidth||!host.clientHeight)return;camera.aspect=host.clientWidth/host.clientHeight;camera.updateProjectionMatrix();renderer.setSize(host.clientWidth,host.clientHeight);dirty=true;});resize.observe(host);
-      let frameId=0,previousTop=false,previousFloor:number|null|undefined=undefined;
+      let previousTop=false,previousFloor:number|null|undefined=undefined;
       let previousA5Block=state.current.a5Block;
-      let visible=true;
-      const visibility=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting??true;dirty=true;});visibility.observe(host);
-      const draw=()=>{
-        frameId=requestAnimationFrame(draw);
-        if(!visible || document.hidden) return;
+
+      const draw=(_time:number,resumed:boolean)=>{
+        if(resumed)dirty=true;
         const current=state.current;
         if(block==='A5'&&current.a5Block!==previousA5Block){
           if(current.top)topView();else reset();
@@ -362,9 +361,9 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
           updateModelCompass(camera, block === 'A5' ? [1, 1] : [1, -1], compassRef.current);
           renderer.render(scene,camera);dirty=false;
         }
-      };draw();setReady(true);
+      };const stopLoop=visibilityLoop(host,draw);setReady(true);
       const contextLost=(event:Event)=>{event.preventDefault();setFailed(true);};renderer.domElement.addEventListener('webglcontextlost',contextLost);
-      dispose=()=>{disposePicking();cancelAnimationFrame(frameId);visibility.disconnect();resize.disconnect();orbit.removeEventListener('change',onChange);orbit.dispose();controls.current=null;renderer.domElement.removeEventListener('webglcontextlost',contextLost);scene.traverse(o=>{const m=o as import('three').Mesh;if(m.geometry)m.geometry.dispose();});materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());environment.dispose();renderer.dispose();renderer.domElement.remove();};
+      dispose=()=>{disposePicking();stopLoop();resize.disconnect();orbit.removeEventListener('change',onChange);orbit.dispose();controls.current=null;renderer.domElement.removeEventListener('webglcontextlost',contextLost);scene.traverse(o=>{const m=o as import('three').Mesh;if(m.geometry)m.geometry.dispose();});materials.forEach(m=>m.dispose());textures.forEach(t=>t.dispose());environment.dispose();renderer.dispose();renderer.domElement.remove();};
     })().catch(()=>{dispose();if(!cancelled)setFailed(true);});
     return()=>{cancelled=true;dispose();};
   },[model,block,attempt]);
@@ -374,15 +373,15 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
   return <section className="bg-ink py-20 text-ivory">
     <div className="container-lux">
       <p className="text-xs uppercase tracking-[.24em] text-gold-300">Diar El Yassamine</p>
-      <h2 className="mt-4 font-display text-3xl sm:text-5xl">{c.title}</h2><p className="mt-4 text-white/65">{c.subtitle}</p>
+      <h2 className="mt-4 font-display text-3xl sm:text-5xl">{c.title}</h2><p className="mt-4 text-white/85">{c.subtitle}</p>
       <div ref={root} role={fullscreen?'dialog':undefined} aria-modal={fullscreen||undefined} aria-label={c.title} className={fullscreen?'fixed inset-0 z-[100] flex flex-col overflow-auto bg-ink p-4':'mt-9 overflow-hidden rounded-2xl border border-white/15'}>
         <div className="flex flex-wrap items-center justify-between gap-4 bg-[#262522] p-4">
           <div className="flex gap-2">{(['A5','A6'] as const).map(b=><button key={b} className={`${button} ${block===b?'border-gold-400 bg-gold-400 text-ink':'border-white/20'}`} aria-pressed={block===b} onClick={()=>{setBlock(b);setTop(false);setHovered(null);}}>{c.block} {b.slice(1)}</button>)}</div>
-          <span className="text-xs text-white/60">{block==='A5'?(a5Block==='all'?c.five:a5Block):c.six}</span>
+          <span className="text-xs text-white/85">{block==='A5'?(a5Block==='all'?c.five:a5Block):c.six}</span>
           <button className={`${button} border-white/20`} onClick={()=>setFullscreen(!fullscreen)}>{fullscreen?c.close:c.fullscreen}</button>
         </div>
         {block==='A5'&&<div className="flex flex-wrap items-center gap-2 border-t border-white/10 bg-[#262522] px-4 pb-4" role="group" aria-label={selectionCopy.filter}>
-          <span className="me-2 text-xs text-white/60">{selectionCopy.filter}</span>
+          <span className="me-2 text-xs text-white/85">{selectionCopy.filter}</span>
           {(['all','A5.a','A5.b'] as const).map(part=><button key={part} type="button" className={`${button} ${a5Block===part?'border-gold-400 bg-gold-400 text-ink':'border-white/20'}`} aria-pressed={a5Block===part} onClick={()=>{setA5Block(part);setHovered(null);}}>{part==='all'?selectionCopy.both:part}</button>)}
         </div>}
         <div className="relative min-h-[360px] bg-[#e8e5de]" style={{height:fullscreen?'calc(100dvh - 205px)':'clamp(380px, 60vw, 620px)'}}>
@@ -406,7 +405,7 @@ export default function YassamineMaquette({ locale, lots, planContact }: { local
       <nav aria-label={selectionCopy.list} className="mt-4 flex flex-wrap gap-2">
           {listedYassamineLots(lots).filter(lot=>lot.block.startsWith(block)&&(block!=='A5'||a5Block==='all'||lot.block===a5Block)&&(floor===null||lot.floor===floor)).map(lot=><Link key={lot.ref} prefetch={false} href={yassamineApartmentHref(locale,lot.ref)} className={`${button} border-white/20 hover:border-gold-400 hover:text-gold-300`} aria-label={`${selectionCopy.open} ${lot.code}`}>{lot.code} ↗</Link>)}
       </nav>
-      <p className="mt-2 max-w-3xl text-sm text-white/65">{c.note}</p>
+      <p className="mt-2 max-w-3xl text-sm text-white/85">{c.note}</p>
       <div className="mt-9"><h3 className="font-display text-2xl">{c.plans} · {floor===null||floor===0?c.ground:`R+${floor}`}</h3>
         <div className="mt-5 grid gap-5 md:grid-cols-2">{selectedPlans.map(p=><article key={p.id} className="overflow-hidden rounded-xl bg-ivory text-ink"><PlanBrand project="Diar El Yassamine" document={`${p.block} · ${floor===null||floor===0?c.ground:`R+${floor}`}`} {...planContact} /><div className="flex items-center justify-between gap-3 p-4"><strong>{p.block}</strong><a className="text-sm underline underline-offset-4" href={p.pdf.replace('/models/yassamine/', '/models/yassamine/presentation/')} download>{c.download}</a></div><img src={p.plan.replace('/models/yassamine/', '/models/yassamine/presentation/')} alt={`${c.plans} ${p.block}`} loading="lazy" className="h-[340px] w-full bg-white object-contain p-3" /></article>)}</div>
       </div>

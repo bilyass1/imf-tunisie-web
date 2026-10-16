@@ -1,0 +1,63 @@
+name: Security review
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '17 5 * * 1'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@dcedce43c6f43de0b836d1fe38946645c9c638dc # v2
+        env:
+          GITLEAKS_ENABLE_COMMENTS: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  codeql:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: github/codeql-action/init@f051dc808ef3645eb0d08647ec751634ec2304ac # v4
+        with:
+          languages: javascript-typescript
+      - uses: github/codeql-action/analyze@f051dc808ef3645eb0d08647ec751634ec2304ac
+        with:
+          # GitHub default setup is already enabled. Do not submit a conflicting advanced analysis.
+          upload: false
+          output: sarif
+      - run: node scripts/check-sarif.cjs sarif
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: codeql-sarif
+          path: sarif/*.sarif
+          retention-days: 30
+
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm audit --omit=dev --audit-level=high
+      - run: node scripts/check-development-audit.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: development-audit
+          path: artifacts/development-audit.json
+          retention-days: 30

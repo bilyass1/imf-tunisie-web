@@ -4,12 +4,12 @@ import type { Dictionary } from '@/i18n/getDictionary';
 import { SITE } from '@/lib/site';
 import { LogoMark } from '@/components/Logo';
 import { IconPin, IconPhone, IconMail, IconFacebook, IconInstagram, IconLinkedin } from '@/components/Icons';
-import { getProjects } from '@/lib/db';
+import { getProjectLinks } from '@/lib/db';
 import { getCompanySite } from '@/lib/company';
 
 export default async function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const SITE=(await getCompanySite());
-  const projects = await getProjects();
+  const projects = await getProjectLinks();
   const year = new Date().getFullYear();
   const socialLinks = [
     { href: SITE.social.facebook, Icon: IconFacebook, label: 'Facebook' },
@@ -34,7 +34,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label={label}
-                className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-white/60 transition hover:border-gold-400 hover:text-gold-300"
+                className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-white/85 transition hover:border-gold-400 hover:text-gold-300"
               >
                 <Icon className="h-4 w-4" />
               </a>
@@ -103,7 +103,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
               <IconPhone className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
               <span className="flex flex-col">
                 {SITE.office.phones.map((p) => (
-                  <a key={p} href={`tel:${p.replace(/\s/g, '')}`} className="transition hover:text-gold-300">
+                  <a key={p} href={`tel:${p.replace(/\s/g, '')}`} className="inline-flex min-h-11 items-center transition hover:text-gold-300">
                     {p}
                   </a>
                 ))}
@@ -111,7 +111,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
             </li>
             <li className="flex gap-3">
               <IconMail className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
-              <a href={`mailto:${SITE.email}`} className="transition hover:text-gold-300">
+              <a href={`mailto:${SITE.email}`} className="inline-flex min-h-11 items-center transition hover:text-gold-300">
                 {SITE.email}
               </a>
             </li>
@@ -120,7 +120,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-lux flex flex-col items-center justify-between gap-3 py-6 text-[12px] text-white/65 md:flex-row">
+        <div className="container-lux flex flex-col items-center justify-between gap-3 py-6 text-[12px] text-white/85 md:flex-row">
           <p>
             © {year} {SITE.legalName}. {dict.footer.rights}
           </p>
@@ -131,7 +131,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
             <span>
               {dict.footer.rc} : {SITE.legal.rc}
             </span>
-            <a href={SITE.agency.url} target="_blank" rel="noreferrer noopener" className="transition hover:text-gold-300">
+            <a href={SITE.agency.url} target="_blank" rel="noreferrer noopener" className="inline-flex min-h-11 items-center transition hover:text-gold-300">
               {dict.footer.madeBy}
             </a>
           </p>

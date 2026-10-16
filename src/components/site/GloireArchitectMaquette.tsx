@@ -1,4 +1,5 @@
 'use client';
+import { visibilityLoop } from './visibility-loop';
 
 import { loadModelBytes, modelPixelRatio } from './model-runtime';
 import { publicAssetUrl } from '@/lib/public-asset-url';
@@ -203,15 +204,14 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
 
       let dirty = true;
       let interacting = false;
-      let visible = true;
+
       const onChange = () => { dirty = true; };
       const onStart = () => { interacting = true; dirty = true; };
       const onEnd = () => { interacting = false; dirty = true; };
       orbit.addEventListener('change', onChange);
       orbit.addEventListener('start', onStart);
       orbit.addEventListener('end', onEnd);
-      const visibility = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; dirty = true; });
-      visibility.observe(host);
+
       const resize = new ResizeObserver(() => {
         if (!host.clientWidth || !host.clientHeight) return;
         camera.aspect = host.clientWidth / host.clientHeight; camera.updateProjectionMatrix();
@@ -219,10 +219,9 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         dirty = true;
       });
       resize.observe(host);
-      let frame = 0;
-      const draw = () => {
-        frame = requestAnimationFrame(draw);
-        if (!visible || document.hidden) return;
+
+      const draw = (_time: number, resumed: boolean) => {
+        if (resumed) dirty = true;
         orbit.autoRotate = rotatingRef.current;
         const changed = orbit.update();
         const ratio = interacting || orbit.autoRotate || changed ? Math.min(restingPixelRatio, .85) : restingPixelRatio;
@@ -233,7 +232,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
           renderer.render(scene, camera); dirty = false;
         }
       };
-      draw(); setProgress(100); setReady(true);
+      const stopLoop = visibilityLoop(host, draw); setProgress(100); setReady(true);
       const onLost = (event: Event) => { event.preventDefault(); setFailed(true); };
       renderer.domElement.addEventListener('webglcontextlost', onLost);
       cleanup = () => {
@@ -243,7 +242,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         renderer.domElement.removeEventListener('pointercancel', pointerCancel);
         renderer.domElement.removeEventListener('pointerleave', pointerCancel);
         pickMeshes.forEach(mesh => mesh.geometry.dispose()); pickMaterial.dispose();
-        cancelAnimationFrame(frame); resize.disconnect(); visibility.disconnect(); orbit.dispose(); draco.dispose(); api.current = null;
+        stopLoop(); resize.disconnect(); orbit.dispose(); draco.dispose(); api.current = null;
         renderer.domElement.removeEventListener('webglcontextlost', onLost);
         const disposedMaterials = new Set<import('three').Material>();
         scene.traverse(object => { const mesh = object as import('three').Mesh; mesh.geometry?.dispose(); const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]; mats.filter(Boolean).forEach(mat => disposedMaterials.add(mat)); });

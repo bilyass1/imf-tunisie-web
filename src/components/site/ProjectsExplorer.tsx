@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
@@ -49,6 +49,7 @@ export default function ProjectsExplorer({
   labels: ExplorerLabels;
 }) {
   const params = useSearchParams();
+  const id = useId();
   const [status, setStatus] = useState<string>(params.get('status') ?? 'all');
   const [city, setCity] = useState('all');
   const [typology, setTypology] = useState('all');
@@ -88,9 +89,10 @@ export default function ProjectsExplorer({
               <button
                 key={value}
                 type="button"
+                aria-pressed={status === value}
                 onClick={() => setStatus(value)}
                 className={`rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] transition ${
-                  status === value ? 'bg-gold-gradient text-ink' : 'text-ink/55 hover:text-gold-600'
+                  status === value ? 'bg-gold-gradient text-ink' : 'text-muted hover:text-gold-600'
                 }`}
               >
                 {label}
@@ -98,7 +100,8 @@ export default function ProjectsExplorer({
             ))}
           </div>
 
-          <select value={city} onChange={(e) => setCity(e.target.value)} className="field !w-auto !rounded-full !py-2.5 text-[12.5px]">
+          <label className="sr-only" htmlFor={`${id}-city`}>{labels.city}</label>
+          <select id={`${id}-city`} value={city} onChange={(e) => setCity(e.target.value)} className="field !w-auto !rounded-full !py-2.5 text-[12.5px]">
             <option value="all">
               {labels.city} — {labels.all}
             </option>
@@ -110,7 +113,7 @@ export default function ProjectsExplorer({
           </select>
 
           {typologies.length > 0 && (
-            <select
+            <label className="flex flex-col"><span className="sr-only">{labels.typology}</span><select
               value={typology}
               onChange={(e) => setTypology(e.target.value)}
               className="field !w-auto !rounded-full !py-2.5 text-[12.5px]"
@@ -123,10 +126,11 @@ export default function ProjectsExplorer({
                   {ty}
                 </option>
               ))}
-            </select>
+            </select></label>
           )}
 
-          <input
+          <label className="sr-only" htmlFor={`${id}-search`}>{labels.search}</label>
+          <input id={`${id}-search`} type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={labels.search}
@@ -142,21 +146,21 @@ export default function ProjectsExplorer({
                 setTypology('all');
                 setQuery('');
               }}
-              className="flex items-center gap-1.5 rounded-full border border-ink/12 px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-ink/55 transition hover:border-gold-400 hover:text-gold-600"
+              className="flex items-center gap-1.5 rounded-full border border-ink/12 px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-muted transition hover:border-gold-400 hover:text-gold-600"
             >
               <IconClose className="h-3.5 w-3.5" />
               {labels.reset}
             </button>
           )}
 
-          <span className="ms-auto shrink-0 text-[12px] text-ink/40">
+          <span role="status" aria-live="polite" aria-atomic="true" className="ms-auto shrink-0 text-[12px] text-muted">
             {filtered.length} {labels.results}
           </span>
         </div>
       </div>
 
       {filtered.length === 0 ? (
-        <p className="py-24 text-center text-[15px] text-ink/45">{labels.noResult}</p>
+        <p className="py-24 text-center text-[15px] text-muted">{labels.noResult}</p>
       ) : (
         <div className="grid gap-8 py-14 lg:gap-10">
           {filtered.map((p, i) => (
@@ -221,7 +225,7 @@ function Stat({ value, label, accent = false }: { value: string; label: string; 
   return (
     <div>
       <p className={`font-display text-[24px] font-light leading-none ${accent ? 'text-gold-600' : 'text-ink'}`}>{value}</p>
-      <p className="mt-1.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink/40">{label}</p>
+      <p className="mt-1.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-muted">{label}</p>
     </div>
   );
 }

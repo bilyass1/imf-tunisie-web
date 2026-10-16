@@ -1,0 +1,1262 @@
+[
+  {
+    "source": "/models/yassamine/presentation/A5a-0.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "c3ee635e600951d2167438aa2e9be20a0352a455bd269c67191dd9074b3a2c8d"
+  },
+  {
+    "source": "/models/yassamine/presentation/A5a-1.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "b56ce62169709ae884589935fbad198385456e62b64ba3e56efc89df3bb920a7"
+  },
+  {
+    "source": "/models/yassamine/presentation/A5b-0.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "7377d566c6599c418388dba89818f28bec6dae0e1ae1b2aacf1cf489846de4ad"
+  },
+  {
+    "source": "/models/yassamine/presentation/A5b-1.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "84a77c681c1e94b35455d393df040fde04d77f5f21db2b2e1e099f70d5dcde6a"
+  },
+  {
+    "source": "/models/yassamine/presentation/A6a-0.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "6827e16529fc038249d8d25cde507ad0826526fb20845e4a02069986a466539e"
+  },
+  {
+    "source": "/models/yassamine/presentation/A6a-1.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "b5cf8cf68eb1e1778d84dd18c6266efb31672b5b40a8fbb128fffa18a17490f1"
+  },
+  {
+    "source": "/models/yassamine/presentation/A6a-4.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "c704827e99994ca549985f981ba9db6fd4be1bfc44a1bd8181ea6293b7d452a5"
+  },
+  {
+    "source": "/models/yassamine/presentation/A6b-0.pdf",
+    "width": 595.32,
+    "height": 841.92,
+    "sourceSha256": "70c27c35e20e9f051d24d27b654b91844f3397d077d2bbe9f67801354996582d"
+  },
+  {
+    "source": "/models/yassamine/presentation/A6b-1.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "c8539e52e81a1bb7b2e29339475a20e850aa4fab3c32201379f00e8b86f9b819"
+  },
+  {
+    "source": "/models/yassamine/presentation/A6b-2.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "4fcd759f7f820400f85cb0bff939787fdd78b4bb9553bb23e6e54fb9dab8be9a"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A101.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "d0754194a61d82ae370fd989fd11acb034d0a5385f524012358d675cb83c27fe"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A104.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "ce793186992a4ed80064a29147a069e8b7bfc8bd5e429fb36d26b1bf6b60f587"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A201.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "a7d765302214783ce23c025bee09189a7d404693aa96d8f1dc6fcc33c3cfd35a"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A202.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "36275e4264a04e4d1da60e2288e9a536934ca21b265e378c5203b222eb16802b"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A204.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "eb134879aaf37901f638099180f962841b561e7e687a8b32e40e72ab3bf40fda"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A304.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "2ed107d889b198a9a585789a9238c14d41171d3f21d0ca188169e7b6b548400b"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A305.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "95e417db09b0906b3a350d88a2fe869a445e87dea7d8c222718311c13b69b3cf"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A501.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "97b824af9accfb4ead25c035b15b4a11a040f170c45af5984b816c9b2b4143f6"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A502.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "dcac7e6dfee658b629fcccfdf6c0f54889ab8b65843a4e313e4e0cbd85f7ce17"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A503.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "02715ffcec88b1b02ca74d9b49d97fe7bd926aae8c1dc1ea5c58aedfe31bb8ac"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A504.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "5e86a2266ccf24850b4f5025ed05158e3c3a9f01ae414bb7037b701de40bcfb3"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A511.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "c11f24d95efb8e8e9a0f2436f30bf8d05d25dfff75aa7fd8dabb75d2418bf687"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A512.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "b008ca9da4374fb74212ba3b023b294812bd190af9fa2eae6b41a125cf81d8d4"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A513.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "dd0a4788d6ffaf59d17de5c59ac03967a491d66bdea0a34818a0c5a65cd1bf8b"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A514.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "ccccf81b8c081683945f7968fdc8447d02226b3bfb6412ea59f1ec837d8e358d"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A521.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "7179eaad4cc5b2ebcad6509c74e802191970963a3801bdf5c5fa86e1e518749f"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A522.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "6f38178b1b18255765b0467add497accd3348df44e8e07031dc0e8e8c9be3572"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A523.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "7d78cdab2d29672c4de23441722e4d953e94e22721eb1a7095bf5a798526da4a"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A524.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "23e5e0644ef23a802a40d0ef16a3c2ff78016e94926c637249b7c4b14084c9cd"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A531.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "26c31d437947a7d9ea9af64ec73f526b8c2ed6ce7114b1c25e8ff25ba1aa604e"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A532.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "ecae6312c1d11923aa57d8c8dee29408bb1f0590f0b7c8b1f41efe6d1d2cbfe8"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A533.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "6a77603ea3fccbdf0efdd8bf843c425fd071cec368abd3294764bf0b4864f58f"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A534.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "9f8c7ae0c504778a8fddc72b2ce21cc33edbd533edf17df5c9604529c467ef1c"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A541.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "015a37c4f26b0a894bab00d704c7840b5d1e4ec69f8ee7ea29fee3ee8e6743e1"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A542.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "cdc17adec19677db133acfc91bfdf399262a9a9c36827e47dbd5bd0d40c73695"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A543.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "b30cfadae11044dc890a339fd416dd427363a40168a4cf92e49244ce45df48d5"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A544.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "24ea418db0c1c30b69d6fa5089f0918aafa6aada61ae956fd77ab2ac2b0b5611"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b01.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "4b21d4a0cd0ff871bada608dcb28b585eb2db2891f29f9dccc8a8e07952d3866"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b02.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "2d4fab09474a4a942cf82faea04f58805f7aa5c219afa91f3489e23e503f82ff"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b03.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "190b045f6ac085726423ca7e2f08e3c548aa5ede8019a2a4f9996aa7cfd21d8c"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b04.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "e575b5d5aab6e174eaf9a52e34115060d3e8e815f658d42b9782bbe49badfda8"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b05.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "b6ba75d9b3ce87b0d7ea744bf22fb563228481ad5ff6a46c533e0d4362dde3e6"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b11.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "5bf6c8584bd01f74a2f0637da927950a4b784a15dcd722cf3b23b3e315933a22"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b12.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "327d715b18b0b49d4d10b6e6a64cb051e674e081b4655bbd47df5865b59f27a8"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b13.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "2ce94e46c23265eadae5bb73d3e46b4e25c4ccd1708f507d97218aa8969e2a9c"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b14.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "c84e5c770ad53847b76c284b11d0bce755a2c96db6e8a85bae3a381db5363ffc"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b15.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "a065396559eb76ab68b3b9a6e402f409d09b8965b24f488a44616f70b21da247"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b21.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "9c0140049625eacc0b9c8933606e032d6425e52ef6eafe587b16e80c85c77602"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b22.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "9f0db2971effddac92e1d4d5a4ae97fc41e5fb0b90c79e06063bb23c764204e2"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b23.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "23466dfd01fb11c80b0673002e992598dc714b712794458df67e70a927eb735a"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b24.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "69cc5f2a9a4c2ba2c420b062d72cffbecef26ed2d98f8a6c8cbd5d84720c51bb"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b25.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "d25f2b47599c6b2cff71b768d38481ea64076410e0ad9475dd0e46f4f3b0ff30"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b31.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "146a3fde2756c8629e88901177e37ba1cc24cabac5489af2f8640cb802815123"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b32.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "9d987c831b981e780cd630074656435cbf45c129a284fac3bb06e46322f0135b"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b33.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "c92ae2469518fff4cbaea39746693368cd862ff3e722285d93fc419fef72aaa3"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b34.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "a21864796e678c46fb3277ec92f2c1255867e62c8042c1a6b98a62fc25192506"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b35.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "6b0fc713848378763cda9e6053cb09c692b0f5111da70644c7679bc3821f9861"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b41.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "0b4d23b4d709f2297d38fc6e97b7e8c25c08e7b63d569d9101984619bdeb3b9e"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b42.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "673a6be94194f3b15b70bf5aaf14f44bcfad6d5db45ba0c7a66c62e616a2ca39"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b43.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "b77580d2b5480592e451cb88a944bea648b016026726bf9c0f3e151d6e1fea66"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b44.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "31a942c10743f7e50a8402c9c1ccaaa0ff4408d3165c5a595e18be6ca0718f8f"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A5b45.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "2597d505075b926eaa838b4911262ff3269663bc4aefe236794612f96aa4cff4"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a01.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "fcf4c63379fce263d3ce0116f79bcce084d2e986e8982f29074b8acda4f16c38"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a02.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "bdccbe283b6769a83514ec08e3df9e1ec986ca0323e22eff1775583a1d781ead"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a03.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "3e2ae02aaac321193b5ea27994b8a1b059f87587cc96842534456be7ba53296b"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a04.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "9104189cdf68961d60a66434a79cc7d2ed0e2982f93493a93e681638d5cb5778"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a11.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "e0c6788e242a895f60b62b3fdb4e4832e172f93a20cd8e0b5a526991d9e8a855"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a12.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "dfd37bb6de5a3d57c1ff4691857433dfed567a8c94fa7ab554321e5ed99437c3"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a13.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "1930f8a8262387ba819c365fac2a73f789966651a583257806653a11ee600eef"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a14.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "904fa24fb3c9793053d048d77945be4166898a77d19353a20c7a414702cf5430"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a21.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "0eefc8459faec72d69026ad39a4e35b745c91c16476fd48009463e9fe9d7ad18"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a22.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "8e507e31fdee1b750c7cba5be0371519425208406b79d6b4aa76941316db0178"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a23.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "0b5c68ada2d15fdbf393ce9ffeb1e63dfaf581763535e5f261eef941568a3f68"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a24.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "e3c3a5cf8a5a355da30ab01b91c6032ea0a9cbace2cee02f7fe40c64b680cdf3"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a31.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "d0a19e2245779faf2f000a1502de12a76cabb5e06ce4c1852c73a9092a166582"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a32.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "30e293aaff5f488756dde24df46df34fab546f88449c4cc2bc8a8e620cf0b103"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a33.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "cf207cf8fd41cddef488d6506de8b393ad5202276f684606f171d48b6559dc8b"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a34.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "ca9829f226c6c94415804a140c0208fc146e13c88eae28afbbf03cea62d5fb24"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a41.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "e8a4abb27c39466e167ed2dbd8ed7591c7395ad448ba8969e498eb775a1c46ba"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a42.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "01d9561898fe08aad4edb15e658f16d3f1b4af7f0e78d130e3f41df6efbf1989"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a43.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "5430a01b87446ea7b75f84d26ad7ec56be043ad3467e8b43e53606612a7f3745"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6a44.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "41c79394025b44be5b662826ba23e197ed614dcbbd0832f272be0596e76e41ed"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b01.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "d344226b5f755c534814559b03f794752e95dec4ae2a71f85115b9a906250027"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b02.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "a9fe7b0029d24cdb3133a8cf9bc04ee973e0caa5a4f53be8f297046f2f4d721c"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b03.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "1106c125f1debc0682063704d156b05821beb132cae2a587547f20b9e806b855"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b11.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "86da97dbf8ab44af8ce32ef36752ccc8f3ab59336f7f19243d2ca5242949d0cc"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b12.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "ea01fe462510caa596ecdf3f1a6b56d316eec8ec5444c23b6ce9e305fa06104e"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b13.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "a047b77a3d4a1609a5855f430239a736910318733fa0edbee3de082f8afc2921"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b21.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "8b4eabd5400406b8e760ea7ffca79411644c1aa02c4d1069a3e510f456262e2b"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b22.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "b50d660c8cf6331bf63e287011cb177c0dd65b57e8baf02e93c2bd2ca7d405d0"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b23.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "a35a309c9589ec49c4da22520ff44a2aa2a5d8bac67349ca322e299f9b30cd63"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b31.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "fff500a826d5a23208a88d1b2424377e5adb6239fd348c4b1d72cbbd76958188"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b32.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "6b1eff23bfecc923847679610ae7f8978c2bdc9627f79adbc85b0afef020a702"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/A6b33.pdf",
+    "width": 841.92,
+    "height": 595.32,
+    "sourceSha256": "571c7372885a6f9c62245ea2ce4a10b8aa9cab28681cf55deeac20c9809ed9d3"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/RDC-A1.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "0109d51cd95853c239c6aace16e9317853c0b4eb1d11587f5e26e719b4e04c9c"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/RDC-A2.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "d224f9393e7606b085356f9f77e5bc68c8cc9abf7f8813aecf99f1e448e26d59"
+  },
+  {
+    "source": "/plans/diar-al-yassamine/presentation/RDC-A3.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "60c5879287035c752cd7506c005f22794f35fde565deb19eeaa1f403c9aa2a24"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PGARDEBLOCA.pdf",
+    "width": 1190.4,
+    "height": 841.92,
+    "sourceSha256": "1516e7da6b168a30cf664af4aac15c1142080e7cc60bb2678693735742d3692f"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PGARDEBLOCB.pdf",
+    "width": 1190.4,
+    "height": 841.92,
+    "sourceSha256": "1b3cd8e979bd75d415ba828e4c0ab7156fdcc7bcaed541518bf36b763be07490"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PGARDEBLOCC.pdf",
+    "width": 1190.4,
+    "height": 841.92,
+    "sourceSha256": "2edb5f5a37c9e987e255767f9e00a44628c9b5302f4e6a750460a888988c57a7"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PGARDEBLOCD.pdf",
+    "width": 1190.4,
+    "height": 841.92,
+    "sourceSha256": "73ba87eba6a7dafeecaab85646ab3044c0882ce499e294dbba377216f4a61847"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PLANCHE1ETAGE.pdf",
+    "width": 2551.32,
+    "height": 3117.96,
+    "sourceSha256": "7dec9b359e5c1b72fea774bd34e01e82557c225ed18cf59baa6d528e5ea78483"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PLANCHE2ETAGE.pdf",
+    "width": 2551.32,
+    "height": 3117.96,
+    "sourceSha256": "36e946ce24b3edcc2fc6c7c73fca652a03d9be4981fd0cc49936e218ec625012"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PLANCHE3ETAGE.pdf",
+    "width": 2551.32,
+    "height": 3117.96,
+    "sourceSha256": "35063f800319517863687dbb7ebcc7c99e8db4aec5e839f0e068104f1fb30157"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PLANCHE4ETAGE.pdf",
+    "width": 2551.32,
+    "height": 3117.96,
+    "sourceSha256": "42c1344fa73d5af10ffbc71b9dcff1eb1828e13ece5d34026728035faacd0e49"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PLANCHE5ETAGE.pdf",
+    "width": 2551.32,
+    "height": 3117.96,
+    "sourceSha256": "fb62b5d18cf245c20f646249bdb39562d88e97f25c54e96170511a3f412ec9bc"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PLANCHERDC.pdf",
+    "width": 2551.32,
+    "height": 3117.96,
+    "sourceSha256": "9b960fa911cfed52a8513318e3c98ffac5aef9c09ca41f7342f8b594c9698230"
+  },
+  {
+    "source": "/plans/la-gloire/ensemble/presentation/PLANCHESOUS-SOL.pdf",
+    "width": 2551.32,
+    "height": 3117.96,
+    "sourceSha256": "83c1140eb5851e86fd0e1ebde9aaedd7381ee09943aac7462df78d15add8dd63"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A01.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "a9a94a9be24ae6b6481b7c9a5396ddfdaf0a76f147b5a09cea4c0fa87e961788"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A02.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "fca322dd7e596dbff284489bf5035db4ae3f4c3b0528ed5c353b434b51d834b7"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A03.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "f37e0d1059c6e4fe13921bf64d86c34e9da82814e5a5149b977e1f431a84adf0"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A11.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "92769437b0bb67133de1fc5807bca2a26d779a3e1d3a8a240737996c29ef0d95"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A12.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "fd0c390700c34bf332fa9901dcab8c1c9acd1199befd0cd60f1b06e8d5df27f5"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A13.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "220bb9d923c73935b821517359dd07808556e71f28c1f6612a249f0399d1607f"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A14.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "9963932a2d4f920afa2e309914280f10575e0285e226ad9168aff4912568c624"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A21.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "ad57e3eba18dc8033ffe75e5f99ee16d2c5fc170a9697053f323769bd46deacc"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A22.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "8c3470b93bc3878b6c617a226f1d23f5352a6fde83a2bf504c011830e9b0f385"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A23.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "e2700c26bb400b59ba73f9fe918c25dddae4ea59bb505f44cbeeec3b3e165a08"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A24.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "38492bcaa771026116c64bf0da2ff27c6e8312221f523ffd77c73f30afa9868d"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A31.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "e700e9ee9c530d3927dd9e191fe8a82a2633fdcfaae9fdc2774efaa9754b1693"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A32.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "1d4ec4c8f7bcd5b2987ac9e7eebbd63aa018328a6b48674446ecb14bd6dc92e8"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A33.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "e4049a130ac753e7661d2cd915afdd7fe3b0e035a8c4676a62700b2382b99e3e"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A34.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "d9f63e011cfcc5d16af5569615615c4143489154795c00112027eb2e7596e125"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A41.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "485db889d9dff72303d24af483e6b43e3413eb589d1e97efd632372c9e722114"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A42.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "7c81631b4e8b84dca36d1bf85bb6975915be49a0fbf1febf87d52a8b61ca33c1"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A43.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "ba654050a5aaeea38c0484ad3f48b2fef436906e44c63004180b4b371c2518ac"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A44.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "03446b8edfaa4918a591aad3fedc0be5bd3c490f62b89255a9769133b7c7da69"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A51.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "78c5f30617ebe445c2f8dd4267f2584bdbe96a783c25b29aa612471bbf21578e"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A52.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "f7f9ed573dd68c80f7d378e3c1c63ea35f9f97e44e4dee7d75877f46e8a90ad4"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/A53.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "98d3f1aa7906051a3c6dc2bf73d1e7210279f3acdc2934387a323d5cbf251a9b"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B01.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "88cdca4bba6962516073399be1fcf3ec91afbc45676f8c8d45772a4a5099ea8d"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B02.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "42621b39e5b5640bc6b750a635826179c343c5151db60beea1f32c016a7fa0e2"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B11.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "cdd0b5ff71b5087db2e9cf231831e5f0b60b1327638680b4e1e78d6ad49e0502"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B12.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "5cf64ae4220176b1fad6e9c1081c315344724cbc3c8276391bd37906cba5c822"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B13.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "eefe5fe0c5f581a24b3b309515895e9c25e1227b36df4836183b9b87877d1942"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B21.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "fc8fc1ea33efe872665d28fb760a5f81f291b351481ce7b98261847f3b487fa5"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B22.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "6d52c91a24d66a06fd9002e9f452253ebd2dc6044d9c7df6205094f333828faa"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B23.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "de7f9cae77ea467647733aa6c52971c3f2221bbd932d597dcbe7247a2c2d49a3"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B24.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "a6a74f470d2ac96fdaf38d0248a6c31e11a054893e8b56a22b3e1a82b903e66d"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B31.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "31b75b885298d2d004b8ccff1a4317285bd5ffd5c72e750e838aae5bd9cef476"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B32.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "c88fe4b42a72f318f5defc8dafb03c7e736f647b68234dded63e6a98a165fe0d"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B33.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "75d16fa50315c4ccb2c2e7c2a4aa60a1a947705bae1d4bc6e4938ab24ee55359"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B34.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "cd1faaff0a2d4fcf9d65f7c0739e80980996978a9794d2a7a8cf2b300d3e84a5"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B41.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "9a4150e2aa03d995c0c6867b76b0aeeca0c65dd50a0a7d43b9ba178cfb1e1565"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B42.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "426ac92516c2ee2c81d4b889288bd001cf17811402937edf4670ffe30574f67f"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B43.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "38249daf495c6863d5a18e8bdd1f51a9561f80d1dcb5c37df907ed2dc7878a41"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B44.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "8dd8d0034460812cb7bd945aee94684dadaee023ea99f614eb51be2a767f136c"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B51.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "ed6bfcfc35014ebe472aa2b70122fe1e950b3abe7be84c1230160133a6565d71"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B52.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "8f314e6046f8d03193cfc28e7cb422aad09dab38a55c6de2455dffd4822bc70c"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B53.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "156668d8cae417749d01439595f625e91e554a3c362b2afb83128df017a04dfd"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/B54.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "16738dda5cf089646f7ed36349a95050e0cbfdbb2b57a9c5e2c041bbf0b96ca9"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C01.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "f161ecced28e57230dfc1d573bb7e65578602244bd732af5eb59ed958ed2d97a"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C02.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "1cb746e4c182fd33d60c1b7e2bcd8329e63e611ecb2ed0934c0b5ed34baad0b0"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C03.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "45ccb60e4351ec5eb2a6c0e8fa89f43431b34223bd25f693c55464ea4feeb889"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C04.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "3541d9d3a91e336195c4c409c0af470a1be4547a5882323e4830e2887a2a0706"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C11.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "c496afd47e8c3e7ff78957dc909b598e1737ad50a7227d3046e459d3beb16d67"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C12.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "7e34606347a78f91c62f3c430faf5f1e04a21cd29077e9ad6ae9e2a5567d35b2"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C13.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "af9cb0e8ea526d0d45b211bb1cd9a9288a510e4c7c9a2b5dfd66c7b99dcd4205"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C14.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "812144b7f68ea7650f9cb1569c3ee8368de7fdc12c7719c4a75651d03b79657f"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C15.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "c21b0c426a366a1bcf318e8fa5a81ea7c40bcb8fa8ae2ae9be1755ad98e316e9"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C21.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "e11f7f68393a5ffc8fbbcc509ba6485d319cc2614ecb244dee807ac7bfc1e2ce"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C22.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "fa8eee76fa1224ed49294d58b3c5f638ea97198b01836ef7ccea697ef4b7d42f"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C23.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "8b0f4f5dec3aee07f85ef35328ff065cb0fc2852a13a5aa7378ffe1f28f0ae53"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C24.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "52a454817f226c4e554fadfe3d4b81784f41d2cb7236e5415330e4409d92ac53"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C25.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "0a17a12ff19a0a319be6682d34cdca049926751f22f7d81b01573ec32cdf3d13"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C31.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "1e29ea5e837eed3c39f5add5477af9e3721145762c6bbbfbfdee3c2a942b48bf"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C32.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "a19282fcb2735d59ecdc4e6f9d6e4bb7f0b0935f482d9ff45b45c030153dec84"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C33.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "3a053848bba69cae53dde5fc5f0696f26fb1ac6132c0b8677e222aef4c941033"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C34.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "28eb5832f6667f069e34fea81edf05966606c3e0d8b4fbc0f63ec04a45de6de6"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C35.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "45eda7664a28a07e214a5744bd82eea3f59bba69243321252e86214956588456"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C41.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "feb06f635cbe64f1faf7a0961ee180e80f6c6de9389623cb371a3354b63db9f9"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C42.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "d0cebe809da5fe1e93eaabb5aa84eaebbc2b2af29254ae001ce879bd1bdaeb30"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C43.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "973ce7b841e5cabee014a5c3f944f3980a7cc50cff22bf9c057fdb6e2fdf3a20"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C44.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "ccfc900b5d800ccc2a000662ba916e943db3ee5bd722f0329164a0d69cadcfc4"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C45.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "b9a7734349d9b2668c621c98edd73ffcbcf5d7ac79e4e91ef82282073cde75e5"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C51.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "70964a9f18f45a79cbcc8054f3222020e911983fe61010d32a303b5632998e60"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C52.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "01eb69372d9dc749befe14ec102db505ee8d68c5cef968ec1a0310662b5e53cb"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C53.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "bb2582ed1e94cfc89846c8f1f5d692ee29fc824505277a2ba42f0416cda5447d"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/C54.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "5effb6490db969b28cfb71cec31d13e02808b651e05b0e3808adcd9efb3f01e3"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D01.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "a7fbe62afbde7364c1508b09c19e8549929507480bba3b4cbd521f639ec9b4c2"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D02.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "4b3d13c632e65599606e8f0178af50453cd8bc0099d6cbdcfe0fe51bbd3f132c"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D03.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "ba8d6dcae849805a39010922910e9f5febff45adac6693e32658bff919fcad49"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D11.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "399a6fa6594045c1c95108ed66d2e9f39c28af2ecbd53fd6dfb34d59bf5525ce"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D12.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "6f2172932761f178540ec917151361018bd46d6848a724526ae65c4dde5d1535"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D13.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "f0ba96c977444acd789d5eaeb2db2c0454e4af43465f7eea377c0ccd9de80a5c"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D14.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "0f782503975fa684dd42964c1f85efb72a699a9224c4e759c2a0791d87f65ee3"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D15.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "2eebd2d94bb3d6e4ab32eb3792cf17a3be802fc5cf70410e286e3594a724dbd3"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D16.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "776c4e02d5af89ac95c86b1abc894dc7d1140e5f00c43715b7ff2b023748d9f4"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D21.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "42907d55bca896577c56cc7e6cf5e732d110aca5ba106df14c3bedf29cd3ead7"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D22.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "c422abf76122c94f24e1eb76b91d1d6f15ff52ca99f4b61253421fe9e0b78148"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D23.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "c5e11fa04e71c87ab61e1270714908bd18511816f85dbd76699275b0f6c030d6"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D24.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "77f246cdb2767af906937b1e7bdbcadc8255a5fc9b5bd1a3e7122cc6a0e5a311"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D25.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "932c5e96423722a3a24670d64ad3a28b996dfd63bd279b894309cda35705bdd5"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D26.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "abbb65ab4730fd29f6a97fd11496b52022a26ca0a79f28450599e4834d415c2f"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D31.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "2ce7e408e9f4a179687295deef497244cf59f7770c503f736c992ac85ea92720"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D32.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "c21415994a609fd45723642b76714be2d8cc2e48375453ce36bad1cb16dc6b1c"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D33.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "b183847f100685b11f016b524078404c4a117a959b7a5d99de82affdbd3c5829"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D34.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "9bbe2bbc0f14ba1057439346a4c7f45204361058f018226235e6c8058044c164"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D35.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "697162d4dfae01d60f8549b32d7fba4c85f4e54c8af42b2f709eff241f26f199"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D36.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "920fc8fdaab92d5cb72d44f0d0d340c2f1f6b432d1e330891cd2b72368cab2ca"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D41.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "518613468456c1a87b03041c9f9d91afd157893f84436aae582865737a3cf708"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D42.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "dd015f06aae7cf9418b9d3fbf9f6db688a5c8d71e1155b1db51a815c6fd5d66a"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D43.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "9d6db6a4c6f5c70940b3aa0585480b0e0563b98056a0a57783883e2c5860ece7"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D44.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "408d12b45a73442e94775fa36e3c37dbea5e31c0e725bd02f1924da90fa67607"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D45.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "4ba2a09a3da0782a08c80b63a31a92f5251b448daf1578fb47456822573db839"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D46.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "da9881c25f610cd3e3ef494416633d5c7bacd763db3a3cdc01a1fb4e55df15e4"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D51.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "7d03de6983edf547d53cb3d0695f40d3b41b8332c07808f4ec69f3bf8705002b"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D52.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "41e3da778d797d7490d023f812edcd0d1028890cf14e6336e66ad60d3e18adeb"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D53.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "316b356d0fc096ae22849c6cbd12a1f6bf4379edc8b65673e0fd5c9ae61e7b85"
+  },
+  {
+    "source": "/plans/la-gloire/presentation/D54.pdf",
+    "width": 1190.16,
+    "height": 842.04,
+    "sourceSha256": "3954749657634d29997bc71abe30463eee80d060bb8f572520f312696e85af41"
+  }
+]

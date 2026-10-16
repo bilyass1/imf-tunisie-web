@@ -38,7 +38,7 @@ export default async function MyLotPage({ params, searchParams }: { params: Prom
     >
       <ClientPropertyTabs locale={locale} basePath={`/${locale}/espace-client/mon-appartement`} properties={properties} selected={selected}/>
       {!project || !lot ? (
-        <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center text-ink/50">
+        <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center text-muted">
           {dict.client.noLot}
         </div>
       ) : (
@@ -70,7 +70,7 @@ export default async function MyLotPage({ params, searchParams }: { params: Prom
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-ink/8 bg-white">
-            <h2 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-ink/50">
+            <h2 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-muted">
               {dict.project.specs}
             </h2>
             <dl className="divide-y divide-ink/6 px-6">
@@ -90,7 +90,7 @@ export default async function MyLotPage({ params, searchParams }: { params: Prom
                 },
               ].map((row) => (
                 <div key={row.k} className="flex items-center justify-between gap-4 py-4">
-                  <dt className="text-[12px] uppercase tracking-[0.1em] text-ink/45">{row.k}</dt>
+                  <dt className="text-[12px] uppercase tracking-[0.1em] text-muted">{row.k}</dt>
                   <dd className="text-[14.5px] font-medium text-ink">{row.v}</dd>
                 </div>
               ))}

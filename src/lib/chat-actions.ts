@@ -1,4 +1,5 @@
 'use server';
+import { getStore } from './postgres-store.cjs';
 import { withAudit } from './audit';
 import { randomUUID } from 'node:crypto';
 import { revalidatePath } from 'next/cache';
@@ -9,6 +10,11 @@ import { allowRequest } from './rate-limit';
 export async function sendChatMessage(_: {ok:boolean;message:string}, form:FormData) {
   try {
     const session=await getSession();
+    if(process.env.DATABASE_URL){
+      if(!session || !await allowRequest('chat',session.sub,30,60000))throw new Error('Veuillez patienter ou vous reconnecter.');
+      await getStore().postMessage(session.sub,String(form.get('client')??''),String(form.get('body')??'').trim());
+      revalidatePath('/','layout');return {ok:true,message:'Message envoyé.'};
+    }
     const db=(await readDb());
     const sender=db.users.find(u=>u.id===session?.sub);
     if(!sender) throw new Error('Veuillez vous reconnecter.');

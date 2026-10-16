@@ -36,6 +36,6 @@ export default function ClientApartmentSelection({projects,clients}: {projects:P
       </div>;
     })}
     {needsPassword && <SensitivePasswordField/>}
-    <p className="text-sm text-ink/55">La création du compte mettra à jour tous les appartements sélectionnés dans Lots et disponibilité.</p>
+    <p className="text-sm text-muted">La création du compte mettra à jour tous les appartements sélectionnés dans Lots et disponibilité.</p>
   </fieldset>;
 }

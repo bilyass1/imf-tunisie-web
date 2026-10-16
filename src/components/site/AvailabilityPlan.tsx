@@ -136,7 +136,7 @@ export default function AvailabilityPlan({
                     setSelected(null);
                   }}
                   className={`rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] transition ${
-                    block === id ? 'bg-gold-gradient text-ink' : 'text-ink/55 hover:text-gold-600'
+                    block === id ? 'bg-gold-gradient text-ink' : 'text-muted hover:text-gold-600'
                   }`}
                 >
                   {labels.block} {id}
@@ -145,7 +145,7 @@ export default function AvailabilityPlan({
             </div>
           )}
 
-          <select
+          <select aria-label={labels.typology}
             value={typology}
             onChange={(e) => setTypology(e.target.value)}
             className="rounded-full border border-ink/12 bg-white px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-ink/65 outline-none transition focus:border-gold-400"
@@ -165,8 +165,8 @@ export default function AvailabilityPlan({
               type="button"
               onClick={() => setView('grid')}
               aria-label={labels.gridView}
-              className={`grid h-8 w-9 place-items-center rounded-full transition ${
-                view === 'grid' ? 'bg-ink text-white' : 'text-ink/45'
+              className={`grid h-11 w-11 place-items-center rounded-full transition ${
+                view === 'grid' ? 'bg-ink text-white' : 'text-muted'
               }`}
             >
               <IconGrid className="h-4 w-4" />
@@ -175,8 +175,8 @@ export default function AvailabilityPlan({
               type="button"
               onClick={() => setView('list')}
               aria-label={labels.listView}
-              className={`grid h-8 w-9 place-items-center rounded-full transition ${
-                view === 'list' ? 'bg-ink text-white' : 'text-ink/45'
+              className={`grid h-11 w-11 place-items-center rounded-full transition ${
+                view === 'list' ? 'bg-ink text-white' : 'text-muted'
               }`}
             >
               <IconList className="h-4 w-4" />
@@ -193,7 +193,7 @@ export default function AvailabilityPlan({
               <strong className="font-semibold text-ink">{stats[s]}</strong>
             </span>
           ))}
-          <span className="ms-auto text-ink/45">
+          <span className="ms-auto text-muted">
             {stats.total} {labels.stats.total}
           </span>
         </div>
@@ -201,7 +201,7 @@ export default function AvailabilityPlan({
         {/* ---- Vue plan (immeuble) ---- */}
         {view === 'grid' ? (
           <div className="mt-6 overflow-hidden rounded-2xl border border-ink/8 bg-white">
-            {byFloor.length === 0 && <p className="p-10 text-center text-sm text-ink/45">{labels.empty}</p>}
+            {byFloor.length === 0 && <p className="p-10 text-center text-sm text-muted">{labels.empty}</p>}
             {byFloor.map(([f, floorLots], i) => (
               <div
                 key={f}
@@ -213,7 +213,7 @@ export default function AvailabilityPlan({
                   type="button"
                   onClick={() => setFloor(floor === f ? 'all' : f)}
                   className={`w-full shrink-0 rounded-lg px-3 py-2 text-start text-[11px] font-semibold uppercase tracking-[0.14em] transition sm:w-[124px] ${
-                    floor === f ? 'bg-ink text-gold-200' : 'bg-sand/60 text-ink/55 hover:text-gold-600'
+                    floor === f ? 'bg-ink text-gold-200' : 'bg-sand/60 text-muted hover:text-gold-600'
                   }`}
                 >
                   {floorLabel(f, locale)}
@@ -227,20 +227,22 @@ export default function AvailabilityPlan({
                       <button
                         key={lot.ref}
                         type="button"
+                        aria-pressed={active}
                         onClick={() => setSelected(active ? null : lot)}
                         className={`min-w-[92px] rounded-lg border px-3 py-2.5 text-start transition-all duration-200 ${st.tile} ${
                           active ? 'ring-2 ring-gold-400 ring-offset-2' : ''
                         }`}
                       >
                         <span className="block text-[13px] font-bold leading-none">{lot.code}</span>
-                        <span className="mt-1.5 block text-[10.5px] font-semibold uppercase tracking-wider opacity-70">
+                        <span className="mt-1.5 block text-[12px] font-semibold uppercase tracking-wider">
                           {lot.typology}
                         </span>
                         {lot.sellableArea ? (
-                          <span className="mt-0.5 block text-[10.5px] opacity-60">
+                          <span className="mt-0.5 block text-[12px]">
                             {lot.sellableArea.toFixed(2)} m²
                           </span>
                         ) : null}
+                        <span className="mt-1 block max-w-48 text-[11px] font-medium">{labels.legend[lot.status]}</span>
                       </button>
                     );
                   })}
@@ -253,7 +255,7 @@ export default function AvailabilityPlan({
           <div className="mt-6 overflow-x-auto rounded-2xl border border-ink/8 bg-white">
             <table className="w-full min-w-[720px] text-start text-[13px]">
               <thead>
-                <tr className="border-b border-ink/8 bg-sand/40 text-[11px] uppercase tracking-[0.12em] text-ink/50">
+                <tr className="border-b border-ink/8 bg-sand/40 text-[11px] uppercase tracking-[0.12em] text-muted">
                   <th className="px-4 py-3 text-start font-semibold">{labels.table.code}</th>
                   <th className="px-4 py-3 text-start font-semibold">{labels.floor}</th>
                   <th className="px-4 py-3 text-start font-semibold">{labels.table.typology}</th>
@@ -267,7 +269,7 @@ export default function AvailabilityPlan({
               <tbody>
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-10 text-center text-ink/45">
+                    <td colSpan={8} className="px-4 py-10 text-center text-muted">
                       {labels.empty}
                     </td>
                   </tr>
@@ -298,7 +300,7 @@ export default function AvailabilityPlan({
           </div>
         )}
 
-        <p className="mt-4 text-[12px] leading-relaxed text-ink/40">{labels.note}</p>
+        <p className="mt-4 text-[12px] leading-relaxed text-muted">{labels.note}</p>
       </div>
 
       {/* ---- Panneau de détail ---- */}
@@ -309,14 +311,14 @@ export default function AvailabilityPlan({
               <button
                 type="button"
                 onClick={() => setSelected(null)}
-                className="absolute end-4 top-4 text-white/50 transition hover:text-gold-300"
+                className="absolute end-4 top-4 text-white/85 transition hover:text-gold-300"
                 aria-label="×"
               >
                 <IconClose className="h-4 w-4" />
               </button>
               <span className="eyebrow !text-gold-300">{labels.selected}</span>
               <p className="mt-3 font-display text-[34px] font-light leading-none">{selected.code}</p>
-              <p className="mt-2 text-[13px] text-white/55">
+              <p className="mt-2 text-[13px] text-white/85">
                 {labels.block} {selected.block} · {floorLabel(selected.floor, locale)} · {selected.typology}
               </p>
               <span
@@ -344,7 +346,7 @@ export default function AvailabilityPlan({
                 { k: labels.table.price, v: selected.price ? formatMoney(selected.price, locale) : labels.onRequest },
               ].map((row) => (
                 <div key={row.k} className="flex items-center justify-between gap-4 py-3.5">
-                  <dt className="text-[12px] uppercase tracking-[0.1em] text-ink/45">{row.k}</dt>
+                  <dt className="text-[12px] uppercase tracking-[0.1em] text-muted">{row.k}</dt>
                   <dd className={row.strong ? 'font-display text-[20px] text-ink' : 'text-[14px] font-medium text-ink/75'}>
                     {row.v}
                   </dd>
@@ -352,7 +354,7 @@ export default function AvailabilityPlan({
               ))}
             </dl>
             {projectSlug === 'diar-al-yassamine' && (selected.block === 'A5.a' || selected.block.startsWith('A6.')) && (
-              <p className="px-6 pt-4 text-xs leading-relaxed text-ink/55">
+              <p className="px-6 pt-4 text-xs leading-relaxed text-muted">
                 {locale === 'ar' ? 'المساحات تقريبية حسب مخطط البيع الفردي.' : locale === 'en' ? 'Approximate areas from the individual sales plan.' : 'Surfaces approximatives selon le plan de vente individuel.'}
               </p>
             )}
@@ -387,12 +389,12 @@ export default function AvailabilityPlan({
         ) : (
           <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-8 text-center">
             <p className="font-display text-[22px] font-light text-ink/70">{labels.title}</p>
-            <p className="mt-3 text-[13.5px] leading-relaxed text-ink/50">{labels.subtitle}</p>
+            <p className="mt-3 text-[13.5px] leading-relaxed text-muted">{labels.subtitle}</p>
             <div className="mt-6 grid grid-cols-2 gap-3 text-center sm:grid-cols-4 lg:grid-cols-2">
               {(['available', 'reserved', 'sold', 'unconfirmed'] as const).map((s) => (
                 <div key={s} className="rounded-xl bg-sand/50 px-2 py-3">
                   <p className={`font-display text-[24px] leading-none ${STATUS_STYLES[s].text}`}>{stats[s]}</p>
-                  <p className="mt-1.5 text-[10px] uppercase tracking-wider text-ink/45">{labels.legend[s]}</p>
+                  <p className="mt-1.5 text-[10px] uppercase tracking-wider text-muted">{labels.legend[s]}</p>
                 </div>
               ))}
             </div>

@@ -147,7 +147,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
             <a
               key={s.id}
               href={`#${s.id}`}
-              className="shrink-0 rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-ink/50 transition hover:bg-white hover:text-gold-600"
+              className="shrink-0 rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:bg-white hover:text-gold-600"
             >
               {s.label}
             </a>
@@ -187,7 +187,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
                 >
                   {s.value}
                 </p>
-                <p className="mt-2 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink/45">{s.label}</p>
+                <p className="mt-2 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted">{s.label}</p>
               </Reveal>
             ))}
           </div>
@@ -208,7 +208,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
             </Reveal>
 
             <Reveal delay={190}>
-              <h3 className="mt-10 text-[12px] font-semibold uppercase tracking-[0.2em] text-ink/45">
+              <h3 className="mt-10 text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
                 {sectionLabel('highlights', dict.project.highlights)}
               </h3>
               <ul className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -223,7 +223,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
 
             {amenities.length > 0 && (
               <Reveal delay={250}>
-                <h3 className="mt-10 text-[12px] font-semibold uppercase tracking-[0.2em] text-ink/45">
+                <h3 className="mt-10 text-[12px] font-semibold uppercase tracking-[0.2em] text-muted">
                   {sectionLabel('amenities', dict.project.amenities)}
                 </h3>
                 <div className="mt-5 flex flex-wrap gap-2.5">
@@ -247,13 +247,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
 
           <Reveal delay={120}>
             <div className="overflow-hidden rounded-2xl border border-ink/8 bg-white">
-              <h3 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
+              <h3 className="border-b border-ink/8 px-6 py-4 text-[12px] font-semibold uppercase tracking-[0.18em] text-muted">
                 {sectionLabel('specs', dict.project.specs)}
               </h3>
               <dl className="divide-y divide-ink/6 px-6">
                 {project.specs.map((s) => (
                   <div key={s.label.fr} className="flex flex-col gap-1 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
-                    <dt className="text-[12px] uppercase tracking-[0.1em] text-ink/45">{t(s.label, locale)}</dt>
+                    <dt className="text-[12px] uppercase tracking-[0.1em] text-muted">{t(s.label, locale)}</dt>
                     <dd className="text-[14px] font-medium text-ink sm:text-end">{t(s.value, locale)}</dd>
                   </div>
                 ))}
@@ -264,7 +264,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               <ProgressMeter value={project.progressPercent} locale={locale}/>
               {project.progress && (
                 <div className="mt-6 overflow-hidden rounded-2xl border border-ink/8 bg-white p-6">
-                  <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
+                  <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-muted">
                     {sectionLabel('progress', dict.project.progress)}
                   </h3>
                   <ul className="mt-5 space-y-5">
@@ -290,7 +290,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
                   <IconPlay className="h-4 w-4" />
                 </span>
                 <div>
-                  <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink/45">
+                  <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-muted">
                     {dict.project.video}
                   </p>
                   <p className="mt-2 text-[13.5px] leading-relaxed text-ink/60">{t(project.videoNote, locale)}</p>
@@ -450,7 +450,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
         <section id="disponibilite" className="scroll-mt-[170px] bg-ivory py-24">
           <div className="container-lux rounded-2xl border border-dashed border-ink/15 bg-white/60 p-12 text-center">
             <h2 className="h-display text-[28px]">{dict.availability.soonTitle}</h2>
-            <p className="mx-auto mt-4 max-w-lg text-[14.5px] text-ink/55">{dict.availability.soonBody}</p>
+            <p className="mx-auto mt-4 max-w-lg text-[14.5px] text-muted">{dict.availability.soonBody}</p>
           </div>
         </section>
       ) : null}
@@ -523,7 +523,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
         <div className="container-lux relative flex flex-col gap-10 py-20 lg:flex-row lg:items-center lg:justify-between">
           <Reveal>
             <span className="eyebrow !text-gold-300">{dict.home.cta.title}</span>
-            <p className="mt-4 max-w-md text-[15px] text-white/60">{dict.home.cta.body}</p>
+            <p className="mt-4 max-w-md text-[15px] text-white/85">{dict.home.cta.body}</p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link href={`/${locale}/contact?project=${project.slug}`} className="btn-gold">
                 {dict.project.bookVisit}
@@ -546,7 +546,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
                 </p>
                 <p className="mt-1.5 font-display text-[24px] font-light text-white">{nextProject.name}</p>
               </div>
-              <IconArrow className="h-5 w-5 shrink-0 text-white/50 transition-transform group-hover:translate-x-1 rtl:rotate-180" />
+              <IconArrow className="h-5 w-5 shrink-0 text-white/85 transition-transform group-hover:translate-x-1 rtl:rotate-180" />
             </Link>
           </Reveal>
         </div>

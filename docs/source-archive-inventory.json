@@ -1,0 +1,2532 @@
+{
+  "sourceCommit": "8c8600e0bd73aaa9faa3bc3f9ba99f4c0f04945c",
+  "files": [
+    {
+      "path": "source-assets/models/yassamine/A5a-0.pdf",
+      "size": 464946,
+      "sha256": "e6d1a904ad46054f75a0fb3cd493244da355edecc4948170b9a9364eea56fab3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/A5a-1.pdf",
+      "size": 399787,
+      "sha256": "947acc010a7f7f97bb06abafece32d11faffd226fa5f9c69fc803c0ff8ea36a2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/A5b-0.pdf",
+      "size": 536360,
+      "sha256": "9d1404081642e5371593722c4a1666c588fa40e125729f882649f837385acc6a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/A5b-1.pdf",
+      "size": 446214,
+      "sha256": "25f1e4c76c81948184708829893425b11ecb62f609c0e88bed0f64522586e795",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/A6a-0.pdf",
+      "size": 387932,
+      "sha256": "bd146ccdac8c1a80b64c24456cbebd33a56543f40cd1eac54ef20424e30eb603",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/A6a-1.pdf",
+      "size": 361372,
+      "sha256": "a92d741f67d991a113953b4daa1350a4942225cb1635da1a38d75b5959006ee0",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/A6a-4.pdf",
+      "size": 353914,
+      "sha256": "f0ccf084283cf491c31e4c94f64994b460f0b061794fab5c3e5364545f20a630",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/A6b-0.pdf",
+      "size": 335948,
+      "sha256": "17a76b157f7d5ab2f6eec34eae76056bc5b2ee2edd16b4b64c5b51a2228ce019",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/A6b-1.pdf",
+      "size": 316554,
+      "sha256": "69b8a5e7c9e907b7ea43b18789d9841794c1b841bd07d28074e6c1120ba925b8",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/A6b-2.pdf",
+      "size": 314020,
+      "sha256": "1dd83a729d92f781cedbf69c80a8a549a4328f2dd0ccbd8e7ea7915f91c117de",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A5a-0.pdf",
+      "size": 1367310,
+      "sha256": "c3ee635e600951d2167438aa2e9be20a0352a455bd269c67191dd9074b3a2c8d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A5a-1.pdf",
+      "size": 1345268,
+      "sha256": "b56ce62169709ae884589935fbad198385456e62b64ba3e56efc89df3bb920a7",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A5b-0.pdf",
+      "size": 1622035,
+      "sha256": "7377d566c6599c418388dba89818f28bec6dae0e1ae1b2aacf1cf489846de4ad",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A5b-1.pdf",
+      "size": 1485731,
+      "sha256": "84a77c681c1e94b35455d393df040fde04d77f5f21db2b2e1e099f70d5dcde6a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A6a-0.pdf",
+      "size": 1718600,
+      "sha256": "6827e16529fc038249d8d25cde507ad0826526fb20845e4a02069986a466539e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A6a-1.pdf",
+      "size": 1500328,
+      "sha256": "b5cf8cf68eb1e1778d84dd18c6266efb31672b5b40a8fbb128fffa18a17490f1",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A6a-4.pdf",
+      "size": 1492405,
+      "sha256": "c704827e99994ca549985f981ba9db6fd4be1bfc44a1bd8181ea6293b7d452a5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A6b-0.pdf",
+      "size": 1325716,
+      "sha256": "70c27c35e20e9f051d24d27b654b91844f3397d077d2bbe9f67801354996582d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A6b-1.pdf",
+      "size": 1228468,
+      "sha256": "c8539e52e81a1bb7b2e29339475a20e850aa4fab3c32201379f00e8b86f9b819",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/models/yassamine/presentation/A6b-2.pdf",
+      "size": 1205467,
+      "sha256": "4fcd759f7f820400f85cb0bff939787fdd78b4bb9553bb23e6e54fb9dab8be9a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A101.dwg",
+      "size": 18887198,
+      "sha256": "7fb0e71d1792dc5177855a78eb49b1e9a8cfb365aab86a273da7378617fe4521",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A104.dwg",
+      "size": 18899047,
+      "sha256": "8e81310b3c7265e6fd5af21866f4af8313e96b5cff8eeed8107b7aacd993b4d1",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A201.dwg",
+      "size": 18876663,
+      "sha256": "3909bc2dfae6776a930f7ec9802355225300b6eb15e5b331a3ac9a2e08a068ee",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A202.dwg",
+      "size": 18894552,
+      "sha256": "8860e38f281c94ece5818d65d0196289c7ff620a6197412cd0baef17cbd630f6",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A204.dwg",
+      "size": 17856934,
+      "sha256": "7191444098f61774c1dac49514897b28d44f602ded68f47cd79965ed6e228856",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A304.dwg",
+      "size": 18880074,
+      "sha256": "bb8b719243801d09de1a1b9eead2b7f7afad782e526ae3ddeb9f5fa9c1873d3e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A305.dwg",
+      "size": 18883242,
+      "sha256": "968b1991e17ef577e82272ac0266685cb16ce56b3858d171c07c401d2124eba9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A501.pdf",
+      "size": 355232,
+      "sha256": "003d88a9a61a5d75a4c4f7c8cec249a6011998debf92214a1e1293ac88f4a98e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A502.pdf",
+      "size": 346662,
+      "sha256": "544b2a16bc911ea49bd44825b5a56efb9b77124c079258ce56198a049f9dfed2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A503.pdf",
+      "size": 328594,
+      "sha256": "17cd6df4743c01a7152ed35637d0ea1efe877d51a9b5e67849aae6bcb725e0a7",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A504.pdf",
+      "size": 345869,
+      "sha256": "ab56bcb2393335bdb8565778fc8083143ff79bebb5d016a70f61662468486fed",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A511.pdf",
+      "size": 289000,
+      "sha256": "57a67fdb4e9f85d7f1eff486d80b7929f8ecc886b9c91d9b36b1d7950be0e43d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A512.pdf",
+      "size": 285078,
+      "sha256": "3c8cffcd0be44cc4cc914318e79bacd9d497280f09258d10b607377674880986",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A513.pdf",
+      "size": 267614,
+      "sha256": "aebbabea18f3cb3720519fc51bc62ff3a3e0c6703c05c1776d0a162b76860753",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A514.pdf",
+      "size": 271710,
+      "sha256": "6fdf68a2e6e17fdfe32609d341f08437cdadd0be255efb509b0962172283faa2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A521.pdf",
+      "size": 288435,
+      "sha256": "aa2d0295ca446be12874d8702fbdfd4a0f867f9488fcf8064593080ba1808bde",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A522.pdf",
+      "size": 284591,
+      "sha256": "124b3ad4c37fe1886a9b7bb38e444e3ec131cf3db17b6f43499738d43e5f9bc6",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A523.pdf",
+      "size": 267788,
+      "sha256": "1d978730a299415bdf75efe0507b1ff1d6c63ed9fc925ec2d0cf7113a9e08ed8",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A524.pdf",
+      "size": 272515,
+      "sha256": "1e7e9a6167157ebccc3d56dc55825a0e020b6d2133b1e3285f20a1b0c8caa724",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A531.pdf",
+      "size": 287264,
+      "sha256": "808be838c5ad00fc88d982b676e23e384814257e4e2812acf36192177ceda974",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A532.pdf",
+      "size": 284084,
+      "sha256": "5eb41fa539f0625ff3847f6a3f78263ea95257add54c8d3275166d7d1532c459",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A533.pdf",
+      "size": 268381,
+      "sha256": "a53a44059df8eefcea03707ae4251e7a94f86df637b8965a9cb8d660c1271213",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A534.pdf",
+      "size": 272734,
+      "sha256": "25d36c9741050e7485785001187c505b37957636fc0e6498256b199af51fcd19",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A541.pdf",
+      "size": 283771,
+      "sha256": "7f261cdcb672bd6d22a3ecd0ecf0400f8d9af0751c713b26e0fc1d7ff4e023d4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A542.pdf",
+      "size": 282231,
+      "sha256": "ff0485eafa4de4164fa51d2239ddea0849eb0df448985c626d781d49cb295473",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A543.pdf",
+      "size": 271176,
+      "sha256": "9ecab9a4e86c836d0e2e578aabcc6ac30d77458d9c095226004dd0abae91ff5f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/A544.pdf",
+      "size": 268934,
+      "sha256": "a59610fcd91d2dd0d9f9e1bb9909771a36d89933aa39a866c3d9fde37adc67c8",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/RDC-A123.dwg",
+      "size": 18790468,
+      "sha256": "97d1e68401001c64dfbd1d6f779a4993302182e7bcd728760d0dd23afb32b5cd",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A101.pdf",
+      "size": 1588956,
+      "sha256": "d0754194a61d82ae370fd989fd11acb034d0a5385f524012358d675cb83c27fe",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A104.pdf",
+      "size": 1340484,
+      "sha256": "ce793186992a4ed80064a29147a069e8b7bfc8bd5e429fb36d26b1bf6b60f587",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A201.pdf",
+      "size": 1518926,
+      "sha256": "a7d765302214783ce23c025bee09189a7d404693aa96d8f1dc6fcc33c3cfd35a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A202.pdf",
+      "size": 1538715,
+      "sha256": "36275e4264a04e4d1da60e2288e9a536934ca21b265e378c5203b222eb16802b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A204.pdf",
+      "size": 1323713,
+      "sha256": "eb134879aaf37901f638099180f962841b561e7e687a8b32e40e72ab3bf40fda",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A304.pdf",
+      "size": 1426827,
+      "sha256": "2ed107d889b198a9a585789a9238c14d41171d3f21d0ca188169e7b6b548400b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A305.pdf",
+      "size": 1539426,
+      "sha256": "95e417db09b0906b3a350d88a2fe869a445e87dea7d8c222718311c13b69b3cf",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A501.pdf",
+      "size": 1150367,
+      "sha256": "97b824af9accfb4ead25c035b15b4a11a040f170c45af5984b816c9b2b4143f6",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A502.pdf",
+      "size": 1101147,
+      "sha256": "dcac7e6dfee658b629fcccfdf6c0f54889ab8b65843a4e313e4e0cbd85f7ce17",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A503.pdf",
+      "size": 1003386,
+      "sha256": "02715ffcec88b1b02ca74d9b49d97fe7bd926aae8c1dc1ea5c58aedfe31bb8ac",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A504.pdf",
+      "size": 1179379,
+      "sha256": "5e86a2266ccf24850b4f5025ed05158e3c3a9f01ae414bb7037b701de40bcfb3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A511.pdf",
+      "size": 1185385,
+      "sha256": "c11f24d95efb8e8e9a0f2436f30bf8d05d25dfff75aa7fd8dabb75d2418bf687",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A512.pdf",
+      "size": 1093154,
+      "sha256": "b008ca9da4374fb74212ba3b023b294812bd190af9fa2eae6b41a125cf81d8d4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A513.pdf",
+      "size": 1083054,
+      "sha256": "dd0a4788d6ffaf59d17de5c59ac03967a491d66bdea0a34818a0c5a65cd1bf8b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A514.pdf",
+      "size": 1156720,
+      "sha256": "ccccf81b8c081683945f7968fdc8447d02226b3bfb6412ea59f1ec837d8e358d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A521.pdf",
+      "size": 1187699,
+      "sha256": "7179eaad4cc5b2ebcad6509c74e802191970963a3801bdf5c5fa86e1e518749f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A522.pdf",
+      "size": 1089561,
+      "sha256": "6f38178b1b18255765b0467add497accd3348df44e8e07031dc0e8e8c9be3572",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A523.pdf",
+      "size": 1071448,
+      "sha256": "7d78cdab2d29672c4de23441722e4d953e94e22721eb1a7095bf5a798526da4a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A524.pdf",
+      "size": 1151777,
+      "sha256": "23e5e0644ef23a802a40d0ef16a3c2ff78016e94926c637249b7c4b14084c9cd",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A531.pdf",
+      "size": 1191107,
+      "sha256": "26c31d437947a7d9ea9af64ec73f526b8c2ed6ce7114b1c25e8ff25ba1aa604e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A532.pdf",
+      "size": 1082668,
+      "sha256": "ecae6312c1d11923aa57d8c8dee29408bb1f0590f0b7c8b1f41efe6d1d2cbfe8",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A533.pdf",
+      "size": 1081393,
+      "sha256": "6a77603ea3fccbdf0efdd8bf843c425fd071cec368abd3294764bf0b4864f58f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A534.pdf",
+      "size": 1149941,
+      "sha256": "9f8c7ae0c504778a8fddc72b2ce21cc33edbd533edf17df5c9604529c467ef1c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A541.pdf",
+      "size": 1177886,
+      "sha256": "015a37c4f26b0a894bab00d704c7840b5d1e4ec69f8ee7ea29fee3ee8e6743e1",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A542.pdf",
+      "size": 1114366,
+      "sha256": "cdc17adec19677db133acfc91bfdf399262a9a9c36827e47dbd5bd0d40c73695",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A543.pdf",
+      "size": 1074723,
+      "sha256": "b30cfadae11044dc890a339fd416dd427363a40168a4cf92e49244ce45df48d5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A544.pdf",
+      "size": 1139256,
+      "sha256": "24ea418db0c1c30b69d6fa5089f0918aafa6aada61ae956fd77ab2ac2b0b5611",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b01.pdf",
+      "size": 1133718,
+      "sha256": "4b21d4a0cd0ff871bada608dcb28b585eb2db2891f29f9dccc8a8e07952d3866",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b02.pdf",
+      "size": 1114538,
+      "sha256": "2d4fab09474a4a942cf82faea04f58805f7aa5c219afa91f3489e23e503f82ff",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b03.pdf",
+      "size": 1088724,
+      "sha256": "190b045f6ac085726423ca7e2f08e3c548aa5ede8019a2a4f9996aa7cfd21d8c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b04.pdf",
+      "size": 1141663,
+      "sha256": "e575b5d5aab6e174eaf9a52e34115060d3e8e815f658d42b9782bbe49badfda8",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b05.pdf",
+      "size": 1233243,
+      "sha256": "b6ba75d9b3ce87b0d7ea744bf22fb563228481ad5ff6a46c533e0d4362dde3e6",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b11.pdf",
+      "size": 1162457,
+      "sha256": "5bf6c8584bd01f74a2f0637da927950a4b784a15dcd722cf3b23b3e315933a22",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b12.pdf",
+      "size": 1078494,
+      "sha256": "327d715b18b0b49d4d10b6e6a64cb051e674e081b4655bbd47df5865b59f27a8",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b13.pdf",
+      "size": 1106686,
+      "sha256": "2ce94e46c23265eadae5bb73d3e46b4e25c4ccd1708f507d97218aa8969e2a9c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b14.pdf",
+      "size": 1139651,
+      "sha256": "c84e5c770ad53847b76c284b11d0bce755a2c96db6e8a85bae3a381db5363ffc",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b15.pdf",
+      "size": 1190453,
+      "sha256": "a065396559eb76ab68b3b9a6e402f409d09b8965b24f488a44616f70b21da247",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b21.pdf",
+      "size": 1169430,
+      "sha256": "9c0140049625eacc0b9c8933606e032d6425e52ef6eafe587b16e80c85c77602",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b22.pdf",
+      "size": 1100103,
+      "sha256": "9f0db2971effddac92e1d4d5a4ae97fc41e5fb0b90c79e06063bb23c764204e2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b23.pdf",
+      "size": 1103529,
+      "sha256": "23466dfd01fb11c80b0673002e992598dc714b712794458df67e70a927eb735a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b24.pdf",
+      "size": 1134857,
+      "sha256": "69cc5f2a9a4c2ba2c420b062d72cffbecef26ed2d98f8a6c8cbd5d84720c51bb",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b25.pdf",
+      "size": 1183962,
+      "sha256": "d25f2b47599c6b2cff71b768d38481ea64076410e0ad9475dd0e46f4f3b0ff30",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b31.pdf",
+      "size": 1158685,
+      "sha256": "146a3fde2756c8629e88901177e37ba1cc24cabac5489af2f8640cb802815123",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b32.pdf",
+      "size": 1103550,
+      "sha256": "9d987c831b981e780cd630074656435cbf45c129a284fac3bb06e46322f0135b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b33.pdf",
+      "size": 1101073,
+      "sha256": "c92ae2469518fff4cbaea39746693368cd862ff3e722285d93fc419fef72aaa3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b34.pdf",
+      "size": 1131373,
+      "sha256": "a21864796e678c46fb3277ec92f2c1255867e62c8042c1a6b98a62fc25192506",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b35.pdf",
+      "size": 1161818,
+      "sha256": "6b0fc713848378763cda9e6053cb09c692b0f5111da70644c7679bc3821f9861",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b41.pdf",
+      "size": 1149172,
+      "sha256": "0b4d23b4d709f2297d38fc6e97b7e8c25c08e7b63d569d9101984619bdeb3b9e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b42.pdf",
+      "size": 1095929,
+      "sha256": "673a6be94194f3b15b70bf5aaf14f44bcfad6d5db45ba0c7a66c62e616a2ca39",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b43.pdf",
+      "size": 1098179,
+      "sha256": "b77580d2b5480592e451cb88a944bea648b016026726bf9c0f3e151d6e1fea66",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b44.pdf",
+      "size": 1128027,
+      "sha256": "31a942c10743f7e50a8402c9c1ccaaa0ff4408d3165c5a595e18be6ca0718f8f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A5b45.pdf",
+      "size": 1159178,
+      "sha256": "2597d505075b926eaa838b4911262ff3269663bc4aefe236794612f96aa4cff4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a01.pdf",
+      "size": 1479769,
+      "sha256": "fcf4c63379fce263d3ce0116f79bcce084d2e986e8982f29074b8acda4f16c38",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a02.pdf",
+      "size": 1482541,
+      "sha256": "bdccbe283b6769a83514ec08e3df9e1ec986ca0323e22eff1775583a1d781ead",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a03.pdf",
+      "size": 1253740,
+      "sha256": "3e2ae02aaac321193b5ea27994b8a1b059f87587cc96842534456be7ba53296b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a04.pdf",
+      "size": 1239525,
+      "sha256": "9104189cdf68961d60a66434a79cc7d2ed0e2982f93493a93e681638d5cb5778",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a11.pdf",
+      "size": 1321447,
+      "sha256": "e0c6788e242a895f60b62b3fdb4e4832e172f93a20cd8e0b5a526991d9e8a855",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a12.pdf",
+      "size": 1307202,
+      "sha256": "dfd37bb6de5a3d57c1ff4691857433dfed567a8c94fa7ab554321e5ed99437c3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a13.pdf",
+      "size": 1337313,
+      "sha256": "1930f8a8262387ba819c365fac2a73f789966651a583257806653a11ee600eef",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a14.pdf",
+      "size": 1257255,
+      "sha256": "904fa24fb3c9793053d048d77945be4166898a77d19353a20c7a414702cf5430",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a21.pdf",
+      "size": 1328404,
+      "sha256": "0eefc8459faec72d69026ad39a4e35b745c91c16476fd48009463e9fe9d7ad18",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a22.pdf",
+      "size": 1315918,
+      "sha256": "8e507e31fdee1b750c7cba5be0371519425208406b79d6b4aa76941316db0178",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a23.pdf",
+      "size": 1326402,
+      "sha256": "0b5c68ada2d15fdbf393ce9ffeb1e63dfaf581763535e5f261eef941568a3f68",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a24.pdf",
+      "size": 1256113,
+      "sha256": "e3c3a5cf8a5a355da30ab01b91c6032ea0a9cbace2cee02f7fe40c64b680cdf3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a31.pdf",
+      "size": 1343242,
+      "sha256": "d0a19e2245779faf2f000a1502de12a76cabb5e06ce4c1852c73a9092a166582",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a32.pdf",
+      "size": 1294695,
+      "sha256": "30e293aaff5f488756dde24df46df34fab546f88449c4cc2bc8a8e620cf0b103",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a33.pdf",
+      "size": 1326870,
+      "sha256": "cf207cf8fd41cddef488d6506de8b393ad5202276f684606f171d48b6559dc8b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a34.pdf",
+      "size": 1230429,
+      "sha256": "ca9829f226c6c94415804a140c0208fc146e13c88eae28afbbf03cea62d5fb24",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a41.pdf",
+      "size": 1333374,
+      "sha256": "e8a4abb27c39466e167ed2dbd8ed7591c7395ad448ba8969e498eb775a1c46ba",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a42.pdf",
+      "size": 1261475,
+      "sha256": "01d9561898fe08aad4edb15e658f16d3f1b4af7f0e78d130e3f41df6efbf1989",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a43.pdf",
+      "size": 1307093,
+      "sha256": "5430a01b87446ea7b75f84d26ad7ec56be043ad3467e8b43e53606612a7f3745",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6a44.pdf",
+      "size": 1275358,
+      "sha256": "41c79394025b44be5b662826ba23e197ed614dcbbd0832f272be0596e76e41ed",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b01.pdf",
+      "size": 1405815,
+      "sha256": "d344226b5f755c534814559b03f794752e95dec4ae2a71f85115b9a906250027",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b02.pdf",
+      "size": 1210881,
+      "sha256": "a9fe7b0029d24cdb3133a8cf9bc04ee973e0caa5a4f53be8f297046f2f4d721c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b03.pdf",
+      "size": 1297310,
+      "sha256": "1106c125f1debc0682063704d156b05821beb132cae2a587547f20b9e806b855",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b11.pdf",
+      "size": 1267999,
+      "sha256": "86da97dbf8ab44af8ce32ef36752ccc8f3ab59336f7f19243d2ca5242949d0cc",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b12.pdf",
+      "size": 1220262,
+      "sha256": "ea01fe462510caa596ecdf3f1a6b56d316eec8ec5444c23b6ce9e305fa06104e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b13.pdf",
+      "size": 1209760,
+      "sha256": "a047b77a3d4a1609a5855f430239a736910318733fa0edbee3de082f8afc2921",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b21.pdf",
+      "size": 1178552,
+      "sha256": "8b4eabd5400406b8e760ea7ffca79411644c1aa02c4d1069a3e510f456262e2b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b22.pdf",
+      "size": 1232399,
+      "sha256": "b50d660c8cf6331bf63e287011cb177c0dd65b57e8baf02e93c2bd2ca7d405d0",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b23.pdf",
+      "size": 1195232,
+      "sha256": "a35a309c9589ec49c4da22520ff44a2aa2a5d8bac67349ca322e299f9b30cd63",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b31.pdf",
+      "size": 1227696,
+      "sha256": "fff500a826d5a23208a88d1b2424377e5adb6239fd348c4b1d72cbbd76958188",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b32.pdf",
+      "size": 1231665,
+      "sha256": "6b1eff23bfecc923847679610ae7f8978c2bdc9627f79adbc85b0afef020a702",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/A6b33.pdf",
+      "size": 1217406,
+      "sha256": "571c7372885a6f9c62245ea2ce4a10b8aa9cab28681cf55deeac20c9809ed9d3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/RDC-A1.pdf",
+      "size": 1951802,
+      "sha256": "0109d51cd95853c239c6aace16e9317853c0b4eb1d11587f5e26e719b4e04c9c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/RDC-A2.pdf",
+      "size": 1917192,
+      "sha256": "d224f9393e7606b085356f9f77e5bc68c8cc9abf7f8813aecf99f1e448e26d59",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/diar-al-yassamine/presentation/RDC-A3.pdf",
+      "size": 2012182,
+      "sha256": "60c5879287035c752cd7506c005f22794f35fde565deb19eeaa1f403c9aa2a24",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A01.pdf",
+      "size": 9093251,
+      "sha256": "cd838bdf3b50d43467b98ffd362e39b321b1384401b5f259b820f8da74f943aa",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A02.pdf",
+      "size": 11922929,
+      "sha256": "e97628cc30251b5656e4994f1bd165587619510a892ba002cfdaead668c44fb2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A03.pdf",
+      "size": 14762333,
+      "sha256": "717189bb2ad2e2b3893e3e98d92cae1a86866106aada32173aff3845158b7503",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A11.pdf",
+      "size": 8177348,
+      "sha256": "54e4f5ed56d4dfe9832d9e9a69734e08efab842fb59756f206da4bef8178744e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A12.pdf",
+      "size": 10592915,
+      "sha256": "7d5e133a99d86f6f2b3333aa677ac242cc679480e5c4f8b8b75fe09f2537a4d3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A13.pdf",
+      "size": 10358323,
+      "sha256": "413b66c0fc518f39822186050cfb03919262996d9d3c29ea718c0d08475383a4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A14.pdf",
+      "size": 8233065,
+      "sha256": "0f40af6e7645c3b6275a8afa03f32cb5d9ab4822d975be41f52d389b7cec0a05",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A21.pdf",
+      "size": 8072140,
+      "sha256": "94d54ff0a3f74b5b4fbade72cba3b57dc663d596a81debdec1ca2cc3635ec606",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A22.pdf",
+      "size": 10514547,
+      "sha256": "b308967881f7f12a2e9a660d5269eef2f00d88edeafcf8a9128387a123747faa",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A23.pdf",
+      "size": 10217161,
+      "sha256": "2a71caadb47ace59ed7e271cb63b10d3518b289ebe7f75d337187049e5fcc88e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A24.pdf",
+      "size": 8189905,
+      "sha256": "db16369048361f04597477e7e2cbc24c899dcc499baa094779bd66f70f52484b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A31.pdf",
+      "size": 8075236,
+      "sha256": "c3383ff4f6765a3294ef9305f58877e5c97fa9ca81536f07b52105a22b6c4673",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A32.pdf",
+      "size": 10517030,
+      "sha256": "353696343a021f216032a4243d84a04d027f7a59990eb51c48bf62d2c6a0622a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A33.pdf",
+      "size": 10218815,
+      "sha256": "8dfb4a4d50b433e012cf84d34c726353debb93ca50e57dc3fefb246e7741999a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A34.pdf",
+      "size": 8191162,
+      "sha256": "4e07d3f5cc70afcfe0cef4554cbc36b511649d619bc3a6766fa6e5a58cd4870d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A41.pdf",
+      "size": 8070293,
+      "sha256": "a0a7461d8c7eb0c405b6b8c07039dc43987f217793413e8ff0fa18e2360404a7",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A42.pdf",
+      "size": 10506320,
+      "sha256": "81762fb345eb60f460275374e4757f2b55e999007960384299e8385ee0790873",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A43.pdf",
+      "size": 10215447,
+      "sha256": "8517067555fb9308bd991d9ce6f860f5fb84e01eeaf517d6551c4e880eef5580",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A44.pdf",
+      "size": 8187384,
+      "sha256": "29ea4b9ac7f51fbb73cd19224e7fc8217685b9d1e0e83bf7b3f1b5c4aa849dbf",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A51.pdf",
+      "size": 8306945,
+      "sha256": "ca7442b15be8037c795cef9ce85e40bce4bf507c61d33bbf0c3c91b78592e7f1",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A52.pdf",
+      "size": 10837145,
+      "sha256": "70b31a914f4ee4ba7b69f4b37610253bdff2a4acf58b99e199be780da7c1ac43",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/A53.pdf",
+      "size": 12149276,
+      "sha256": "ac33741343751bfc15fbbfca23b29a7846f65831c2ace383f83090cbbec117f5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B01.pdf",
+      "size": 9973055,
+      "sha256": "83b86cca35f96b00a3810cb351d0096263b1997189fc949705db39bb7cd46732",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B02.pdf",
+      "size": 13953443,
+      "sha256": "0a3b9a1a4ba768498aabc02e2cfb5ada9713dae84610355d8e0954d0a830ce72",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B11.pdf",
+      "size": 8600376,
+      "sha256": "883127e7a43edca8faefd6d87c605a10e17bd0743e4084fea04c33f16232fdea",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B12.pdf",
+      "size": 12030404,
+      "sha256": "ef36cac1e6a1b7bead5007379d1de2d26c1cf52bef1f4d0773ec9245f68ecca2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B13.pdf",
+      "size": 10511499,
+      "sha256": "8c662ed7c908107b3f29e8ff5ac6db30aa99c7f39e6ca79005fff45ecbec2aa9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B21.pdf",
+      "size": 8483812,
+      "sha256": "dc4a65e0255c96c5d2ac80fc22378a28ed0f0cb99cec1da97fb6b1c1ca8626d8",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B22.pdf",
+      "size": 11826877,
+      "sha256": "0056b15a434daf6fe111682a690d9279770dbd8183dcac088b22b5cf4485e772",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B23.pdf",
+      "size": 10484662,
+      "sha256": "0eedd68702da220a5c1ab1afceacf91f1be2af3b103a3db5d24cc14882b311c9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B24.pdf",
+      "size": 8109240,
+      "sha256": "774aa46e38bdbcd6e132526852db6155d6c78d3eaf2274c641064327b61c77bc",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B31.pdf",
+      "size": 8481920,
+      "sha256": "026dfb3b2a233d20ffcfa3808c6279c592021f1abdb53787a0477d5d140e7db9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B32.pdf",
+      "size": 11829376,
+      "sha256": "9a7ef16f8e0bf04eecdd67362a4db810ba4e4815174206a899181ab6fb2238b9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B33.pdf",
+      "size": 10486939,
+      "sha256": "da418a4e11006db345c84834d9f7a2269e5ce31894d9d4edbcd5aa0d83f79598",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B34.pdf",
+      "size": 8111250,
+      "sha256": "bf8672fddb6003e5f50c938d4ced1763c0ee58d6d56153baadbe6e4afd5b69bf",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B41.pdf",
+      "size": 8479646,
+      "sha256": "04b60ced64cac65c113d40ae74413f37f31adba9c078daa29aa35d8bfd2810a1",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B42.pdf",
+      "size": 11825037,
+      "sha256": "9ca3cab0a27f6f059e1e39d4b4e19599180dd92d5284c65ee0f32f70f903423e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B43.pdf",
+      "size": 10482291,
+      "sha256": "2a64b2131cec08305cd687440d992a4ed63d85b33ba6ab90cb2022a51ac615ef",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B44.pdf",
+      "size": 8106564,
+      "sha256": "37a2602b3f53963061137914e679a82f595cdc8158e7e409e9371b7e80b37cf9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B51.pdf",
+      "size": 8747413,
+      "sha256": "91a8936713565566f0bf6c5c1eeef0fee36bf0ca6391490a21b640ff452f6853",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B52.pdf",
+      "size": 11563681,
+      "sha256": "204717a21fe40231171b50a7a75cc1272a3b6faa6cdcb62b19cd2b93afaec66b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B53.pdf",
+      "size": 10844104,
+      "sha256": "1895b7c926b9fcd9ca18daa6dbab84bbaaac6f328e08a64eb5f56210267eaf20",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/B54.pdf",
+      "size": 8323468,
+      "sha256": "8a962c9c9b1824cb6323ca39c4f38cc836a27b039e72397beb9c59dd4631340d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C01.pdf",
+      "size": 9626427,
+      "sha256": "1bc22eb10dbc5bb804fe1c72023db0564d0e07dd3547a570fe8a2e53b4804f23",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C02.pdf",
+      "size": 11864563,
+      "sha256": "f8879c92b7718aafb5fe46d7a095569a8b7c6f41430050dbd27208d56ace04f4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C03.pdf",
+      "size": 10303005,
+      "sha256": "7534d17b93101e0e35e4b992778e24fa53af4a433b54f1128991e1433496dc66",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C04.pdf",
+      "size": 10702880,
+      "sha256": "46d9baa8dd9ed9e05f756c0caf3097a481966bbb220e3e0871c431849c78f7fa",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C11.pdf",
+      "size": 8135351,
+      "sha256": "6b0ef6f2cdf1b6340b54de75f0ca5d1fd31d079e4bb37f1a65ff988a885e1294",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C12.pdf",
+      "size": 10263143,
+      "sha256": "0f5d8cc45ce0dc3fe80e3f9feb46de0eabdda4c93289f3b56a96ab942dfe362a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C13.pdf",
+      "size": 7877347,
+      "sha256": "4708bdf8561086798ad36a24478df3038a0818deffa49d0211ca8f28102d9c33",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C14.pdf",
+      "size": 7869067,
+      "sha256": "c62cd46f8452f19247da11d9cf15692e3384cfe721998a5e0c5e342870505907",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C15.pdf",
+      "size": 9560160,
+      "sha256": "89b49ac0c59c27e57311cdd09119980df04ae251ed15de358b1072e2b5ca3de1",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C21.pdf",
+      "size": 7801468,
+      "sha256": "543833436cb10e0fd6dae49d9fe7b93b330edea30a57cd5f89fddc775f6ac962",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C22.pdf",
+      "size": 10192700,
+      "sha256": "c436f6da29c636977ec686b4ddb6402db416df1a814fde125c67dbf31f20966d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C23.pdf",
+      "size": 7798308,
+      "sha256": "d4357db5b48a5696e2a04f494243276c64ccfd916f1ab5aebe3bf88a3ded4c8b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C24.pdf",
+      "size": 7810648,
+      "sha256": "c1167ce0b86adba831f523ce9ec38f98b2f6b640b20ef97127cc3c752e7f35f0",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C25.pdf",
+      "size": 9450770,
+      "sha256": "e61e26329c1beff433221630097891985aff1e4cd5163d829a87654d26a8775e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C31.pdf",
+      "size": 7803040,
+      "sha256": "31820a31d53b58caf5d478c540cb54f7dbf796fc732db96cf6af727c5510b423",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C32.pdf",
+      "size": 10194373,
+      "sha256": "5fcc67692a040b23469848190dd229a4089ee882d9be5ead9a987c98ad30cf5d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C33.pdf",
+      "size": 7800235,
+      "sha256": "df3e85e4cbf14c5bbbae32a43f20aa9261b266f1b5e59badee719410267f28bc",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C34.pdf",
+      "size": 7811794,
+      "sha256": "cca2c08746d850cadebbcd751e39a4c98fc39ecf5f6ea96e7860491d7cbba031",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C35.pdf",
+      "size": 9452312,
+      "sha256": "e5e7d5f77ac0a293e3036adf493a4a6d818f156a346d584977fa9f63c2029065",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C41.pdf",
+      "size": 7797237,
+      "sha256": "81e883041e25117eedae5e1c79eabbea519646404cdd182090e69615c511b244",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C42.pdf",
+      "size": 10188958,
+      "sha256": "a1f6621d1e408c44e037394252687cb0e5feebc8116efef7904ce0b83992db8c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C43.pdf",
+      "size": 7790776,
+      "sha256": "86351eca3eef07a4e6692e951add9fd656f6f259140f7860313176f0ee2feec4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C44.pdf",
+      "size": 7806499,
+      "sha256": "17a8e4d858f0313c94dd8960ef90eed4869e5297ccf7d6398d0c1daf2c19efdf",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C45.pdf",
+      "size": 9450146,
+      "sha256": "a5573addc4f22edfaac7989aee3a89f35001c57eea96b1af171fddee83b9042c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C51.pdf",
+      "size": 8004216,
+      "sha256": "01a343a127694bd73143bbb4ac0804bf12017b00d755fdd1ea4db56031247cc1",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C52.pdf",
+      "size": 10424840,
+      "sha256": "8701559187a9335e561bcc1ec48a13543dca779d4c54fd0bdb73af2c4b614fe3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C53.pdf",
+      "size": 8924489,
+      "sha256": "36c1390fbb99d8e107081bd09f4a676e78306f96b663403fbd5d00d18283a98f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/C54.pdf",
+      "size": 10444928,
+      "sha256": "4f1688471f9bb07c5646a34113f5cde395848519b5edbe050667b3384c34d7ab",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D01.pdf",
+      "size": 11258899,
+      "sha256": "c5c350835d71272f8dbff376bc60f487802e0e3ed2bdc502603f61f7917572db",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D02.pdf",
+      "size": 9514878,
+      "sha256": "4dad0336caa1c378ea10efb573088346ff676a7246fafe18da99bebd1356c335",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D03.pdf",
+      "size": 12175587,
+      "sha256": "b82d666ee15146986b52ab9dd9b5cb812000b6cf5fadd433c45f4b066bf7a61b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D11.pdf",
+      "size": 7681014,
+      "sha256": "fa03513d7df5798a5c39d7a91a1adbca9c95727a395c4725fb1348be58b861d7",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D12.pdf",
+      "size": 7892844,
+      "sha256": "44fc801bf8fcd769c45b42cabcb79e56e46f079933e0fd25f27458541c98cb9b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D13.pdf",
+      "size": 7882038,
+      "sha256": "05e1f4b55ebacc24ad358d2443eff815edc90faa6ac6b8a0d63e5d9d1b0b0f85",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D14.pdf",
+      "size": 7876877,
+      "sha256": "d4d846795a2a5577ac7790f2458c665d4068faa843eff430cb1b23971bc993bd",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D15.pdf",
+      "size": 10277305,
+      "sha256": "02ea2210f0b46fd86405975e0f59ea5b8ce9f685db30925d8368b8d313bf8b1a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D16.pdf",
+      "size": 8071917,
+      "sha256": "2772522b371feb4448992fc16433c66c9846e762cc263df00d223e5337392297",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D21.pdf",
+      "size": 7614823,
+      "sha256": "5ed8a539b5b40deb8bc73430c7b07df6bf9374a580d474bfaa46c1dda5875733",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D22.pdf",
+      "size": 7840183,
+      "sha256": "cd92496359d3404cbf221dbbcb6a27820da71ec2c02f639eb1cc5bb70498dd25",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D23.pdf",
+      "size": 7783264,
+      "sha256": "b1a243d58274b97a2e1458bcd3411afc1a641818ba2f66d2e14d88add4e734df",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D24.pdf",
+      "size": 7758005,
+      "sha256": "ee2feb068e1e5059f28c53d6ed93cd89fb8831b012131a4182c46d7823fcd1de",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D25.pdf",
+      "size": 10115684,
+      "sha256": "1720db82e374befa4fce0403a2e64b63489b82b0a148e864957605899d3d4401",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D26.pdf",
+      "size": 7801820,
+      "sha256": "e8187244c68860a15d68ad0401f6733854f4fe07f8544b84543c8ff930811a91",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D31.pdf",
+      "size": 7616278,
+      "sha256": "e578fa3b7e0d25106c503712233e4bdc7acb28a7ce3a52720b4a3d2231bef16c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D32.pdf",
+      "size": 7842451,
+      "sha256": "68a01ad824e48a548a5913c886ca014f17ba521c5ad0aceefd9e98f92dd6a2f2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D33.pdf",
+      "size": 7785452,
+      "sha256": "41b944c2edd1a37e6ef5689fb83e5f12a91bdd00bf23f8366f535fd28d70e3b5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D34.pdf",
+      "size": 7759865,
+      "sha256": "38d59a1167c50193dd0bec5aac8a73dbc9c037eea86944a3b958c2ab12757c10",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D35.pdf",
+      "size": 10120652,
+      "sha256": "1d638e795709b853cada079c940f82d1853618b5b0a2b9fcdc35e112f77148af",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D36.pdf",
+      "size": 7803611,
+      "sha256": "c5631a6af08edd8979b579ac4ebcf914625c622be7a7f21293eedaa0d7a95255",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D41.pdf",
+      "size": 7612000,
+      "sha256": "d954b9ccaaae9b886586e9147a6fc764234732559164e34e4ed81b3abd13c4a3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D42.pdf",
+      "size": 7837666,
+      "sha256": "2aef31c4b56be7d0b58b822e20b0e71750a8357eae8c53368a20553acc503506",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D43.pdf",
+      "size": 7780366,
+      "sha256": "dbf06214c1897445bd81e5414800efd628715b2b25a19e7434ee7248ab18b4d2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D44.pdf",
+      "size": 7758514,
+      "sha256": "b4691dd9c1f2d1b5e9fe65ccbc4642da247dbdc24588ec51eaf667200c3935b0",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D45.pdf",
+      "size": 10115590,
+      "sha256": "6a0f505569f77d419f610a07e23f213e812aba840f038c5f6cc3b75119b6e383",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D46.pdf",
+      "size": 11876168,
+      "sha256": "3ad25b5b41b72dd45ca67436be400987bdcc14291028949e43650d0fa079e53d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D51.pdf",
+      "size": 10378557,
+      "sha256": "7b8905fe6c01fd2e4489c42b808eed341387fee5c61c88346146eee27892d4dc",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D52.pdf",
+      "size": 9614545,
+      "sha256": "9084268b9a90cd5d7522b901a3493be217118d648949a17c4a9ad9f03c48dffd",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D53.pdf",
+      "size": 10367719,
+      "sha256": "d088c51b9420465fe72d6213485fb4b08f6a32297c3d594022dfb8788b817a00",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/D54.pdf",
+      "size": 8035300,
+      "sha256": "5eadc9419ff99f1160123611b35e4c42998a0e1eec812162c5bb937c5c519825",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PGARDEBLOCA.pdf",
+      "size": 11880201,
+      "sha256": "6d518e30bf38e9ad582176055b16797d3a54ace43e1f646c748721bd576d40ba",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PGARDEBLOCB.pdf",
+      "size": 11967740,
+      "sha256": "5448fb7d7907e9b3bb7e57e1428ec9a3e77d4bcc6f27ecce0fa82a16661b10b6",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PGARDEBLOCC.pdf",
+      "size": 11899023,
+      "sha256": "419bc7bf4f57fb80a373a4e3466ccf57f98121b22dcf2b0eb67ca564c14e3cd0",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PGARDEBLOCD.pdf",
+      "size": 11919324,
+      "sha256": "0de134d00747d8dc9931a49941cb42b2666b430bef5eb0f626555355bb07c2b9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PLANCHE1ETAGE.pdf",
+      "size": 84662004,
+      "sha256": "ef07b54082ab23840ad1cee2fc454f1e4e02902a4b87c3197e7820693ece816c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PLANCHE2ETAGE.pdf",
+      "size": 83429243,
+      "sha256": "2819d4fbe08cc59c63727386b3faa5af29a2f9cf00dd64dea4e45e202554a4c5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PLANCHE3ETAGE.pdf",
+      "size": 83438154,
+      "sha256": "e2f7681d84ed9f555f8c14b7d18b4af4ab5c7a3190fab2a340b8d23926511c3a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PLANCHE4ETAGE.pdf",
+      "size": 83418546,
+      "sha256": "257b2903189f5e182a552744aac286f6c36dff634b98eb64fff1b804aad72e24",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PLANCHE5ETAGE.pdf",
+      "size": 82442266,
+      "sha256": "dd37762ec86c91448d59199f8bdb5a42493b5c49717f86f3d4df3f903072eb1f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PLANCHERDC.pdf",
+      "size": 104611954,
+      "sha256": "92898e435b04fe325d7d4dbee85fe020bd58e9f523ea0cd0c710baf3d5fc771c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/PLANCHESOUS-SOL.pdf",
+      "size": 59117099,
+      "sha256": "58f3670809cff9cc430d044961a8f52c5c45a6c1d1ea7db8ee13e38573dafa1f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PGARDEBLOCA.pdf",
+      "size": 4492461,
+      "sha256": "1516e7da6b168a30cf664af4aac15c1142080e7cc60bb2678693735742d3692f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PGARDEBLOCB.pdf",
+      "size": 4502206,
+      "sha256": "1b3cd8e979bd75d415ba828e4c0ab7156fdcc7bcaed541518bf36b763be07490",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PGARDEBLOCC.pdf",
+      "size": 4502291,
+      "sha256": "2edb5f5a37c9e987e255767f9e00a44628c9b5302f4e6a750460a888988c57a7",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PGARDEBLOCD.pdf",
+      "size": 4514134,
+      "sha256": "73ba87eba6a7dafeecaab85646ab3044c0882ce499e294dbba377216f4a61847",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PLANCHE1ETAGE.pdf",
+      "size": 6399914,
+      "sha256": "7dec9b359e5c1b72fea774bd34e01e82557c225ed18cf59baa6d528e5ea78483",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PLANCHE2ETAGE.pdf",
+      "size": 6344735,
+      "sha256": "36e946ce24b3edcc2fc6c7c73fca652a03d9be4981fd0cc49936e218ec625012",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PLANCHE3ETAGE.pdf",
+      "size": 6324763,
+      "sha256": "35063f800319517863687dbb7ebcc7c99e8db4aec5e839f0e068104f1fb30157",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PLANCHE4ETAGE.pdf",
+      "size": 6321841,
+      "sha256": "42c1344fa73d5af10ffbc71b9dcff1eb1828e13ece5d34026728035faacd0e49",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PLANCHE5ETAGE.pdf",
+      "size": 6397842,
+      "sha256": "fb62b5d18cf245c20f646249bdb39562d88e97f25c54e96170511a3f412ec9bc",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PLANCHERDC.pdf",
+      "size": 7831784,
+      "sha256": "9b960fa911cfed52a8513318e3c98ffac5aef9c09ca41f7342f8b594c9698230",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/ensemble/presentation/PLANCHESOUS-SOL.pdf",
+      "size": 5525899,
+      "sha256": "83c1140eb5851e86fd0e1ebde9aaedd7381ee09943aac7462df78d15add8dd63",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A01.pdf",
+      "size": 1515482,
+      "sha256": "a9a94a9be24ae6b6481b7c9a5396ddfdaf0a76f147b5a09cea4c0fa87e961788",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A02.pdf",
+      "size": 1954838,
+      "sha256": "fca322dd7e596dbff284489bf5035db4ae3f4c3b0528ed5c353b434b51d834b7",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A03.pdf",
+      "size": 2357322,
+      "sha256": "f37e0d1059c6e4fe13921bf64d86c34e9da82814e5a5149b977e1f431a84adf0",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A11.pdf",
+      "size": 1364346,
+      "sha256": "92769437b0bb67133de1fc5807bca2a26d779a3e1d3a8a240737996c29ef0d95",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A12.pdf",
+      "size": 1692223,
+      "sha256": "fd0c390700c34bf332fa9901dcab8c1c9acd1199befd0cd60f1b06e8d5df27f5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A13.pdf",
+      "size": 1649742,
+      "sha256": "220bb9d923c73935b821517359dd07808556e71f28c1f6612a249f0399d1607f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A14.pdf",
+      "size": 1368138,
+      "sha256": "9963932a2d4f920afa2e309914280f10575e0285e226ad9168aff4912568c624",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A21.pdf",
+      "size": 1356611,
+      "sha256": "ad57e3eba18dc8033ffe75e5f99ee16d2c5fc170a9697053f323769bd46deacc",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A22.pdf",
+      "size": 1685663,
+      "sha256": "8c3470b93bc3878b6c617a226f1d23f5352a6fde83a2bf504c011830e9b0f385",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A23.pdf",
+      "size": 1634341,
+      "sha256": "e2700c26bb400b59ba73f9fe918c25dddae4ea59bb505f44cbeeec3b3e165a08",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A24.pdf",
+      "size": 1365963,
+      "sha256": "38492bcaa771026116c64bf0da2ff27c6e8312221f523ffd77c73f30afa9868d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A31.pdf",
+      "size": 1357127,
+      "sha256": "e700e9ee9c530d3927dd9e191fe8a82a2633fdcfaae9fdc2774efaa9754b1693",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A32.pdf",
+      "size": 1685892,
+      "sha256": "1d4ec4c8f7bcd5b2987ac9e7eebbd63aa018328a6b48674446ecb14bd6dc92e8",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A33.pdf",
+      "size": 1634694,
+      "sha256": "e4049a130ac753e7661d2cd915afdd7fe3b0e035a8c4676a62700b2382b99e3e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A34.pdf",
+      "size": 1364255,
+      "sha256": "d9f63e011cfcc5d16af5569615615c4143489154795c00112027eb2e7596e125",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A41.pdf",
+      "size": 1355951,
+      "sha256": "485db889d9dff72303d24af483e6b43e3413eb589d1e97efd632372c9e722114",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A42.pdf",
+      "size": 1681932,
+      "sha256": "7c81631b4e8b84dca36d1bf85bb6975915be49a0fbf1febf87d52a8b61ca33c1",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A43.pdf",
+      "size": 1633742,
+      "sha256": "ba654050a5aaeea38c0484ad3f48b2fef436906e44c63004180b4b371c2518ac",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A44.pdf",
+      "size": 1365138,
+      "sha256": "03446b8edfaa4918a591aad3fedc0be5bd3c490f62b89255a9769133b7c7da69",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A51.pdf",
+      "size": 1374998,
+      "sha256": "78c5f30617ebe445c2f8dd4267f2584bdbe96a783c25b29aa612471bbf21578e",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A52.pdf",
+      "size": 1727476,
+      "sha256": "f7f9ed573dd68c80f7d378e3c1c63ea35f9f97e44e4dee7d75877f46e8a90ad4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/A53.pdf",
+      "size": 1934904,
+      "sha256": "98d3f1aa7906051a3c6dc2bf73d1e7210279f3acdc2934387a323d5cbf251a9b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B01.pdf",
+      "size": 1631409,
+      "sha256": "88cdca4bba6962516073399be1fcf3ec91afbc45676f8c8d45772a4a5099ea8d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B02.pdf",
+      "size": 2235317,
+      "sha256": "42621b39e5b5640bc6b750a635826179c343c5151db60beea1f32c016a7fa0e2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B11.pdf",
+      "size": 1409448,
+      "sha256": "cdd0b5ff71b5087db2e9cf231831e5f0b60b1327638680b4e1e78d6ad49e0502",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B12.pdf",
+      "size": 1905430,
+      "sha256": "5cf64ae4220176b1fad6e9c1081c315344724cbc3c8276391bd37906cba5c822",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B13.pdf",
+      "size": 1685761,
+      "sha256": "eefe5fe0c5f581a24b3b309515895e9c25e1227b36df4836183b9b87877d1942",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B21.pdf",
+      "size": 1401261,
+      "sha256": "fc8fc1ea33efe872665d28fb760a5f81f291b351481ce7b98261847f3b487fa5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B22.pdf",
+      "size": 1862445,
+      "sha256": "6d52c91a24d66a06fd9002e9f452253ebd2dc6044d9c7df6205094f333828faa",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B23.pdf",
+      "size": 1677685,
+      "sha256": "de7f9cae77ea467647733aa6c52971c3f2221bbd932d597dcbe7247a2c2d49a3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B24.pdf",
+      "size": 1360294,
+      "sha256": "a6a74f470d2ac96fdaf38d0248a6c31e11a054893e8b56a22b3e1a82b903e66d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B31.pdf",
+      "size": 1401544,
+      "sha256": "31b75b885298d2d004b8ccff1a4317285bd5ffd5c72e750e838aae5bd9cef476",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B32.pdf",
+      "size": 1865565,
+      "sha256": "c88fe4b42a72f318f5defc8dafb03c7e736f647b68234dded63e6a98a165fe0d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B33.pdf",
+      "size": 1678128,
+      "sha256": "75d16fa50315c4ccb2c2e7c2a4aa60a1a947705bae1d4bc6e4938ab24ee55359",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B34.pdf",
+      "size": 1360919,
+      "sha256": "cd1faaff0a2d4fcf9d65f7c0739e80980996978a9794d2a7a8cf2b300d3e84a5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B41.pdf",
+      "size": 1400054,
+      "sha256": "9a4150e2aa03d995c0c6867b76b0aeeca0c65dd50a0a7d43b9ba178cfb1e1565",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B42.pdf",
+      "size": 1864152,
+      "sha256": "426ac92516c2ee2c81d4b889288bd001cf17811402937edf4670ffe30574f67f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B43.pdf",
+      "size": 1674796,
+      "sha256": "38249daf495c6863d5a18e8bdd1f51a9561f80d1dcb5c37df907ed2dc7878a41",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B44.pdf",
+      "size": 1361602,
+      "sha256": "8dd8d0034460812cb7bd945aee94684dadaee023ea99f614eb51be2a767f136c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B51.pdf",
+      "size": 1472437,
+      "sha256": "ed6bfcfc35014ebe472aa2b70122fe1e950b3abe7be84c1230160133a6565d71",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B52.pdf",
+      "size": 1883608,
+      "sha256": "8f314e6046f8d03193cfc28e7cb422aad09dab38a55c6de2455dffd4822bc70c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B53.pdf",
+      "size": 1745535,
+      "sha256": "156668d8cae417749d01439595f625e91e554a3c362b2afb83128df017a04dfd",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/B54.pdf",
+      "size": 1381251,
+      "sha256": "16738dda5cf089646f7ed36349a95050e0cbfdbb2b57a9c5e2c041bbf0b96ca9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C01.pdf",
+      "size": 1568030,
+      "sha256": "f161ecced28e57230dfc1d573bb7e65578602244bd732af5eb59ed958ed2d97a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C02.pdf",
+      "size": 1870523,
+      "sha256": "1cb746e4c182fd33d60c1b7e2bcd8329e63e611ecb2ed0934c0b5ed34baad0b0",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C03.pdf",
+      "size": 1696169,
+      "sha256": "45ccb60e4351ec5eb2a6c0e8fa89f43431b34223bd25f693c55464ea4feeb889",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C04.pdf",
+      "size": 1725550,
+      "sha256": "3541d9d3a91e336195c4c409c0af470a1be4547a5882323e4830e2887a2a0706",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C11.pdf",
+      "size": 1401086,
+      "sha256": "c496afd47e8c3e7ff78957dc909b598e1737ad50a7227d3046e459d3beb16d67",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C12.pdf",
+      "size": 1623987,
+      "sha256": "7e34606347a78f91c62f3c430faf5f1e04a21cd29077e9ad6ae9e2a5567d35b2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C13.pdf",
+      "size": 1370915,
+      "sha256": "af9cb0e8ea526d0d45b211bb1cd9a9288a510e4c7c9a2b5dfd66c7b99dcd4205",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C14.pdf",
+      "size": 1370385,
+      "sha256": "812144b7f68ea7650f9cb1569c3ee8368de7fdc12c7719c4a75651d03b79657f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C15.pdf",
+      "size": 1542210,
+      "sha256": "c21b0c426a366a1bcf318e8fa5a81ea7c40bcb8fa8ae2ae9be1755ad98e316e9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C21.pdf",
+      "size": 1361111,
+      "sha256": "e11f7f68393a5ffc8fbbcc509ba6485d319cc2614ecb244dee807ac7bfc1e2ce",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C22.pdf",
+      "size": 1623371,
+      "sha256": "fa8eee76fa1224ed49294d58b3c5f638ea97198b01836ef7ccea697ef4b7d42f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C23.pdf",
+      "size": 1368710,
+      "sha256": "8b0f4f5dec3aee07f85ef35328ff065cb0fc2852a13a5aa7378ffe1f28f0ae53",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C24.pdf",
+      "size": 1372571,
+      "sha256": "52a454817f226c4e554fadfe3d4b81784f41d2cb7236e5415330e4409d92ac53",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C25.pdf",
+      "size": 1535812,
+      "sha256": "0a17a12ff19a0a319be6682d34cdca049926751f22f7d81b01573ec32cdf3d13",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C31.pdf",
+      "size": 1360193,
+      "sha256": "1e29ea5e837eed3c39f5add5477af9e3721145762c6bbbfbfdee3c2a942b48bf",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C32.pdf",
+      "size": 1623465,
+      "sha256": "a19282fcb2735d59ecdc4e6f9d6e4bb7f0b0935f482d9ff45b45c030153dec84",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C33.pdf",
+      "size": 1369078,
+      "sha256": "3a053848bba69cae53dde5fc5f0696f26fb1ac6132c0b8677e222aef4c941033",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C34.pdf",
+      "size": 1372710,
+      "sha256": "28eb5832f6667f069e34fea81edf05966606c3e0d8b4fbc0f63ec04a45de6de6",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C35.pdf",
+      "size": 1536024,
+      "sha256": "45eda7664a28a07e214a5744bd82eea3f59bba69243321252e86214956588456",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C41.pdf",
+      "size": 1359600,
+      "sha256": "feb06f635cbe64f1faf7a0961ee180e80f6c6de9389623cb371a3354b63db9f9",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C42.pdf",
+      "size": 1622906,
+      "sha256": "d0cebe809da5fe1e93eaabb5aa84eaebbc2b2af29254ae001ce879bd1bdaeb30",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C43.pdf",
+      "size": 1368247,
+      "sha256": "973ce7b841e5cabee014a5c3f944f3980a7cc50cff22bf9c057fdb6e2fdf3a20",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C44.pdf",
+      "size": 1371207,
+      "sha256": "ccfc900b5d800ccc2a000662ba916e943db3ee5bd722f0329164a0d69cadcfc4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C45.pdf",
+      "size": 1536226,
+      "sha256": "b9a7734349d9b2668c621c98edd73ffcbcf5d7ac79e4e91ef82282073cde75e5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C51.pdf",
+      "size": 1382660,
+      "sha256": "70964a9f18f45a79cbcc8054f3222020e911983fe61010d32a303b5632998e60",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C52.pdf",
+      "size": 1659136,
+      "sha256": "01eb69372d9dc749befe14ec102db505ee8d68c5cef968ec1a0310662b5e53cb",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C53.pdf",
+      "size": 1549117,
+      "sha256": "bb2582ed1e94cfc89846c8f1f5d692ee29fc824505277a2ba42f0416cda5447d",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/C54.pdf",
+      "size": 1689569,
+      "sha256": "5effb6490db969b28cfb71cec31d13e02808b651e05b0e3808adcd9efb3f01e3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D01.pdf",
+      "size": 1803562,
+      "sha256": "a7fbe62afbde7364c1508b09c19e8549929507480bba3b4cbd521f639ec9b4c2",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D02.pdf",
+      "size": 1591156,
+      "sha256": "4b3d13c632e65599606e8f0178af50453cd8bc0099d6cbdcfe0fe51bbd3f132c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D03.pdf",
+      "size": 1911756,
+      "sha256": "ba8d6dcae849805a39010922910e9f5febff45adac6693e32658bff919fcad49",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D11.pdf",
+      "size": 1346215,
+      "sha256": "399a6fa6594045c1c95108ed66d2e9f39c28af2ecbd53fd6dfb34d59bf5525ce",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D12.pdf",
+      "size": 1368619,
+      "sha256": "6f2172932761f178540ec917151361018bd46d6848a724526ae65c4dde5d1535",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D13.pdf",
+      "size": 1371203,
+      "sha256": "f0ba96c977444acd789d5eaeb2db2c0454e4af43465f7eea377c0ccd9de80a5c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D14.pdf",
+      "size": 1367173,
+      "sha256": "0f782503975fa684dd42964c1f85efb72a699a9224c4e759c2a0791d87f65ee3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D15.pdf",
+      "size": 1619455,
+      "sha256": "2eebd2d94bb3d6e4ab32eb3792cf17a3be802fc5cf70410e286e3594a724dbd3",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D16.pdf",
+      "size": 1387795,
+      "sha256": "776c4e02d5af89ac95c86b1abc894dc7d1140e5f00c43715b7ff2b023748d9f4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D21.pdf",
+      "size": 1342765,
+      "sha256": "42907d55bca896577c56cc7e6cf5e732d110aca5ba106df14c3bedf29cd3ead7",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D22.pdf",
+      "size": 1372841,
+      "sha256": "c422abf76122c94f24e1eb76b91d1d6f15ff52ca99f4b61253421fe9e0b78148",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D23.pdf",
+      "size": 1365790,
+      "sha256": "c5e11fa04e71c87ab61e1270714908bd18511816f85dbd76699275b0f6c030d6",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D24.pdf",
+      "size": 1361989,
+      "sha256": "77f246cdb2767af906937b1e7bdbcadc8255a5fc9b5bd1a3e7122cc6a0e5a311",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D25.pdf",
+      "size": 1609880,
+      "sha256": "932c5e96423722a3a24670d64ad3a28b996dfd63bd279b894309cda35705bdd5",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D26.pdf",
+      "size": 1364445,
+      "sha256": "abbb65ab4730fd29f6a97fd11496b52022a26ca0a79f28450599e4834d415c2f",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D31.pdf",
+      "size": 1342183,
+      "sha256": "2ce7e408e9f4a179687295deef497244cf59f7770c503f736c992ac85ea92720",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D32.pdf",
+      "size": 1373553,
+      "sha256": "c21415994a609fd45723642b76714be2d8cc2e48375453ce36bad1cb16dc6b1c",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D33.pdf",
+      "size": 1366319,
+      "sha256": "b183847f100685b11f016b524078404c4a117a959b7a5d99de82affdbd3c5829",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D34.pdf",
+      "size": 1361851,
+      "sha256": "9bbe2bbc0f14ba1057439346a4c7f45204361058f018226235e6c8058044c164",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D35.pdf",
+      "size": 1610383,
+      "sha256": "697162d4dfae01d60f8549b32d7fba4c85f4e54c8af42b2f709eff241f26f199",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D36.pdf",
+      "size": 1364380,
+      "sha256": "920fc8fdaab92d5cb72d44f0d0d340c2f1f6b432d1e330891cd2b72368cab2ca",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D41.pdf",
+      "size": 1341471,
+      "sha256": "518613468456c1a87b03041c9f9d91afd157893f84436aae582865737a3cf708",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D42.pdf",
+      "size": 1373137,
+      "sha256": "dd015f06aae7cf9418b9d3fbf9f6db688a5c8d71e1155b1db51a815c6fd5d66a",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D43.pdf",
+      "size": 1365395,
+      "sha256": "9d6db6a4c6f5c70940b3aa0585480b0e0563b98056a0a57783883e2c5860ece7",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D44.pdf",
+      "size": 1361985,
+      "sha256": "408d12b45a73442e94775fa36e3c37dbea5e31c0e725bd02f1924da90fa67607",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D45.pdf",
+      "size": 1609393,
+      "sha256": "4ba2a09a3da0782a08c80b63a31a92f5251b448daf1578fb47456822573db839",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D46.pdf",
+      "size": 1363365,
+      "sha256": "da9881c25f610cd3e3ef494416633d5c7bacd763db3a3cdc01a1fb4e55df15e4",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D51.pdf",
+      "size": 1677807,
+      "sha256": "7d03de6983edf547d53cb3d0695f40d3b41b8332c07808f4ec69f3bf8705002b",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D52.pdf",
+      "size": 1626492,
+      "sha256": "41e3da778d797d7490d023f812edcd0d1028890cf14e6336e66ad60d3e18adeb",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D53.pdf",
+      "size": 1648964,
+      "sha256": "316b356d0fc096ae22849c6cbd12a1f6bf4379edc8b65673e0fd5c9ae61e7b85",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    },
+    {
+      "path": "source-assets/plans/la-gloire/presentation/D54.pdf",
+      "size": 1382789,
+      "sha256": "3954749657634d29997bc71abe30463eee80d060bb8f572520f312696e85af41",
+      "classification": "owner-review-required",
+      "previouslyPublished": true
+    }
+  ]
+}

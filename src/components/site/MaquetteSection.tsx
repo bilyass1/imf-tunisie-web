@@ -43,6 +43,7 @@ export default function MaquetteSection({
   const router = useRouter();
   const isLaGloire = projectSlug === 'residence-la-gloire';
   const [view, setView] = useState<'architect' | 'availability'>('availability');
+  const [sceneRef,setSceneRef]=useState(selectedRef);
   const [apartmentRef, setApartmentRef] = useState(selectedRef ?? lots[0]?.ref ?? '');
   const apartmentCopy = locale === 'en'
     ? { label: 'Apartment', open: 'Open apartment details', pick: 'Select on the interactive plan' }
@@ -66,23 +67,23 @@ export default function MaquetteSection({
       lots={lots}
       massing={displayMassing}
       labels={labels}
-      selectedRef={selectedRef}
+      selectedRef={sceneRef}
       initialMode={isLaGloire ? 'commercial' : 'realistic'}
       hideModeToggle={isLaGloire}
       onSelect={(ref) => router.push(`/${locale}/projets/${projectSlug}/appartements/${ref}`)}
     />}
-      {isLaGloire && view === 'architect' && <div className="flex flex-wrap items-end gap-4 rounded-b-2xl bg-ink p-5 text-ivory">
+      <div className="flex flex-wrap items-end gap-4 rounded-b-2xl bg-ink p-5 text-ivory">
         <label className="flex min-w-56 flex-col gap-2 text-sm">
           <span>{apartmentCopy.label}</span>
-          <select className="rounded-lg border border-white/25 bg-ink px-3 py-3 text-ivory" value={apartmentRef} onChange={event => setApartmentRef(event.target.value)}>
+          <select className="rounded-lg border border-white/25 bg-ink px-3 py-3 text-ivory" value={apartmentRef} onChange={event => {const selected=lots.find(lot=>lot.ref===event.target.value);if(selected){setApartmentRef(selected.ref);setSceneRef(selected.ref);}}}>
             {Array.from(new Set(lots.map(lot => lot.block))).map(block => <optgroup key={block} label={`Bloc ${block}`}>
-              {lots.filter(lot => lot.block === block).map(lot => <option key={lot.ref} value={lot.ref}>{lot.code} · {lot.typology} · {lot.floor === 0 ? 'RDC' : `R+${lot.floor}`}</option>)}
+              {lots.filter(lot => lot.block === block).map(lot => <option key={lot.ref} value={lot.ref}>{lot.code} · {lot.typology} · {lot.floor === 0 ? 'RDC' : `R+${lot.floor}`} · {lot.sellableArea ?? '—'} m² · {labels.legend[lot.status]}</option>)}
             </optgroup>)}
           </select>
         </label>
-        {apartmentRef && <Link className="btn-gold" href={`/${locale}/projets/${projectSlug}/appartements/${apartmentRef}`}>{apartmentCopy.open} →</Link>}
-        <button type="button" className="rounded-lg border border-white/25 px-4 py-3 text-sm hover:bg-white/10" onClick={() => setView('availability')}>{apartmentCopy.pick}</button>
-      </div>}
+        {apartmentRef && <Link className="btn-gold" href={`/${locale}/projets/${projectSlug}/appartements/${encodeURIComponent(apartmentRef)}`}>{apartmentCopy.open} →</Link>}
+
+      </div>
     </div>
   );
 }

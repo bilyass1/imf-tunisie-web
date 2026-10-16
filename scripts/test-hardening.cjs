@@ -43,6 +43,13 @@ function load(file,imports,env={},globals={}){const mod={exports:{}};vm.runInNew
  const sessionsModule=load('src/lib/session.ts',{'next/headers':{},'./db':{getAuthUserById:async()=>({id:'admin-fixture',role:'admin',authVersion:1})},'./postgres-store.cjs':{}},{NODE_ENV:'production'});
  await assert.rejects(()=>sessionsModule.createSession({sub:'admin-fixture',email:'admin@example.test',name:'Fixture',role:'admin',authVersion:1}),/Clé de sécurité/);
  await assert.rejects(()=>sessionsModule.createSession({sub:'admin-fixture',email:'admin@example.test',name:'Fixture',role:'admin',authVersion:0,mfa:true}),/compte a changé/);
+ const {evaluate}=require('./check-development-audit.cjs');
+ const report=(url,name='braces')=>({metadata:{vulnerabilities:{high:1}},vulnerabilities:{parent:{severity:'high',via:[name]},[name]:{severity:'high',via:[{severity:'high',name,url}]}}});
+ assert.equal(evaluate(report('https://github.com/advisories/GHSA-vfj7-8cjw-p6xm')).knownUnpatchedBuildAdvisories.length,1);
+ assert.throws(()=>evaluate(report('https://github.com/advisories/GHSA-new-new-new')),/New dependency/);
+ assert.throws(()=>evaluate(report('https://github.com/advisories/GHSA-vfj7-8cjw-p6xm','unrelated-package')),/New dependency/);
+ assert.throws(()=>evaluate({error:{message:'Unavailable'}}),/unavailable/);
+ const temporary=require('tmp').dirSync({prefix:'quality-toolchain-'});assert(fs.statSync(temporary.name).isDirectory());temporary.removeCallback();assert(/^[a-f0-9-]{36}$/.test(require('uuid').v4()));const ftp=new (require('basic-ftp').Client)(100);ftp.close();
  const directory=require('node:fs').mkdtempSync(require('node:path').join(require('node:os').tmpdir(),'imf-sarif-'));
  try{for(const high of [false,true]){
   fs.writeFileSync(require('node:path').join(directory,'fixture.sarif'),JSON.stringify({runs:[{tool:{driver:{rules:[]},extensions:[{rules:[{id:'fixture',properties:{'security-severity':'8.0'}}]}]},results:high?[{ruleId:'fixture',level:'warning'}]:[]}]}));

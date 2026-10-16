@@ -29,6 +29,13 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
       - run: npm audit --omit=dev --audit-level=high
+      - run: node scripts/check-development-audit.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: development-audit
+          path: artifacts/development-audit.json
+          retention-days: 30
       - run: npm sbom --omit=dev --sbom-format=cyclonedx > sbom.runtime.cdx.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -96,6 +103,7 @@ jobs:
           --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
     env:
       DATABASE_URL: postgres://postgres@localhost:5432/imf_lighthouse_test
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
       LHCI_DEVICE: ${{ matrix.device }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803

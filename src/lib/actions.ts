@@ -1,9 +1,10 @@
 'use server';
 
+import { beginAdminAuthentication } from './admin-passkeys';
 import bcrypt from 'bcryptjs';
 import { sendChatMessage } from './chat-actions';
 import { isLocale } from '@/i18n/config';
-import { allowRequest } from './rate-limit';
+import { allowAnonymous } from './anonymous-limits';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import {
@@ -36,6 +37,7 @@ export interface FormState {
   ok: boolean;
   error?: string;
   done?: boolean;
+  mfa?: Awaited<ReturnType<typeof beginAdminAuthentication>>;
 }
 
 /* ------------------------- Formulaire contact ------------------------ */
@@ -57,7 +59,7 @@ export async function submitLeadAction(_prev: FormState, formData: FormData): Pr
   }
 
   try {
-    if(!await allowRequest('contact-global','all',30,60000)||!await allowRequest('contact',phone,5,3600000)) return {ok:false,error:'server'};
+    if(!await allowAnonymous('contact',phone)) return {ok:false,error:'server'};
     for(const key of ['project','lot','budget']) if(String(formData.get(key)??'').length>200) return {ok:false,error:'required'};
     (await captureWebLead({
       name,
@@ -86,16 +88,21 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   const locale = isLocale(rawLocale)?rawLocale:'fr';
   const scope = String(formData.get('scope') ?? 'client');
 
-  if(!email || email.length>254 || !password || password.length>1024 || !await allowRequest('login-global','all',100,60000) || !await allowRequest('login-account',email,10,600000)) return {ok:false,error:'invalid'};
+  if(!email || email.length>254 || !password || password.length>1024 || !await allowAnonymous('login',email)) return {ok:false,error:'invalid'};
 
   const user = (await getAuthUserByEmail(email));
-  if (password.length>1024 || !user || !await bcrypt.compare(password, user.passwordHash)) {
+  // A deliberately unusable fixed hash makes unknown identities pay the same bcrypt cost.
+  const valid=await bcrypt.compare(password,user?.passwordHash??'$2a$12$1QwBIXCI6JX8YRtWpzERIu5Y0IPaLWtIyp7fy.DwcbcEyRPAaRnxS');
+  if (!user || !valid) {
     return { ok: false, error: 'invalid' };
   }
-  if (scope === 'admin' && user.role !== 'admin') {
+  if ((scope === 'admin') !== (user.role === 'admin')) {
     return { ok: false, error: 'invalid' };
   }
 
+  if(user.role==='admin' && (process.env.NODE_ENV==='production'||process.env.APP_ORIGIN)) {
+    try{return {ok:false,mfa:await beginAdminAuthentication(user,String(formData.get('enrollmentToken')??''))};}catch{return {ok:false,error:'invalid'};}
+  }
   await createSession({ sub: user.id, email: user.email, name: user.name, role: user.role });
 
   redirect(user.role === 'admin' && scope === 'admin' ? `/${locale}/admin` : `/${locale}/espace-client`);

@@ -19,10 +19,10 @@ for (const lot of YASSAMINE_A5B_LOTS) {
   assert.equal(lot.status, 'available');
   assert.equal(lot.price, undefined);
   assert.ok(lot.sellableArea > lot.grossArea);
-  assert.ok(fs.statSync(`source-assets${lot.planUrl}`).size > 1000, lot.planUrl);
+  assert.ok(require('../docs/source-archive-inventory.json').files.find(item=>item.path===`source-assets${lot.planUrl}`).size > 1000, lot.planUrl);
   assert.ok(fs.statSync(`public${lot.planImage}`).size > 1000, lot.planImage);
   const floorSheet = `A5b-${lot.floor === 0 ? 0 : 1}`;
-  assert.ok(fs.statSync(`source-assets/models/yassamine/presentation/${floorSheet}.pdf`).size > 1000);
+  assert.ok(require('../docs/source-archive-inventory.json').files.find(item=>item.path===`source-assets/models/yassamine/presentation/${floorSheet}.pdf`).size > 1000);
 }
 assert.equal(YASSAMINE_A5B_LOTS.find(lot => lot.ref === 'A5b03').typology, 'S+1');
 assert.equal(YASSAMINE_A5B_LOTS.find(lot => lot.ref === 'A5b05').terraceArea, 15.86);

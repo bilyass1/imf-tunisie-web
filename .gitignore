@@ -19,3 +19,13 @@ tmp/
 .imf-source-assets/
 public/**/*.preview.webp
 public/**/*.web.pdf
+
+# Original technical masters belong in a private archive, never in Git or deployments.
+source-assets/
+playwright-report/
+test-results/
+
+qa/
+.env.*.local
+
+sbom.*.json

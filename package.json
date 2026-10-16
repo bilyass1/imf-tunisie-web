@@ -21,12 +21,21 @@
     "db:validate": "node scripts/postgres.cjs validate",
     "admin:create": "node scripts/create-admin.cjs",
     "assets:web-documents": "node scripts/prepare-web-documents.mjs",
-    "predev": "node scripts/prepare-public-assets.mjs && node scripts/prepare-web-documents.mjs"
+    "predev": "node scripts/prepare-public-assets.mjs && node scripts/prepare-web-documents.mjs",
+    "ops:check": "node scripts/check-production.cjs",
+    "test:e2e": "playwright test",
+    "test:hardening": "node scripts/test-hardening.cjs",
+    "catalog:seed": "node scripts/catalog-seed.cjs",
+    "check:sources": "node scripts/check-source-policy.cjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1152.0",
+    "@simplewebauthn/browser": "^14.0.0",
+    "@simplewebauthn/server": "^14.0.3",
     "@vercel/analytics": "^2.0.1",
     "@vercel/functions": "^3.9.8",
     "bcryptjs": "2.4.3",
+    "ipaddr.js": "^2.5.0",
     "jose": "5.9.6",
     "next": "^15.5.28",
     "pdf-lib": "^1.17.1",
@@ -39,6 +48,7 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
     "@eslint/eslintrc": "^3.3.7",
+    "@playwright/test": "^1.64.1",
     "@types/bcryptjs": "2.4.6",
     "@types/node": "22.10.7",
     "@types/pg": "^8.23.1",
@@ -49,10 +59,11 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.25",
     "postcss": "8.5.28",
-    "tailwindcss": "3.4.17",
+    "tailwindcss": "3.4.19",
     "typescript": "5.7.3"
   },
   "overrides": {
-    "postcss": "8.5.28"
+    "postcss": "8.5.28",
+    "postcss-selector-parser": "7.1.6"
   }
 }

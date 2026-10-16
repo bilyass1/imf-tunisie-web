@@ -8,7 +8,7 @@ function rows(db){
  for(const p of db.projects)for(const l of p.lots){const key=JSON.stringify([p.slug,l.ref]);if(lots.has(key))throw new Error('Appartement dupliqué.');lots.add(key);}
  for(const u of db.users){
   if(users.has(u.id)||emails.has(u.email.toLowerCase()))throw new Error('Compte ou e-mail dupliqué.');users.add(u.id);emails.add(u.email.toLowerCase());
-  if(u.projectSlug||u.lotRef){const key=JSON.stringify([u.projectSlug,u.lotRef]);if(!lots.has(key))throw new Error('Appartement client introuvable.');if(u.role==='client'){if(assignments.has(key))throw new Error('Appartement attribué deux fois.');assignments.add(key);}}
+  for(const p of new Map([...(u.properties??[]),...(u.projectSlug||u.lotRef?[{projectSlug:u.projectSlug,lotRef:u.lotRef}]:[])].map(p=>[JSON.stringify([p.projectSlug,p.lotRef]),p])).values()){const key=JSON.stringify([p.projectSlug,p.lotRef]);if(!lots.has(key))throw new Error('Appartement client introuvable.');if(u.role==='client'){if(assignments.has(key))throw new Error('Appartement attribué deux fois.');assignments.add(key);}}
  }
  return db;
 }

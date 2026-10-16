@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import PwaInstall from '@/components/site/PwaInstall';
 import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
+import AdminActivity from '@/components/admin/AdminActivity';
 import { Analytics } from '@vercel/analytics/next';
 import '../globals.css';
 import { isLocale, localeMeta, locales, type Locale } from '@/i18n/config';
@@ -83,6 +84,7 @@ export default async function LocaleLayout({
       </head>
       <body className="font-sans">
         {children}
+        <AdminActivity/>
         <PwaInstall locale={locale}/>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(knowledgeGraph) }} />
         {process.env.VERCEL === '1' && <Analytics />}

@@ -10,7 +10,7 @@ const nextConfig = {
   poweredByHeader: false,
   async headers() {
     return [
-      {source:'/:path*',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'SAMEORIGIN'},...(process.env.NODE_ENV==='production'?[{key:'Strict-Transport-Security',value:'max-age=31536000'}]:[]),{key:'Permissions-Policy',value:'camera=(), microphone=(), geolocation=()'}]},
+      {source:'/:path*',headers:[{key:'X-Content-Type-Options',value:'nosniff'},{key:'Referrer-Policy',value:'strict-origin-when-cross-origin'},{key:'X-Frame-Options',value:'DENY'},...(process.env.NODE_ENV==='production'?[{key:'Strict-Transport-Security',value:'max-age=31536000'}]:[]),{key:'Permissions-Policy',value:'camera=(), microphone=(), geolocation=()'}]},
       ...['/models/:path*','/draco/:path*','/plans/:path*'].map(source=>({source,headers:[{key:'Cache-Control',value:'public, max-age=86400, stale-while-revalidate=604800'}]})),
       {source:'/sw.js',headers:[{key:'Cache-Control',value:'no-cache, no-store, must-revalidate'},{key:'Content-Type',value:'application/javascript; charset=utf-8'},{key:'Service-Worker-Allowed',value:'/'}]},
     ];

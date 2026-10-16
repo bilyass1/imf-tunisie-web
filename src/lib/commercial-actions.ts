@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import { revalidatePath } from 'next/cache';
 import { getSession, createSession } from './session';
-import { readDb, writeCommercialDb as writeDb, isPersistent } from './db';
+import { getAuthUserById, readPaymentWorkspace, readDb, writeCommercialDb as writeDb, isPersistent } from './db';
 import type { Database, Localized, User } from './types';
 import { projectPresentation } from './project-presentation';
 import { parseContactInput } from './contact-input';
@@ -54,8 +54,7 @@ function galleryCategory(form: FormData, project: Database['projects'][number]) 
 }
 async function staff() {
   const session=await getSession();
-  const db=(await readDb());
-  if (!session || db.users.find(u=>u.id===session.sub)?.role!=='admin') throw new Error('Accès commercial requis.');
+  if (!session || (await getAuthUserById(session.sub))?.role!=='admin') throw new Error('Accès commercial requis.');
   if (!isPersistent()) throw new Error('Un stockage durable doit être configuré avant de modifier les dossiers sur cet hébergement.');
 }
 
@@ -143,7 +142,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       if(!user) throw new Error('Compte client introuvable.');
       user.passwordHash=passwordHash; user.authVersion=(user.authVersion??0)+1;
       (await writeDb(db));
-      if(operation==='password-self') await createSession({sub:user.id,email:user.email,name:user.name,role:user.role});
+      if(operation==='password-self') await createSession({sub:user.id,email:user.email,name:user.name,role:user.role,mfa:session?.mfa});
     } else if (operation==='client') {
       const db=await readDb();
       await createClient(db,form,selectedClientLots(form),authorized);
@@ -217,7 +216,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       (db.uploads??=[]).push({id,mime,name:label+(kind==='contract'?'.pdf':'.webp'),clientId:recipient?.id,public:kind==='gallery'||kind==='panorama'});
       await writeDb(db,{id,bytes});
     } else {
-      const db=(await readDb());
+      const db=operation.startsWith('payment-')?await readPaymentWorkspace(value(form,'client')):await readDb();
       if(operation==='contact-save') {
         const input=parseContactInput(form,db.projects);
         const id=value(form,'contact');

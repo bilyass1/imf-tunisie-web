@@ -44,7 +44,10 @@ export function middleware(request: NextRequest) {
   if (hasLocale) {
     const nonce=btoa(crypto.randomUUID());
     const dev=process.env.NODE_ENV==='development';
-    const policy=`default-src 'self'; script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'wasm-unsafe-eval' ${dev?"'unsafe-eval'":''}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: ${dev?'ws:':''}; worker-src 'self' blob:; frame-src 'self' https://www.google.com https://maps.google.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self';`;
+    const external=new Set<string>();
+    for(const value of [process.env.NEXT_PUBLIC_ASSET_ORIGIN,...(process.env.CSP_ALLOWED_ORIGINS??'').split(',')]){try{if(value){const url=new URL(value);if(url.protocol==='https:')external.add(url.origin);}}catch{}}
+    const origins=[...external].join(' ');
+    const policy=`default-src 'self'; script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'wasm-unsafe-eval' ${dev?"'unsafe-eval'":''}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: ${origins}; font-src 'self' data:; connect-src 'self' ${origins} ${dev?'ws:':''}; worker-src 'self' blob:; frame-src 'self' https://www.google.com https://maps.google.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self';`;
     const requestHeaders=new Headers(request.headers);requestHeaders.set('x-nonce',nonce);requestHeaders.set('Content-Security-Policy',policy);
     const response = NextResponse.next({request:{headers:requestHeaders}});response.headers.set('Content-Security-Policy',policy);
     if (/^\/(fr|en|ar)\/(admin(?:\/|$|-)|espace-client|connexion|inscription)/.test(pathname)) response.headers.set('X-Robots-Tag', 'noindex, nofollow');

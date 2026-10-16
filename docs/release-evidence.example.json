@@ -1,0 +1,17 @@
+{
+  "releaseCommit": "TO_FILL",
+  "owner": "TO_FILL",
+  "evidenceDate": "TO_FILL",
+  "originalsClassifiedAndPrivatelyArchived": false,
+  "historySecretScanReviewed": false,
+  "exposedActiveCredentialsRotated": false,
+  "schemaAndRuntimeLeastPrivilegeVerified": false,
+  "trustedProxyAndWafVerified": false,
+  "passkeyEnrollmentAndRecoveryTested": false,
+  "stagingTenantIsolationAndCsrfPassed": false,
+  "antivirusAndTlsVerified": false,
+  "encryptedOffsiteBackupRestorePassed": false,
+  "releaseCiAndScannersPassed": false,
+  "monitoringAndIncidentContactsReady": false,
+  "evidenceReferences": []
+}

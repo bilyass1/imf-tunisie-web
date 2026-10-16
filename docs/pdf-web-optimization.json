@@ -1,1262 +1,1472 @@
 [
   {
     "source": "/models/yassamine/presentation/A5a-0.pdf",
-    "beforeBytes": 1367310,
-    "webBytes": 600564,
-    "pages": 1
+    "sourceSha256": "c3ee635e600951d2167438aa2e9be20a0352a455bd269c67191dd9074b3a2c8d",
+    "webBytes": 600563,
+    "pages": 1,
+    "webSha256": "0f98a495da959e29ebc5e87a8b953618b68d2a17b4332ac82763d1cf9acfb016"
   },
   {
     "source": "/models/yassamine/presentation/A5a-1.pdf",
-    "beforeBytes": 1345268,
-    "webBytes": 581630,
-    "pages": 1
+    "sourceSha256": "b56ce62169709ae884589935fbad198385456e62b64ba3e56efc89df3bb920a7",
+    "webBytes": 581629,
+    "pages": 1,
+    "webSha256": "f68d3100afee0eb163936d4ba4845bb99b0a87330b62a6f4b770295cbd29bb81"
   },
   {
     "source": "/models/yassamine/presentation/A5b-0.pdf",
-    "beforeBytes": 1622035,
-    "webBytes": 736266,
-    "pages": 1
+    "sourceSha256": "7377d566c6599c418388dba89818f28bec6dae0e1ae1b2aacf1cf489846de4ad",
+    "webBytes": 736265,
+    "pages": 1,
+    "webSha256": "1bbb7a08583f7e603a2eec69d65b93fba5ae99f5e340e147074169429e6c5045"
   },
   {
     "source": "/models/yassamine/presentation/A5b-1.pdf",
-    "beforeBytes": 1485731,
-    "webBytes": 657731,
-    "pages": 1
+    "sourceSha256": "84a77c681c1e94b35455d393df040fde04d77f5f21db2b2e1e099f70d5dcde6a",
+    "webBytes": 657730,
+    "pages": 1,
+    "webSha256": "8d9e197d7844eeb273eb9dddd48ce3df6981988fa57eea86444b6b88c39e3dc8"
   },
   {
     "source": "/models/yassamine/presentation/A6a-0.pdf",
-    "beforeBytes": 1718600,
-    "webBytes": 714361,
-    "pages": 1
+    "sourceSha256": "6827e16529fc038249d8d25cde507ad0826526fb20845e4a02069986a466539e",
+    "webBytes": 714360,
+    "pages": 1,
+    "webSha256": "8286f68074152cb656af8b719645800fcd125e3e1b556e6961fcf6b0895334bf"
   },
   {
     "source": "/models/yassamine/presentation/A6a-1.pdf",
-    "beforeBytes": 1500328,
-    "webBytes": 623048,
-    "pages": 1
+    "sourceSha256": "b5cf8cf68eb1e1778d84dd18c6266efb31672b5b40a8fbb128fffa18a17490f1",
+    "webBytes": 623047,
+    "pages": 1,
+    "webSha256": "28ab48a99216b716e126853ffd4b0a382004a31975ba48c00d300c63e255812a"
   },
   {
     "source": "/models/yassamine/presentation/A6a-4.pdf",
-    "beforeBytes": 1492405,
-    "webBytes": 620985,
-    "pages": 1
+    "sourceSha256": "c704827e99994ca549985f981ba9db6fd4be1bfc44a1bd8181ea6293b7d452a5",
+    "webBytes": 620984,
+    "pages": 1,
+    "webSha256": "9f7fcdf9ed89754758356ec9922b8a76d52e5412d9cc55975f7c4ddedd52f897"
   },
   {
     "source": "/models/yassamine/presentation/A6b-0.pdf",
-    "beforeBytes": 1325716,
+    "sourceSha256": "70c27c35e20e9f051d24d27b654b91844f3397d077d2bbe9f67801354996582d",
     "webBytes": 551821,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "981e4b6368986274c5324b690e34c9cf510563c7ba76a3ff0a5186193330d8f3"
   },
   {
     "source": "/models/yassamine/presentation/A6b-1.pdf",
-    "beforeBytes": 1228468,
-    "webBytes": 500593,
-    "pages": 1
+    "sourceSha256": "c8539e52e81a1bb7b2e29339475a20e850aa4fab3c32201379f00e8b86f9b819",
+    "webBytes": 500592,
+    "pages": 1,
+    "webSha256": "fec23fe1e0976bc9432925eb8251a41e7e5fe6c33dcf1cb9e52af910120ef5e0"
   },
   {
     "source": "/models/yassamine/presentation/A6b-2.pdf",
-    "beforeBytes": 1205467,
-    "webBytes": 483441,
-    "pages": 1
+    "sourceSha256": "4fcd759f7f820400f85cb0bff939787fdd78b4bb9553bb23e6e54fb9dab8be9a",
+    "webBytes": 483440,
+    "pages": 1,
+    "webSha256": "1edce02d9a7c869c5731e46df0d02fefb4a1d1c1603f18581ae3d823425325b8"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A101.pdf",
-    "beforeBytes": 1588956,
-    "webBytes": 678037,
-    "pages": 1
+    "sourceSha256": "d0754194a61d82ae370fd989fd11acb034d0a5385f524012358d675cb83c27fe",
+    "webBytes": 678036,
+    "pages": 1,
+    "webSha256": "13e8ec1b1051f65bba6415a51d35e74f61442e4e892ba0e79b4f557ba4ffb92b"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A104.pdf",
-    "beforeBytes": 1340484,
-    "webBytes": 560539,
-    "pages": 1
+    "sourceSha256": "ce793186992a4ed80064a29147a069e8b7bfc8bd5e429fb36d26b1bf6b60f587",
+    "webBytes": 560538,
+    "pages": 1,
+    "webSha256": "d475d115f80d6d6504abb453d78f98d8aaee550d45578fb7648346bb6da53e55"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A201.pdf",
-    "beforeBytes": 1518926,
-    "webBytes": 647285,
-    "pages": 1
+    "sourceSha256": "a7d765302214783ce23c025bee09189a7d404693aa96d8f1dc6fcc33c3cfd35a",
+    "webBytes": 647284,
+    "pages": 1,
+    "webSha256": "be6a54ea0f524949d008ef202f09cd58e7a35d3d091934356cbc2c74fc3ec667"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A202.pdf",
-    "beforeBytes": 1538715,
-    "webBytes": 653132,
-    "pages": 1
+    "sourceSha256": "36275e4264a04e4d1da60e2288e9a536934ca21b265e378c5203b222eb16802b",
+    "webBytes": 653131,
+    "pages": 1,
+    "webSha256": "5573d39a0503dd5befe02fc798c23ded3d04fe90f9f7f9f5c851e21cab3e1c34"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A204.pdf",
-    "beforeBytes": 1323713,
-    "webBytes": 553567,
-    "pages": 1
+    "sourceSha256": "eb134879aaf37901f638099180f962841b561e7e687a8b32e40e72ab3bf40fda",
+    "webBytes": 553566,
+    "pages": 1,
+    "webSha256": "e4d3fb41fb2b5d0126106c20aa351057129b3a14fa67387407516b5c4b015f80"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A304.pdf",
-    "beforeBytes": 1426827,
-    "webBytes": 594379,
-    "pages": 1
+    "sourceSha256": "2ed107d889b198a9a585789a9238c14d41171d3f21d0ca188169e7b6b548400b",
+    "webBytes": 594378,
+    "pages": 1,
+    "webSha256": "ae444c23e6727a135d04b98da7aa084d0d4d82887841e7c49e4cde27dd0abd23"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A305.pdf",
-    "beforeBytes": 1539426,
-    "webBytes": 654026,
-    "pages": 1
+    "sourceSha256": "95e417db09b0906b3a350d88a2fe869a445e87dea7d8c222718311c13b69b3cf",
+    "webBytes": 654025,
+    "pages": 1,
+    "webSha256": "2b089afa383066b53a9312d4de3a36c651ebbbdc178a57c32278afece9593e3e"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A501.pdf",
-    "beforeBytes": 1150367,
-    "webBytes": 256330,
-    "pages": 1
+    "sourceSha256": "97b824af9accfb4ead25c035b15b4a11a040f170c45af5984b816c9b2b4143f6",
+    "webBytes": 256328,
+    "pages": 1,
+    "webSha256": "f0eb2caba5b007f4f39970aa068e69e471fc585223254c3f0ea3d16abca2aec6"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A502.pdf",
-    "beforeBytes": 1101147,
-    "webBytes": 250435,
-    "pages": 1
+    "sourceSha256": "dcac7e6dfee658b629fcccfdf6c0f54889ab8b65843a4e313e4e0cbd85f7ce17",
+    "webBytes": 250433,
+    "pages": 1,
+    "webSha256": "87dea24161fed21be053fe5b1a80aedc9f9a33e54cfaf0c1576d46f36155024b"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A503.pdf",
-    "beforeBytes": 1003386,
-    "webBytes": 217591,
-    "pages": 1
+    "sourceSha256": "02715ffcec88b1b02ca74d9b49d97fe7bd926aae8c1dc1ea5c58aedfe31bb8ac",
+    "webBytes": 217589,
+    "pages": 1,
+    "webSha256": "8122cc82376423704fddb1731fdfedd7ae3707c491e769d08277bf42dfdbb578"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A504.pdf",
-    "beforeBytes": 1179379,
-    "webBytes": 264136,
-    "pages": 1
+    "sourceSha256": "5e86a2266ccf24850b4f5025ed05158e3c3a9f01ae414bb7037b701de40bcfb3",
+    "webBytes": 264135,
+    "pages": 1,
+    "webSha256": "a381bc6430f77b7642fdc670ca0109aeec7800b52c4c069f550a92af5e239aff"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A511.pdf",
-    "beforeBytes": 1185385,
+    "sourceSha256": "c11f24d95efb8e8e9a0f2436f30bf8d05d25dfff75aa7fd8dabb75d2418bf687",
     "webBytes": 267495,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "d42ca4b7138030669b7f76dcb42a6412e72a4a8d2f03c523a8a0eb8de7c5e8e4"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A512.pdf",
-    "beforeBytes": 1093154,
+    "sourceSha256": "b008ca9da4374fb74212ba3b023b294812bd190af9fa2eae6b41a125cf81d8d4",
     "webBytes": 247647,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "60bd7ab8ab2bc151ff1d1fdf74655941c6ee94116510f0e35b24d4cb176c1c58"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A513.pdf",
-    "beforeBytes": 1083054,
+    "sourceSha256": "dd0a4788d6ffaf59d17de5c59ac03967a491d66bdea0a34818a0c5a65cd1bf8b",
     "webBytes": 237402,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "b639bdeb3362a01c6b9bc6b4fa57339a54dfc236f92bbc1d7a287705f679b741"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A514.pdf",
-    "beforeBytes": 1156720,
+    "sourceSha256": "ccccf81b8c081683945f7968fdc8447d02226b3bfb6412ea59f1ec837d8e358d",
     "webBytes": 257389,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "e06cb5170ee55f129c9f0c072793812543fea03833069d30e22a3eb8e311f767"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A521.pdf",
-    "beforeBytes": 1187699,
-    "webBytes": 267102,
-    "pages": 1
+    "sourceSha256": "7179eaad4cc5b2ebcad6509c74e802191970963a3801bdf5c5fa86e1e518749f",
+    "webBytes": 267101,
+    "pages": 1,
+    "webSha256": "ed162927987cce9cbed0af99b93a287ff8f315c28ed7dc5ee7ff2d8dea26d9bc"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A522.pdf",
-    "beforeBytes": 1089561,
-    "webBytes": 243527,
-    "pages": 1
+    "sourceSha256": "6f38178b1b18255765b0467add497accd3348df44e8e07031dc0e8e8c9be3572",
+    "webBytes": 243526,
+    "pages": 1,
+    "webSha256": "e90a1a966a1cbca2aaf165e4bbb3e4cb691f71deba0e03ce17f43be3faea0223"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A523.pdf",
-    "beforeBytes": 1071448,
-    "webBytes": 234252,
-    "pages": 1
+    "sourceSha256": "7d78cdab2d29672c4de23441722e4d953e94e22721eb1a7095bf5a798526da4a",
+    "webBytes": 234251,
+    "pages": 1,
+    "webSha256": "91e6103145b76e6f7907c973e7ae87a0fc49b17c2ac5d1f633ee4871edab0358"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A524.pdf",
-    "beforeBytes": 1151777,
-    "webBytes": 257016,
-    "pages": 1
+    "sourceSha256": "23e5e0644ef23a802a40d0ef16a3c2ff78016e94926c637249b7c4b14084c9cd",
+    "webBytes": 257015,
+    "pages": 1,
+    "webSha256": "f9c3854844f75f2bb08ab69ea005773f34eaba95d44491d85954c850c65f07e4"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A531.pdf",
-    "beforeBytes": 1191107,
+    "sourceSha256": "26c31d437947a7d9ea9af64ec73f526b8c2ed6ce7114b1c25e8ff25ba1aa604e",
     "webBytes": 266911,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "100d3015f6d70910a8e33c2b39299562217d918fa19099ac50a7b49cf54f4a80"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A532.pdf",
-    "beforeBytes": 1082668,
+    "sourceSha256": "ecae6312c1d11923aa57d8c8dee29408bb1f0590f0b7c8b1f41efe6d1d2cbfe8",
     "webBytes": 241171,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "a60429ec4efe3253b41ff88b4b65acb399f52a9dc12202673e26de9d928ce4a5"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A533.pdf",
-    "beforeBytes": 1081393,
+    "sourceSha256": "6a77603ea3fccbdf0efdd8bf843c425fd071cec368abd3294764bf0b4864f58f",
     "webBytes": 238131,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "c5177752b50b68ac76216269bb864d0d434305f463204678819b74f6df694ec0"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A534.pdf",
-    "beforeBytes": 1149941,
+    "sourceSha256": "9f8c7ae0c504778a8fddc72b2ce21cc33edbd533edf17df5c9604529c467ef1c",
     "webBytes": 255711,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "935c4bc3fd2fad65a9ef94a002e5889dd1001d65bfad2764bd2a31ae7eed4545"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A541.pdf",
-    "beforeBytes": 1177886,
-    "webBytes": 265368,
-    "pages": 1
+    "sourceSha256": "015a37c4f26b0a894bab00d704c7840b5d1e4ec69f8ee7ea29fee3ee8e6743e1",
+    "webBytes": 265367,
+    "pages": 1,
+    "webSha256": "583ccd84d38723d5806c8683dd717affb445b5735feede6f2a793dbe0240b49f"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A542.pdf",
-    "beforeBytes": 1114366,
-    "webBytes": 250878,
-    "pages": 1
+    "sourceSha256": "cdc17adec19677db133acfc91bfdf399262a9a9c36827e47dbd5bd0d40c73695",
+    "webBytes": 250877,
+    "pages": 1,
+    "webSha256": "1ffc073c95991b6b959d589ff1e98dfe9802c1d6c1601a28f559a51a321e2661"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A543.pdf",
-    "beforeBytes": 1074723,
-    "webBytes": 237729,
-    "pages": 1
+    "sourceSha256": "b30cfadae11044dc890a339fd416dd427363a40168a4cf92e49244ce45df48d5",
+    "webBytes": 237728,
+    "pages": 1,
+    "webSha256": "a6f6f3d8831f1dbbadfe4f82ce79654675064ee676070a8ee816de22ffbf7ba6"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A544.pdf",
-    "beforeBytes": 1139256,
+    "sourceSha256": "24ea418db0c1c30b69d6fa5089f0918aafa6aada61ae956fd77ab2ac2b0b5611",
     "webBytes": 252776,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "ccdddea0e2f736dd5a2154c0d65928ce5d6b83b705d611d2dfbced672f83cb5f"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b01.pdf",
-    "beforeBytes": 1133718,
+    "sourceSha256": "4b21d4a0cd0ff871bada608dcb28b585eb2db2891f29f9dccc8a8e07952d3866",
     "webBytes": 476138,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "8f4cb47d182fe5868756291cc2e619e5e9dc083d5528e97be22ad5f49cb092fb"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b02.pdf",
-    "beforeBytes": 1114538,
+    "sourceSha256": "2d4fab09474a4a942cf82faea04f58805f7aa5c219afa91f3489e23e503f82ff",
     "webBytes": 462729,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "749e9f927719962cc61bd7803817bde2085edea0f284811f952dbfe230a03d21"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b03.pdf",
-    "beforeBytes": 1088724,
+    "sourceSha256": "190b045f6ac085726423ca7e2f08e3c548aa5ede8019a2a4f9996aa7cfd21d8c",
     "webBytes": 445624,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "1546a34873f2065610f741c55a5836dbcd694689e842dea8af428ac1732a868a"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b04.pdf",
-    "beforeBytes": 1141663,
-    "webBytes": 469555,
-    "pages": 1
+    "sourceSha256": "e575b5d5aab6e174eaf9a52e34115060d3e8e815f658d42b9782bbe49badfda8",
+    "webBytes": 469554,
+    "pages": 1,
+    "webSha256": "f5f25c5cba34c9f0e1ae79084999f047a6b059a7aeaf6a4802de12a66b3489cd"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b05.pdf",
-    "beforeBytes": 1233243,
-    "webBytes": 529658,
-    "pages": 1
+    "sourceSha256": "b6ba75d9b3ce87b0d7ea744bf22fb563228481ad5ff6a46c533e0d4362dde3e6",
+    "webBytes": 529657,
+    "pages": 1,
+    "webSha256": "1831731df81bbda42ebfc09bc6057c96fb40448a0f25de44d3039eea10a790de"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b11.pdf",
-    "beforeBytes": 1162457,
+    "sourceSha256": "5bf6c8584bd01f74a2f0637da927950a4b784a15dcd722cf3b23b3e315933a22",
     "webBytes": 487267,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "e39b83095557517766a32cd3aa1aeb921483c6c7bddd0adb9ec6dd0a62128d9a"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b12.pdf",
-    "beforeBytes": 1078494,
-    "webBytes": 447942,
-    "pages": 1
+    "sourceSha256": "327d715b18b0b49d4d10b6e6a64cb051e674e081b4655bbd47df5865b59f27a8",
+    "webBytes": 447940,
+    "pages": 1,
+    "webSha256": "bfeab7ea421f5fd7eb8afd437471585d65d5ffcc7012618296e16e3825d44024"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b13.pdf",
-    "beforeBytes": 1106686,
-    "webBytes": 450307,
-    "pages": 1
+    "sourceSha256": "2ce94e46c23265eadae5bb73d3e46b4e25c4ccd1708f507d97218aa8969e2a9c",
+    "webBytes": 450306,
+    "pages": 1,
+    "webSha256": "0386376cf2f5788c9e1fdc5e14934f0d3b835f6a9671031c90171362196be199"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b14.pdf",
-    "beforeBytes": 1139651,
-    "webBytes": 467789,
-    "pages": 1
+    "sourceSha256": "c84e5c770ad53847b76c284b11d0bce755a2c96db6e8a85bae3a381db5363ffc",
+    "webBytes": 467788,
+    "pages": 1,
+    "webSha256": "6ad7c44b79c12fd8f5fa2bf14ec64f278d3dc0b5efd056fc4fa1d788e2ffcfbc"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b15.pdf",
-    "beforeBytes": 1190453,
-    "webBytes": 505923,
-    "pages": 1
+    "sourceSha256": "a065396559eb76ab68b3b9a6e402f409d09b8965b24f488a44616f70b21da247",
+    "webBytes": 505922,
+    "pages": 1,
+    "webSha256": "2d69af43cc664a41e692453c8531a5194c86848926f1f116ee79c2edf3c05bc9"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b21.pdf",
-    "beforeBytes": 1169430,
-    "webBytes": 491811,
-    "pages": 1
+    "sourceSha256": "9c0140049625eacc0b9c8933606e032d6425e52ef6eafe587b16e80c85c77602",
+    "webBytes": 491810,
+    "pages": 1,
+    "webSha256": "02819c76947ad6f75585455bda32da73f6498d883971f1a80e1e49e9360287a3"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b22.pdf",
-    "beforeBytes": 1100103,
-    "webBytes": 457710,
-    "pages": 1
+    "sourceSha256": "9f0db2971effddac92e1d4d5a4ae97fc41e5fb0b90c79e06063bb23c764204e2",
+    "webBytes": 457709,
+    "pages": 1,
+    "webSha256": "631c85b6f25349adb80e229b85eae8f58404ab9a9dd957fd69060b8befb03076"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b23.pdf",
-    "beforeBytes": 1103529,
-    "webBytes": 449550,
-    "pages": 1
+    "sourceSha256": "23466dfd01fb11c80b0673002e992598dc714b712794458df67e70a927eb735a",
+    "webBytes": 449549,
+    "pages": 1,
+    "webSha256": "b82d413e21350baffe54c9dd786e00aa41b56fc19615e444b82a31b19a388a84"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b24.pdf",
-    "beforeBytes": 1134857,
-    "webBytes": 470708,
-    "pages": 1
+    "sourceSha256": "69cc5f2a9a4c2ba2c420b062d72cffbecef26ed2d98f8a6c8cbd5d84720c51bb",
+    "webBytes": 470707,
+    "pages": 1,
+    "webSha256": "b6b2908b0060a2cf38c9dc0a0c034373fc686892b44e7738d1063a2a2c930126"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b25.pdf",
-    "beforeBytes": 1183962,
-    "webBytes": 501409,
-    "pages": 1
+    "sourceSha256": "d25f2b47599c6b2cff71b768d38481ea64076410e0ad9475dd0e46f4f3b0ff30",
+    "webBytes": 501408,
+    "pages": 1,
+    "webSha256": "18db57f6f87f0c0eb022ead167e26e3ac0c9b1226b370b924eea6477d53a6f58"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b31.pdf",
-    "beforeBytes": 1158685,
-    "webBytes": 486084,
-    "pages": 1
+    "sourceSha256": "146a3fde2756c8629e88901177e37ba1cc24cabac5489af2f8640cb802815123",
+    "webBytes": 486083,
+    "pages": 1,
+    "webSha256": "d73eba8f4a1e079ed6f65b597b23ca97ec45d826d7e048c342848dde93fdda33"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b32.pdf",
-    "beforeBytes": 1103550,
-    "webBytes": 456131,
-    "pages": 1
+    "sourceSha256": "9d987c831b981e780cd630074656435cbf45c129a284fac3bb06e46322f0135b",
+    "webBytes": 456130,
+    "pages": 1,
+    "webSha256": "1ad271ee4473ec9298415cd60c33367dc40a2134e91977004b8be94227122775"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b33.pdf",
-    "beforeBytes": 1101073,
-    "webBytes": 449723,
-    "pages": 1
+    "sourceSha256": "c92ae2469518fff4cbaea39746693368cd862ff3e722285d93fc419fef72aaa3",
+    "webBytes": 449722,
+    "pages": 1,
+    "webSha256": "98f072df5730989da63bd1fefee90b1d4c37ba7f41b2091b9e55b819404cce45"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b34.pdf",
-    "beforeBytes": 1131373,
-    "webBytes": 465603,
-    "pages": 1
+    "sourceSha256": "a21864796e678c46fb3277ec92f2c1255867e62c8042c1a6b98a62fc25192506",
+    "webBytes": 465602,
+    "pages": 1,
+    "webSha256": "a94d3d4cc549c2701c70e1bbb65d4b31a4e1d0a6412feee71dafceee0a439401"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b35.pdf",
-    "beforeBytes": 1161818,
-    "webBytes": 495715,
-    "pages": 1
+    "sourceSha256": "6b0fc713848378763cda9e6053cb09c692b0f5111da70644c7679bc3821f9861",
+    "webBytes": 495714,
+    "pages": 1,
+    "webSha256": "1af76b2330bcb1fccf9d9b4c34c873175f804a4e5f0b13409dbb2471c0c25b28"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b41.pdf",
-    "beforeBytes": 1149172,
-    "webBytes": 481239,
-    "pages": 1
+    "sourceSha256": "0b4d23b4d709f2297d38fc6e97b7e8c25c08e7b63d569d9101984619bdeb3b9e",
+    "webBytes": 481238,
+    "pages": 1,
+    "webSha256": "18ba7fe9f00c6ae642a3dd7c7ab0bbabda2bd45173e3f142034a4673840fc2ba"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b42.pdf",
-    "beforeBytes": 1095929,
-    "webBytes": 455417,
-    "pages": 1
+    "sourceSha256": "673a6be94194f3b15b70bf5aaf14f44bcfad6d5db45ba0c7a66c62e616a2ca39",
+    "webBytes": 455416,
+    "pages": 1,
+    "webSha256": "378d52c92c95da8d0d042d37c846a8802791602c6f30c29f17f6f113ed68d802"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b43.pdf",
-    "beforeBytes": 1098179,
-    "webBytes": 444787,
-    "pages": 1
+    "sourceSha256": "b77580d2b5480592e451cb88a944bea648b016026726bf9c0f3e151d6e1fea66",
+    "webBytes": 444786,
+    "pages": 1,
+    "webSha256": "6dc1a263bff69507f4c0e1103915da41b3c21ff004a6e390d02b7800cb946eec"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b44.pdf",
-    "beforeBytes": 1128027,
-    "webBytes": 460826,
-    "pages": 1
+    "sourceSha256": "31a942c10743f7e50a8402c9c1ccaaa0ff4408d3165c5a595e18be6ca0718f8f",
+    "webBytes": 460825,
+    "pages": 1,
+    "webSha256": "b6dc515b5f4c98fc1bcfd2992f6d20205a6b98fc0edb8b86f0dbc8fa7236e146"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A5b45.pdf",
-    "beforeBytes": 1159178,
-    "webBytes": 491938,
-    "pages": 1
+    "sourceSha256": "2597d505075b926eaa838b4911262ff3269663bc4aefe236794612f96aa4cff4",
+    "webBytes": 491937,
+    "pages": 1,
+    "webSha256": "0e3110431e78259d46f50521f2973c1af5fbf16f932797b9e9042ed42ca00af7"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a01.pdf",
-    "beforeBytes": 1479769,
-    "webBytes": 589689,
-    "pages": 1
+    "sourceSha256": "fcf4c63379fce263d3ce0116f79bcce084d2e986e8982f29074b8acda4f16c38",
+    "webBytes": 589688,
+    "pages": 1,
+    "webSha256": "b683ea9a19f57e54b2867c447ce4196d61e2b4a1728b1bc9ad015ac837a3e06e"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a02.pdf",
-    "beforeBytes": 1482541,
+    "sourceSha256": "bdccbe283b6769a83514ec08e3df9e1ec986ca0323e22eff1775583a1d781ead",
     "webBytes": 594052,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "7e88b39a97cb5e373a15a2a72dbae7a8b62538063c691f134aa0b3f6d2b0f20f"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a03.pdf",
-    "beforeBytes": 1253740,
+    "sourceSha256": "3e2ae02aaac321193b5ea27994b8a1b059f87587cc96842534456be7ba53296b",
     "webBytes": 491682,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "de4c3e40836ea4a1f77478516a289be3fe6f5f1b46e1c72673dd5795b985d2c6"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a04.pdf",
-    "beforeBytes": 1239525,
-    "webBytes": 502373,
-    "pages": 1
+    "sourceSha256": "9104189cdf68961d60a66434a79cc7d2ed0e2982f93493a93e681638d5cb5778",
+    "webBytes": 502372,
+    "pages": 1,
+    "webSha256": "e3a71222b68760d111d5dbd57c11bd875e262c1906c28a9233cada97cca12899"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a11.pdf",
-    "beforeBytes": 1321447,
-    "webBytes": 531353,
-    "pages": 1
+    "sourceSha256": "e0c6788e242a895f60b62b3fdb4e4832e172f93a20cd8e0b5a526991d9e8a855",
+    "webBytes": 531352,
+    "pages": 1,
+    "webSha256": "dcd025cdc2165efe068c5c4da6b8ed8bd0571010baf1ecd9c8eafbfb5bd48b87"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a12.pdf",
-    "beforeBytes": 1307202,
+    "sourceSha256": "dfd37bb6de5a3d57c1ff4691857433dfed567a8c94fa7ab554321e5ed99437c3",
     "webBytes": 524814,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "0841bec6db8f8aeb936f77cdca0e198caadab63ec2a167070f181d8a6539a039"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a13.pdf",
-    "beforeBytes": 1337313,
+    "sourceSha256": "1930f8a8262387ba819c365fac2a73f789966651a583257806653a11ee600eef",
     "webBytes": 538879,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "0d8874f5b49fde84b1f9f06da26d930162a8ce02e29cf126de2c5eb08f32f83f"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a14.pdf",
-    "beforeBytes": 1257255,
-    "webBytes": 501681,
-    "pages": 1
+    "sourceSha256": "904fa24fb3c9793053d048d77945be4166898a77d19353a20c7a414702cf5430",
+    "webBytes": 501680,
+    "pages": 1,
+    "webSha256": "bc866bc2446decee7f365029c4b1c0a02935b3d977a42364654c587fdc8feec1"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a21.pdf",
-    "beforeBytes": 1328404,
-    "webBytes": 523761,
-    "pages": 1
+    "sourceSha256": "0eefc8459faec72d69026ad39a4e35b745c91c16476fd48009463e9fe9d7ad18",
+    "webBytes": 523760,
+    "pages": 1,
+    "webSha256": "487f5985709be44243e11bd0cf99c5c41e2fbef4d7d2d113d29ba54fd01f331b"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a22.pdf",
-    "beforeBytes": 1315918,
-    "webBytes": 526151,
-    "pages": 1
+    "sourceSha256": "8e507e31fdee1b750c7cba5be0371519425208406b79d6b4aa76941316db0178",
+    "webBytes": 526150,
+    "pages": 1,
+    "webSha256": "b7163f4feaea00402069bccee6ec8672bcefd09fd50ec67940dde615ffcaab43"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a23.pdf",
-    "beforeBytes": 1326402,
-    "webBytes": 521645,
-    "pages": 1
+    "sourceSha256": "0b5c68ada2d15fdbf393ce9ffeb1e63dfaf581763535e5f261eef941568a3f68",
+    "webBytes": 521644,
+    "pages": 1,
+    "webSha256": "3535fc386ff9e091aaefee64f3e3aa3d0445a66d5f2e4c5e71ae58f58776e324"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a24.pdf",
-    "beforeBytes": 1256113,
-    "webBytes": 498458,
-    "pages": 1
+    "sourceSha256": "e3c3a5cf8a5a355da30ab01b91c6032ea0a9cbace2cee02f7fe40c64b680cdf3",
+    "webBytes": 498457,
+    "pages": 1,
+    "webSha256": "40a7e9590f2bcfb4ec548a6372ab181660ba01e6a428d5599abd21354f099f59"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a31.pdf",
-    "beforeBytes": 1343242,
-    "webBytes": 538771,
-    "pages": 1
+    "sourceSha256": "d0a19e2245779faf2f000a1502de12a76cabb5e06ce4c1852c73a9092a166582",
+    "webBytes": 538770,
+    "pages": 1,
+    "webSha256": "07eebe095f6f24e0bca8303e5102a314153cec6a55d56aa7d41285fdf916b1cc"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a32.pdf",
-    "beforeBytes": 1294695,
-    "webBytes": 519131,
-    "pages": 1
+    "sourceSha256": "30e293aaff5f488756dde24df46df34fab546f88449c4cc2bc8a8e620cf0b103",
+    "webBytes": 519130,
+    "pages": 1,
+    "webSha256": "2e8c05feef3a667361551ec28f0fccab6e6af635c87117e789d3f41b526fda4f"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a33.pdf",
-    "beforeBytes": 1326870,
-    "webBytes": 532490,
-    "pages": 1
+    "sourceSha256": "cf207cf8fd41cddef488d6506de8b393ad5202276f684606f171d48b6559dc8b",
+    "webBytes": 532488,
+    "pages": 1,
+    "webSha256": "87ac064c539638870d494e7632f144ad65b50a70b18bfc88550147da72f8865f"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a34.pdf",
-    "beforeBytes": 1230429,
-    "webBytes": 488554,
-    "pages": 1
+    "sourceSha256": "ca9829f226c6c94415804a140c0208fc146e13c88eae28afbbf03cea62d5fb24",
+    "webBytes": 488553,
+    "pages": 1,
+    "webSha256": "bbb496037d8a08b54bf1a0191881ae8963cf7a078346eef260b294b023c1e7d3"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a41.pdf",
-    "beforeBytes": 1333374,
-    "webBytes": 538160,
-    "pages": 1
+    "sourceSha256": "e8a4abb27c39466e167ed2dbd8ed7591c7395ad448ba8969e498eb775a1c46ba",
+    "webBytes": 538159,
+    "pages": 1,
+    "webSha256": "1a5637e30cfea82c6e6df11a43294b94da7d9fd6496b01a4b0f90fcab70b2e9a"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a42.pdf",
-    "beforeBytes": 1261475,
-    "webBytes": 507064,
-    "pages": 1
+    "sourceSha256": "01d9561898fe08aad4edb15e658f16d3f1b4af7f0e78d130e3f41df6efbf1989",
+    "webBytes": 507063,
+    "pages": 1,
+    "webSha256": "8d00a7737dab1602abed379626ecda2d80a4ad1086f4ff845aba5e184ca4419b"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a43.pdf",
-    "beforeBytes": 1307093,
-    "webBytes": 519529,
-    "pages": 1
+    "sourceSha256": "5430a01b87446ea7b75f84d26ad7ec56be043ad3467e8b43e53606612a7f3745",
+    "webBytes": 519528,
+    "pages": 1,
+    "webSha256": "ed98fdd746e755653b3abb445774839faf7011df20bead851718ee37d780e91a"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6a44.pdf",
-    "beforeBytes": 1275358,
-    "webBytes": 516288,
-    "pages": 1
+    "sourceSha256": "41c79394025b44be5b662826ba23e197ed614dcbbd0832f272be0596e76e41ed",
+    "webBytes": 516287,
+    "pages": 1,
+    "webSha256": "cf24cebc889e00a0d2be65ab42a8e50af3569529c76f2b14e01b766ee5c4ac4c"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b01.pdf",
-    "beforeBytes": 1405815,
-    "webBytes": 549973,
-    "pages": 1
+    "sourceSha256": "d344226b5f755c534814559b03f794752e95dec4ae2a71f85115b9a906250027",
+    "webBytes": 549972,
+    "pages": 1,
+    "webSha256": "a9cf58e583bbd48d533d5e601f6614942fc55dc45aea8a9dc888e63d3a5b679d"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b02.pdf",
-    "beforeBytes": 1210881,
-    "webBytes": 489985,
-    "pages": 1
+    "sourceSha256": "a9fe7b0029d24cdb3133a8cf9bc04ee973e0caa5a4f53be8f297046f2f4d721c",
+    "webBytes": 489984,
+    "pages": 1,
+    "webSha256": "0cd79c4fcd75f2eb09a541615335fd84b568f3bae2e61b7849106d09eb7add13"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b03.pdf",
-    "beforeBytes": 1297310,
-    "webBytes": 514670,
-    "pages": 1
+    "sourceSha256": "1106c125f1debc0682063704d156b05821beb132cae2a587547f20b9e806b855",
+    "webBytes": 514669,
+    "pages": 1,
+    "webSha256": "899dbe81b7e92340727f259c4310c7cd7b02b07819ce112d927044f69c0ce844"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b11.pdf",
-    "beforeBytes": 1267999,
-    "webBytes": 505243,
-    "pages": 1
+    "sourceSha256": "86da97dbf8ab44af8ce32ef36752ccc8f3ab59336f7f19243d2ca5242949d0cc",
+    "webBytes": 505242,
+    "pages": 1,
+    "webSha256": "4152cc006f231e9dd4841aba1accb70aa493f19347431b52afbfcb5b532c535c"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b12.pdf",
-    "beforeBytes": 1220262,
-    "webBytes": 489967,
-    "pages": 1
+    "sourceSha256": "ea01fe462510caa596ecdf3f1a6b56d316eec8ec5444c23b6ce9e305fa06104e",
+    "webBytes": 489966,
+    "pages": 1,
+    "webSha256": "2c823575eb60583ab18ed1eaac63dd1d20220894d3a259538cc33fa8438d8dd6"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b13.pdf",
-    "beforeBytes": 1209760,
-    "webBytes": 488711,
-    "pages": 1
+    "sourceSha256": "a047b77a3d4a1609a5855f430239a736910318733fa0edbee3de082f8afc2921",
+    "webBytes": 488710,
+    "pages": 1,
+    "webSha256": "cf15cfebf23640089cb34806b5c0094c45e66fd1a3b41a9b694874f08319bbd7"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b21.pdf",
-    "beforeBytes": 1178552,
-    "webBytes": 463226,
-    "pages": 1
+    "sourceSha256": "8b4eabd5400406b8e760ea7ffca79411644c1aa02c4d1069a3e510f456262e2b",
+    "webBytes": 463225,
+    "pages": 1,
+    "webSha256": "3f0b119523e679594bd3652365a6260c9b9a9ee8be11328ad4fb99b504b1b8ce"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b22.pdf",
-    "beforeBytes": 1232399,
-    "webBytes": 497256,
-    "pages": 1
+    "sourceSha256": "b50d660c8cf6331bf63e287011cb177c0dd65b57e8baf02e93c2bd2ca7d405d0",
+    "webBytes": 497255,
+    "pages": 1,
+    "webSha256": "f7c4c990426e63888af94336073bcf888f280e9dfeb3aa27d070693be7a4cec0"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b23.pdf",
-    "beforeBytes": 1195232,
-    "webBytes": 473165,
-    "pages": 1
+    "sourceSha256": "a35a309c9589ec49c4da22520ff44a2aa2a5d8bac67349ca322e299f9b30cd63",
+    "webBytes": 473164,
+    "pages": 1,
+    "webSha256": "4f8955b5197f3d6615772f3ba980615e855075a1ae794151f2d54e18d10e3b80"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b31.pdf",
-    "beforeBytes": 1227696,
-    "webBytes": 479268,
-    "pages": 1
+    "sourceSha256": "fff500a826d5a23208a88d1b2424377e5adb6239fd348c4b1d72cbbd76958188",
+    "webBytes": 479266,
+    "pages": 1,
+    "webSha256": "e46236c5a7b6cf28f0a69469f863f55565e177e7730a4caa41ad08c654a80cba"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b32.pdf",
-    "beforeBytes": 1231665,
-    "webBytes": 495138,
-    "pages": 1
+    "sourceSha256": "6b1eff23bfecc923847679610ae7f8978c2bdc9627f79adbc85b0afef020a702",
+    "webBytes": 495136,
+    "pages": 1,
+    "webSha256": "3b7c8773838ce5c6514c45673fa3d7c9df933bb721c75b5e25d22806be48f619"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/A6b33.pdf",
-    "beforeBytes": 1217406,
-    "webBytes": 490644,
-    "pages": 1
+    "sourceSha256": "571c7372885a6f9c62245ea2ce4a10b8aa9cab28681cf55deeac20c9809ed9d3",
+    "webBytes": 490643,
+    "pages": 1,
+    "webSha256": "19fbf40e50b42e72f15a6c34ede508f6e97eb77690b67035112f7423cfc0ad2c"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/RDC-A1.pdf",
-    "beforeBytes": 1951802,
-    "webBytes": 859417,
-    "pages": 1
+    "sourceSha256": "0109d51cd95853c239c6aace16e9317853c0b4eb1d11587f5e26e719b4e04c9c",
+    "webBytes": 859416,
+    "pages": 1,
+    "webSha256": "2b5aabc319d6d22c2e94f368ce6ff8bcbda8e9b06cf3eb5febebd61fae6f9ac5"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/RDC-A2.pdf",
-    "beforeBytes": 1917192,
-    "webBytes": 837826,
-    "pages": 1
+    "sourceSha256": "d224f9393e7606b085356f9f77e5bc68c8cc9abf7f8813aecf99f1e448e26d59",
+    "webBytes": 837825,
+    "pages": 1,
+    "webSha256": "a34dad45affa1ac0b171951d50f47686d154a74c27b8df28eb4dae571139facc"
   },
   {
     "source": "/plans/diar-al-yassamine/presentation/RDC-A3.pdf",
-    "beforeBytes": 2012182,
-    "webBytes": 888033,
-    "pages": 1
+    "sourceSha256": "60c5879287035c752cd7506c005f22794f35fde565deb19eeaa1f403c9aa2a24",
+    "webBytes": 888031,
+    "pages": 1,
+    "webSha256": "4ca454198f7f6ba25efc675bbb64e1ebbaae8b540612adba1107e934d86227c4"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PGARDEBLOCA.pdf",
-    "beforeBytes": 4492461,
-    "webBytes": 1084375,
-    "pages": 1
+    "sourceSha256": "1516e7da6b168a30cf664af4aac15c1142080e7cc60bb2678693735742d3692f",
+    "webBytes": 1084374,
+    "pages": 1,
+    "webSha256": "f5a0e1712772f8985f742bf2110375e7bddc5e39231e5a66c1834f45d2ad22c3"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PGARDEBLOCB.pdf",
-    "beforeBytes": 4502206,
-    "webBytes": 1082271,
-    "pages": 1
+    "sourceSha256": "1b3cd8e979bd75d415ba828e4c0ab7156fdcc7bcaed541518bf36b763be07490",
+    "webBytes": 1082270,
+    "pages": 1,
+    "webSha256": "a8cedb8aac6801114ab33cfb233a0b73adc59a42e312c6e5220cd58773eceff4"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PGARDEBLOCC.pdf",
-    "beforeBytes": 4502291,
-    "webBytes": 1078610,
-    "pages": 1
+    "sourceSha256": "2edb5f5a37c9e987e255767f9e00a44628c9b5302f4e6a750460a888988c57a7",
+    "webBytes": 1078609,
+    "pages": 1,
+    "webSha256": "7d358111f5841481a83ac184bc672a37a52d8ef9c0ed63d285b58023181cd8ff"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PGARDEBLOCD.pdf",
-    "beforeBytes": 4514134,
-    "webBytes": 1077034,
-    "pages": 1
+    "sourceSha256": "73ba87eba6a7dafeecaab85646ab3044c0882ce499e294dbba377216f4a61847",
+    "webBytes": 1077033,
+    "pages": 1,
+    "webSha256": "b22c26376e5c37b13e95bf6c0da0e64066ff9c682aa9b5f7a3ca4a172ebaf5ad"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PLANCHE1ETAGE.pdf",
-    "beforeBytes": 6399914,
-    "webBytes": 1537315,
-    "pages": 1
+    "sourceSha256": "7dec9b359e5c1b72fea774bd34e01e82557c225ed18cf59baa6d528e5ea78483",
+    "webBytes": 1537314,
+    "pages": 1,
+    "webSha256": "19da5e7dd2f0e25a84b980ce02f9145f233896e9aaf7014dac29cf144e4e7fd0"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PLANCHE2ETAGE.pdf",
-    "beforeBytes": 6344735,
-    "webBytes": 1527674,
-    "pages": 1
+    "sourceSha256": "36e946ce24b3edcc2fc6c7c73fca652a03d9be4981fd0cc49936e218ec625012",
+    "webBytes": 1527673,
+    "pages": 1,
+    "webSha256": "9a121a11b273440c953fe2563b70c1283d4d1f4148eadfc88510a00571ca5172"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PLANCHE3ETAGE.pdf",
-    "beforeBytes": 6324763,
-    "webBytes": 1523900,
-    "pages": 1
+    "sourceSha256": "35063f800319517863687dbb7ebcc7c99e8db4aec5e839f0e068104f1fb30157",
+    "webBytes": 1523899,
+    "pages": 1,
+    "webSha256": "26a8600eaccafaa2371521a255ea1752e32833fbcd16870e8937c2ee4f8283fe"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PLANCHE4ETAGE.pdf",
-    "beforeBytes": 6321841,
-    "webBytes": 1522719,
-    "pages": 1
+    "sourceSha256": "42c1344fa73d5af10ffbc71b9dcff1eb1828e13ece5d34026728035faacd0e49",
+    "webBytes": 1522718,
+    "pages": 1,
+    "webSha256": "5642961988b28901d61f5febcbe734031469e0d87fc962d7fe1e5f7fb92ba788"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PLANCHE5ETAGE.pdf",
-    "beforeBytes": 6397842,
-    "webBytes": 1530605,
-    "pages": 1
+    "sourceSha256": "fb62b5d18cf245c20f646249bdb39562d88e97f25c54e96170511a3f412ec9bc",
+    "webBytes": 1530604,
+    "pages": 1,
+    "webSha256": "4d4d8fcfac34c9e1d7893dcbf9b00f98852588727539162734a44ed0ce3b3366"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PLANCHERDC.pdf",
-    "beforeBytes": 7831784,
-    "webBytes": 1914874,
-    "pages": 1
+    "sourceSha256": "9b960fa911cfed52a8513318e3c98ffac5aef9c09ca41f7342f8b594c9698230",
+    "webBytes": 1914873,
+    "pages": 1,
+    "webSha256": "e179a00308229391c5b44526f750715951829248eb432c9c6f0a303a1cacbd57"
   },
   {
     "source": "/plans/la-gloire/ensemble/presentation/PLANCHESOUS-SOL.pdf",
-    "beforeBytes": 5525899,
-    "webBytes": 1339646,
-    "pages": 1
+    "sourceSha256": "83c1140eb5851e86fd0e1ebde9aaedd7381ee09943aac7462df78d15add8dd63",
+    "webBytes": 1339645,
+    "pages": 1,
+    "webSha256": "862c10643c0e7ce966470f365d12f635caa935e398a22b21d5a17a0616f303a7"
   },
   {
     "source": "/plans/la-gloire/presentation/A01.pdf",
-    "beforeBytes": 1515482,
-    "webBytes": 688517,
-    "pages": 1
+    "sourceSha256": "a9a94a9be24ae6b6481b7c9a5396ddfdaf0a76f147b5a09cea4c0fa87e961788",
+    "webBytes": 688515,
+    "pages": 1,
+    "webSha256": "61874517782da460ef30e9976976a879b0ef834d0dc8cd5cfb8801fc0fd3708e"
   },
   {
     "source": "/plans/la-gloire/presentation/A02.pdf",
-    "beforeBytes": 1954838,
-    "webBytes": 892229,
-    "pages": 1
+    "sourceSha256": "fca322dd7e596dbff284489bf5035db4ae3f4c3b0528ed5c353b434b51d834b7",
+    "webBytes": 892228,
+    "pages": 1,
+    "webSha256": "df817716f13e206d0d5d03f36eca28abe5b4a316b17be45149bd852b6c2f9b71"
   },
   {
     "source": "/plans/la-gloire/presentation/A03.pdf",
-    "beforeBytes": 2357322,
-    "webBytes": 1090900,
-    "pages": 1
+    "sourceSha256": "f37e0d1059c6e4fe13921bf64d86c34e9da82814e5a5149b977e1f431a84adf0",
+    "webBytes": 1090899,
+    "pages": 1,
+    "webSha256": "c560d5f2233032152c12f74082ed57158efee4a5d41d563e92ca84db6f19c3d8"
   },
   {
     "source": "/plans/la-gloire/presentation/A11.pdf",
-    "beforeBytes": 1364346,
-    "webBytes": 621411,
-    "pages": 1
+    "sourceSha256": "92769437b0bb67133de1fc5807bca2a26d779a3e1d3a8a240737996c29ef0d95",
+    "webBytes": 621409,
+    "pages": 1,
+    "webSha256": "1fd5546fa6b928b010285eb61cbf28cb248265799463685660df624be333f13b"
   },
   {
     "source": "/plans/la-gloire/presentation/A12.pdf",
-    "beforeBytes": 1692223,
-    "webBytes": 776652,
-    "pages": 1
+    "sourceSha256": "fd0c390700c34bf332fa9901dcab8c1c9acd1199befd0cd60f1b06e8d5df27f5",
+    "webBytes": 776651,
+    "pages": 1,
+    "webSha256": "0dfbcead4a5f587e286fb90c48da3b585367a3c92222240c5c1dc6acf6af0add"
   },
   {
     "source": "/plans/la-gloire/presentation/A13.pdf",
-    "beforeBytes": 1649742,
-    "webBytes": 758640,
-    "pages": 1
+    "sourceSha256": "220bb9d923c73935b821517359dd07808556e71f28c1f6612a249f0399d1607f",
+    "webBytes": 758639,
+    "pages": 1,
+    "webSha256": "c24b2d793553f5606cb270d1759f15924da447beb34005e7ea0fe71a5178f86c"
   },
   {
     "source": "/plans/la-gloire/presentation/A14.pdf",
-    "beforeBytes": 1368138,
-    "webBytes": 624941,
-    "pages": 1
+    "sourceSha256": "9963932a2d4f920afa2e309914280f10575e0285e226ad9168aff4912568c624",
+    "webBytes": 624940,
+    "pages": 1,
+    "webSha256": "f42d65abe4046cdc784d269a1c06f7f823ad037ec9396b50af68054f194b8231"
   },
   {
     "source": "/plans/la-gloire/presentation/A21.pdf",
-    "beforeBytes": 1356611,
-    "webBytes": 618437,
-    "pages": 1
+    "sourceSha256": "ad57e3eba18dc8033ffe75e5f99ee16d2c5fc170a9697053f323769bd46deacc",
+    "webBytes": 618436,
+    "pages": 1,
+    "webSha256": "60782e1eef01bb70da2c3332c2701c44835dd6adf729a26770c7f2800a131221"
   },
   {
     "source": "/plans/la-gloire/presentation/A22.pdf",
-    "beforeBytes": 1685663,
-    "webBytes": 773148,
-    "pages": 1
+    "sourceSha256": "8c3470b93bc3878b6c617a226f1d23f5352a6fde83a2bf504c011830e9b0f385",
+    "webBytes": 773146,
+    "pages": 1,
+    "webSha256": "cca5bb284b15e05fcc19c194405eee8f80c455a00fa73efe453d53d8c9a3220f"
   },
   {
     "source": "/plans/la-gloire/presentation/A23.pdf",
-    "beforeBytes": 1634341,
-    "webBytes": 747594,
-    "pages": 1
+    "sourceSha256": "e2700c26bb400b59ba73f9fe918c25dddae4ea59bb505f44cbeeec3b3e165a08",
+    "webBytes": 747592,
+    "pages": 1,
+    "webSha256": "fa0ca408d86cc8e99e2934309d208080748790b404a6433fd5deafb0b3e9ff83"
   },
   {
     "source": "/plans/la-gloire/presentation/A24.pdf",
-    "beforeBytes": 1365963,
-    "webBytes": 622802,
-    "pages": 1
+    "sourceSha256": "38492bcaa771026116c64bf0da2ff27c6e8312221f523ffd77c73f30afa9868d",
+    "webBytes": 622801,
+    "pages": 1,
+    "webSha256": "0408550e210763255e3ba642829af244ad1031963489eabbb435535ce9afb34b"
   },
   {
     "source": "/plans/la-gloire/presentation/A31.pdf",
-    "beforeBytes": 1357127,
+    "sourceSha256": "e700e9ee9c530d3927dd9e191fe8a82a2633fdcfaae9fdc2774efaa9754b1693",
     "webBytes": 618460,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "79fdf3f1ec0808d74b1c63eafa36b689ae7caa9f2c9c6e0092c833eea0c988a0"
   },
   {
     "source": "/plans/la-gloire/presentation/A32.pdf",
-    "beforeBytes": 1685892,
-    "webBytes": 773429,
-    "pages": 1
+    "sourceSha256": "1d4ec4c8f7bcd5b2987ac9e7eebbd63aa018328a6b48674446ecb14bd6dc92e8",
+    "webBytes": 773428,
+    "pages": 1,
+    "webSha256": "57114c99e9df2a2f33ccd739d310895b780dfe8ea12690af17edaa857da54490"
   },
   {
     "source": "/plans/la-gloire/presentation/A33.pdf",
-    "beforeBytes": 1634694,
-    "webBytes": 747723,
-    "pages": 1
+    "sourceSha256": "e4049a130ac753e7661d2cd915afdd7fe3b0e035a8c4676a62700b2382b99e3e",
+    "webBytes": 747722,
+    "pages": 1,
+    "webSha256": "456de7ed8df8ded984108280465981d0e1033542a864b94ef283ea53ca01effa"
   },
   {
     "source": "/plans/la-gloire/presentation/A34.pdf",
-    "beforeBytes": 1364255,
-    "webBytes": 624923,
-    "pages": 1
+    "sourceSha256": "d9f63e011cfcc5d16af5569615615c4143489154795c00112027eb2e7596e125",
+    "webBytes": 624922,
+    "pages": 1,
+    "webSha256": "55acdf0239577568fb231fd321cb3d960f2aff6d99bb0369bcf4a4db9c1df2e2"
   },
   {
     "source": "/plans/la-gloire/presentation/A41.pdf",
-    "beforeBytes": 1355951,
-    "webBytes": 618146,
-    "pages": 1
+    "sourceSha256": "485db889d9dff72303d24af483e6b43e3413eb589d1e97efd632372c9e722114",
+    "webBytes": 618145,
+    "pages": 1,
+    "webSha256": "3509b4174ea57449cb80fe461092e08a4440164c77f9a3d6b5ab55ce09a08a18"
   },
   {
     "source": "/plans/la-gloire/presentation/A42.pdf",
-    "beforeBytes": 1681932,
-    "webBytes": 779767,
-    "pages": 1
+    "sourceSha256": "7c81631b4e8b84dca36d1bf85bb6975915be49a0fbf1febf87d52a8b61ca33c1",
+    "webBytes": 779766,
+    "pages": 1,
+    "webSha256": "c3a0f21f792911361a22a776945ff4d6c4c86906c368ab4b691fc7d1ff909f3f"
   },
   {
     "source": "/plans/la-gloire/presentation/A43.pdf",
-    "beforeBytes": 1633742,
-    "webBytes": 747709,
-    "pages": 1
+    "sourceSha256": "ba654050a5aaeea38c0484ad3f48b2fef436906e44c63004180b4b371c2518ac",
+    "webBytes": 747708,
+    "pages": 1,
+    "webSha256": "aaea8298f2dde14245d7b0f1734a8424215f2dbd5fd1e5eb0470a3498c2c0063"
   },
   {
     "source": "/plans/la-gloire/presentation/A44.pdf",
-    "beforeBytes": 1365138,
+    "sourceSha256": "03446b8edfaa4918a591aad3fedc0be5bd3c490f62b89255a9769133b7c7da69",
     "webBytes": 621486,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "4a7b4e9df1dae83c30a15cd8c5c6a7660135089364061fe387a9f472c7e91f33"
   },
   {
     "source": "/plans/la-gloire/presentation/A51.pdf",
-    "beforeBytes": 1374998,
+    "sourceSha256": "78c5f30617ebe445c2f8dd4267f2584bdbe96a783c25b29aa612471bbf21578e",
     "webBytes": 628611,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "1de567105d153d0b38f1e0dfca9173f300c1bd5345727d8575f4c841c05660de"
   },
   {
     "source": "/plans/la-gloire/presentation/A52.pdf",
-    "beforeBytes": 1727476,
-    "webBytes": 795604,
-    "pages": 1
+    "sourceSha256": "f7f9ed573dd68c80f7d378e3c1c63ea35f9f97e44e4dee7d75877f46e8a90ad4",
+    "webBytes": 795603,
+    "pages": 1,
+    "webSha256": "ff3bf25943f5384f0166b1f3fed9262da7d39b91c106489c19ed6fb786c1fa17"
   },
   {
     "source": "/plans/la-gloire/presentation/A53.pdf",
-    "beforeBytes": 1934904,
+    "sourceSha256": "98d3f1aa7906051a3c6dc2bf73d1e7210279f3acdc2934387a323d5cbf251a9b",
     "webBytes": 893657,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "9fc3c16c7ef86d2052f2c7eef82b617efff1154479240d7019313863bdc592ba"
   },
   {
     "source": "/plans/la-gloire/presentation/B01.pdf",
-    "beforeBytes": 1631409,
+    "sourceSha256": "88cdca4bba6962516073399be1fcf3ec91afbc45676f8c8d45772a4a5099ea8d",
     "webBytes": 745886,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "1692ea2f67d1708c8ebe3f4c2318a239f5a3e6360a507d017273828c3bb0ff25"
   },
   {
     "source": "/plans/la-gloire/presentation/B02.pdf",
-    "beforeBytes": 2235317,
-    "webBytes": 1029524,
-    "pages": 1
+    "sourceSha256": "42621b39e5b5640bc6b750a635826179c343c5151db60beea1f32c016a7fa0e2",
+    "webBytes": 1029523,
+    "pages": 1,
+    "webSha256": "e207bc7b4a016c7cca52d32cc63530bd641d33aed54acfb24efd2e1542c8b39f"
   },
   {
     "source": "/plans/la-gloire/presentation/B11.pdf",
-    "beforeBytes": 1409448,
-    "webBytes": 646912,
-    "pages": 1
+    "sourceSha256": "cdd0b5ff71b5087db2e9cf231831e5f0b60b1327638680b4e1e78d6ad49e0502",
+    "webBytes": 646911,
+    "pages": 1,
+    "webSha256": "cdda134fde00561472c250bedf2c7de59b84602874b8b62bb4c9c209c03a889a"
   },
   {
     "source": "/plans/la-gloire/presentation/B12.pdf",
-    "beforeBytes": 1905430,
-    "webBytes": 879113,
-    "pages": 1
+    "sourceSha256": "5cf64ae4220176b1fad6e9c1081c315344724cbc3c8276391bd37906cba5c822",
+    "webBytes": 879112,
+    "pages": 1,
+    "webSha256": "944e2016eb5bfdf3c003c8b7edbae5e1130e08708ff5f346167905ebab1cbce4"
   },
   {
     "source": "/plans/la-gloire/presentation/B13.pdf",
-    "beforeBytes": 1685761,
+    "sourceSha256": "eefe5fe0c5f581a24b3b309515895e9c25e1227b36df4836183b9b87877d1942",
     "webBytes": 778472,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "043a2cbe5fd65fa7ff7f5f9c718137a7c3f6598143ba74ca4d2c3746fc685585"
   },
   {
     "source": "/plans/la-gloire/presentation/B21.pdf",
-    "beforeBytes": 1401261,
+    "sourceSha256": "fc8fc1ea33efe872665d28fb760a5f81f291b351481ce7b98261847f3b487fa5",
     "webBytes": 643950,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "b2bf334061180e965998d9a3fda886580fcac73cdae9dc315f0599df031a7042"
   },
   {
     "source": "/plans/la-gloire/presentation/B22.pdf",
-    "beforeBytes": 1862445,
-    "webBytes": 860315,
-    "pages": 1
+    "sourceSha256": "6d52c91a24d66a06fd9002e9f452253ebd2dc6044d9c7df6205094f333828faa",
+    "webBytes": 860314,
+    "pages": 1,
+    "webSha256": "fa9297f25a46407444cdabe96f761527877d916cd0aff74e91ca40c75620ae25"
   },
   {
     "source": "/plans/la-gloire/presentation/B23.pdf",
-    "beforeBytes": 1677685,
-    "webBytes": 773944,
-    "pages": 1
+    "sourceSha256": "de7f9cae77ea467647733aa6c52971c3f2221bbd932d597dcbe7247a2c2d49a3",
+    "webBytes": 773943,
+    "pages": 1,
+    "webSha256": "2991d60a5912e1e593b1f254b254ae2f7542f63e8658a0eb49415ab705544672"
   },
   {
     "source": "/plans/la-gloire/presentation/B24.pdf",
-    "beforeBytes": 1360294,
-    "webBytes": 622886,
-    "pages": 1
+    "sourceSha256": "a6a74f470d2ac96fdaf38d0248a6c31e11a054893e8b56a22b3e1a82b903e66d",
+    "webBytes": 622885,
+    "pages": 1,
+    "webSha256": "9b27b1e8c6e2601649851d4cc09d13d9f1d55ccbb09961104ead52a6d0609ce4"
   },
   {
     "source": "/plans/la-gloire/presentation/B31.pdf",
-    "beforeBytes": 1401544,
-    "webBytes": 643540,
-    "pages": 1
+    "sourceSha256": "31b75b885298d2d004b8ccff1a4317285bd5ffd5c72e750e838aae5bd9cef476",
+    "webBytes": 643539,
+    "pages": 1,
+    "webSha256": "001859a39924ba82087170e11bc278bb9848f9cbbd9d5e22d83a2fa5ff7baf66"
   },
   {
     "source": "/plans/la-gloire/presentation/B32.pdf",
-    "beforeBytes": 1865565,
-    "webBytes": 857299,
-    "pages": 1
+    "sourceSha256": "c88fe4b42a72f318f5defc8dafb03c7e736f647b68234dded63e6a98a165fe0d",
+    "webBytes": 857298,
+    "pages": 1,
+    "webSha256": "07a1b74a8d8172f0d111be29e460d6615326b26e3e41ffc9877629a9de791fbb"
   },
   {
     "source": "/plans/la-gloire/presentation/B33.pdf",
-    "beforeBytes": 1678128,
-    "webBytes": 773946,
-    "pages": 1
+    "sourceSha256": "75d16fa50315c4ccb2c2e7c2a4aa60a1a947705bae1d4bc6e4938ab24ee55359",
+    "webBytes": 773945,
+    "pages": 1,
+    "webSha256": "339c43d8883770f571d05bc14e32451bdd658aa33ec6dcbc0c299353ba0816a2"
   },
   {
     "source": "/plans/la-gloire/presentation/B34.pdf",
-    "beforeBytes": 1360919,
-    "webBytes": 623834,
-    "pages": 1
+    "sourceSha256": "cd1faaff0a2d4fcf9d65f7c0739e80980996978a9794d2a7a8cf2b300d3e84a5",
+    "webBytes": 623833,
+    "pages": 1,
+    "webSha256": "42fa08c2cfc44a9ecafac8b03e0ff5fab17d5e5ccd324244ca1a74f373712dde"
   },
   {
     "source": "/plans/la-gloire/presentation/B41.pdf",
-    "beforeBytes": 1400054,
-    "webBytes": 643294,
-    "pages": 1
+    "sourceSha256": "9a4150e2aa03d995c0c6867b76b0aeeca0c65dd50a0a7d43b9ba178cfb1e1565",
+    "webBytes": 643292,
+    "pages": 1,
+    "webSha256": "f3b8463b7e25ff3f9395af814c0a6e998d9002a335289c136c9fc07147404055"
   },
   {
     "source": "/plans/la-gloire/presentation/B42.pdf",
-    "beforeBytes": 1864152,
-    "webBytes": 858162,
-    "pages": 1
+    "sourceSha256": "426ac92516c2ee2c81d4b889288bd001cf17811402937edf4670ffe30574f67f",
+    "webBytes": 858161,
+    "pages": 1,
+    "webSha256": "2bbd5c594c07d2f029b1acb5ac0aed24def2b66cd36b23be8613c2db565b0b8f"
   },
   {
     "source": "/plans/la-gloire/presentation/B43.pdf",
-    "beforeBytes": 1674796,
-    "webBytes": 773724,
-    "pages": 1
+    "sourceSha256": "38249daf495c6863d5a18e8bdd1f51a9561f80d1dcb5c37df907ed2dc7878a41",
+    "webBytes": 773723,
+    "pages": 1,
+    "webSha256": "1e247e1bc76a33189a05bd9845ae71f44e4dde591757b371c506c88081333fb4"
   },
   {
     "source": "/plans/la-gloire/presentation/B44.pdf",
-    "beforeBytes": 1361602,
-    "webBytes": 621262,
-    "pages": 1
+    "sourceSha256": "8dd8d0034460812cb7bd945aee94684dadaee023ea99f614eb51be2a767f136c",
+    "webBytes": 621261,
+    "pages": 1,
+    "webSha256": "057c5ff26841da9daf0847bdc0299e8c62ece2b742bb6892a8158e1d58bc669e"
   },
   {
     "source": "/plans/la-gloire/presentation/B51.pdf",
-    "beforeBytes": 1472437,
-    "webBytes": 676567,
-    "pages": 1
+    "sourceSha256": "ed6bfcfc35014ebe472aa2b70122fe1e950b3abe7be84c1230160133a6565d71",
+    "webBytes": 676566,
+    "pages": 1,
+    "webSha256": "c267af7fd8ffc21786502fac625d94f4bb4377dd17325226609a2a1d4e878cd2"
   },
   {
     "source": "/plans/la-gloire/presentation/B52.pdf",
-    "beforeBytes": 1883608,
-    "webBytes": 864888,
-    "pages": 1
+    "sourceSha256": "8f314e6046f8d03193cfc28e7cb422aad09dab38a55c6de2455dffd4822bc70c",
+    "webBytes": 864887,
+    "pages": 1,
+    "webSha256": "0a690212111ad7ce90d50061ea4b17c5769cdc9623bdbbba47541f7ca82ca9b5"
   },
   {
     "source": "/plans/la-gloire/presentation/B53.pdf",
-    "beforeBytes": 1745535,
-    "webBytes": 806562,
-    "pages": 1
+    "sourceSha256": "156668d8cae417749d01439595f625e91e554a3c362b2afb83128df017a04dfd",
+    "webBytes": 806561,
+    "pages": 1,
+    "webSha256": "a1252b8bbf350d6c52d39d324971182eb162aa5c0020f9aba863a96017961b1b"
   },
   {
     "source": "/plans/la-gloire/presentation/B54.pdf",
-    "beforeBytes": 1381251,
-    "webBytes": 632714,
-    "pages": 1
+    "sourceSha256": "16738dda5cf089646f7ed36349a95050e0cbfdbb2b57a9c5e2c041bbf0b96ca9",
+    "webBytes": 632713,
+    "pages": 1,
+    "webSha256": "88d098d42f1d18870e6f88d99d215e2176cf1e0b8a2f318da74e048b2b834a2c"
   },
   {
     "source": "/plans/la-gloire/presentation/C01.pdf",
-    "beforeBytes": 1568030,
-    "webBytes": 709780,
-    "pages": 1
+    "sourceSha256": "f161ecced28e57230dfc1d573bb7e65578602244bd732af5eb59ed958ed2d97a",
+    "webBytes": 709779,
+    "pages": 1,
+    "webSha256": "260032e4093bf959808f8f1c5ae344a9a5164e44e7533271282f16669941ce15"
   },
   {
     "source": "/plans/la-gloire/presentation/C02.pdf",
-    "beforeBytes": 1870523,
-    "webBytes": 880898,
-    "pages": 1
+    "sourceSha256": "1cb746e4c182fd33d60c1b7e2bcd8329e63e611ecb2ed0934c0b5ed34baad0b0",
+    "webBytes": 880897,
+    "pages": 1,
+    "webSha256": "7bce7dea7fe110f77c31d9b06bca65913530dade55ee77c040f0772b3ee7d163"
   },
   {
     "source": "/plans/la-gloire/presentation/C03.pdf",
-    "beforeBytes": 1696169,
-    "webBytes": 781267,
-    "pages": 1
+    "sourceSha256": "45ccb60e4351ec5eb2a6c0e8fa89f43431b34223bd25f693c55464ea4feeb889",
+    "webBytes": 781266,
+    "pages": 1,
+    "webSha256": "a837e5e0a5bf9759004d8ef36b4c4aeec65445970556ea711e1aa2bf33f6fe03"
   },
   {
     "source": "/plans/la-gloire/presentation/C04.pdf",
-    "beforeBytes": 1725550,
+    "sourceSha256": "3541d9d3a91e336195c4c409c0af470a1be4547a5882323e4830e2887a2a0706",
     "webBytes": 799320,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "b37eb7d64eb4722e9e1b35be4005c261ef19cd8167fb828f0b99871c92ea5fe6"
   },
   {
     "source": "/plans/la-gloire/presentation/C11.pdf",
-    "beforeBytes": 1401086,
-    "webBytes": 621431,
-    "pages": 1
+    "sourceSha256": "c496afd47e8c3e7ff78957dc909b598e1737ad50a7227d3046e459d3beb16d67",
+    "webBytes": 621430,
+    "pages": 1,
+    "webSha256": "98689cdb98204aa534dd711f9af5048b1399ce0b383cfda5bcc6be12dd0a9d70"
   },
   {
     "source": "/plans/la-gloire/presentation/C12.pdf",
-    "beforeBytes": 1623987,
-    "webBytes": 746251,
-    "pages": 1
+    "sourceSha256": "7e34606347a78f91c62f3c430faf5f1e04a21cd29077e9ad6ae9e2a5567d35b2",
+    "webBytes": 746250,
+    "pages": 1,
+    "webSha256": "1c38c7d20f3f09283fd6c5e376ce197db81b4380b624a0345fb724aae5ecd07b"
   },
   {
     "source": "/plans/la-gloire/presentation/C13.pdf",
-    "beforeBytes": 1370915,
+    "sourceSha256": "af9cb0e8ea526d0d45b211bb1cd9a9288a510e4c7c9a2b5dfd66c7b99dcd4205",
     "webBytes": 603051,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "8356f9407fa03fdb7e29b175d11fd5e41e65d3ffd2666c059bb1219f90ee94f2"
   },
   {
     "source": "/plans/la-gloire/presentation/C14.pdf",
-    "beforeBytes": 1370385,
-    "webBytes": 601286,
-    "pages": 1
+    "sourceSha256": "812144b7f68ea7650f9cb1569c3ee8368de7fdc12c7719c4a75651d03b79657f",
+    "webBytes": 601285,
+    "pages": 1,
+    "webSha256": "9c4721e2a583d5022a138b75608d7535263f69418dd0dec9f9e6f571e2a181b1"
   },
   {
     "source": "/plans/la-gloire/presentation/C15.pdf",
-    "beforeBytes": 1542210,
-    "webBytes": 703322,
-    "pages": 1
+    "sourceSha256": "c21b0c426a366a1bcf318e8fa5a81ea7c40bcb8fa8ae2ae9be1755ad98e316e9",
+    "webBytes": 703321,
+    "pages": 1,
+    "webSha256": "34e2336c314a093be6f4ffb048a07d8b4d38f82f575280d9eafbb6d83549c702"
   },
   {
     "source": "/plans/la-gloire/presentation/C21.pdf",
-    "beforeBytes": 1361111,
-    "webBytes": 595006,
-    "pages": 1
+    "sourceSha256": "e11f7f68393a5ffc8fbbcc509ba6485d319cc2614ecb244dee807ac7bfc1e2ce",
+    "webBytes": 595005,
+    "pages": 1,
+    "webSha256": "d783054e08762cb6cc31cfa4756c0fa5b971c8c3ce69573e3b03cb3b39626d6e"
   },
   {
     "source": "/plans/la-gloire/presentation/C22.pdf",
-    "beforeBytes": 1623371,
-    "webBytes": 746489,
-    "pages": 1
+    "sourceSha256": "fa8eee76fa1224ed49294d58b3c5f638ea97198b01836ef7ccea697ef4b7d42f",
+    "webBytes": 746488,
+    "pages": 1,
+    "webSha256": "3e08ed269728ac039070129d300323bb9adcaa7ed4d9e8ec1b56f400329f611a"
   },
   {
     "source": "/plans/la-gloire/presentation/C23.pdf",
-    "beforeBytes": 1368710,
+    "sourceSha256": "8b0f4f5dec3aee07f85ef35328ff065cb0fc2852a13a5aa7378ffe1f28f0ae53",
     "webBytes": 602880,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "72e78552de7346e334bf9904df77bceeeb5bc79f9cb9d126ace7581204105362"
   },
   {
     "source": "/plans/la-gloire/presentation/C24.pdf",
-    "beforeBytes": 1372571,
+    "sourceSha256": "52a454817f226c4e554fadfe3d4b81784f41d2cb7236e5415330e4409d92ac53",
     "webBytes": 603014,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "025388df47fb5cabe261c93c19d13b4d5aeb82bfa4b63ffa9d6ced7614569d1d"
   },
   {
     "source": "/plans/la-gloire/presentation/C25.pdf",
-    "beforeBytes": 1535812,
-    "webBytes": 697289,
-    "pages": 1
+    "sourceSha256": "0a17a12ff19a0a319be6682d34cdca049926751f22f7d81b01573ec32cdf3d13",
+    "webBytes": 697288,
+    "pages": 1,
+    "webSha256": "06aa2bc3ab3b5a5bef44cdee6d693da97771b74f2f15e0a97e6f9b90673dc51d"
   },
   {
     "source": "/plans/la-gloire/presentation/C31.pdf",
-    "beforeBytes": 1360193,
-    "webBytes": 598396,
-    "pages": 1
+    "sourceSha256": "1e29ea5e837eed3c39f5add5477af9e3721145762c6bbbfbfdee3c2a942b48bf",
+    "webBytes": 598395,
+    "pages": 1,
+    "webSha256": "d38499ace9f09c4be23f95eae5f7f60c8d2487844f351473ad2fc392568313ea"
   },
   {
     "source": "/plans/la-gloire/presentation/C32.pdf",
-    "beforeBytes": 1623465,
-    "webBytes": 746875,
-    "pages": 1
+    "sourceSha256": "a19282fcb2735d59ecdc4e6f9d6e4bb7f0b0935f482d9ff45b45c030153dec84",
+    "webBytes": 746874,
+    "pages": 1,
+    "webSha256": "c41a255438d3a9dde2d60ae537827312de333a4cdcf0b441c67e0889705af1aa"
   },
   {
     "source": "/plans/la-gloire/presentation/C33.pdf",
-    "beforeBytes": 1369078,
-    "webBytes": 603671,
-    "pages": 1
+    "sourceSha256": "3a053848bba69cae53dde5fc5f0696f26fb1ac6132c0b8677e222aef4c941033",
+    "webBytes": 603670,
+    "pages": 1,
+    "webSha256": "671b4fe59846948a492d3e9dc6a7fc93b63459db0148e21336f680d7227dabef"
   },
   {
     "source": "/plans/la-gloire/presentation/C34.pdf",
-    "beforeBytes": 1372710,
-    "webBytes": 603447,
-    "pages": 1
+    "sourceSha256": "28eb5832f6667f069e34fea81edf05966606c3e0d8b4fbc0f63ec04a45de6de6",
+    "webBytes": 603446,
+    "pages": 1,
+    "webSha256": "9cc99223914c094bd98bca506dd5f15b8e4c5b3dad5700b2f8262c741eb91078"
   },
   {
     "source": "/plans/la-gloire/presentation/C35.pdf",
-    "beforeBytes": 1536024,
-    "webBytes": 697533,
-    "pages": 1
+    "sourceSha256": "45eda7664a28a07e214a5744bd82eea3f59bba69243321252e86214956588456",
+    "webBytes": 697532,
+    "pages": 1,
+    "webSha256": "b8b9f21249336571db9dafc057fecc0b171b114ba2a35429c794fb2927d0c714"
   },
   {
     "source": "/plans/la-gloire/presentation/C41.pdf",
-    "beforeBytes": 1359600,
-    "webBytes": 596270,
-    "pages": 1
+    "sourceSha256": "feb06f635cbe64f1faf7a0961ee180e80f6c6de9389623cb371a3354b63db9f9",
+    "webBytes": 596269,
+    "pages": 1,
+    "webSha256": "8a9b7999a17060b7b8c54bbb0624c5dadc98350b62a72222c0f23662adcdc5ca"
   },
   {
     "source": "/plans/la-gloire/presentation/C42.pdf",
-    "beforeBytes": 1622906,
-    "webBytes": 746791,
-    "pages": 1
+    "sourceSha256": "d0cebe809da5fe1e93eaabb5aa84eaebbc2b2af29254ae001ce879bd1bdaeb30",
+    "webBytes": 746790,
+    "pages": 1,
+    "webSha256": "1b814a10da54789a7ff97ef2b621108d51698f89175df2c0ad4200c8e0f379a7"
   },
   {
     "source": "/plans/la-gloire/presentation/C43.pdf",
-    "beforeBytes": 1368247,
-    "webBytes": 601447,
-    "pages": 1
+    "sourceSha256": "973ce7b841e5cabee014a5c3f944f3980a7cc50cff22bf9c057fdb6e2fdf3a20",
+    "webBytes": 601446,
+    "pages": 1,
+    "webSha256": "fc05cfabd7d6e20384104abcb01abb0910a409d7eb5deb47c3ca358057415ef3"
   },
   {
     "source": "/plans/la-gloire/presentation/C44.pdf",
-    "beforeBytes": 1371207,
-    "webBytes": 603730,
-    "pages": 1
+    "sourceSha256": "ccfc900b5d800ccc2a000662ba916e943db3ee5bd722f0329164a0d69cadcfc4",
+    "webBytes": 603729,
+    "pages": 1,
+    "webSha256": "7efa703685d1d16f9949502474fcce1c0821b5896d7c9bb9b266300d34687225"
   },
   {
     "source": "/plans/la-gloire/presentation/C45.pdf",
-    "beforeBytes": 1536226,
-    "webBytes": 693414,
-    "pages": 1
+    "sourceSha256": "b9a7734349d9b2668c621c98edd73ffcbcf5d7ac79e4e91ef82282073cde75e5",
+    "webBytes": 693413,
+    "pages": 1,
+    "webSha256": "920c507c2cf0c65ec0127e91b57a41465f250b487b04adac584a48e0244018f1"
   },
   {
     "source": "/plans/la-gloire/presentation/C51.pdf",
-    "beforeBytes": 1382660,
-    "webBytes": 610480,
-    "pages": 1
+    "sourceSha256": "70964a9f18f45a79cbcc8054f3222020e911983fe61010d32a303b5632998e60",
+    "webBytes": 610479,
+    "pages": 1,
+    "webSha256": "2e1c2a60bab83b30b7d431944ffa4caac64a2107830c43038747b9777fd30ac1"
   },
   {
     "source": "/plans/la-gloire/presentation/C52.pdf",
-    "beforeBytes": 1659136,
-    "webBytes": 766977,
-    "pages": 1
+    "sourceSha256": "01eb69372d9dc749befe14ec102db505ee8d68c5cef968ec1a0310662b5e53cb",
+    "webBytes": 766976,
+    "pages": 1,
+    "webSha256": "32112ebb92ac265f4588b3a14f239ddf8a74c2eeeea790df2c24b4c881e7c2da"
   },
   {
     "source": "/plans/la-gloire/presentation/C53.pdf",
-    "beforeBytes": 1549117,
-    "webBytes": 698702,
-    "pages": 1
+    "sourceSha256": "bb2582ed1e94cfc89846c8f1f5d692ee29fc824505277a2ba42f0416cda5447d",
+    "webBytes": 698701,
+    "pages": 1,
+    "webSha256": "88f70d6d540df40772046d43ff95aadb1e888f1d07036e46a11c8fb05e3e3d19"
   },
   {
     "source": "/plans/la-gloire/presentation/C54.pdf",
-    "beforeBytes": 1689569,
-    "webBytes": 784221,
-    "pages": 1
+    "sourceSha256": "5effb6490db969b28cfb71cec31d13e02808b651e05b0e3808adcd9efb3f01e3",
+    "webBytes": 784220,
+    "pages": 1,
+    "webSha256": "e2cf94fddaa62f98a143bbab39c943a07e627d7a4b593d17d4403d46463da33a"
   },
   {
     "source": "/plans/la-gloire/presentation/D01.pdf",
-    "beforeBytes": 1803562,
-    "webBytes": 842224,
-    "pages": 1
+    "sourceSha256": "a7fbe62afbde7364c1508b09c19e8549929507480bba3b4cbd521f639ec9b4c2",
+    "webBytes": 842223,
+    "pages": 1,
+    "webSha256": "c61f2250a52902bb7c03b9d8e3378cdbcd6873956dabb1cb0f2b31f6742346a7"
   },
   {
     "source": "/plans/la-gloire/presentation/D02.pdf",
-    "beforeBytes": 1591156,
-    "webBytes": 722486,
-    "pages": 1
+    "sourceSha256": "4b3d13c632e65599606e8f0178af50453cd8bc0099d6cbdcfe0fe51bbd3f132c",
+    "webBytes": 722485,
+    "pages": 1,
+    "webSha256": "e62034521dd6c2dc1be1741f5bb0b22b41bbd1dfd1d677d88b71e8a4c6aa8a40"
   },
   {
     "source": "/plans/la-gloire/presentation/D03.pdf",
-    "beforeBytes": 1911756,
+    "sourceSha256": "ba8d6dcae849805a39010922910e9f5febff45adac6693e32658bff919fcad49",
     "webBytes": 903341,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "83a79de3d71604466d6978d38207ce6130728932eca60790227f650a055bf83d"
   },
   {
     "source": "/plans/la-gloire/presentation/D11.pdf",
-    "beforeBytes": 1346215,
-    "webBytes": 591414,
-    "pages": 1
+    "sourceSha256": "399a6fa6594045c1c95108ed66d2e9f39c28af2ecbd53fd6dfb34d59bf5525ce",
+    "webBytes": 591413,
+    "pages": 1,
+    "webSha256": "79cc2bcba6d4ec27ec213d8e2cd8bd470884b08b4f0283dd091cba194e369ba4"
   },
   {
     "source": "/plans/la-gloire/presentation/D12.pdf",
-    "beforeBytes": 1368619,
+    "sourceSha256": "6f2172932761f178540ec917151361018bd46d6848a724526ae65c4dde5d1535",
     "webBytes": 602228,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "58fcee7685b6815a31b614f5f342011a69e564c12ed2781040e7a3de592ab53a"
   },
   {
     "source": "/plans/la-gloire/presentation/D13.pdf",
-    "beforeBytes": 1371203,
+    "sourceSha256": "f0ba96c977444acd789d5eaeb2db2c0454e4af43465f7eea377c0ccd9de80a5c",
     "webBytes": 602670,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "1d4056a0d85108ae9860e3a1a47709cf1863eb0e7eb837ee206102569b3e0cfa"
   },
   {
     "source": "/plans/la-gloire/presentation/D14.pdf",
-    "beforeBytes": 1367173,
-    "webBytes": 602143,
-    "pages": 1
+    "sourceSha256": "0f782503975fa684dd42964c1f85efb72a699a9224c4e759c2a0791d87f65ee3",
+    "webBytes": 602142,
+    "pages": 1,
+    "webSha256": "0a2476e3159b2dc404358706c27bf50cae8324638864dc444116c9c615363c44"
   },
   {
     "source": "/plans/la-gloire/presentation/D15.pdf",
-    "beforeBytes": 1619455,
-    "webBytes": 743301,
-    "pages": 1
+    "sourceSha256": "2eebd2d94bb3d6e4ab32eb3792cf17a3be802fc5cf70410e286e3594a724dbd3",
+    "webBytes": 743300,
+    "pages": 1,
+    "webSha256": "ab15daeb044116893a4e2c3238469ed65df0a97c829fde6658c33cc17010cbec"
   },
   {
     "source": "/plans/la-gloire/presentation/D16.pdf",
-    "beforeBytes": 1387795,
-    "webBytes": 613879,
-    "pages": 1
+    "sourceSha256": "776c4e02d5af89ac95c86b1abc894dc7d1140e5f00c43715b7ff2b023748d9f4",
+    "webBytes": 613878,
+    "pages": 1,
+    "webSha256": "1b7bf762447bad909382365b58dbdeb533a2c408cdac1c6b554a1b687aaafaf3"
   },
   {
     "source": "/plans/la-gloire/presentation/D21.pdf",
-    "beforeBytes": 1342765,
-    "webBytes": 588985,
-    "pages": 1
+    "sourceSha256": "42907d55bca896577c56cc7e6cf5e732d110aca5ba106df14c3bedf29cd3ead7",
+    "webBytes": 588984,
+    "pages": 1,
+    "webSha256": "3970fedfe132d8af0eed5dda8a6eee29f0850aca15256e8680a560fca3860880"
   },
   {
     "source": "/plans/la-gloire/presentation/D22.pdf",
-    "beforeBytes": 1372841,
+    "sourceSha256": "c422abf76122c94f24e1eb76b91d1d6f15ff52ca99f4b61253421fe9e0b78148",
     "webBytes": 603299,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "8c06b0729f427f4bd4287d866bb5da302eb6866f063d65e8b85c502afd730c52"
   },
   {
     "source": "/plans/la-gloire/presentation/D23.pdf",
-    "beforeBytes": 1365790,
+    "sourceSha256": "c5e11fa04e71c87ab61e1270714908bd18511816f85dbd76699275b0f6c030d6",
     "webBytes": 601695,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "66dae6433f26508c6707e156a46fe73c6aa4e3072a63bc6a1f36861757334c82"
   },
   {
     "source": "/plans/la-gloire/presentation/D24.pdf",
-    "beforeBytes": 1361989,
-    "webBytes": 598760,
-    "pages": 1
+    "sourceSha256": "77f246cdb2767af906937b1e7bdbcadc8255a5fc9b5bd1a3e7122cc6a0e5a311",
+    "webBytes": 598759,
+    "pages": 1,
+    "webSha256": "e3e957e1e0d46a703012f75864dafc8f264d13413cccf5cdcabe2a1bf153efff"
   },
   {
     "source": "/plans/la-gloire/presentation/D25.pdf",
-    "beforeBytes": 1609880,
-    "webBytes": 738316,
-    "pages": 1
+    "sourceSha256": "932c5e96423722a3a24670d64ad3a28b996dfd63bd279b894309cda35705bdd5",
+    "webBytes": 738315,
+    "pages": 1,
+    "webSha256": "5e04981cd1df80cf968c121b059993e95f273fac8529c6ef47894193a1ef9a3d"
   },
   {
     "source": "/plans/la-gloire/presentation/D26.pdf",
-    "beforeBytes": 1364445,
-    "webBytes": 598806,
-    "pages": 1
+    "sourceSha256": "abbb65ab4730fd29f6a97fd11496b52022a26ca0a79f28450599e4834d415c2f",
+    "webBytes": 598805,
+    "pages": 1,
+    "webSha256": "6aefd53d4f280505362f808aa25a342d1d5eeae4b72bb717b58bcc3928293335"
   },
   {
     "source": "/plans/la-gloire/presentation/D31.pdf",
-    "beforeBytes": 1342183,
-    "webBytes": 587919,
-    "pages": 1
+    "sourceSha256": "2ce7e408e9f4a179687295deef497244cf59f7770c503f736c992ac85ea92720",
+    "webBytes": 587918,
+    "pages": 1,
+    "webSha256": "3c010f444703cab657ce4bd3678ddb1f7c554db7ccde3c04d3ed3984a9d3bcac"
   },
   {
     "source": "/plans/la-gloire/presentation/D32.pdf",
-    "beforeBytes": 1373553,
+    "sourceSha256": "c21415994a609fd45723642b76714be2d8cc2e48375453ce36bad1cb16dc6b1c",
     "webBytes": 603510,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "19a923a97d6671e28579ab2a0e051b96b66161c09ef103baef49870612ea55bc"
   },
   {
     "source": "/plans/la-gloire/presentation/D33.pdf",
-    "beforeBytes": 1366319,
+    "sourceSha256": "b183847f100685b11f016b524078404c4a117a959b7a5d99de82affdbd3c5829",
     "webBytes": 601232,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "c5daa348c676943f66854ab1b7bd3885e952e307658c82e49cd7b03c8d286a44"
   },
   {
     "source": "/plans/la-gloire/presentation/D34.pdf",
-    "beforeBytes": 1361851,
-    "webBytes": 598316,
-    "pages": 1
+    "sourceSha256": "9bbe2bbc0f14ba1057439346a4c7f45204361058f018226235e6c8058044c164",
+    "webBytes": 598315,
+    "pages": 1,
+    "webSha256": "91a9b669d44e8d140ffbfb2eef4d031276dc34dfbdc8946600360fa8716f5d6d"
   },
   {
     "source": "/plans/la-gloire/presentation/D35.pdf",
-    "beforeBytes": 1610383,
+    "sourceSha256": "697162d4dfae01d60f8549b32d7fba4c85f4e54c8af42b2f709eff241f26f199",
     "webBytes": 736370,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "4843d77af364c7936e7b74790c3b2a2ef1ebf503fd883dfbdb1403d6ae731b33"
   },
   {
     "source": "/plans/la-gloire/presentation/D36.pdf",
-    "beforeBytes": 1364380,
+    "sourceSha256": "920fc8fdaab92d5cb72d44f0d0d340c2f1f6b432d1e330891cd2b72368cab2ca",
     "webBytes": 599083,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "94975aa01d04e16c99a82fdf534ea422235ea19fcd5de45b6d88e91c53237b18"
   },
   {
     "source": "/plans/la-gloire/presentation/D41.pdf",
-    "beforeBytes": 1341471,
-    "webBytes": 588533,
-    "pages": 1
+    "sourceSha256": "518613468456c1a87b03041c9f9d91afd157893f84436aae582865737a3cf708",
+    "webBytes": 588532,
+    "pages": 1,
+    "webSha256": "b533354d771f064b30c3519bda234053c3d697cb8ee670f13883fc4c5182d02f"
   },
   {
     "source": "/plans/la-gloire/presentation/D42.pdf",
-    "beforeBytes": 1373137,
-    "webBytes": 602128,
-    "pages": 1
+    "sourceSha256": "dd015f06aae7cf9418b9d3fbf9f6db688a5c8d71e1155b1db51a815c6fd5d66a",
+    "webBytes": 602127,
+    "pages": 1,
+    "webSha256": "86a736e2fa76bd7a5195f035f3996d63a4f4dd52a62241c5606a2d2997134e04"
   },
   {
     "source": "/plans/la-gloire/presentation/D43.pdf",
-    "beforeBytes": 1365395,
-    "webBytes": 601049,
-    "pages": 1
+    "sourceSha256": "9d6db6a4c6f5c70940b3aa0585480b0e0563b98056a0a57783883e2c5860ece7",
+    "webBytes": 601047,
+    "pages": 1,
+    "webSha256": "19770e4ae5ef9e197d1de8fa2e7f919df6d68145cd271fea6db81383091e25f9"
   },
   {
     "source": "/plans/la-gloire/presentation/D44.pdf",
-    "beforeBytes": 1361985,
-    "webBytes": 598750,
-    "pages": 1
+    "sourceSha256": "408d12b45a73442e94775fa36e3c37dbea5e31c0e725bd02f1924da90fa67607",
+    "webBytes": 598748,
+    "pages": 1,
+    "webSha256": "0f2705212563d52e7def3d7f732989da1241d5706546fa12c9d5c8f74d566940"
   },
   {
     "source": "/plans/la-gloire/presentation/D45.pdf",
-    "beforeBytes": 1609393,
+    "sourceSha256": "4ba2a09a3da0782a08c80b63a31a92f5251b448daf1578fb47456822573db839",
     "webBytes": 736314,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "d9f171850cba1fff6253236b2a5649aaca8006a3ea7d67f644b3de1da79d0abe"
   },
   {
     "source": "/plans/la-gloire/presentation/D46.pdf",
-    "beforeBytes": 1363365,
-    "webBytes": 599117,
-    "pages": 1
+    "sourceSha256": "da9881c25f610cd3e3ef494416633d5c7bacd763db3a3cdc01a1fb4e55df15e4",
+    "webBytes": 599116,
+    "pages": 1,
+    "webSha256": "141cd3338e2a19aab30256d08faaff69c20649f6a28ae572a2c70a2dc8f5965c"
   },
   {
     "source": "/plans/la-gloire/presentation/D51.pdf",
-    "beforeBytes": 1677807,
-    "webBytes": 780756,
-    "pages": 1
+    "sourceSha256": "7d03de6983edf547d53cb3d0695f40d3b41b8332c07808f4ec69f3bf8705002b",
+    "webBytes": 780755,
+    "pages": 1,
+    "webSha256": "db5d7f1b196b0d96b527390c52a2b5790ce8dd3ddbb3499dbe7c48769a017b24"
   },
   {
     "source": "/plans/la-gloire/presentation/D52.pdf",
-    "beforeBytes": 1626492,
+    "sourceSha256": "41e3da778d797d7490d023f812edcd0d1028890cf14e6336e66ad60d3e18adeb",
     "webBytes": 743238,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "80ae670c46c636c5837c2638c0cd4d6417e9ac4775d99005ae1757ba150e9c97"
   },
   {
     "source": "/plans/la-gloire/presentation/D53.pdf",
-    "beforeBytes": 1648964,
+    "sourceSha256": "316b356d0fc096ae22849c6cbd12a1f6bf4379edc8b65673e0fd5c9ae61e7b85",
     "webBytes": 757644,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "06d3eb49ad1ab7d1efb9e052d3d36d986b21efc46c7d791f213a8500cced16f3"
   },
   {
     "source": "/plans/la-gloire/presentation/D54.pdf",
-    "beforeBytes": 1382789,
+    "sourceSha256": "3954749657634d29997bc71abe30463eee80d060bb8f572520f312696e85af41",
     "webBytes": 611296,
-    "pages": 1
+    "pages": 1,
+    "webSha256": "c9da197d0a9457de6ff0635e4691011806ed9ff9c611d8fe5654df10529f30d8"
   }
 ]

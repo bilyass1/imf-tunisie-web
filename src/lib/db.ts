@@ -1,4 +1,5 @@
 import 'server-only';
+import { assertProductionStorage } from './runtime-security';
 import { cache as requestCache } from 'react';
 import { unstable_noStore as noStore } from 'next/cache';
 import type { VisitRequest } from './visit-request';
@@ -77,6 +78,7 @@ function ensureFile(): void {
 }
 
 export async function readDb(): Promise<Database> {
+  assertProductionStorage();
   // Next.js calls generateStaticParams during `next build`, before the
   // production database migration is guaranteed to have run. Use the local
   // seed only for that compilation pass; every runtime request still requires
@@ -117,13 +119,14 @@ export async function writeDb(data: Database): Promise<void> {
 
 /** Les écritures sont-elles durables ? Faux en hébergement serverless. */
 export function isPersistent(): boolean {
-  return Boolean(process.env.DATABASE_URL) || (!process.env.VERCEL && resolveMode() === 'file' && dataDir === LOCAL_DIR);
+  return Boolean(process.env.DATABASE_URL) || (process.env.NODE_ENV!=='production' && !process.env.VERCEL && resolveMode() === 'file' && dataDir === LOCAL_DIR);
 }
 
 /** Commercial records must never silently fall back to volatile memory. */
 export async function writeCommercialDb(data: Database, media?: MediaWrite): Promise<void> {
+  assertProductionStorage();
   if (process.env.DATABASE_URL) {
-    try { const before=await getStore(buildSeed).read(); await getStore(buildSeed).write(data, media,createAuditEvent(before,data)); return; }
+    try { const before=getStore(buildSeed).original(data);if(!before)throw new Error('Rechargez les données avant de les modifier.'); await getStore(buildSeed).write(data, media,createAuditEvent(before,data)); return; }
     catch (error) {
       if (error && typeof error === 'object' && 'code' in error) throw new Error('Enregistrement PostgreSQL impossible. Réessayez ou contactez l’administrateur.');
       throw error;
@@ -154,10 +157,13 @@ export async function writeCommercialDb(data: Database, media?: MediaWrite): Pro
   catch { throw new Error('Le dossier est supprimé, mais le nettoyage de certains fichiers a échoué.'); }
 }
 
-export async function readMedia(id: string): Promise<Buffer | undefined> {
+export async function readMedia(id: string,start?:number,end?:number): Promise<Buffer | undefined> {
   if (!/^[a-f0-9-]{36}$/.test(id)) return undefined;
-  if (process.env.DATABASE_URL) return getStore(buildSeed).readMedia(id);
-  try { return await fs.promises.readFile(path.join(LOCAL_DIR,'uploads',id)); }
+  if (process.env.DATABASE_URL) return getStore(buildSeed).readMedia(id,start,end);
+  try {
+    if(start===undefined)return await fs.promises.readFile(path.join(LOCAL_DIR,'uploads',id));
+    const file=await fs.promises.open(path.join(LOCAL_DIR,'uploads',id),'r');try{const buffer=Buffer.alloc(end!-start+1);const {bytesRead}=await file.read(buffer,0,buffer.length,start);return buffer.subarray(0,bytesRead);}finally{await file.close();}
+  }
   catch { return undefined; }
 }
 
@@ -173,6 +179,7 @@ export async function getMediaMetadata(id: string): Promise<NonNullable<Database
 // Writes and authentication retain their independent, versioned reads.
 export const getPublicData = requestCache(async () => {
   // Prices and availability must be read at runtime, never frozen from build seed data.
+  assertProductionStorage();
   noStore();
   if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') {
     const data = await getStore(buildSeed).readPublic();
@@ -186,7 +193,7 @@ export const getPublicData = requestCache(async () => {
 /** A small cross-instance signal for already-open public pages. */
 export async function getPublicRevision(): Promise<string> {
   if (process.env.DATABASE_URL && process.env.NEXT_PHASE !== 'phase-production-build') {
-    return getStore(buildSeed).revision();
+    return getStore(buildSeed).publicRevision();
   }
   if (resolveMode() !== 'file') return 'memory';
   ensureFile();
@@ -322,6 +329,8 @@ export async function captureWebLead(input: {
   budget?: string;
   visit?: VisitRequest;
 }): Promise<{ contact: Contact; deal: Deal }> {
+  assertProductionStorage();
+  if(process.env.DATABASE_URL)return getStore().captureLead(input);
   const db = (await readDb());
   if (input.visit) {
     const property = db.projects.find(p => p.slug === input.projectSlug)?.lots.find(l => l.ref === input.lotRef || l.code === input.lotRef);
@@ -569,4 +578,17 @@ export async function canReadPrivateMedia(id:string,userId:string):Promise<boole
 }
 export async function getAuditEvents() {
   return process.env.DATABASE_URL?getStore(buildSeed).readAudit():[...(await readDb()).auditEvents??[]].reverse().slice(0,100);
+}
+
+export async function getMediaSize(id:string):Promise<number|undefined> {
+ if(!/^[a-f0-9-]{36}$/.test(id))return undefined;
+ if(process.env.DATABASE_URL)return getStore().mediaSize(id);
+ return fs.promises.stat(path.join(LOCAL_DIR,'uploads',id)).then(stat=>stat.size).catch(()=>undefined);
+}
+export async function readPaymentWorkspace(id:string) {
+ assertProductionStorage();return process.env.DATABASE_URL?getStore().readPaymentWorkspace(id):readDb();
+}
+
+export async function getClientRevision(id:string):Promise<string> {
+  assertProductionStorage();return process.env.DATABASE_URL?getStore().clientRevision(id):getPublicRevision();
 }

@@ -1,3 +1,7 @@
+# Historique — état du correctif du 15 octobre 2026
+
+Pour la politique actuelle, lire [DEPLOYMENT.md](../DEPLOYMENT.md) et [le suivi du 16 octobre](AUDIT-2026-10-16.md). Les références ci-dessous aux masters suivis dans Git et à l’ancien amorçage décrivent la livraison précédente.
+
 # Correctifs de l’audit du 15 octobre 2026
 
 Les comptes existants, leurs identifiants, leurs hachages de mots de passe et leurs dossiers ne sont ni supprimés ni réinitialisés par cette mise à jour. Les tests utilisent uniquement des bases et comptes jetables.

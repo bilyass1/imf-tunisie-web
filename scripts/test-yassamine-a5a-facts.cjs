@@ -42,8 +42,9 @@ for (const lot of existing) {
   assert.equal(lot.planImage, `/plans/diar-al-yassamine/${lot.ref}.webp`);
   const record = source.plans.find(item => item.ref === lot.ref);
   assert.ok(record, `Missing source ${lot.ref}`);
-  const pdf = fs.readFileSync(`source-assets${lot.planUrl}`);
-  assert.equal(crypto.createHash('sha256').update(pdf).digest('hex'), record.pdfSha256);
+  const archived=require('../docs/source-archive-inventory.json').files.find(item=>item.path===`source-assets${lot.planUrl}`);
+  assert.equal(archived.sha256,record.pdfSha256,'Recorded original checksum must match the architect source record');
+  if(fs.existsSync(`source-assets${lot.planUrl}`))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(`source-assets${lot.planUrl}`)).digest('hex'),record.pdfSha256);
   assert.ok(fs.statSync(`public${lot.planImage}`).size > 1000);
 }
 const a504 = existing.find(lot => lot.ref === 'A504');

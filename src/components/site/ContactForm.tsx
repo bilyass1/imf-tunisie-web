@@ -51,6 +51,9 @@ export default function ContactForm({
     ar: { date:'التاريخ المرغوب', time:'الوقت المرغوب (تونس)', mode:'نوع الزيارة', onsite:'في الموقع', video:'مكالمة فيديو', note:'هذا طلب موعد. سيتصل بك فريقنا لتأكيد الزيارة.', consent:'أوافق على الاتصال بي لتنظيم هذه الزيارة.', message:'أرغب في زيارة هذه الشقة.', error:'اختر موعداً مستقبلياً خلال ستة أشهر ووافق على الاتصال بك.', unavailable:'هذه الشقة لم تعد متاحة للزيارة. اختر عقاراً آخر أو اتصل بفريقنا.' },
   }[locale];
 
+  const [fields,setFields]=useState({name:'',phone:'',email:'',budget:'',message:visiting?visitLabels.message:''});
+  const change=(key:keyof typeof fields,value:string)=>setFields(current=>({...current,[key]:value}));
+
   useEffect(() => {
     setDateBounds(visitDateBounds());
     setProject(params.get('project') ?? '');
@@ -84,21 +87,21 @@ export default function ContactForm({
         <label className="label" htmlFor="cf-name">
           {labels.name} *
         </label>
-        <input id="cf-name" name="name" required className="field" autoComplete="name" />
+        <input id="cf-name" name="name" value={fields.name} onChange={e=>change('name',e.target.value)} required className="field" autoComplete="name" />
       </div>
 
       <div>
         <label className="label" htmlFor="cf-phone">
           {labels.phone} *
         </label>
-        <input id="cf-phone" name="phone" required className="field" inputMode="tel" autoComplete="tel" placeholder="+216 …" />
+        <input id="cf-phone" name="phone" type="tel" value={fields.phone} onChange={e=>change('phone',e.target.value)} required className="field" inputMode="tel" autoComplete="tel" placeholder="+216 …" />
       </div>
 
       <div>
         <label className="label" htmlFor="cf-email">
           {labels.email}
         </label>
-        <input id="cf-email" name="email" type="email" className="field" autoComplete="email" />
+        <input id="cf-email" name="email" type="email" value={fields.email} onChange={e=>change('email',e.target.value)} className="field" autoComplete="email" />
       </div>
 
       <div>
@@ -139,7 +142,7 @@ export default function ContactForm({
         <label className="label" htmlFor="cf-budget">
           {labels.budget}
         </label>
-        <select id="cf-budget" name="budget" className="field">
+        <select id="cf-budget" name="budget" value={fields.budget} onChange={e=>change('budget',e.target.value)} className="field">
           <option value="">{labels.choose}</option>
           <option value="< 150 000 TND">&lt; 150 000 TND</option>
           <option value="150 000 – 250 000 TND">150 000 – 250 000 TND</option>
@@ -152,7 +155,7 @@ export default function ContactForm({
         <label className="label" htmlFor="cf-message">
           {labels.message} *
         </label>
-        <textarea key={visiting ? 'visit' : 'contact'} id="cf-message" name="message" required defaultValue={visiting ? visitLabels.message : ''} maxLength={4000} rows={compact ? 3 : 5} className="field resize-none" />
+        <textarea key={visiting ? 'visit' : 'contact'} id="cf-message" name="message" required value={fields.message} onChange={e=>change('message',e.target.value)} maxLength={4000} rows={compact ? 3 : 5} className="field resize-none" />
       </div>
 
       {state.error && (

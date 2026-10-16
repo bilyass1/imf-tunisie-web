@@ -16,7 +16,6 @@ export function LogoMark({ className = '', light = false }: { className?: string
       alt=""
       width={80}
       height={104}
-      priority
       className={`w-auto object-contain ${className}`}
       aria-hidden="true"
     />
@@ -46,7 +45,7 @@ export default function Logo({
   compact?: boolean;
 }) {
   return (
-    <Link href={`/${locale}`} className="group flex items-center gap-3" aria-label={SITE.legalName}>
+    <Link href={`/${locale}`} className="group flex items-center gap-3" aria-label={`IMF ${SITE.legalName}`}>
       <LogoMark className={compact ? 'h-8' : 'h-10'} light={light} />
       <span className="flex flex-col leading-none">
         <span

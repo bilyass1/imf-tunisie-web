@@ -4,20 +4,22 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireAdminUser } from '@/lib/auth';
-import { getClients, getProjects } from '@/lib/db';
+import { getProjects } from '@/lib/db';
 import { clientProperties } from '@/lib/client-properties';
+import { clientDirectory } from '@/lib/client-directory';
 import { formatMoney } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
 
-export default async function AdminClientsPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function AdminClientsPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams:Promise<{after?:string}> }) {
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
   const user = await requireAdminUser(locale);
 
-  const clients = (await getClients());
+  const query=await searchParams;
+  const {items:clients,next}=await clientDirectory(query.after);
   const projects = await getProjects();
   const projectNames = new Map(projects.map((p) => [p.slug, p.name]));
 
@@ -78,6 +80,7 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
           </div>
         </div>
       )}
+      <nav aria-label="Pagination" className="mt-5 flex flex-wrap gap-4"><Link className="btn-ghost" href={`/${locale}/admin/clients`}>{locale==='ar'?'البداية':locale==='en'?'First page':'Première page'}</Link>{next&&<Link className="btn-ghost" href={`/${locale}/admin/clients?${new URLSearchParams({after:next})}`}>{locale==='ar'?'التالي':locale==='en'?'Next page':'Page suivante'}</Link>}</nav>
     </PortalShell>
   );
 }

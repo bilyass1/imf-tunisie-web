@@ -1,0 +1,50 @@
+{
+  "commit": "0845df69ca2723b2445c3d879b61ec6c5eac007c",
+  "scope": "Initial correction, before follow-up fixes; lab data, not field p75 or WCAG certification",
+  "device": "Lighthouse default mobile",
+  "runsPerUrl": 5,
+  "results": [
+    {
+      "path": "/ar",
+      "performanceMedian": 97,
+      "accessibilityMinimum": 96,
+      "lcpMedianMs": 2612.3,
+      "clsMedian": 0
+    },
+    {
+      "path": "/en",
+      "performanceMedian": 97,
+      "accessibilityMinimum": 96,
+      "lcpMedianMs": 2548.9,
+      "clsMedian": 0
+    },
+    {
+      "path": "/fr",
+      "performanceMedian": 97,
+      "accessibilityMinimum": 96,
+      "lcpMedianMs": 2594.7,
+      "clsMedian": 0
+    },
+    {
+      "path": "/fr/contact",
+      "performanceMedian": 98,
+      "accessibilityMinimum": 97,
+      "lcpMedianMs": 2358.6,
+      "clsMedian": 0
+    },
+    {
+      "path": "/fr/projets",
+      "performanceMedian": 96,
+      "accessibilityMinimum": 97,
+      "lcpMedianMs": 2706.1,
+      "clsMedian": 0
+    },
+    {
+      "path": "/fr/recherche",
+      "performanceMedian": 84,
+      "accessibilityMinimum": 97,
+      "lcpMedianMs": 2694.9,
+      "clsMedian": 0.1446
+    }
+  ]
+}

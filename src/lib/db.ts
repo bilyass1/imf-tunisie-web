@@ -213,6 +213,11 @@ export async function getPublicRevision(): Promise<string> {
   const stat = fs.statSync(dbFile);
   return `${stat.mtimeMs}/${stat.size}`;
 }
+export const getProjectLinks=requestCache(async():Promise<Pick<Project,'slug'|'name'>[]>=>{
+ assertProductionStorage();noStore();
+ if(process.env.DATABASE_URL&&process.env.NEXT_PHASE!=='phase-production-build')return (await getStore().securityQuery("SELECT slug,data->>'name' AS name FROM imf_projects ORDER BY slug")).rows;
+ return (await readDb()).projects.map(({slug,name})=>({slug,name}));
+});
 export async function getProjects(): Promise<Project[]> {
   return (await getPublicData()).projects.map(projectPresentation);
 }
@@ -299,7 +304,9 @@ export async function readCrmWorkspace(collection:'contacts'|'deals'|'activities
   return process.env.DATABASE_URL?getStore().readCrmWorkspace(collection,id):readDb();
 }
 
+/** Bounded compatibility read; use listCrm for cursor pagination. */
 export async function getContacts(): Promise<Contact[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('contacts');
   return (await readDb()).contacts;
 }
 
@@ -308,11 +315,14 @@ export async function getContact(id: string): Promise<Contact | undefined> {
   return (await readDb()).contacts.find((c) => c.id === id);
 }
 
+/** Bounded compatibility read; use listCrm for cursor pagination. */
 export async function getDeals(): Promise<Deal[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('deals');
   return (await readDb()).deals;
 }
 
 export async function getDeal(id: string): Promise<Deal | undefined> {
+  if(process.env.DATABASE_URL)return (await getStore().readCrmRecord('deals',id))[0];
   return (await readDb()).deals.find((d) => d.id === id);
 }
 
@@ -321,7 +331,9 @@ export async function getDealsForContact(contactId: string): Promise<Deal[]> {
   return (await readDb()).deals.filter((d) => d.contactId === contactId);
 }
 
+/** Bounded compatibility read; use listCrm for cursor pagination. */
 export async function getActivities(): Promise<Activity[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('activities');
   return (await readDb()).activities;
 }
 
@@ -332,7 +344,9 @@ export async function getActivitiesForContact(contactId: string): Promise<Activi
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
+/** Bounded compatibility read; use listCrm for cursor pagination. */
 export async function getTasks(): Promise<CrmTask[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('tasks');
   return (await readDb()).tasks;
 }
 

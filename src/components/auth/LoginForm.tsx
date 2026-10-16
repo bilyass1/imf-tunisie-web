@@ -5,7 +5,7 @@ import { startAuthentication, startRegistration } from '@simplewebauthn/browser'
 import { useState } from 'react';
 import { useActionState } from 'react';
 import { loginAction, type FormState } from '@/lib/actions';
-import { IconArrow, IconLock, IconMail } from '@/components/Icons';
+import { IconArrow, IconMail } from '@/components/Icons';
 
 const initial: FormState = { ok: false };
 
@@ -18,6 +18,7 @@ export default function LoginForm({
   scope: 'client' | 'admin';
   labels: { email: string; password: string; submit: string; signingIn: string; invalid: string; forgot: string };
 }) {
+  const [email,setEmail]=useState('');
   const [keyBusy,setKeyBusy]=useState(false),[keyError,setKeyError]=useState(false);
   async function verifyKey(){
     if(!state.mfa)return;setKeyBusy(true);setKeyError(false);
@@ -44,6 +45,8 @@ export default function LoginForm({
           <input
             id="login-email"
             name="email"
+            value={email}
+            onChange={event=>setEmail(event.target.value)}
             type="email"
             aria-invalid={Boolean(state.error)}
             aria-describedby={state.error ? "login-error" : undefined}
@@ -55,7 +58,7 @@ export default function LoginForm({
         </div>
       </div>
 
-      <PasswordField label={labels.password} name="password" autoComplete="current-password" minLength={1} locale={locale}/>
+      <PasswordField label={labels.password} name="password" autoComplete="current-password" minLength={1} locale={locale} invalid={Boolean(state.error)} describedBy={state.error?'login-error':undefined}/>
 
       {scope==='admin' && <details className="text-sm"><summary>Première inscription de la clé de sécurité</summary><label className="label mt-3" htmlFor="enrollment-token">Jeton privé fourni par l’exploitant</label><input id="enrollment-token" name="enrollmentToken" type="password" autoComplete="off" className="field" /></details>}
       {state.mfa && <button type="button" disabled={keyBusy} onClick={verifyKey} className="btn-gold w-full">{keyBusy?'Vérification…':state.mfa.purpose==='register'?'Inscrire une clé de sécurité':'Vérifier avec ma clé de sécurité'}</button>}

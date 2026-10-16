@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { requireAdminUser } from '@/lib/auth';
-import { getActivitiesForContact, getContact, getDealsForContact, getProjects } from '@/lib/db';
+import { getContact, getProjects } from '@/lib/db';
+import { listCrm } from '@/lib/crm';
 import { formatDate, formatMoney } from '@/lib/format';
 import { DEAL_STAGES } from '@/lib/types';
 import { addActivityAction, addTaskAction, setDealStageAction, updateDealAction } from '@/lib/actions';
@@ -13,9 +14,10 @@ import { adminNav } from '@/components/portal/clientNav';
 import { IconArrowLeft, IconMail, IconPhone, IconPin } from '@/components/Icons';
 
 export default async function ContactDetailPage({
-  params,
+  params, searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams:Promise<{dealsAfter?:string;activitiesAfter?:string}>;
 }) {
   const { locale: raw, id } = await params;
   if (!isLocale(raw)) notFound();
@@ -26,8 +28,9 @@ export default async function ContactDetailPage({
   const contact = (await getContact(id));
   if (!contact) notFound();
 
-  const deals = (await getDealsForContact(id));
-  const activities = (await getActivitiesForContact(id));
+  const query=await searchParams;
+  const [dealsPage,activitiesPage]=await Promise.all([listCrm('deals',{contactId:id,after:query.dealsAfter}),listCrm('activities',{contactId:id,after:query.activitiesAfter})]);
+  const deals=dealsPage.items,activities=activitiesPage.items;
   const projects=await getProjects();
   const projectNames = new Map(projects.map((p) => [p.slug, p.name]));
 
@@ -244,6 +247,7 @@ export default async function ContactDetailPage({
           </section>
         </div>
       </div>
+      <nav aria-label="Pagination" className="mt-5 flex flex-wrap gap-4"><Link className="btn-ghost" href={`/${locale}/admin/contacts/${encodeURIComponent(id)}`}>{locale==='ar'?'البداية':locale==='en'?'First page':'Première page'}</Link>{([['dealsAfter',dealsPage.next,dict.crm.dealsOf],['activitiesAfter',activitiesPage.next,dict.crm.recentActivity]] as const).map(([key,next,label])=>next&&<Link key={key} className="btn-ghost" href={`/${locale}/admin/contacts/${encodeURIComponent(id)}?${new URLSearchParams({...Object.fromEntries(Object.entries(query).filter((entry):entry is [string,string]=>typeof entry[1]==='string')),[key]:next})}`}>{label} →</Link>)}</nav>
     </PortalShell>
   );
 }

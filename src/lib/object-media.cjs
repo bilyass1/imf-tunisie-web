@@ -25,7 +25,7 @@ async function stream(key,start,end,signal){
   const response=await client().send(new GetObjectCommand({Bucket:process.env.MEDIA_S3_BUCKET,Key:key,Range:`bytes=${start}-${end}`}),{abortSignal:AbortSignal.any([controller.signal,AbortSignal.timeout(120000)])});
   if(response.ContentLength!==end-start+1)throw new Error('Unexpected object size');
   source=response.Body.transformToWebStream().getReader();
- }catch(error){signal?.removeEventListener('abort',abort);throw error;}
+ }catch(error){controller.abort();signal?.removeEventListener('abort',abort);throw error;}
  const done=()=>signal?.removeEventListener('abort',abort);
  let received=0;
  return new ReadableStream({

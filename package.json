@@ -29,7 +29,8 @@
     "check:sources": "node scripts/check-source-policy.cjs",
     "test:quality": "node scripts/test-quality.cjs",
     "metrics:prune": "node scripts/prune-web-vitals.cjs",
-    "test:lighthouse": "lhci autorun"
+    "test:lighthouse": "lhci autorun",
+    "benchmark:quality": "node scripts/benchmark-quality.cjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1152.0",

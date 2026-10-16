@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { test,expect, type Page } from '@playwright/test';
 import fs from 'node:fs';
 import { Pool } from 'pg';
@@ -15,6 +16,8 @@ test('real login: passkey admin, client boundaries, media ranges and CSP',async(
  const ownerContext=await browser.newContext({extraHTTPHeaders:{'x-real-ip':'192.0.2.11'}}),owner=await ownerContext.newPage();
  let loginRequest:{url:string;headers:Record<string,string>;data:Buffer}|undefined;owner.on('request',request=>{if(request.method()==='POST'&&request.headers()['next-action'])loginRequest={url:request.url(),headers:request.headers(),data:request.postDataBuffer()!};});
  await login(owner,'a@example.test');await owner.locator('button[type=submit]').click();await expect(owner).toHaveURL(/espace-client/);
+ await admin.emulateMedia({reducedMotion:'reduce'});await owner.emulateMedia({reducedMotion:'reduce'});
+ for(const page of [admin,owner]){const scan=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']).analyze();expect(scan.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>({html:n.html,summary:n.failureSummary}))}))).toEqual([]);}
  const peerContext=await browser.newContext({extraHTTPHeaders:{'x-real-ip':'192.0.2.12'}}),peer=await peerContext.newPage();await login(peer,'b@example.test');await peer.locator('button[type=submit]').click();await expect(peer).toHaveURL(/espace-client/);
  expect(loginRequest).toBeDefined();const forged=await ownerContext.request.post(loginRequest!.url,{headers:{...loginRequest!.headers,origin:'https://attacker.example'},data:loginRequest!.data});expect(forged.status()).toBeGreaterThanOrEqual(400);
  expect((await ownerContext.request.post('/api/admin-auth',{headers:{origin:'https://attacker.example'},data:{}})).status()).toBe(403);

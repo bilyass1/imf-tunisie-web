@@ -145,7 +145,7 @@ export default function AvailabilityPlan({
             </div>
           )}
 
-          <select
+          <select aria-label={labels.typology}
             value={typology}
             onChange={(e) => setTypology(e.target.value)}
             className="rounded-full border border-ink/12 bg-white px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-ink/65 outline-none transition focus:border-gold-400"
@@ -165,7 +165,7 @@ export default function AvailabilityPlan({
               type="button"
               onClick={() => setView('grid')}
               aria-label={labels.gridView}
-              className={`grid h-8 w-9 place-items-center rounded-full transition ${
+              className={`grid h-11 w-11 place-items-center rounded-full transition ${
                 view === 'grid' ? 'bg-ink text-white' : 'text-muted'
               }`}
             >
@@ -175,7 +175,7 @@ export default function AvailabilityPlan({
               type="button"
               onClick={() => setView('list')}
               aria-label={labels.listView}
-              className={`grid h-8 w-9 place-items-center rounded-full transition ${
+              className={`grid h-11 w-11 place-items-center rounded-full transition ${
                 view === 'list' ? 'bg-ink text-white' : 'text-muted'
               }`}
             >
@@ -233,11 +233,11 @@ export default function AvailabilityPlan({
                         }`}
                       >
                         <span className="block text-[13px] font-bold leading-none">{lot.code}</span>
-                        <span className="mt-1.5 block text-[10.5px] font-semibold uppercase tracking-wider opacity-70">
+                        <span className="mt-1.5 block text-[12px] font-semibold uppercase tracking-wider">
                           {lot.typology}
                         </span>
                         {lot.sellableArea ? (
-                          <span className="mt-0.5 block text-[10.5px] opacity-60">
+                          <span className="mt-0.5 block text-[12px]">
                             {lot.sellableArea.toFixed(2)} m²
                           </span>
                         ) : null}

@@ -9,6 +9,7 @@ import { getCompanySite } from '@/lib/company';
 import { alternates } from '@/lib/seo';
 import Reveal from '@/components/Reveal';
 import PageHero from '@/components/site/PageHero';
+import ContactMap from '@/components/site/ContactMap';
 import ContactForm from '@/components/site/ContactForm';
 import { IconPin, IconPhone, IconMail, IconClock } from '@/components/Icons';
 
@@ -98,7 +99,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                       <div className="mt-1.5 space-y-0.5 text-[14.5px] text-white/80">
                         {info.lines.map((line, i) =>
                           info.hrefs?.[i] ? (
-                            <a key={line} href={info.hrefs[i]} className="block transition hover:text-gold-300">
+                            <a key={line} href={info.hrefs[i]} className="flex min-h-11 items-center transition hover:text-gold-300">
                               {line}
                             </a>
                           ) : (
@@ -121,17 +122,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               </div>
             </div>
 
-            <div className="mt-6 overflow-hidden rounded-2xl border border-ink/8 bg-white">
-              <iframe
-                title="IMF — Sfax"
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                  'Route Teniour Km 1, Sfax, Tunisie',
-                )}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
-                className="h-[280px] w-full"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
+            <ContactMap locale={locale} />
           </Reveal>
 
           {/* ---- Formulaire ---- */}

@@ -43,6 +43,7 @@ export default function MaquetteSection({
   const router = useRouter();
   const isLaGloire = projectSlug === 'residence-la-gloire';
   const [view, setView] = useState<'architect' | 'availability'>('availability');
+  const [sceneRef,setSceneRef]=useState(selectedRef);
   const [apartmentRef, setApartmentRef] = useState(selectedRef ?? lots[0]?.ref ?? '');
   const apartmentCopy = locale === 'en'
     ? { label: 'Apartment', open: 'Open apartment details', pick: 'Select on the interactive plan' }
@@ -66,7 +67,7 @@ export default function MaquetteSection({
       lots={lots}
       massing={displayMassing}
       labels={labels}
-      selectedRef={apartmentRef}
+      selectedRef={sceneRef}
       initialMode={isLaGloire ? 'commercial' : 'realistic'}
       hideModeToggle={isLaGloire}
       onSelect={(ref) => router.push(`/${locale}/projets/${projectSlug}/appartements/${ref}`)}
@@ -74,7 +75,7 @@ export default function MaquetteSection({
       <div className="flex flex-wrap items-end gap-4 rounded-b-2xl bg-ink p-5 text-ivory">
         <label className="flex min-w-56 flex-col gap-2 text-sm">
           <span>{apartmentCopy.label}</span>
-          <select className="rounded-lg border border-white/25 bg-ink px-3 py-3 text-ivory" value={apartmentRef} onChange={event => {const selected=lots.find(lot=>lot.ref===event.target.value);if(selected)setApartmentRef(selected.ref);}}>
+          <select className="rounded-lg border border-white/25 bg-ink px-3 py-3 text-ivory" value={apartmentRef} onChange={event => {const selected=lots.find(lot=>lot.ref===event.target.value);if(selected){setApartmentRef(selected.ref);setSceneRef(selected.ref);}}}>
             {Array.from(new Set(lots.map(lot => lot.block))).map(block => <optgroup key={block} label={`Bloc ${block}`}>
               {lots.filter(lot => lot.block === block).map(lot => <option key={lot.ref} value={lot.ref}>{lot.code} · {lot.typology} · {lot.floor === 0 ? 'RDC' : `R+${lot.floor}`} · {lot.sellableArea ?? '—'} m² · {labels.legend[lot.status]}</option>)}
             </optgroup>)}

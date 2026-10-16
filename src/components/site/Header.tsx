@@ -50,6 +50,7 @@ export default function Header({
 
   useEffect(() => {
     if (!open) return;
+    const opener = menuButton.current;
     const dialog = menuPanel.current;
     if (!dialog) return;
     dialog.showModal();
@@ -62,7 +63,7 @@ export default function Header({
       dialog.close();
       document.body.style.overflow = previousOverflow;
       desktop.removeEventListener('change', onDesktop);
-      menuButton.current?.focus();
+      opener?.focus();
     };
   }, [open]);
 
@@ -89,7 +90,7 @@ export default function Header({
           solid ? 'border-b border-ink/8 bg-ivory/92 backdrop-blur-xl' : 'bg-gradient-to-b from-black/55 to-transparent'
         }`}
       >
-        <div dir="ltr" className="flex h-[76px] w-full items-center justify-between gap-4 px-5 sm:px-8 lg:h-[84px] lg:px-10">
+        <div dir="ltr" className="flex h-[76px] w-full items-center justify-between gap-2 px-5 sm:px-8 lg:h-[84px] lg:px-10">
           <div className="shrink-0">
             <Logo locale={locale} light={light} />
           </div>
@@ -165,7 +166,6 @@ export default function Header({
         id="mobile-menu"
         aria-label={labels.menu}
         onCancel={() => setOpen(false)}
-        onClose={() => setOpen(false)}
         className="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-y-auto border-0 bg-ink p-0 text-white backdrop:bg-black/60"
       >
         <button type="button" onClick={() => setOpen(false)} aria-label={labels.close} className="absolute end-5 top-4 grid h-11 w-11 place-items-center rounded-full border border-white/50"><IconClose className="h-5 w-5" /></button>

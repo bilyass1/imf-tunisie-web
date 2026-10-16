@@ -20,8 +20,8 @@ const nextConfig = {
   images: {
     // Les visuels sont servis depuis /public/media (déjà optimisés à 1600px, qualité 80).
     formats: ['image/avif', 'image/webp'],
-    // Les visuels ne changent pas : on les garde un an dans le cache du navigateur.
-    minimumCacheTTL: 31536000,
+    // Editable static paths may be replaced; uploaded media use new UUID URLs.
+    minimumCacheTTL: 3600,
   },
 
   experimental: {

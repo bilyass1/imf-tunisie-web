@@ -48,7 +48,6 @@ CREATE INDEX imf_passkeys_client ON imf_passkeys(client_id);
 CREATE TABLE imf_media_objects (
  id text PRIMARY KEY, object_key text NOT NULL UNIQUE, size integer NOT NULL CHECK(size BETWEEN 1 AND 8388608), sha256 text NOT NULL
 );
-INSERT INTO imf_schema_migrations(version) VALUES(6);
 CREATE TABLE imf_admin_sessions (
  id text PRIMARY KEY, client_id text NOT NULL REFERENCES imf_users(id) ON DELETE CASCADE,
  created_at timestamptz NOT NULL DEFAULT now(), last_seen timestamptz NOT NULL DEFAULT now(), expires_at timestamptz NOT NULL
@@ -72,3 +71,4 @@ END $$;
 CREATE TRIGGER imf_users_client_revision AFTER INSERT OR UPDATE ON imf_users FOR EACH ROW EXECUTE FUNCTION imf_client_revision_changed();
 CREATE TRIGGER imf_documents_client_revision AFTER INSERT OR UPDATE OR DELETE ON imf_documents FOR EACH ROW EXECUTE FUNCTION imf_client_revision_changed();
 CREATE TRIGGER imf_messages_client_revision AFTER INSERT OR UPDATE OR DELETE ON imf_messages FOR EACH ROW EXECUTE FUNCTION imf_client_revision_changed();
+INSERT INTO imf_schema_migrations(version) VALUES(6);

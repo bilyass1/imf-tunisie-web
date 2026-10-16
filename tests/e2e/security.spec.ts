@@ -31,3 +31,16 @@ test('real login: passkey admin, client boundaries, media ranges and CSP',async(
  const changedRole=new Pool({connectionString:process.env.DATABASE_URL});try{await changedRole.query("UPDATE imf_users SET role='admin' WHERE id='e2e-client-b'");await peer.goto('/fr/espace-client');await expect(peer).toHaveURL(/connexion/);}finally{await changedRole.end();}
  await adminContext.close();await ownerContext.close();await peerContext.close();
 });
+
+
+test('public plan selection accepts only catalogue references',async({page})=>{
+ await page.goto('/fr/projets/residence-la-gloire',{waitUntil:'domcontentloaded'});
+ const selector=page.getByTestId('interior-reference'),link=page.getByTestId('interior-project-link');
+ const options=selector.locator('option');await expect(options).not.toHaveCount(0);
+ const option=options.nth(Math.min(1,(await options.count())-1));
+ const valid=await option.getAttribute('value')??await option.innerText();
+ await selector.selectOption(valid);await expect(link).toHaveAttribute('href',`/fr/projets/residence-la-gloire/appartements/${encodeURIComponent(valid)}#interieur`);
+ const original=await link.getAttribute('href');
+ await selector.evaluate(element=>{const select=element as HTMLSelectElement,value='../../../unapproved?value=<img>';select.add(new Option('Unapproved',value));select.value=value;select.dispatchEvent(new Event('change',{bubbles:true}));});
+ await expect(link).toHaveAttribute('href',original!);
+});

@@ -32,6 +32,11 @@ function load(file,imports,env={}){const mod={exports:{}};vm.runInNewContext(ts.
  const sessionsModule=load('src/lib/session.ts',{'next/headers':{},'./db':{getAuthUserById:async()=>({id:'admin-fixture',role:'admin',authVersion:1})},'./postgres-store.cjs':{}},{NODE_ENV:'production'});
  await assert.rejects(()=>sessionsModule.createSession({sub:'admin-fixture',email:'admin@example.test',name:'Fixture',role:'admin',authVersion:1}),/Clé de sécurité/);
  await assert.rejects(()=>sessionsModule.createSession({sub:'admin-fixture',email:'admin@example.test',name:'Fixture',role:'admin',authVersion:0,mfa:true}),/compte a changé/);
+ const directory=require('node:fs').mkdtempSync(require('node:path').join(require('node:os').tmpdir(),'imf-sarif-'));
+ try{for(const high of [false,true]){
+  fs.writeFileSync(require('node:path').join(directory,'fixture.sarif'),JSON.stringify({runs:[{tool:{driver:{rules:[]},extensions:[{rules:[{id:'fixture',properties:{'security-severity':'8.0'}}]}]},results:high?[{ruleId:'fixture',level:'warning'}]:[]}]}));
+  const checked=require('node:child_process').spawnSync(process.execPath,['scripts/check-sarif.cjs',directory],{encoding:'utf8'});assert.equal(checked.status,high?1:0,'SARIF extensions must enforce severity, not silently skip rules');
+ }}finally{fs.rmSync(directory,{recursive:true,force:true});}
  const {PGlite}=require('@electric-sql/pglite'),{createStore}=require('../src/lib/postgres-store.cjs');const engine=new PGlite();const query=(sql,params)=>!params&&sql.includes(';')?engine.exec(sql):engine.query(sql,params);const pool={query,connect:async()=>({query,release(){}})};
  try{
   await assert.rejects(()=>createStore(pool).revision());assert.equal((await query("SELECT count(*)::int AS n FROM information_schema.tables WHERE table_schema='public'")).rows[0].n,0,'Runtime must never create tables');

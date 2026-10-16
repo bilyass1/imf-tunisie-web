@@ -74,13 +74,13 @@ export default function MaquetteSection({
       {isLaGloire && view === 'architect' && <div className="flex flex-wrap items-end gap-4 rounded-b-2xl bg-ink p-5 text-ivory">
         <label className="flex min-w-56 flex-col gap-2 text-sm">
           <span>{apartmentCopy.label}</span>
-          <select className="rounded-lg border border-white/25 bg-ink px-3 py-3 text-ivory" value={apartmentRef} onChange={event => setApartmentRef(event.target.value)}>
+          <select className="rounded-lg border border-white/25 bg-ink px-3 py-3 text-ivory" value={apartmentRef} onChange={event => {const selected=lots.find(lot=>lot.ref===event.target.value);if(selected)setApartmentRef(selected.ref);}}>
             {Array.from(new Set(lots.map(lot => lot.block))).map(block => <optgroup key={block} label={`Bloc ${block}`}>
               {lots.filter(lot => lot.block === block).map(lot => <option key={lot.ref} value={lot.ref}>{lot.code} · {lot.typology} · {lot.floor === 0 ? 'RDC' : `R+${lot.floor}`}</option>)}
             </optgroup>)}
           </select>
         </label>
-        {apartmentRef && <Link className="btn-gold" href={`/${locale}/projets/${projectSlug}/appartements/${apartmentRef}`}>{apartmentCopy.open} →</Link>}
+        {apartmentRef && <Link className="btn-gold" href={`/${locale}/projets/${projectSlug}/appartements/${encodeURIComponent(apartmentRef)}`}>{apartmentCopy.open} →</Link>}
         <button type="button" className="rounded-lg border border-white/25 px-4 py-3 text-sm hover:bg-white/10" onClick={() => setView('availability')}>{apartmentCopy.pick}</button>
       </div>}
     </div>

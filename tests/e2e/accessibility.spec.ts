@@ -76,3 +76,11 @@ test('search results render before JavaScript hydration',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false});
  try{const page=await context.newPage();await page.goto('/fr/recherche');await expect(page.getByText('Comparez les appartements à Tunis et Sfax selon votre budget, votre surface et vos envies.',{exact:true})).toBeVisible();await expect(page.getByRole('link',{name:'Voir cet appartement →'})).toHaveCount(24);}finally{await context.close();}
 });
+
+test('optional metric collector validates canonical origin behind the server',async({request})=>{
+ const body={id:'v5-browser-fixture',metric:'LCP',route:'search',locale:'fr',device:'mobile',value:1234};
+ const headers={origin:'http://localhost:3100','x-real-ip':'192.0.2.91'};
+ expect((await request.post('/api/web-vitals',{headers,data:body})).status()).toBe(204);
+ expect((await request.post('/api/web-vitals',{headers:{...headers,origin:'https://attacker.example'},data:body})).status()).toBe(400);
+ expect((await request.post('/api/web-vitals',{headers,data:{...body,route:'/fr/admin/private-account'}})).status()).toBe(400);
+});

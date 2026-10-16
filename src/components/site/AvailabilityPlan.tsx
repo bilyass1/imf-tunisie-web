@@ -227,6 +227,7 @@ export default function AvailabilityPlan({
                       <button
                         key={lot.ref}
                         type="button"
+                        aria-pressed={active}
                         onClick={() => setSelected(active ? null : lot)}
                         className={`min-w-[92px] rounded-lg border px-3 py-2.5 text-start transition-all duration-200 ${st.tile} ${
                           active ? 'ring-2 ring-gold-400 ring-offset-2' : ''
@@ -241,6 +242,7 @@ export default function AvailabilityPlan({
                             {lot.sellableArea.toFixed(2)} m²
                           </span>
                         ) : null}
+                        <span className="mt-1 block max-w-48 text-[11px] font-medium">{labels.legend[lot.status]}</span>
                       </button>
                     );
                   })}

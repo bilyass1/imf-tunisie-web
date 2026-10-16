@@ -22,7 +22,7 @@ body {
 }
 
 ::selection { background: #c9a24b; color: #111315; }
-:focus-visible { outline: 2px solid #a8822e; outline-offset: 4px; }
+:focus-visible { outline: 2px solid #805b20; outline-offset: 4px; }
 button, a, input, select { -webkit-tap-highlight-color: transparent; }
 button:disabled { cursor: not-allowed; opacity: .45; }
 canvas { display: block; }
@@ -76,7 +76,7 @@ canvas { display: block; }
   }
 
   .field {
-    @apply w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm outline-none transition
+    @apply w-full rounded-xl border border-ink/50 bg-white px-4 py-3 text-sm outline-none transition
            placeholder:text-muted focus:border-gold-400 focus:ring-4 focus:ring-gold-400/15;
   }
 

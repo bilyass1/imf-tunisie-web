@@ -54,9 +54,14 @@ test('apartment information remains available without WebGL',async({page})=>{
 test('contact errors preserve values and success receives focus',async({page})=>{
  await page.setExtraHTTPHeaders({'x-real-ip':'192.0.2.90'});
  await page.goto('/fr/contact');
- const name=page.locator('#cf-name'),phone=page.locator('#cf-phone'),message=page.locator('#cf-message');
+ // Next.js can briefly retain a hidden streaming copy; exercise the controls
+ // exposed to assistive technology rather than matching hidden DOM by ID.
+ const name=page.getByRole('textbox',{name:/^Nom et prénom/});
+ const phone=page.getByRole('textbox',{name:/^Téléphone/});
+ const message=page.getByRole('textbox',{name:/^Votre message/});
+ await expect(name).toHaveAccessibleName('Nom et prénom *');
  await name.fill('Quality fixture');await phone.fill('1'.repeat(81));await message.fill('Synthetic accessibility test');
- const submit=page.locator('form').filter({has:name}).locator('button[type=submit]');
+ const submit=page.getByRole('button',{name:'Envoyer ma demande',exact:true});
  await submit.click();await expect(page.getByRole('alert')).toBeVisible();
  await expect(name).toHaveValue('Quality fixture');await expect(message).toHaveValue('Synthetic accessibility test');
  await phone.fill('22123456');await submit.click();

@@ -59,7 +59,7 @@ export default function Logo({
         {!compact && (
           <span
             className={`mt-1 hidden whitespace-nowrap text-[8.5px] font-medium uppercase tracking-[0.18em] sm:block ${
-              light ? 'text-white/65' : 'text-ink/55'
+              light ? 'text-white/85' : 'text-muted'
             }`}
           >
             Immobilière Mseddi Frères

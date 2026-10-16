@@ -1,4 +1,5 @@
 'use client';
+import { visibilityLoop } from './visibility-loop';
 
 import { modelPixelRatio } from './model-runtime';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -348,7 +349,7 @@ export default function Maquette3D({
       // l'inclinaison qui donne le relief et les ombres portées longues
       sun.position.copy(sunDirection).multiplyScalar(span * 1.8);
       sun.castShadow = true;
-      const shadowSize = mount.clientWidth >= 768 && renderer.capabilities.maxTextureSize >= 4096 ? 4096 : 2048;
+      const shadowSize = mount.clientWidth >= 768 && !window.matchMedia('(pointer: coarse)').matches ? 2048 : 1024;
       sun.shadow.mapSize.set(shadowSize, shadowSize);
       const d = span * .85;
       sun.shadow.camera.left = -d;
@@ -1067,7 +1068,7 @@ export default function Maquette3D({
       let py = 0;
       let startX = 0, startY = 0;
       let dirty = true;
-      let visible = true;
+
 
       const place = () => {
         const fittedRadius = radius / Math.min(1, camera.aspect);
@@ -1188,8 +1189,7 @@ export default function Maquette3D({
       };
       const ro = new ResizeObserver(resize);
       ro.observe(mount);
-      const io = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; dirty = true; });
-      io.observe(mount);
+
 
       place();
 
@@ -1203,7 +1203,7 @@ export default function Maquette3D({
         place();
       }
 
-      let raf = 0;
+
       let previousTime = 0;
 
       /**
@@ -1260,10 +1260,10 @@ export default function Maquette3D({
         dirty = true;
       };
 
-      const animate = (time: number) => {
-        raf = requestAnimationFrame(animate);
+      const animate = (time: number, resumed: boolean) => {
+        if (resumed) { previousTime = time; dirty = true; }
         const dt = Math.min((time - previousTime) / 1000, .05); previousTime = time;
-        if (!visible || document.hidden) return;
+
         if (rotatingRef.current) {
           theta += dt * .06;
           place();
@@ -1280,7 +1280,7 @@ export default function Maquette3D({
         if (lightingRef.current !== appliedLighting) { applyLighting(lightingRef.current); appliedLighting = lightingRef.current; }
         if (dirty) { renderer.render(scene, camera); dirty = false; }
       };
-      raf = requestAnimationFrame(animate);
+      const stopLoop = visibilityLoop(mount, animate);
       setReady(true);
 
       apiRef.current = {
@@ -1303,9 +1303,9 @@ export default function Maquette3D({
       };
 
       cleanup = () => {
-        cancelAnimationFrame(raf);
+        stopLoop();
         ro.disconnect();
-        io.disconnect();
+
         el.removeEventListener('pointerdown', pd);
         el.removeEventListener('pointermove', pm);
         el.removeEventListener('pointerup', pu);
@@ -1440,9 +1440,9 @@ export default function Maquette3D({
           <button type="button" className="viewer-control border border-white/15" onClick={() => apiRef.current?.view('aerial')}>{labels.aerial}</button>
           <button type="button" className="viewer-control border border-white/15" onClick={() => apiRef.current?.view('street')}>{labels.street}</button>
         </div>
-        <p className="max-w-md text-xs leading-relaxed text-white/55">{labels.hint}</p>
+        <p className="max-w-md text-xs leading-relaxed text-white/85">{labels.hint}</p>
       </div>
-      <p className="border-t border-white/5 px-5 py-2 text-xs text-white/40">{labels.indicative}</p>
+      <p className="border-t border-white/5 px-5 py-2 text-xs text-white/85">{labels.indicative}</p>
     </div>
   );
 }

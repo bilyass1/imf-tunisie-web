@@ -20,13 +20,13 @@ export default function LotCompositionEditor({ lot, projectSlug, locale }: { lot
     <section id="composition-editor" className="mt-5 scroll-mt-28 rounded-2xl border border-gold-300/50 bg-white p-5 shadow-card sm:p-7">
       <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-700">{lot.code} · {lot.typology}</p>
       <h2 className="mt-2 font-display text-2xl text-ink">{labels.title}</h2>
-      <p className="mt-2 text-[13px] text-ink/55">{labels.hint}</p>
+      <p className="mt-2 text-[13px] text-muted">{labels.hint}</p>
       <form action={action} className="mt-5">
         <input type="hidden" name="projectSlug" value={projectSlug} />
         <input type="hidden" name="lotRef" value={lot.ref} />
         <div className="grid gap-4 lg:grid-cols-3">
           {(['fr', 'en', 'ar'] as const).map((language) => (
-            <label key={language} className="block text-[12px] font-semibold uppercase tracking-[0.1em] text-ink/55">
+            <label key={language} className="block text-[12px] font-semibold uppercase tracking-[0.1em] text-muted">
               {language.toUpperCase()}
               <textarea
                 key={`${lot.ref}-${language}`}

@@ -2,7 +2,7 @@
   "name": "imf-tunisie-web",
   "version": "1.0.0",
   "private": true,
-  "description": "Site web + espace client IMF \u2014 Immobili\u00e8re Mseddi Fr\u00e8res",
+  "description": "Site web + espace client IMF — Immobilière Mseddi Frères",
   "scripts": {
     "prebuild": "node scripts/prepare-public-assets.mjs && node scripts/prepare-web-documents.mjs",
     "assets:prepare": "node scripts/prepare-public-assets.mjs",
@@ -26,7 +26,10 @@
     "test:e2e": "playwright test",
     "test:hardening": "node scripts/test-hardening.cjs",
     "catalog:seed": "node scripts/catalog-seed.cjs",
-    "check:sources": "node scripts/check-source-policy.cjs"
+    "check:sources": "node scripts/check-source-policy.cjs",
+    "test:quality": "node scripts/test-quality.cjs",
+    "metrics:prune": "node scripts/prune-web-vitals.cjs",
+    "test:lighthouse": "lhci autorun"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1152.0",
@@ -46,8 +49,10 @@
     "three": "^0.171.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@electric-sql/pglite": "^0.5.8",
     "@eslint/eslintrc": "^3.3.7",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.64.1",
     "@types/bcryptjs": "2.4.6",
     "@types/node": "22.10.7",

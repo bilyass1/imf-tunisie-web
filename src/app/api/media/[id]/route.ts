@@ -1,6 +1,6 @@
 
 
-import { getMediaSize, getMediaMetadata, canReadPrivateMedia, readMedia } from '@/lib/db';
+import { getMediaSize, getMediaMetadata, canReadPrivateMedia, streamMedia } from '@/lib/db';
 import { getSession } from '@/lib/session';
 export const runtime='nodejs';
 export async function GET(request: Request, {params}: {params: Promise<{id:string}>}) {
@@ -22,8 +22,8 @@ export async function GET(request: Request, {params}: {params: Promise<{id:strin
       let start=match?.[1]?Number(match[1]):0,end=match?.[2]?Number(match[2]):size-1;
       if(match&&!match[1]&&match[2]){start=Math.max(0,size-Number(match[2]));end=size-1;}
       if(!match||(!match[1]&&!match[2])||!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||start>=size||end<start){headers.set('Content-Range',`bytes */${size}`);return new Response(null,{status:416,headers});}
-      end=Math.min(end,size-1);headers.set('Content-Range',`bytes ${start}-${end}/${size}`);headers.set('Content-Length',String(end-start+1));const bytes=await readMedia(id,start,end);if(!bytes)return new Response(null,{status:404});return new Response(bytes,{status:206,headers});
+      end=Math.min(end,size-1);headers.set('Content-Range',`bytes ${start}-${end}/${size}`);headers.set('Content-Length',String(end-start+1));const stream=await streamMedia(id,start,end,request.signal);return new Response(stream,{status:206,headers});
     }
-    headers.set('Content-Length',String(size));const bytes=await readMedia(id);if(!bytes)return new Response(null,{status:404});return new Response(bytes,{headers});
+    headers.set('Content-Length',String(size));const stream=await streamMedia(id,0,size-1,request.signal);return new Response(stream,{headers});
   } catch {return new Response(null,{status:404});}
 }

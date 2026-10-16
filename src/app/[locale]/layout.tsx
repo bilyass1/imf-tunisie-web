@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 import type { Metadata, Viewport } from 'next';
+import WebVitals from '@/components/site/WebVitals';
 import PwaInstall from '@/components/site/PwaInstall';
 import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
@@ -84,6 +85,7 @@ export default async function LocaleLayout({
       </head>
       <body className="font-sans">
         {children}
+        {process.env.NEXT_PUBLIC_WEB_VITALS_ENABLED==='1'&&<WebVitals/>}
         <AdminActivity/>
         <PwaInstall locale={locale}/>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(knowledgeGraph) }} />

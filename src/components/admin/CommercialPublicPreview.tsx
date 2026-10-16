@@ -83,7 +83,7 @@ export default function CommercialPublicPreview({ projects, initialPath }: { pro
         </label>
       </div>
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-sm">
-        <span role="status" className={published ? 'font-medium text-emerald-700' : 'text-ink/55'}>{published ? 'Modification publiée · aperçu actualisé' : loading ? 'Chargement de l’aperçu…' : 'Page publique actuelle'}</span>
+        <span role="status" className={published ? 'font-medium text-emerald-700' : 'text-muted'}>{published ? 'Modification publiée · aperçu actualisé' : loading ? 'Chargement de l’aperçu…' : 'Page publique actuelle'}</span>
         <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-gold-700 underline">Ouvrir la page publique ↗</a>
       </div>
     </div>

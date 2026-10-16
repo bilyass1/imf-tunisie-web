@@ -2,6 +2,14 @@ import type { AuditEvent } from './audit';
 import type { Database, User } from './types';
 export interface MediaWrite { id: string; bytes: Buffer }
 export interface PostgresStore {
+  searchProperties(filters:import('./property-search').PropertyFilters,locale:string,page:number):Promise<import('./property-repository.cjs').SearchResult>;
+  readCrmWorkspace(collection:string,id?:string):Promise<Database>;
+  readCrmRecord(collection:string,id?:string,contactId?:string):Promise<any[]>;
+  crmList(collection:string,input:import('./crm').PageInput):Promise<{items:any[];next?:string}>;
+  crmStats():Promise<import('./db').PipelineStats>;
+  crmDashboard():ReturnType<typeof import('./crm').getCrmDashboard>;
+
+  streamMedia(id:string,start:number,end:number,signal?:AbortSignal):Promise<ReadableStream<Uint8Array>>;
   securityQuery(sql:string,params?:unknown[]):Promise<{rows:any[]}>;
   captureLead(input:Parameters<typeof import('./db').captureWebLead>[0]):ReturnType<typeof import('./db').captureWebLead>;
   postMessage(actorId:string,recipient:string,body:string):Promise<void>;

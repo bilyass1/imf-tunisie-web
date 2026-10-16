@@ -1,6 +1,6 @@
 'use client';
 import { useMemo, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Locale } from '@/i18n/config';
@@ -28,7 +28,8 @@ export function PropertyCard({ item, locale }: { item: PropertyListing; locale: 
   </article>;
 }
 
-export default function PropertyExplorer({ listings, locale }: { listings: PropertyListing[]; locale: Locale }) {
+export default function PropertyExplorer({ listings, locale, server }: { listings: PropertyListing[]; locale: Locale;server?:import('@/lib/property-repository.cjs').SearchResult }) {
+  const router=useRouter();
   const params = useSearchParams();
   const pathname = usePathname();
   const filters = useMemo(() => readFilters(new URLSearchParams(params.toString())), [params]);
@@ -37,8 +38,8 @@ export default function PropertyExplorer({ listings, locale }: { listings: Prope
   const [limit,setLimit] = useState(12);
   const [mapOpen,setMapOpen] = useState(false);
   const [mapProject,setMapProject] = useState('');
-  const results = useMemo(() => filterProperties(listings,filters),[listings,filters]);
-  const projects = [...new Map(listings.map(l => [l.project,l])).values()];
+  const results = useMemo(() => server?listings:filterProperties(listings,filters),[listings,filters,server]);
+  const projects = server?.projects??[...new Map(listings.map(l => [l.project,l])).values()];
   const mapProjects = [...new Map(results.map(l => [l.project,l])).values()];
   const mapped = mapProjects.find(p => p.project === mapProject) ?? mapProjects[0];
   const map = mapped ? projectMap(mapped.project, mapped.mapQuery, locale) : undefined;
@@ -49,12 +50,13 @@ export default function PropertyExplorer({ listings, locale }: { listings: Prope
     en: { range: 'The minimum must not exceed the maximum.', contact: 'Get help finding a property', hint: 'Broaden your criteria or ask our team for help.' },
     ar: { range: 'يجب ألا يتجاوز الحد الأدنى الحد الأقصى.', contact: 'مساعدتي في البحث عن عقار', hint: 'وسّع معايير البحث أو اطلب المساعدة من فريقنا.' },
   }[locale];
-  function reset() { window.history.replaceState(null, '', pathname); setLimit(12); }
+  function reset() { window.history.replaceState(null, '', pathname); if(server)router.refresh(); setLimit(12); }
   function change(key: keyof PropertyFilters, value: string) {
     const next = { ...filters, [key]: value };
     const query = new URLSearchParams();
     for (const k of Object.keys(next) as (keyof PropertyFilters)[]) if (next[k] !== defaultFilters[k]) query.set(k,next[k]);
     window.history.replaceState(null,'',`${pathname}${query.size ? `?${query}` : ''}`);
+    if(server)router.refresh();
     setLimit(12);
   }
   return <div className="space-y-8">
@@ -64,16 +66,16 @@ export default function PropertyExplorer({ listings, locale }: { listings: Prope
     </div>
     <form onSubmit={e=>e.preventDefault()} className="grid gap-4 rounded-2xl border border-ink/10 bg-white p-5 sm:grid-cols-2 lg:grid-cols-4" role="search">
       <label className="sm:col-span-2"><span className="label">{c.search}</span><input type="search" className="field" maxLength={150} value={filters.q} onChange={e=>change('q',e.target.value)}/></label>
-      <label><span className="label">{c.city}</span><select className="field" value={filters.city} onChange={e=>change('city',e.target.value)}><option value="">{c.all}</option>{[...new Set(listings.map(l=>l.city))].sort().map(city=><option key={city}>{city}</option>)}</select></label>
+      <label><span className="label">{c.city}</span><select className="field" value={filters.city} onChange={e=>change('city',e.target.value)}><option value="">{c.all}</option>{[...new Set(projects.map(l=>l.city))].sort().map(city=><option key={city}>{city}</option>)}</select></label>
       <label><span className="label">{c.project}</span><select className="field" value={filters.project} onChange={e=>change('project',e.target.value)}><option value="">{c.all}</option>{projects.map(p=><option value={p.project} key={p.project}>{p.projectName}</option>)}</select></label>
       {(['minPrice','maxPrice','minArea','maxArea'] as const).map(key=><label key={key}><span className="label">{c[key]}</span><input className="field" type="number" inputMode="decimal" min="0" step="any" value={filters[key]} onChange={e=>change(key,e.target.value)}/></label>)}
-      <label><span className="label">{c.bedrooms}</span><select className="field" value={filters.bedrooms} onChange={e=>change('bedrooms',e.target.value)}><option value="">{c.all}</option>{[...new Set(listings.map(l=>l.bedrooms))].sort((a,b)=>a-b).map(n=><option key={n} value={n}>{n} · S+{n}</option>)}</select></label>
+      <label><span className="label">{c.bedrooms}</span><select className="field" value={filters.bedrooms} onChange={e=>change('bedrooms',e.target.value)}><option value="">{c.all}</option>{(server?.bedrooms??[...new Set(listings.map(l=>l.bedrooms))]).sort((a,b)=>a-b).map(n=><option key={n} value={n}>{n} · S+{n}</option>)}</select></label>
       <label><span className="label">{c.status}</span><select className="field" value={filters.status} onChange={e=>change('status',e.target.value)}><option value="">{c.all}</option>{(['available','reserved','sold','unconfirmed'] as const).map(s=><option key={s} value={s}>{c[s]}</option>)}</select></label>
       <label><span className="label">{c.sort}</span><select className="field" value={filters.sort} onChange={e=>change('sort',e.target.value)}>{[['reference',c.reference],['price-asc',c.priceAsc],['price-desc',c.priceDesc],['area-asc',c.areaAsc],['area-desc',c.areaDesc]].map(([v,label])=><option key={v} value={v}>{label}</option>)}</select></label>
       <button className="btn-ghost self-end" type="button" onClick={reset}>{c.reset}</button>
       {invalidRange && <p role="alert" className="text-sm text-red-700 sm:col-span-2 lg:col-span-4">{help.range}</p>}
     </form>
-    <div className="flex flex-wrap items-center justify-between gap-4"><p aria-live="polite">{results.length} {c.results}</p><button type="button" className="btn-ghost" aria-expanded={mapOpen} aria-controls="property-map" onClick={()=>setMapOpen(v=>!v)}>{c.map}</button></div>
+    <div className="flex flex-wrap items-center justify-between gap-4"><p aria-live="polite">{server?.total??results.length} {c.results}</p><button type="button" className="btn-ghost" aria-expanded={mapOpen} aria-controls="property-map" onClick={()=>setMapOpen(v=>!v)}>{c.map}</button></div>
     {mapOpen && <section id="property-map" className="rounded-2xl border border-ink/10 bg-white p-5">
       {mapped ? <>
         <label><span className="label">{c.mapSelect}</span><select className="field mb-4" value={mapped.project} onChange={e=>setMapProject(e.target.value)}>{mapProjects.map(p=><option key={p.project} value={p.project}>{p.projectName} · {results.filter(l=>l.project===p.project).length} {c.results}</option>)}</select></label>
@@ -82,8 +84,9 @@ export default function PropertyExplorer({ listings, locale }: { listings: Prope
         <a className="text-sm underline" href={map?.externalUrl} target="_blank" rel="noopener noreferrer">{c.mapExternal}</a>
       </> : <p>{c.empty}</p>}
     </section>}
-    {results.length ? <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{results.slice(0,limit).map(item=><PropertyCard key={item.id} item={item} locale={locale}/>)}</div> : <div className="space-y-5 rounded-2xl bg-white p-6 text-center sm:p-10"><p className="font-semibold">{c.empty}</p><p>{help.hint}</p><div className="flex flex-wrap justify-center gap-3"><button type="button" className="btn-ghost" onClick={reset}>{c.reset}</button><Link className="btn-gold" href={`/${locale}/contact`}>{help.contact}</Link></div></div>}
-    {results.length>limit && <button type="button" className="btn-ghost" onClick={()=>setLimit(v=>v+12)}>{c.more}</button>}
+    {results.length ? <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{(server?results:results.slice(0,limit)).map(item=><PropertyCard key={item.id} item={item} locale={locale}/>)}</div> : <div className="space-y-5 rounded-2xl bg-white p-6 text-center sm:p-10"><p className="font-semibold">{c.empty}</p><p>{help.hint}</p><div className="flex flex-wrap justify-center gap-3"><button type="button" className="btn-ghost" onClick={reset}>{c.reset}</button><Link className="btn-gold" href={`/${locale}/contact`}>{help.contact}</Link></div></div>}
+    {server&&<nav aria-label="Pagination" className="flex flex-wrap items-center gap-4">{server.page>1&&<Link className="btn-ghost" href={`${pathname}?${new URLSearchParams({...Object.fromEntries(params),page:String(server.page-1)})}`}>{locale==='ar'?'السابق':locale==='en'?'Previous':'Précédent'}</Link>}<span>{server.page}</span>{server.total>server.page*24&&server.page<400&&<Link className="btn-ghost" href={`${pathname}?${new URLSearchParams({...Object.fromEntries(params),page:String(server.page+1)})}`}>{c.more}</Link>}</nav>}
+    {!server&&results.length>limit && <button type="button" className="btn-ghost" onClick={()=>setLimit(v=>v+12)}>{c.more}</button>}
   </div>;
 }
 

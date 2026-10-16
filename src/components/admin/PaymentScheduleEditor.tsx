@@ -73,13 +73,13 @@ export default function PaymentScheduleEditor({ client: serverClient, projects }
       <AdminForm onSaved={onSaved} key={`total/${client.id}/${selected.key}/${apartmentTotal}`} operation="payment-total" title="Montant total de l’appartement">
         <input type="hidden" name="client" value={client.id} /><input type="hidden" name="project" value={selected.project.slug} /><input type="hidden" name="lot" value={selected.lot.ref} />
         <label className="block text-sm">Montant total convenu (TND)<input className="field mt-2" name="totalAmount" type="number" min="0.001" max={MAX_PAYMENT_AMOUNT} step="0.001" defaultValue={apartmentTotal ?? (summary.scheduled || '')} required /></label>
-        <p className="text-sm text-ink/55">Ce montant concerne le dossier de ce client. Le prix public de l’appartement reste indépendant.</p>
+        <p className="text-sm text-muted">Ce montant concerne le dossier de ce client. Le prix public de l’appartement reste indépendant.</p>
       </AdminForm>
       <div aria-live="polite" data-payment-summary className="grid gap-3 sm:grid-cols-3">
-        {[['Montant total', summary.total], ['Déjà réglé', summary.paid], ['Reste à payer', summary.remaining]].map(([label, amount]) => <div key={label} className="rounded-xl border border-ink/10 bg-white p-4"><p className="text-xs text-ink/55">{label}</p><p className="mt-2 font-display text-xl">{formatMoney(Number(amount), locale, 3)}</p></div>)}
+        {[['Montant total', summary.total], ['Déjà réglé', summary.paid], ['Reste à payer', summary.remaining]].map(([label, amount]) => <div key={label} className="rounded-xl border border-ink/10 bg-white p-4"><p className="text-xs text-muted">{label}</p><p className="mt-2 font-display text-xl">{formatMoney(Number(amount), locale, 3)}</p></div>)}
       </div>
       {apartmentTotal !== undefined && <p className="text-sm text-ink/60">Échéances prévues : {formatMoney(summary.scheduled, locale, 3)} · Reste à planifier : {formatMoney(summary.toSchedule, locale, 3)}</p>}
-      {!payments.length && <p className="text-sm text-ink/55">Aucune échéance pour cet appartement. Ajoutez la première ci-dessous.</p>}
+      {!payments.length && <p className="text-sm text-muted">Aucune échéance pour cet appartement. Ajoutez la première ci-dessous.</p>}
       {payments.map(payment => {
         const line = paymentSummary([payment]);
         return <details key={payment.id} className="rounded-xl border border-ink/10 bg-white p-4">
@@ -102,7 +102,7 @@ export default function PaymentScheduleEditor({ client: serverClient, projects }
       {apartmentTotal === undefined ? <p className="text-sm text-ink/60">Enregistrez le montant total ci-dessus avant d’ajouter de nouvelles échéances.</p> : summary.toSchedule > 0 ? <AdminForm onSaved={onSaved} key={`${client.id}/${selected.key}/${payments.length}`} operation="payment-create" title="Ajouter une échéance">
         <input type="hidden" name="client" value={client.id} /><input type="hidden" name="project" value={selected.project.slug} /><input type="hidden" name="lot" value={selected.lot.ref} />
         <PaymentFields />
-        <p className="text-sm text-ink/55">Vous pouvez ajouter plusieurs échéances jusqu’à répartir le montant total. Pour enregistrer un paiement partiel, laissez l’échéance « À régler » puis ajoutez ses versements.</p>
+        <p className="text-sm text-muted">Vous pouvez ajouter plusieurs échéances jusqu’à répartir le montant total. Pour enregistrer un paiement partiel, laissez l’échéance « À régler » puis ajoutez ses versements.</p>
       </AdminForm> : <p className="text-sm text-ink/60">Le montant total est entièrement réparti sur les échéances.</p>}
     </>}
   </section>;

@@ -15,8 +15,12 @@ function configuration(env = process.env) {
   }
   // Provider URLs often contain sslmode=require. Always verify the certificate.
   url.searchParams.delete('sslmode');
-  return { connectionString: url.toString(), max: 3, connectionTimeoutMillis: 10000,
-    idleTimeoutMillis: 10000, statement_timeout: 30000, allowExitOnIdle: true,
+  const integer=(name,fallback,min,max)=>{const value=env[name]===undefined?fallback:Number(env[name]);if(!Number.isSafeInteger(value)||value<min||value>max)throw new Error(`Configuration ${name} invalide.`);return value;};
+  const max=integer('PG_POOL_MAX',3,1,20),instances=integer('PG_MAX_INSTANCES',1,1,10000);
+  const budget=integer('PG_CONNECTION_BUDGET',100,2,100000),reserve=integer('PG_CONNECTION_RESERVE',20,1,99999);
+  if(max*instances>budget-reserve)throw new Error('Le budget global PostgreSQL est dépassé. Réduisez le pool/la concurrence ou configurez un pooler.');
+  return { connectionString: url.toString(), max, connectionTimeoutMillis: integer('PG_CONNECT_TIMEOUT_MS',5000,100,30000),
+    idleTimeoutMillis: 10000, statement_timeout: 15000, idle_in_transaction_session_timeout: 15000, application_name: 'imf-web', allowExitOnIdle: true,
     ssl: local ? false : { rejectUnauthorized: true, ...(env.PG_SSL_CA_FILE ? { ca: fs.readFileSync(env.PG_SSL_CA_FILE, 'utf8') } : {}) } };
 }
 
@@ -34,7 +38,7 @@ const validatedPools=new WeakMap();
 async function ensureSchema(pool) {
  if(!validatedPools.has(pool)) validatedPools.set(pool,(async()=>{
   const result=await pool.query('SELECT max(version)::int AS version FROM imf_schema_migrations');
-  if(result.rows[0]?.version!==6) throw new Error('Schéma PostgreSQL incompatible. Exécutez npm run db:migrate avec le compte de migration avant le démarrage.');
+  if(result.rows[0]?.version!==7) throw new Error('Schéma PostgreSQL incompatible. Exécutez npm run db:migrate avec le compte de migration avant le démarrage.');
   const expected=['imf_users_role_valid','imf_users_auth_version_valid','imf_users_property_fk','imf_projects_data_object','imf_messages_sender_valid','imf_messages_body_valid','imf_records_collection_valid','imf_client_property_assignments_pkey'];
   const constraints=(await pool.query('SELECT conname FROM pg_constraint WHERE connamespace=current_schema()::regnamespace AND conname=ANY($1::text[])',[expected])).rows;
   if(constraints.length!==expected.length)throw new Error('Contraintes PostgreSQL incomplètes. Vérifiez les migrations.');
@@ -273,6 +277,28 @@ function createStore(pool, _seedFactory) {
     const result=await pool.query(start===undefined?'SELECT bytes FROM imf_media WHERE id=$1':'SELECT substring(bytes from $2::int for $3::int) AS bytes FROM imf_media WHERE id=$1',start===undefined?[id]:[id,start+1,end-start+1]);
     return result.rows[0]?.bytes;
   }
+  async function streamMedia(id,start,end,signal) {
+    await ensureSchema(pool);
+    const object=(await pool.query('SELECT object_key FROM imf_media_objects WHERE id=$1',[id])).rows[0];
+    if(object)return require('./object-media.cjs').stream(object.object_key,start,end,signal);
+    return require('./media-stream.cjs').chunkStream(async(first,last)=>{
+      const result=await pool.query('SELECT substring(bytes from $2::int for $3::int) AS bytes FROM imf_media WHERE id=$1',[id,first+1,last-first+1]);
+      return result.rows[0]?.bytes;
+    },start,end,signal);
+  }
+  async function readCrmWorkspace(collection,id) {
+    await ensureSchema(pool);
+    if(!['contacts','deals','activities','tasks'].includes(collection))throw new Error('Invalid collection');
+    const rows=id?(await pool.query('SELECT data FROM imf_records WHERE collection=$1 AND id=$2',[collection,id])).rows:[];
+    const data={projects:[],users:[],news:[],contacts:[],deals:[],activities:[],tasks:[],uploads:[]};
+    data[collection]=rows.map(row=>row.data);
+    snapshots.set(data,{rows:flatten(structuredClone(data)),original:structuredClone(data)});return data;
+  }
+  async function readCrmRecord(collection,id,contactId) {
+    await ensureSchema(pool);
+    if(!['contacts','deals','activities','tasks'].includes(collection))throw new Error('Invalid collection');
+    return (await pool.query(`SELECT data FROM imf_records WHERE collection=$1 AND ($2::text IS NULL OR id=$2) AND ($3::text IS NULL OR data->>'contactId'=$3) ORDER BY data->>'date' DESC,id LIMIT 100`,[collection,id??null,contactId??null])).rows.map(row=>row.data);
+  }
   async function readLotWorkspace(projectSlug,ref) {
     await ensureSchema(pool);
     const project=(await pool.query('SELECT slug,data FROM imf_projects WHERE slug=$1',[projectSlug])).rows[0];
@@ -313,7 +339,7 @@ function createStore(pool, _seedFactory) {
       if(rows.rows.some(row=>[...(row.project_photos??[]),...(row.lot_photos??[])].some(photo=>photo.src===href)))return true;
     }return false;
   }
-  return {readLotWorkspace,publicRevision,clientRevision,captureLead:async(input)=>{await ensureSchema(pool);return require('./scoped-leads.cjs').captureLead(pool,input);},postMessage:async(...args)=>{await ensureSchema(pool);return require('./scoped-chat.cjs').postMessage(pool,...args);},readPaymentWorkspace,mediaSize,securityQuery:async(sql,params)=>{await ensureSchema(pool);return pool.query(sql,params);},original:data=>structuredClone(snapshots.get(data)?.original),readAudit,conversationRevision,canReadMedia,read,readPublic,revision,write,readMedia,readMediaMetadata,consumeRateLimit,readAuthUser,readUserById};
+  return {searchProperties:async(...args)=>{await ensureSchema(pool);return require('./property-repository.cjs').search(pool,...args);},readCrmWorkspace,readCrmRecord,crmList:async(...args)=>{await ensureSchema(pool);return require('./crm-repository.cjs').list(pool,...args);},crmStats:async()=>{await ensureSchema(pool);return require('./crm-repository.cjs').stats(pool);},crmDashboard:async()=>{await ensureSchema(pool);return require('./crm-repository.cjs').dashboard(pool);},streamMedia,readLotWorkspace,publicRevision,clientRevision,captureLead:async(input)=>{await ensureSchema(pool);return require('./scoped-leads.cjs').captureLead(pool,input);},postMessage:async(...args)=>{await ensureSchema(pool);return require('./scoped-chat.cjs').postMessage(pool,...args);},readPaymentWorkspace,mediaSize,securityQuery:async(sql,params)=>{await ensureSchema(pool);return pool.query(sql,params);},original:data=>structuredClone(snapshots.get(data)?.original),readAudit,conversationRevision,canReadMedia,read,readPublic,revision,write,readMedia,readMediaMetadata,consumeRateLimit,readAuthUser,readUserById};
 }
 let store;
 function getStore(seedFactory) {

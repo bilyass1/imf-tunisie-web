@@ -33,7 +33,7 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
       accent="admin"
     >
       {clients.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-12 text-center text-ink/50">
+        <p className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-12 text-center text-muted">
           {dict.admin.clientsEmpty}
         </p>
       ) : (
@@ -41,7 +41,7 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] text-[13.5px]">
               <thead>
-                <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-ink/50">
+                <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-muted">
                   <th className="px-6 py-3 text-start font-semibold">{dict.admin.table.name}</th>
                   <th className="px-6 py-3 text-start font-semibold">{dict.admin.table.contact}</th>
                   <th className="px-6 py-3 text-start font-semibold">{dict.admin.table.project}</th>
@@ -57,13 +57,13 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
                   return (
                     <tr key={c.id} className="border-t border-ink/6">
                       <td className="px-6 py-4 font-medium text-ink">{c.name}</td>
-                      <td className="px-6 py-4 text-ink/55">
+                      <td className="px-6 py-4 text-muted">
                         <a href={`mailto:${c.email}`} className="block hover:text-gold-600">
                           {c.email}
                         </a>
-                        {c.phone && <span className="block text-ink/40">{c.phone}</span>}
+                        {c.phone && <span className="block text-muted">{c.phone}</span>}
                       </td>
-                      <td className="px-6 py-4 text-ink/55">
+                      <td className="px-6 py-4 text-muted">
                         {clientProperties(c).map(item=>projectNames.get(item.projectSlug)??item.projectSlug).join(' · ') || '—'}
                       </td>
                       <td className="px-6 py-4 font-semibold text-ink">{clientProperties(c).map(item=>item.lotRef).join(' · ') || '—'}</td>

@@ -29,6 +29,8 @@ export default function LazyMount({
   useEffect(() => {
     const el = ref.current;
     if (!el || shown) return;
+    const saveData=(navigator as Navigator & {connection?:{saveData?:boolean}}).connection?.saveData;
+    if(saveData || window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 480px)').matches)return;
     if (typeof IntersectionObserver === 'undefined') {
       setShown(true);
       return;

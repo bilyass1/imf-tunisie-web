@@ -220,7 +220,7 @@ export default function Panorama360({ rooms, labels, poster }: {
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-4 py-3 sm:px-5">
         <div className="flex items-center gap-3 text-white">
           <span className="rounded-full border border-gold-300/40 px-3 py-1 text-sm text-gold-200">{current?.photo ? 'Photo' : '360°'}</span>
-          <div><p className="text-base font-medium">{current?.label ?? labels.title}</p><p className="text-xs text-white/55">{labels.room} {rooms.length ? active + 1 : 0} / {rooms.length}{current?.source ? ` · ${current.source}` : ''}</p></div>
+          <div><p className="text-base font-medium">{current?.label ?? labels.title}</p><p className="text-xs text-white/85">{labels.room} {rooms.length ? active + 1 : 0} / {rooms.length}{current?.source ? ` · ${current.source}` : ''}</p></div>
         </div>
         <button type="button" className="viewer-control" onClick={() => setImmersive(v => !v)} aria-label={immersive ? labels.exit : labels.fullscreen}>
           {immersive ? <IconClose className="h-5 w-5" /> : <span aria-hidden="true" className="text-xl">⛶</span>}
@@ -236,7 +236,7 @@ export default function Panorama360({ rooms, labels, poster }: {
             {status === 'loading' ? <><span className="mx-auto mb-5 block h-9 w-9 animate-spin rounded-full border-2 border-white/15 border-t-gold-300" /><p className="text-sm text-white/75">{labels.loading}</p></> : <>
               <IconSparkle className="mx-auto h-8 w-8 text-gold-300" />
               <p className="mt-5 font-display text-3xl text-white">{status === 'error' ? labels.errorTitle : labels.unavailableTitle}</p>
-              <p className="mt-3 text-base leading-relaxed text-white/65">{status === 'error' ? labels.errorBody : labels.unavailableBody}</p>
+              <p className="mt-3 text-base leading-relaxed text-white/85">{status === 'error' ? labels.errorBody : labels.unavailableBody}</p>
               {status === 'error' && <button type="button" className="btn-gold mt-5" onClick={() => setAttempt(a => a + 1)}>{labels.retry}</button>}
             </>}
           </div>
@@ -255,11 +255,11 @@ export default function Panorama360({ rooms, labels, poster }: {
         <div className="no-scrollbar flex gap-3 overflow-x-auto pb-1" aria-label={labels.room}>
           {rooms.map((room, i) => <button key={room.id} type="button" aria-pressed={i === active} onClick={() => setActive(i)}
             className={`group relative flex w-28 shrink-0 flex-col overflow-hidden rounded-lg border text-start transition sm:w-36 ${i === active ? 'border-gold-300 bg-gold-300/10' : 'border-white/15 hover:border-white/50'}`}>
-            {room.photo || (room.available !== false && room.panorama) ? <img src={room.photo ?? room.panorama} alt="" loading="lazy" className={`h-14 w-full object-cover transition sm:h-20 ${i === active ? 'opacity-100' : 'opacity-55 group-hover:opacity-90'}`} /> : <span className="grid h-14 place-items-center bg-white/5 text-lg text-white/30 sm:h-20">360°</span>}
+            {room.photo || (room.available !== false && room.panorama) ? <img src={room.photo ?? room.panorama} alt="" loading="lazy" className={`h-14 w-full object-cover transition sm:h-20 ${i === active ? 'opacity-100' : 'opacity-55 group-hover:opacity-90'}`} /> : <span className="grid h-14 place-items-center bg-white/5 text-lg text-white/85 sm:h-20">360°</span>}
             <span className={`px-3 py-2 text-sm ${i === active ? 'text-gold-200' : 'text-white/75'}`}>{room.label}</span>
           </button>)}
         </div>
-        <p className="mt-3 text-xs text-white/50">{labels.hint}</p>
+        <p className="mt-3 text-xs text-white/85">{labels.hint}</p>
       </div>
     </div>
   );

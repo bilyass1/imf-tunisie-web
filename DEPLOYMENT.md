@@ -2,7 +2,7 @@
 
 ## Sources de vérité
 
-`database/001…006` et `scripts/migrations.cjs` définissent le schéma. Les migrations sont transactionnelles, versionnées et exécutées par un compte propriétaire séparé, avant les processus web. Le runtime vérifie la version 6 et refuse un schéma absent/ancien ; il n’exécute aucun DDL ni amorçage implicite. Les statuts, comptes et hashes existants sont conservés. Une donnée héritée invalide fait échouer la migration, sans correction arbitraire ni suppression.
+`database/001…007` et `scripts/migrations.cjs` définissent le schéma. Les migrations sont transactionnelles, versionnées et exécutées par un compte propriétaire séparé, avant les processus web. Le runtime vérifie la version 7 et refuse un schéma absent/ancien ; il n’exécute aucun DDL ni amorçage implicite. Les statuts, comptes et hashes existants sont conservés. Une donnée héritée invalide fait échouer la migration, sans correction arbitraire ni suppression.
 
 Ne pas exécuter les migrations ou importer une sauvegarde depuis un compte client ou une requête web.
 

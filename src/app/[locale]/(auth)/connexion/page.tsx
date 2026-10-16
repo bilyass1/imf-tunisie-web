@@ -27,7 +27,7 @@ export default async function ClientLoginPage({ params }: { params: Promise<{ lo
         <div className="absolute inset-x-0 bottom-0 p-12">
           <LogoMark className="h-12 w-auto" light />
           <h2 className="h-display mt-6 max-w-sm text-[38px] text-white">{dict.auth.clientTitle}</h2>
-          <p className="mt-4 max-w-sm text-[15px] leading-relaxed text-white/55">{dict.auth.clientSubtitle}</p>
+          <p className="mt-4 max-w-sm text-[15px] leading-relaxed text-white/85">{dict.auth.clientSubtitle}</p>
         </div>
       </div>
 
@@ -36,7 +36,7 @@ export default async function ClientLoginPage({ params }: { params: Promise<{ lo
         <div className="mx-auto w-full max-w-sm">
           <Link
             href={`/${locale}`}
-            className="mb-10 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-ink/45 transition hover:text-gold-600"
+            className="mb-10 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-muted transition hover:text-gold-600"
           >
             <IconArrowLeft className="h-4 w-4 rtl:rotate-180" />
             {dict.auth.backToSite}
@@ -48,7 +48,7 @@ export default async function ClientLoginPage({ params }: { params: Promise<{ lo
 
           <h1 className="h-display mt-6 text-[34px]">{dict.auth.clientTitle}</h1>
           <div className="rule-gold mt-5" />
-          <p className="mt-5 text-[14.5px] leading-relaxed text-ink/55">{dict.auth.clientSubtitle}</p>
+          <p className="mt-5 text-[14.5px] leading-relaxed text-muted">{dict.auth.clientSubtitle}</p>
 
           <div className="mt-9">
             <LoginForm

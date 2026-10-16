@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import type { Locale } from '@/i18n/config';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconArrow, IconArrowLeft, IconClose } from '@/components/Icons';
 import { useImmersiveViewer } from './useImmersiveViewer';
@@ -14,8 +15,10 @@ export interface GalleryItem {
 export default function Gallery({
   items,
   labels,
+  locale,
 }: {
   items: GalleryItem[];
+  locale: Locale;
   labels: { close: string; previous: string; next: string; of: string };
 }) {
   const [index, setIndex] = useState<number | null>(null);
@@ -24,7 +27,6 @@ export default function Gallery({
   const [loadedSrc, setLoadedSrc] = useState('');
   const [failedSrc, setFailedSrc] = useState('');
   const [retry, setRetry] = useState(0);
-  const locale = labels.close === 'Fermer' ? 'fr' : /[\u0600-\u06ff]/.test(labels.close) ? 'ar' : 'en';
   const status = {
     fr: { loading: 'Chargement de la photo…', error: 'La photo n’a pas pu se charger.', retry: 'Réessayer' },
     en: { loading: 'Loading photo…', error: 'The photo could not be loaded.', retry: 'Try again' },
@@ -40,14 +42,14 @@ export default function Gallery({
     if (index === null) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') close();
-      if (e.key === 'ArrowLeft') prev();
-      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') { if (locale === 'ar') next(); else prev(); }
+      if (e.key === 'ArrowRight') { if (locale === 'ar') prev(); else next(); }
     };
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);
     };
-  }, [index, close, prev, next]);
+  }, [index, close, prev, next, locale]);
 
   return (
     <>

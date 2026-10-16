@@ -35,7 +35,7 @@ export default function ProjectCard({
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
           priority={priority}
-          quality={90}
+          quality={80}
           className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.07]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-transparent" />
@@ -70,17 +70,17 @@ export default function ProjectCard({
               <span className="font-semibold text-gold-600">
                 {stats.available} {dict.projects.available}
               </span>
-              <span className="text-ink/40">
+              <span className="text-muted">
                 {stats.total} {dict.projects.lots}
               </span>
               {stats.minArea > 0 && (
-                <span className="text-ink/40">
+                <span className="text-muted">
                   {dict.projects.from} {formatArea(programme?.minArea ?? stats.minArea, locale)}
                 </span>
               )}
             </>
           ) : (
-            <span className="text-ink/40">{project.slug === 'complexe-marassim' ? t(project.highlights[0], locale) : project.status === 'delivered' ? dict.projects.sold : t(project.subtitle, locale)}</span>
+            <span className="text-muted">{project.slug === 'complexe-marassim' ? t(project.highlights[0], locale) : project.status === 'delivered' ? dict.projects.sold : t(project.subtitle, locale)}</span>
           )}
         </div>
 

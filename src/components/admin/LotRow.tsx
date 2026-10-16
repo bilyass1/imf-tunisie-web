@@ -29,8 +29,8 @@ export default function LotRow({
   return (
     <tr className="border-t border-ink/6">
       <td className="px-4 py-2.5 font-semibold text-ink">{lot.code}</td>
-      <td className="px-4 py-2.5 text-ink/55">{floorText}</td>
-      <td className="px-4 py-2.5 text-ink/55">{lot.typology}</td>
+      <td className="px-4 py-2.5 text-muted">{floorText}</td>
+      <td className="px-4 py-2.5 text-muted">{lot.typology}</td>
       <td className="px-4 py-2.5 text-ink/70">{areaText}</td>
       <td className="px-4 py-2.5">
         <LotStatusEditor key={`${lot.ref}/${lot.status}/${lot.reservationNote}/${owner?.id}`} compact projectSlug={projectSlug} lot={lot} owner={owner} clients={clients}/>
@@ -48,7 +48,7 @@ export default function LotRow({
           />
           <button
             type="submit"
-            className="rounded-lg border border-ink/12 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink/50 transition hover:border-gold-400 hover:text-gold-600"
+            className="rounded-lg border border-ink/12 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted transition hover:border-gold-400 hover:text-gold-600"
           >
             OK
           </button>

@@ -40,11 +40,13 @@ export default function LoginForm({
           {labels.email}
         </label>
         <div className="relative">
-          <IconMail className="pointer-events-none absolute start-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/30" />
+          <IconMail className="pointer-events-none absolute start-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
           <input
             id="login-email"
             name="email"
             type="email"
+            aria-invalid={Boolean(state.error)}
+            aria-describedby={state.error ? "login-error" : undefined}
             required
             autoComplete="email"
             className="field !ps-11"
@@ -58,14 +60,14 @@ export default function LoginForm({
       {scope==='admin' && <details className="text-sm"><summary>Première inscription de la clé de sécurité</summary><label className="label mt-3" htmlFor="enrollment-token">Jeton privé fourni par l’exploitant</label><input id="enrollment-token" name="enrollmentToken" type="password" autoComplete="off" className="field" /></details>}
       {state.mfa && <button type="button" disabled={keyBusy} onClick={verifyKey} className="btn-gold w-full">{keyBusy?'Vérification…':state.mfa.purpose==='register'?'Inscrire une clé de sécurité':'Vérifier avec ma clé de sécurité'}</button>}
       {keyError && <p role="alert" className="text-sm text-red-700">Vérification refusée ou annulée. Recommencez la connexion.</p>}
-      {state.error && <p className="rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">{labels.invalid}</p>}
+      {state.error && <p id="login-error" role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-[13px] text-red-700">{labels.invalid}</p>}
 
       <button type="submit" disabled={pending} className="btn-gold w-full disabled:opacity-60">
         {pending ? labels.signingIn : labels.submit}
         {!pending && <IconArrow className="h-4 w-4 rtl:rotate-180" />}
       </button>
 
-      <p className="text-center text-[12px] text-ink/40">{labels.forgot}</p>
+      <p className="text-center text-[12px] text-muted">{labels.forgot}</p>
     </form>
   );
 }

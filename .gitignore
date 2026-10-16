@@ -29,3 +29,5 @@ qa/
 .env.*.local
 
 sbom.*.json
+.lighthouseci/
+artifacts/

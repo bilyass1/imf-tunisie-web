@@ -21,7 +21,7 @@ export default async function AdminLoginPage({ params }: { params: Promise<{ loc
       <div className="w-full max-w-md rounded-2xl bg-ivory p-8 shadow-lux sm:p-10">
         <Link
           href={`/${locale}`}
-          className="mb-8 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-ink/45 transition hover:text-gold-600"
+          className="mb-8 inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-muted transition hover:text-gold-600"
         >
           <IconArrowLeft className="h-4 w-4 rtl:rotate-180" />
           {dict.auth.backToSite}
@@ -30,7 +30,7 @@ export default async function AdminLoginPage({ params }: { params: Promise<{ loc
         <LogoMark className="h-11 w-auto" />
         <h1 className="h-display mt-6 text-[30px]">{dict.auth.adminTitle}</h1>
         <div className="rule-gold mt-5" />
-        <p className="mt-5 text-[14px] text-ink/55">{dict.auth.adminSubtitle}</p>
+        <p className="mt-5 text-[14px] text-muted">{dict.auth.adminSubtitle}</p>
 
         <div className="mt-8">
           <LoginForm

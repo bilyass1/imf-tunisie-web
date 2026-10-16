@@ -40,7 +40,7 @@ export default function PortalShell({
   const navigation = <nav aria-label={title} className="grid gap-1.5 p-2 sm:grid-cols-2 xl:grid-cols-1 xl:p-0">
     {nav.map(item => <Link key={item.key} href={item.href} aria-current={active === item.key ? 'page' : undefined}
       className={`flex min-h-11 items-center gap-3 rounded-xl px-4 py-3 text-[13.5px] font-medium transition ${active === item.key ? 'bg-ink text-white shadow-card' : 'text-ink/60 hover:bg-white hover:text-gold-600'}`}>
-      <span className={`shrink-0 ${active === item.key ? 'text-gold-300' : 'text-ink/35'}`}>{item.icon}</span>{item.label}
+      <span className={`shrink-0 ${active === item.key ? 'text-gold-300' : 'text-muted'}`}>{item.icon}</span>{item.label}
     </Link>)}
   </nav>;
   return (
@@ -60,7 +60,7 @@ export default function PortalShell({
           <div className="flex items-center gap-3">
             <Link
               href={`/${locale}`}
-              className="hidden items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-ink/45 transition hover:text-gold-600 sm:flex"
+              className="hidden items-center gap-2 text-[14px] font-semibold uppercase tracking-[0.12em] text-muted transition hover:text-gold-600 sm:flex"
             >
               <IconArrowLeft className="h-4 w-4 rtl:rotate-180" />
               {backLabel}
@@ -73,7 +73,7 @@ export default function PortalShell({
               <button
                 type="submit"
                 aria-label={logoutLabel}
-                className="flex items-center gap-2 rounded-full border border-ink/12 px-4 py-2 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-ink/60 transition hover:border-gold-400 hover:text-gold-600"
+                className="flex items-center gap-2 rounded-full border border-ink/12 px-4 py-2 text-[14px] font-semibold uppercase tracking-[0.12em] text-ink/60 transition hover:border-gold-400 hover:text-gold-600"
               >
                 <IconLogout className="h-4 w-4 rtl:rotate-180" />
                 <span className="hidden sm:inline">{logoutLabel}</span>
@@ -87,7 +87,7 @@ export default function PortalShell({
         <aside className="min-w-0">
           <div className="lg:sticky lg:top-8">
             <h1 className="h-display text-[28px] leading-tight">{title}</h1>
-            {subtitle && <p className="mt-2 text-[13.5px] text-ink/50">{subtitle}</p>}
+            {subtitle && <p className="mt-2 text-[13.5px] text-muted">{subtitle}</p>}
             <details key={active} className="mt-4 rounded-xl border border-ink/10 bg-white xl:hidden">
               <summary className="cursor-pointer px-4 py-3 font-medium xl:hidden">
                 <span className="text-gold-700">{locale === 'ar' ? 'القائمة' : 'Menu'}</span>

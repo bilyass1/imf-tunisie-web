@@ -19,9 +19,11 @@ const config: Config = {
           300: '#D9BA6A',
           400: '#C9A24B',
           500: '#B58C36',
-          600: '#96702A',
+          600: '#805B20',
           700: '#7A5C1E',
         },
+        muted: 'var(--text-muted)',
+        subtle: 'var(--text-subtle)',
         ivory: '#F7F5F1',
         sand: '#EDE7DC',
       },
@@ -32,7 +34,7 @@ const config: Config = {
       },
       backgroundImage: {
         'gold-gradient':
-          'linear-gradient(135deg, #7A5C1E 0%, #C9A24B 38%, #E8D08A 55%, #C9A24B 72%, #96702A 100%)',
+          'linear-gradient(135deg, #C9A24B 0%, #D9BA6A 38%, #E8D08A 55%, #D9BA6A 72%, #C9A24B 100%)',
       },
       boxShadow: {
         lux: '0 24px 60px -20px rgba(0,0,0,0.45)',

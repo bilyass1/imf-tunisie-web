@@ -40,7 +40,7 @@ function load(file,imports,env={}){const mod={exports:{}};vm.runInNewContext(ts.
  const {PGlite}=require('@electric-sql/pglite'),{createStore}=require('../src/lib/postgres-store.cjs');const engine=new PGlite();const query=(sql,params)=>!params&&sql.includes(';')?engine.exec(sql):engine.query(sql,params);const pool={query,connect:async()=>({query,release(){}})};
  try{
   await assert.rejects(()=>createStore(pool).revision());assert.equal((await query("SELECT count(*)::int AS n FROM information_schema.tables WHERE table_schema='public'")).rows[0].n,0,'Runtime must never create tables');
-  await require('./migrations.cjs').migrate({query});await require('./migrations.cjs').migrate({query});assert.equal((await query('SELECT max(version)::int AS n FROM imf_schema_migrations')).rows[0].n,6);
+  await require('./migrations.cjs').migrate({query});await require('./migrations.cjs').migrate({query});assert.equal((await query('SELECT max(version)::int AS n FROM imf_schema_migrations')).rows[0].n,require('./migrations.cjs').SCHEMA_VERSION);
   await assert.rejects(()=>query("INSERT INTO imf_users(id,email,role,password_hash,data) VALUES('u','u@example.test','unknown','fixture','{}')"));
   await query("INSERT INTO imf_projects(slug,data) VALUES('p','{}')");await query("INSERT INTO imf_lots(project_slug,ref,status,data) VALUES('p','A','reserved','{}'),('p','B','sold','{}')");
   await query("INSERT INTO imf_users(id,email,role,password_hash,project_slug,lot_ref,data) VALUES('a','a@example.test','client','fixture','p','A',$1)",[{properties:[{projectSlug:'p',lotRef:'A'},{projectSlug:'p',lotRef:'B'}]}]);

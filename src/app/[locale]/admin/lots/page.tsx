@@ -45,7 +45,7 @@ export default async function AdminLotsPage({
         logoutLabel={dict.auth.logout}
         accent="admin"
       >
-        <p className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center text-ink/50">
+        <p className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center text-muted">
           {dict.availability.empty}
         </p>
       </PortalShell>
@@ -78,7 +78,7 @@ export default async function AdminLotsPage({
               key={p.slug}
               href={`/${locale}/admin/lots?project=${p.slug}`}
               className={`rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] transition ${
-                p.slug === project.slug ? 'bg-gold-gradient text-ink' : 'text-ink/55 hover:text-gold-600'
+                p.slug === project.slug ? 'bg-gold-gradient text-ink' : 'text-muted hover:text-gold-600'
               }`}
             >
               {p.name}
@@ -86,7 +86,7 @@ export default async function AdminLotsPage({
           ))}
         </div>
 
-        <span className="ms-auto flex flex-wrap gap-4 text-[12px] text-ink/50">
+        <span className="ms-auto flex flex-wrap gap-4 text-[12px] text-muted">
           <span className="text-emerald-600">
             {stats.available} {dict.availability.legend.available}
           </span>
@@ -106,7 +106,7 @@ export default async function AdminLotsPage({
               key={b}
               href={`/${locale}/admin/lots?project=${project.slug}&block=${encodeURIComponent(b)}`}
               className={`rounded-lg px-3.5 py-2 text-[12px] font-semibold uppercase tracking-[0.1em] transition ${
-                b === activeBlock ? 'bg-ink text-gold-200' : 'bg-white text-ink/55 hover:text-gold-600'
+                b === activeBlock ? 'bg-ink text-gold-200' : 'bg-white text-muted hover:text-gold-600'
               }`}
             >
               {dict.availability.block} {b}
@@ -122,7 +122,7 @@ export default async function AdminLotsPage({
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] text-[13px]">
             <thead>
-              <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-ink/50">
+              <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-muted">
                 <th className="px-4 py-3 text-start font-semibold">{dict.availability.table.code}</th>
                 <th className="px-4 py-3 text-start font-semibold">{dict.availability.floor}</th>
                 <th className="px-4 py-3 text-start font-semibold">{dict.availability.table.typology}</th>

@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+  --text-muted: #55514B;
+  --text-subtle: #5D5953;
   --header-h: 84px;
   --font-display: Georgia, 'Times New Roman', serif;
   --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -75,11 +77,11 @@ canvas { display: block; }
 
   .field {
     @apply w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-sm outline-none transition
-           placeholder:text-ink/35 focus:border-gold-400 focus:ring-4 focus:ring-gold-400/15;
+           placeholder:text-muted focus:border-gold-400 focus:ring-4 focus:ring-gold-400/15;
   }
 
   .label {
-    @apply mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.14em] text-ink/55;
+    @apply mb-1.5 block text-[12px] font-semibold uppercase tracking-[0.14em] text-muted;
   }
 
   .chip {
@@ -103,6 +105,7 @@ canvas { display: block; }
   will-change: opacity, transform;
 }
 .reveal.reveal-pending.is-in {
+  will-change: auto;
   opacity: 1;
   transform: none;
 }
@@ -110,7 +113,7 @@ canvas { display: block; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-  .reveal {
+  .reveal, .reveal.reveal-pending {
     opacity: 1;
     transform: none;
     transition: none;
@@ -193,3 +196,7 @@ canvas { display: block; }
   .portal-content :is(.p-6, .p-10, .p-12) { padding: 1rem; }
   .portal-content :is(.px-6) { padding-inline: 1rem; }
 }
+
+/* Reflow and readable portal controls at narrow widths and high zoom. */
+button, select, input { scroll-margin-block: 100px; }
+main { min-width: 0; }

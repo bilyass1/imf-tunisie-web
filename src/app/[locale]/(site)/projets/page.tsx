@@ -59,7 +59,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
       <section className="bg-ivory pb-24">
         <div className="container-lux">
           <div className="py-8"><Link href={`/${locale}/recherche`} className="btn-gold">{locale==='ar'?'ابحث حسب الميزانية والمساحة':locale==='en'?'Search by budget and area':'Rechercher par budget et surface'} →</Link></div>
-          <Suspense fallback={<p className="py-24 text-center text-ink/40">{dict.common.loading}</p>}>
+          <Suspense fallback={<p className="py-24 text-center text-muted">{dict.common.loading}</p>}>
             <ProjectsExplorer
               projects={summaries}
               locale={locale}

@@ -167,6 +167,14 @@ export async function readMedia(id: string,start?:number,end?:number): Promise<B
   catch { return undefined; }
 }
 
+export async function streamMedia(id:string,start:number,end:number,signal?:AbortSignal):Promise<ReadableStream<Uint8Array>> {
+  assertProductionStorage();
+  if (!/^[a-f0-9-]{36}$/.test(id)) throw new Error('Invalid media');
+  if(process.env.DATABASE_URL)return getStore(buildSeed).streamMedia(id,start,end,signal);
+  const {chunkStream}=await import('./media-stream.cjs');
+  return chunkStream((first:number,last:number)=>readMedia(id,first,last),start,end,signal);
+}
+
 export async function getMediaMetadata(id: string): Promise<NonNullable<Database['uploads']>[number] | undefined> {
   if (!/^[a-f0-9-]{36}$/.test(id)) return undefined;
   if (process.env.DATABASE_URL) return getStore(buildSeed).readMediaMetadata(id);
@@ -177,6 +185,11 @@ export async function getMediaMetadata(id: string): Promise<NonNullable<Database
 
 // Share public reads between metadata, layout, page and footer within one render.
 // Writes and authentication retain their independent, versioned reads.
+export const getCompanyData=requestCache(async()=>{
+ assertProductionStorage();noStore();
+ if(process.env.DATABASE_URL && process.env.NEXT_PHASE!=='phase-production-build')return (await getStore().securityQuery("SELECT data FROM imf_records WHERE collection='settings' AND id='company'")).rows[0]?.data as Database['company'];
+ return (await readDb()).company;
+});
 export const getPublicData = requestCache(async () => {
   // Prices and availability must be read at runtime, never frozen from build seed data.
   assertProductionStorage();
@@ -281,11 +294,17 @@ const uid = (prefix: string) =>
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+export async function readCrmWorkspace(collection:'contacts'|'deals'|'activities'|'tasks',id?:string):Promise<Database> {
+  assertProductionStorage();
+  return process.env.DATABASE_URL?getStore().readCrmWorkspace(collection,id):readDb();
+}
+
 export async function getContacts(): Promise<Contact[]> {
   return (await readDb()).contacts;
 }
 
 export async function getContact(id: string): Promise<Contact | undefined> {
+  if(process.env.DATABASE_URL)return (await getStore().readCrmRecord('contacts',id))[0];
   return (await readDb()).contacts.find((c) => c.id === id);
 }
 
@@ -298,6 +317,7 @@ export async function getDeal(id: string): Promise<Deal | undefined> {
 }
 
 export async function getDealsForContact(contactId: string): Promise<Deal[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('deals',undefined,contactId);
   return (await readDb()).deals.filter((d) => d.contactId === contactId);
 }
 
@@ -306,6 +326,7 @@ export async function getActivities(): Promise<Activity[]> {
 }
 
 export async function getActivitiesForContact(contactId: string): Promise<Activity[]> {
+  if(process.env.DATABASE_URL)return getStore().readCrmRecord('activities',undefined,contactId);
   return (await readDb())
     .activities.filter((a) => a.contactId === contactId)
     .sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -398,7 +419,7 @@ export async function captureWebLead(input: {
 }
 
 export async function setDealStage(id: string, stage: DealStage, lostReason?: string): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('deals',id);
   const deal = db.deals.find((d) => d.id === id);
   if (!deal) return false;
   deal.stage = stage;
@@ -418,7 +439,7 @@ export async function setDealStage(id: string, stage: DealStage, lostReason?: st
 }
 
 export async function updateDeal(id: string, patch: Partial<Pick<Deal, 'value' | 'expectedCloseDate' | 'title'>>): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('deals',id);
   const deal = db.deals.find((d) => d.id === id);
   if (!deal) return false;
   Object.assign(deal, patch);
@@ -428,7 +449,7 @@ export async function updateDeal(id: string, patch: Partial<Pick<Deal, 'value' |
 }
 
 export async function addActivity(input: Omit<Activity, 'id'>): Promise<Activity> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('activities');
   const created: Activity = { ...input, id: uid('a') };
   db.activities.unshift(created);
   (await writeDb(db));
@@ -436,7 +457,7 @@ export async function addActivity(input: Omit<Activity, 'id'>): Promise<Activity
 }
 
 export async function addContact(input: Omit<Contact, 'id' | 'createdAt' | 'tags'> & { tags?: string[] }): Promise<Contact> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('contacts');
   const created: Contact = { ...input, tags: input.tags ?? [], id: uid('c'), createdAt: today() };
   db.contacts.unshift(created);
   (await writeDb(db));
@@ -444,7 +465,7 @@ export async function addContact(input: Omit<Contact, 'id' | 'createdAt' | 'tags
 }
 
 export async function addTask(input: Omit<CrmTask, 'id' | 'createdAt' | 'done'>): Promise<CrmTask> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('tasks');
   const created: CrmTask = { ...input, id: uid('t'), createdAt: today(), done: false };
   db.tasks.unshift(created);
   (await writeDb(db));
@@ -452,7 +473,7 @@ export async function addTask(input: Omit<CrmTask, 'id' | 'createdAt' | 'done'>)
 }
 
 export async function toggleTask(id: string): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readCrmWorkspace('tasks',id);
   const task = db.tasks.find((t) => t.id === id);
   if (!task) return false;
   task.done = !task.done;
@@ -482,6 +503,7 @@ export interface PipelineStats {
 }
 
 export async function pipelineStats(): Promise<PipelineStats> {
+  if(process.env.DATABASE_URL)return getStore().crmStats();
   const deals = (await getDeals());
   const byStage = DEAL_STAGES.reduce(
     (acc, stage) => {

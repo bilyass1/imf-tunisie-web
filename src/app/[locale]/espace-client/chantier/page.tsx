@@ -26,7 +26,7 @@ export default async function ProgressPage({params,searchParams}: {params:Promis
       {photos.length?<div className="grid gap-4 sm:grid-cols-2">{photos.map((photo,index)=><figure key={`${photo.src}/${index}`} className="overflow-hidden rounded-2xl border border-ink/10 bg-white">
         <img src={photo.src} alt={t(photo.caption,locale)} loading={index?'lazy':'eager'} className="aspect-[4/3] w-full object-cover"/>
         <figcaption className="px-4 py-3 text-sm text-ink/70">{t(photo.caption,locale)}</figcaption>
-      </figure>)}</div>:<p className="rounded-xl border border-dashed border-ink/15 p-6 text-ink/55">{emptyPhotos}</p>}
+      </figure>)}</div>:<p className="rounded-xl border border-dashed border-ink/15 p-6 text-muted">{emptyPhotos}</p>}
     </section>
     <section data-construction-stats className="space-y-5" aria-label={dict.project.progress}>
       <h2 className="font-display text-2xl">{dict.project.progress}</h2>
@@ -35,7 +35,7 @@ export default async function ProgressPage({params,searchParams}: {params:Promis
       {steps.length>0?<ol className="space-y-6 rounded-2xl border border-ink/8 bg-white p-5 sm:p-7">{steps.map(step=><li key={step.label.fr}>
         <div className="flex items-start justify-between gap-4"><p className="flex items-center gap-2 text-sm font-medium text-ink">{step.done && <IconCheck className="h-4 w-4 shrink-0 text-emerald-600"/>}{t(step.label,locale)}</p><span className="shrink-0 font-display text-xl text-gold-600">{step.percent}%</span></div>
         <div className="mt-3 h-2 overflow-hidden rounded-full bg-sand"><div className="h-full rounded-full bg-gold-gradient" style={{width:`${step.percent}%`}}/></div>
-      </li>)}</ol>:project?.progressPercent==null && lot?.progressPercent==null && <p className="text-ink/55">{dict.client.noLot}</p>}
+      </li>)}</ol>:project?.progressPercent==null && lot?.progressPercent==null && <p className="text-muted">{dict.client.noLot}</p>}
     </section>
   </PortalShell>;
 }

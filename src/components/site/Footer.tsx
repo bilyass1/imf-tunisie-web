@@ -34,7 +34,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label={label}
-                className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-white/60 transition hover:border-gold-400 hover:text-gold-300"
+                className="grid h-9 w-9 place-items-center rounded-full border border-white/15 text-white/85 transition hover:border-gold-400 hover:text-gold-300"
               >
                 <Icon className="h-4 w-4" />
               </a>
@@ -120,7 +120,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-lux flex flex-col items-center justify-between gap-3 py-6 text-[12px] text-white/65 md:flex-row">
+        <div className="container-lux flex flex-col items-center justify-between gap-3 py-6 text-[12px] text-white/85 md:flex-row">
           <p>
             © {year} {SITE.legalName}. {dict.footer.rights}
           </p>

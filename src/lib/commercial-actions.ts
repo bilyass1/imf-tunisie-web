@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import { revalidatePath } from 'next/cache';
 import { getSession, createSession } from './session';
-import { getAuthUserByEmail, getAuthUserById, readPaymentWorkspace, readDb, writeCommercialDb as writeDb, isPersistent } from './db';
+import { getAuthUserByEmail, getAuthUserById, readPaymentWorkspace, readCrmWorkspace, getProjects, readDb, writeCommercialDb as writeDb, isPersistent } from './db';
 import type { Database, Localized, User } from './types';
 import { projectPresentation } from './project-presentation';
 import { parseContactInput } from './contact-input';
@@ -216,9 +216,9 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       (db.uploads??=[]).push({id,mime,name:label+(kind==='contract'?'.pdf':'.webp'),clientId:recipient?.id,public:kind==='gallery'||kind==='panorama'});
       await writeDb(db,{id,bytes});
     } else {
-      const db=operation.startsWith('payment-')||operation==='client-edit'?await readPaymentWorkspace(value(form,'client')):await readDb();
+      const db=operation==='contact-save'?await readCrmWorkspace('contacts',value(form,'contact')):operation.startsWith('payment-')||operation==='client-edit'?await readPaymentWorkspace(value(form,'client')):await readDb();
       if(operation==='contact-save') {
-        const input=parseContactInput(form,db.projects);
+        const input=parseContactInput(form,await getProjects());
         const id=value(form,'contact');
         if(id) {
           const contact=db.contacts.find(contact=>contact.id===id);

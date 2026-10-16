@@ -39,7 +39,7 @@ export default function InteriorExplorer({ locale, references, labels }: { local
         </div>
         <Link data-testid="interior-project-link" href={`/${locale}/projets/residence-la-gloire/appartements/${referencePath}#interieur`} className="btn-gold mt-6">{t.open}</Link>
         <a href={`/plans/la-gloire/presentation/${referencePath}.pdf`} download className="mt-4 block text-xs underline underline-offset-4">{t.plan}</a>
-        <p className="mt-6 text-xs leading-relaxed text-ink/50">{t.note}</p>
+        <p className="mt-6 text-xs leading-relaxed text-muted">{t.note}</p>
       </div>
       <PlanViewer key={reference} image={`/interiors/la-gloire/${referencePath}.webp`} alt={`${t.apartment} ${reference} · 3D`} labels={labels} rotation={PLAN_ROTATION[locale]} exists />
     </div>

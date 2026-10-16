@@ -7,3 +7,6 @@ REVOKE INSERT,UPDATE,DELETE,TRUNCATE ON imf_client_property_assignments FROM imf
 REVOKE UPDATE,DELETE,TRUNCATE ON imf_audit_events FROM imf_app;
 REVOKE INSERT,UPDATE,DELETE,TRUNCATE ON imf_schema_migrations FROM imf_app;
 GRANT USAGE,SELECT ON ALL SEQUENCES IN SCHEMA public TO imf_app;
+
+-- Optional sampled telemetry; no account identifiers or raw URLs.
+GRANT SELECT, INSERT, UPDATE, DELETE ON imf_web_vitals TO imf_app;

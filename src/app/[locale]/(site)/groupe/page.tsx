@@ -93,7 +93,7 @@ export default async function GroupPage({ params }: { params: Promise<{ locale: 
             ].map((s, i) => (
               <Reveal key={s.label} delay={i * 90} className="text-center">
                 <p className="font-display text-[46px] font-light leading-none text-white lg:text-[58px]">{s.value}</p>
-                <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/40">{s.label}</p>
+                <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-white/85">{s.label}</p>
               </Reveal>
             ))}
           </div>
@@ -114,7 +114,7 @@ export default async function GroupPage({ params }: { params: Promise<{ locale: 
                       <Icon className="h-5 w-5" />
                     </span>
                     <h3 className="mt-6 font-display text-[22px] font-light">{v.title}</h3>
-                    <p className="mt-3 text-[13.5px] leading-[1.8] text-ink/55">{v.body}</p>
+                    <p className="mt-3 text-[13.5px] leading-[1.8] text-muted">{v.body}</p>
                   </div>
                 </Reveal>
               );
@@ -135,7 +135,7 @@ export default async function GroupPage({ params }: { params: Promise<{ locale: 
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <h3 className="mt-5 font-display text-[24px] font-light">{e.title}</h3>
-                  <p className="mt-3 text-[14px] leading-[1.8] text-ink/55">{e.body}</p>
+                  <p className="mt-3 text-[14px] leading-[1.8] text-muted">{e.body}</p>
                 </div>
               </Reveal>
             ))}
@@ -148,7 +148,7 @@ export default async function GroupPage({ params }: { params: Promise<{ locale: 
         <div className="container-lux flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
           <Reveal>
             <h2 className="h-display max-w-lg text-[30px] text-white sm:text-[38px]">{dict.group.ctaTitle}</h2>
-            <p className="mt-4 max-w-md text-[15px] text-white/55">{dict.group.ctaBody}</p>
+            <p className="mt-4 max-w-md text-[15px] text-white/85">{dict.group.ctaBody}</p>
           </Reveal>
           <Reveal delay={110} className="flex flex-col gap-3 sm:flex-row">
             <Link href={`/${locale}/contact`} className="btn-gold">

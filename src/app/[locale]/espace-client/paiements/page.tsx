@@ -43,7 +43,7 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
           { label: dict.client.summary.remaining, value: formatMoney(remaining, locale, 3), accent: 'text-gold-600' },
         ].map((kpi) => (
           <div key={kpi.label} className="rounded-2xl border border-ink/8 bg-white p-6">
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-ink/40">{kpi.label}</p>
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-muted">{kpi.label}</p>
             <p className={`mt-3 font-display text-[26px] font-light leading-none ${kpi.accent ?? 'text-ink'}`}>
               {kpi.value}
             </p>
@@ -55,7 +55,7 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
         <div className="overflow-x-auto">
           <table className="w-full min-w-[850px] text-[13.5px]">
             <thead>
-              <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-ink/50">
+              <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-muted">
                 <th className="px-6 py-3 text-start font-semibold">{dict.client.paymentsTable.label}</th>
                 <th className="px-6 py-3 text-start font-semibold">{dict.client.paymentsTable.due}</th>
                 <th className="px-6 py-3 text-end font-semibold">{dict.client.paymentsTable.amount}</th>
@@ -85,7 +85,7 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
                             ? 'bg-emerald-50 text-emerald-700'
                             : late
                               ? 'bg-red-50 text-red-700'
-                              : 'bg-sand text-ink/55'
+                              : 'bg-sand text-muted'
                         }`}
                       >
                         {paymentIsPaid(p) ? <IconCheck className="h-3 w-3" /> : <IconClock className="h-3 w-3" />}
@@ -97,14 +97,14 @@ export default async function PaymentsPage({ params, searchParams }: { params: P
                             ? dict.client.paymentsTable.late
                             : dict.client.paymentsTable.pending}
                       </span>
-                      {paymentIsPaid(p) && p.paidAt && <p className="mt-2 text-xs text-ink/50">{dict.client.paymentsTable.paidOn} {formatDate(p.paidAt, locale)}</p>}
+                      {paymentIsPaid(p) && p.paidAt && <p className="mt-2 text-xs text-muted">{dict.client.paymentsTable.paidOn} {formatDate(p.paidAt, locale)}</p>}
                     </td>
                   </tr>
                 );
               })}
               {payments.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-ink/45">
+                  <td colSpan={6} className="px-6 py-12 text-center text-muted">
                     {selected ? dict.client.paymentsEmpty : dict.client.noLot}
                   </td>
                 </tr>

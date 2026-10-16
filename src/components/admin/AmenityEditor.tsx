@@ -24,7 +24,7 @@ export default function AmenityEditor({ selected, custom = [] }: { selected: str
   return <div className="space-y-4 border-t border-ink/10 pt-5">
     <fieldset>
       <legend className="text-sm font-semibold">Prestations affichées</legend>
-      <p className="mt-3 text-sm text-ink/55">Sélectionnez les prestations avec les mêmes pictogrammes que sur la fiche publique.</p>
+      <p className="mt-3 text-sm text-muted">Sélectionnez les prestations avec les mêmes pictogrammes que sur la fiche publique.</p>
       <div className="mt-3 flex flex-wrap gap-2.5">
         {choices.map(choice => {
           const Icon = AMENITY_ICONS[choice.icon];
@@ -43,7 +43,7 @@ export default function AmenityEditor({ selected, custom = [] }: { selected: str
       <h3 className="text-sm font-semibold">Prestations personnalisées</h3>
       <button type="button" onClick={add} disabled={items.length >= MAX_CUSTOM_AMENITIES} className="btn-ghost disabled:cursor-not-allowed disabled:opacity-50">+ Ajouter une prestation</button>
     </div>
-    <p className="text-sm text-ink/55">Choisissez un pictogramme et saisissez vos intitulés. Le français est obligatoire ; il sera utilisé si une traduction manque. Cliquez sur Enregistrer pour publier vos modifications.</p>
+    <p className="text-sm text-muted">Choisissez un pictogramme et saisissez vos intitulés. Le français est obligatoire ; il sera utilisé si une traduction manque. Cliquez sur Enregistrer pour publier vos modifications.</p>
     {items.map((item, index) => <div key={item.id} className="space-y-4 rounded-xl border border-ink/10 bg-sand/20 p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h4 className="text-sm font-medium">{item.label.fr || `Nouvelle prestation ${index + 1}`}</h4>
@@ -61,6 +61,6 @@ export default function AmenityEditor({ selected, custom = [] }: { selected: str
         </select>
       </label>
     </div>)}
-    <p className="text-xs text-ink/50">{items.length} / {MAX_CUSTOM_AMENITIES} prestations personnalisées. Décochez une prestation pour la masquer ; supprimez-la pour la retirer de ce projet.</p>
+    <p className="text-xs text-muted">{items.length} / {MAX_CUSTOM_AMENITIES} prestations personnalisées. Décochez une prestation pour la masquer ; supprimez-la pour la retirer de ce projet.</p>
   </div>;
 }

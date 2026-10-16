@@ -92,7 +92,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                       <info.Icon className="h-4 w-4" />
                     </span>
                     <div>
-                      <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-white/40">
+                      <p className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-white/85">
                         {info.label}
                       </p>
                       <div className="mt-1.5 space-y-0.5 text-[14.5px] text-white/80">
@@ -111,7 +111,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 ))}
               </ul>
 
-              <div className="mt-10 border-t border-white/10 pt-6 text-[12px] text-white/35">
+              <div className="mt-10 border-t border-white/10 pt-6 text-[12px] text-white/85">
                 <p>
                   {dict.footer.vat} : {SITE.legal.vat}
                 </p>
@@ -142,7 +142,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
               <div className="rule-gold mt-5" />
 
               <div className="mt-8">
-                <Suspense fallback={<p className="text-ink/40">{dict.common.loading}</p>}>
+                <Suspense fallback={<p className="text-muted">{dict.common.loading}</p>}>
                   <ContactForm labels={dict.contact.form} projects={projects} locale={locale} />
                 </Suspense>
               </div>

@@ -34,7 +34,7 @@ export default function SectionHeading({
         </h2>
         <div className={`rule-gold mt-5 ${centered ? 'mx-auto' : ''}`} />
         {subtitle && (
-          <p className={`mt-5 text-[15px] leading-[1.8] ${light ? 'text-white/60' : 'text-ink/60'}`}>{subtitle}</p>
+          <p className={`mt-5 text-[15px] leading-[1.8] ${light ? 'text-white/85' : 'text-ink/60'}`}>{subtitle}</p>
         )}
       </Reveal>
       {action && <Reveal delay={120}>{action}</Reveal>}

@@ -123,7 +123,7 @@ export default function CreditSimulator({
                 onChange={(e) => f.setValue(Number(e.target.value) || 0)}
                 className="field !py-2.5 font-display text-[20px] !text-ink"
               />
-              {f.suffix && <span className="shrink-0 text-[13px] font-medium text-ink/45">{f.suffix}</span>}
+              {f.suffix && <span className="shrink-0 text-[13px] font-medium text-muted">{f.suffix}</span>}
             </div>
             <input
               type="range"
@@ -147,7 +147,7 @@ export default function CreditSimulator({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[520px] text-[13px]">
               <thead>
-                <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-ink/50">
+                <tr className="bg-sand/40 text-[11px] uppercase tracking-[0.1em] text-muted">
                   <th className="px-5 py-2.5 text-start font-semibold">{labels.year}</th>
                   <th className="px-5 py-2.5 text-end font-semibold">{labels.principal}</th>
                   <th className="px-5 py-2.5 text-end font-semibold">{labels.interest}</th>
@@ -187,7 +187,7 @@ export default function CreditSimulator({
               { k: labels.totalCost, v: formatMoney(Math.round(totalPaid), locale) },
             ].map((row) => (
               <div key={row.k} className="flex items-center justify-between gap-4 py-4">
-                <dt className="text-[12px] uppercase tracking-[0.1em] text-white/45">{row.k}</dt>
+                <dt className="text-[12px] uppercase tracking-[0.1em] text-white/85">{row.k}</dt>
                 <dd className="text-[15px] font-medium">{row.v}</dd>
               </div>
             ))}
@@ -197,7 +197,7 @@ export default function CreditSimulator({
               {labels.askAdvice}
               <IconArrow className="h-4 w-4 rtl:rotate-180" />
             </Link>
-            <p className="mt-5 text-[11.5px] leading-relaxed text-white/40">{labels.disclaimer}</p>
+            <p className="mt-5 text-[11.5px] leading-relaxed text-white/85">{labels.disclaimer}</p>
           </div>
         </div>
       </aside>

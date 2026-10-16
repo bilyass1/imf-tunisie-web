@@ -35,7 +35,7 @@ export default function PageHero({
           <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-white/75">
             {breadcrumb.map((b, i) => (
               <span key={b.href} className="flex items-center gap-2">
-                {i > 0 && <span className="text-white/25">/</span>}
+                {i > 0 && <span className="text-white/85">/</span>}
                 <Link href={b.href} className="transition hover:text-gold-300">
                   {b.label}
                 </Link>
@@ -47,7 +47,7 @@ export default function PageHero({
         <h1 className="h-display mt-4 max-w-4xl text-balance text-[40px] text-white sm:text-[54px] lg:text-[64px]">
           {title}
         </h1>
-        {subtitle && <p className="mt-6 max-w-2xl text-[16px] leading-[1.8] text-white/65">{subtitle}</p>}
+        {subtitle && <p className="mt-6 max-w-2xl text-[16px] leading-[1.8] text-white/85">{subtitle}</p>}
         {children}
       </div>
 

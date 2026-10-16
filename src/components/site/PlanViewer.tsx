@@ -147,7 +147,7 @@ export default function PlanViewer({
     return (
       <div className="rounded-2xl border border-dashed border-ink/15 bg-white/60 p-10 text-center">
         <p className="font-display text-[22px] font-light text-ink/75">{labels.missingTitle}</p>
-        <p className="mx-auto mt-3 max-w-md text-[13.5px] leading-relaxed text-ink/50">{labels.missingBody}</p>
+        <p className="mx-auto mt-3 max-w-md text-[13.5px] leading-relaxed text-muted">{labels.missingBody}</p>
         {pdf && (
           <a href={publicAssetUrl(pdf)} download className="btn-ghost mt-7">
             <IconDownload className="h-4 w-4" />
@@ -222,7 +222,7 @@ export default function PlanViewer({
           type="button"
           onClick={() => setScale((s) => clampScale(s + 0.4))}
           aria-label={labels.zoomIn}
-          className="grid h-9 w-9 place-items-center rounded-lg border border-ink/12 bg-white/90 text-[18px] leading-none text-ink/60 backdrop-blur transition hover:border-gold-400 hover:text-gold-600"
+          className="grid h-11 w-11 place-items-center rounded-lg border border-ink/12 bg-white/90 text-[18px] leading-none text-ink/60 backdrop-blur transition hover:border-gold-400 hover:text-gold-600"
         >
           +
         </button>
@@ -230,7 +230,7 @@ export default function PlanViewer({
           type="button"
           onClick={() => setScale((s) => clampScale(s - 0.4))}
           aria-label={labels.zoomOut}
-          className="grid h-9 w-9 place-items-center rounded-lg border border-ink/12 bg-white/90 text-[18px] leading-none text-ink/60 backdrop-blur transition hover:border-gold-400 hover:text-gold-600"
+          className="grid h-11 w-11 place-items-center rounded-lg border border-ink/12 bg-white/90 text-[18px] leading-none text-ink/60 backdrop-blur transition hover:border-gold-400 hover:text-gold-600"
         >
           −
         </button>
@@ -255,7 +255,7 @@ export default function PlanViewer({
         </button>
       </div>
 
-      <p className="pointer-events-none absolute inset-x-0 bottom-3 text-center text-[11px] uppercase tracking-[0.16em] text-ink/30">
+      <p className="pointer-events-none absolute inset-x-0 bottom-3 text-center text-[11px] uppercase tracking-[0.16em] text-muted">
         {rotation ? (mode === 'rotate' ? rotation.hint : labels.hint) : labels.hint}
       </p>
     </div>

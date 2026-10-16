@@ -15,6 +15,7 @@ import {
   captureWebLead,
   clearDemoCrm,
   getAuthUserByEmail,
+  getAuthUserById,
   readDb,
   resetLotStatuses,
   setDealStage,
@@ -103,7 +104,7 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   if(user.role==='admin' && (process.env.NODE_ENV==='production'||process.env.APP_ORIGIN)) {
     try{return {ok:false,mfa:await beginAdminAuthentication(user,String(formData.get('enrollmentToken')??''))};}catch{return {ok:false,error:'invalid'};}
   }
-  await createSession({ sub: user.id, email: user.email, name: user.name, role: user.role });
+  await createSession({ sub: user.id, email: user.email, name: user.name, role: user.role, authVersion:user.authVersion??0 });
 
   redirect(user.role === 'admin' && scope === 'admin' ? `/${locale}/admin` : `/${locale}/espace-client`);
 }
@@ -126,7 +127,7 @@ export async function sendClientMessageAction(_prev: FormState, formData: FormDa
 
 async function requireAdmin() {
   const session = await getSession();
-  if (!session || session.role !== 'admin' || (await readDb()).users.find(u=>u.id===session.sub)?.role!=='admin') throw new Error('Unauthorized');
+  if (!session || session.role !== 'admin' || (await getAuthUserById(session.sub))?.role!=='admin') throw new Error('Unauthorized');
   return session;
 }
 

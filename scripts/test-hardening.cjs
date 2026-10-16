@@ -29,6 +29,9 @@ function load(file,imports,env={}){const mod={exports:{}};vm.runInNewContext(ts.
  const commands=[];class Command{constructor(input){this.input=input;}}class FakeS3{async send(command){commands.push(command.input);return {Body:{transformToByteArray:async()=>Buffer.from('fixture')}};}}
  const objects=load('src/lib/object-media.cjs',{'@aws-sdk/client-s3':{S3Client:FakeS3,PutObjectCommand:Command,GetObjectCommand:Command,DeleteObjectCommand:Command}},{MEDIA_S3_BUCKET:'test-private-bucket'});
  const object=await objects.put('fixture-id',Buffer.from('fixture'));assert.equal(object.size,7);assert.equal(commands[0].ServerSideEncryption,'AES256');assert.equal(commands[0].ACL,undefined);await objects.read(object.key,1,3);assert.equal(commands[1].Range,'bytes=1-3');
+ const sessionsModule=load('src/lib/session.ts',{'next/headers':{},'./db':{getAuthUserById:async()=>({id:'admin-fixture',role:'admin',authVersion:1})},'./postgres-store.cjs':{}},{NODE_ENV:'production'});
+ await assert.rejects(()=>sessionsModule.createSession({sub:'admin-fixture',email:'admin@example.test',name:'Fixture',role:'admin',authVersion:1}),/Clé de sécurité/);
+ await assert.rejects(()=>sessionsModule.createSession({sub:'admin-fixture',email:'admin@example.test',name:'Fixture',role:'admin',authVersion:0,mfa:true}),/compte a changé/);
  const {PGlite}=require('@electric-sql/pglite'),{createStore}=require('../src/lib/postgres-store.cjs');const engine=new PGlite();const query=(sql,params)=>!params&&sql.includes(';')?engine.exec(sql):engine.query(sql,params);const pool={query,connect:async()=>({query,release(){}})};
  try{
   await assert.rejects(()=>createStore(pool).revision());assert.equal((await query("SELECT count(*)::int AS n FROM information_schema.tables WHERE table_schema='public'")).rows[0].n,0,'Runtime must never create tables');

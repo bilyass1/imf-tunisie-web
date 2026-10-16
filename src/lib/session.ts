@@ -32,15 +32,17 @@ export interface SessionPayload {
   mfa?: boolean;
 }
 
-export async function createSession(payload: SessionPayload): Promise<void> {
+export async function createSession(payload: SessionPayload & {authVersion:number}): Promise<void> {
   if(payload.role==='admin' && process.env.NODE_ENV==='production' && !payload.mfa)throw new Error('Clé de sécurité administrateur requise.');
+  const current=await getAuthUserById(payload.sub);
+  if(!current || current.role!==payload.role || (current.authVersion??0)!==payload.authVersion)throw new Error('Le compte a changé pendant la connexion. Reconnectez-vous.');
   const lifetime=payload.role==='admin'?ADMIN_MAX_AGE:MAX_AGE;
   const sessionId=randomUUID();
   if(payload.role==='admin' && process.env.DATABASE_URL) {
     await getStore().securityQuery('DELETE FROM imf_admin_sessions WHERE expires_at<now()');
     await getStore().securityQuery("INSERT INTO imf_admin_sessions(id,client_id,expires_at) VALUES($1,$2,now()+interval '1 hour')",[sessionId,payload.sub]);
   }
-  const token = await new SignJWT({ ...payload, authVersion: (await getAuthUserById(payload.sub))?.authVersion ?? 0 })
+  const token = await new SignJWT({ ...payload, authVersion: payload.authVersion })
     .setProtectedHeader({ alg: 'HS256' })
     .setJti(sessionId)
     .setIssuedAt()

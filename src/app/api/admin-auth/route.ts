@@ -9,7 +9,7 @@ export async function POST(request:Request){
  if(Number(request.headers.get('content-length')??0)>65536)return new Response(null,{status:413,headers});
  try{
   const user=await finishAdminAuthentication(await boundedJson(request) as AuthenticationResponseJSON|RegistrationResponseJSON);
-  await createSession({sub:user.id,email:user.email,name:user.name,role:'admin',mfa:true});
+  await createSession({sub:user.id,email:user.email,name:user.name,role:'admin',mfa:true,authVersion:user.authVersion??0});
   return Response.json({ok:true},{headers});
  }catch{return Response.json({ok:false},{status:401,headers});}
 }

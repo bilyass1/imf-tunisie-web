@@ -273,6 +273,15 @@ function createStore(pool, _seedFactory) {
     const result=await pool.query(start===undefined?'SELECT bytes FROM imf_media WHERE id=$1':'SELECT substring(bytes from $2::int for $3::int) AS bytes FROM imf_media WHERE id=$1',start===undefined?[id]:[id,start+1,end-start+1]);
     return result.rows[0]?.bytes;
   }
+  async function readLotWorkspace(projectSlug,ref) {
+    await ensureSchema(pool);
+    const project=(await pool.query('SELECT slug,data FROM imf_projects WHERE slug=$1',[projectSlug])).rows[0];
+    const lot=(await pool.query('SELECT ref,status,data FROM imf_lots WHERE project_slug=$1 AND ref=$2',[projectSlug,ref])).rows[0];
+    const rows=(await pool.query('SELECT u.* FROM imf_users u JOIN imf_client_property_assignments a ON a.client_id=u.id WHERE a.project_slug=$1 AND a.lot_ref=$2',[projectSlug,ref])).rows;
+    const users=rows.map(row=>({...row.data,id:row.id,email:row.email,role:row.role,passwordHash:row.password_hash,authVersion:row.auth_version,projectSlug:row.project_slug??undefined,lotRef:row.lot_ref??undefined,documents:[],archivedDocuments:[],messages:[]}));
+    const data={projects:project?[{...project.data,slug:project.slug,lots:lot?[{...lot.data,ref:lot.ref,status:lot.status}]:[]}]:[],users,news:[],contacts:[],deals:[],activities:[],tasks:[],uploads:[]};
+    snapshots.set(data,{rows:flatten(structuredClone(data)),original:structuredClone(data)});return data;
+  }
   async function readPaymentWorkspace(id) {
     await ensureSchema(pool);
     const row=(await pool.query("SELECT * FROM imf_users WHERE id=$1 AND role='client'",[id])).rows[0];if(!row)throw new Error('Client introuvable.');
@@ -304,7 +313,7 @@ function createStore(pool, _seedFactory) {
       if(rows.rows.some(row=>[...(row.project_photos??[]),...(row.lot_photos??[])].some(photo=>photo.src===href)))return true;
     }return false;
   }
-  return {publicRevision,clientRevision,captureLead:async(input)=>{await ensureSchema(pool);return require('./scoped-leads.cjs').captureLead(pool,input);},postMessage:async(...args)=>{await ensureSchema(pool);return require('./scoped-chat.cjs').postMessage(pool,...args);},readPaymentWorkspace,mediaSize,securityQuery:async(sql,params)=>{await ensureSchema(pool);return pool.query(sql,params);},original:data=>structuredClone(snapshots.get(data)?.original),readAudit,conversationRevision,canReadMedia,read,readPublic,revision,write,readMedia,readMediaMetadata,consumeRateLimit,readAuthUser,readUserById};
+  return {readLotWorkspace,publicRevision,clientRevision,captureLead:async(input)=>{await ensureSchema(pool);return require('./scoped-leads.cjs').captureLead(pool,input);},postMessage:async(...args)=>{await ensureSchema(pool);return require('./scoped-chat.cjs').postMessage(pool,...args);},readPaymentWorkspace,mediaSize,securityQuery:async(sql,params)=>{await ensureSchema(pool);return pool.query(sql,params);},original:data=>structuredClone(snapshots.get(data)?.original),readAudit,conversationRevision,canReadMedia,read,readPublic,revision,write,readMedia,readMediaMetadata,consumeRateLimit,readAuthUser,readUserById};
 }
 let store;
 function getStore(seedFactory) {

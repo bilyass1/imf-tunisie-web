@@ -23,7 +23,7 @@ test('real login: passkey admin, client boundaries, media ranges and CSP',async(
  const part=await ownerContext.request.get(href,{headers:{range:'bytes=0-4'}});expect(part.status()).toBe(206);expect(await part.text()).toBe('%PDF-');expect(part.headers()['cache-control']).toBe('private, no-store');
  expect((await peerContext.request.get(href,{headers:{range:'bytes=0-4'}})).status()).toBe(404);
  const db=new Pool({connectionString:process.env.DATABASE_URL});try{await db.query("UPDATE imf_documents SET archived=true WHERE client_id='e2e-client-a'");expect((await ownerContext.request.get(href,{headers:{range:'bytes=0-4'}})).status()).toBe(404);}finally{await db.end();}
- await peer.goto('/fr/admin');await expect(peer).toHaveURL(/admin-connexion/);await admin.goto('/fr/espace-client');await expect(admin).toHaveURL(/connexion/);
+ await peer.goto('/fr/admin');await expect(peer).toHaveURL(/admin-connexion/);await admin.goto('/fr/espace-client');await expect(admin).toHaveURL(/\/fr\/admin$/);
  const response=await owner.goto('/fr/espace-client/paiements'),csp=response!.headers()['content-security-policy'];expect(csp).toContain("'strict-dynamic'");expect(csp).toContain("frame-ancestors 'none'");
  const nonces=await owner.locator('script:not([type="application/ld+json"])').evaluateAll(scripts=>scripts.map(script=>(script as HTMLScriptElement).nonce));expect(nonces.length).toBeGreaterThan(0);expect(nonces.every(nonce=>nonce && csp.includes(`nonce-${nonce}`))).toBeTruthy();
  // Exercise actual browser challenge verification and cookie revocation rather than minting JWTs.

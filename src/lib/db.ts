@@ -246,7 +246,7 @@ export function lotStats(lots: Lot[]): LotStats {
 }
 
 export async function updateLotStatus(projectSlug: string, lotRef: string, status: LotStatus, authorized = false, note?: string): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readLotWorkspace(projectSlug,lotRef);
   const project = db.projects.find((p) => p.slug === projectSlug);
   const lot = project?.lots.find((l) => l.ref === lotRef);
   if (!lot) return false;
@@ -256,7 +256,7 @@ export async function updateLotStatus(projectSlug: string, lotRef: string, statu
 }
 
 export async function updateLotPrice(projectSlug: string, lotRef: string, price: number | undefined): Promise<boolean> {
-  const db = (await readDb());
+  const db = await readLotWorkspace(projectSlug,lotRef);
   const project = db.projects.find((p) => p.slug === projectSlug);
   const lot = project?.lots.find((l) => l.ref === lotRef);
   if (!lot) return false;
@@ -266,7 +266,7 @@ export async function updateLotPrice(projectSlug: string, lotRef: string, price:
 }
 
 export async function updateLotComposition(projectSlug: string, lotRef: string, composition: Localized[]): Promise<boolean> {
-  const db = await readDb();
+  const db = await readLotWorkspace(projectSlug,lotRef);
   const lot = db.projects.find((p) => p.slug === projectSlug)?.lots.find((item) => item.ref === lotRef);
   if (!lot) return false;
   lot.composition = composition;
@@ -591,4 +591,8 @@ export async function readPaymentWorkspace(id:string) {
 
 export async function getClientRevision(id:string):Promise<string> {
   assertProductionStorage();return process.env.DATABASE_URL?getStore().clientRevision(id):getPublicRevision();
+}
+
+export async function readLotWorkspace(projectSlug:string,lotRef:string) {
+  assertProductionStorage();return process.env.DATABASE_URL?getStore().readLotWorkspace(projectSlug,lotRef):readDb();
 }

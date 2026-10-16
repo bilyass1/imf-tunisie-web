@@ -15,7 +15,7 @@ export default async function ClientLoginPage({ params }: { params: Promise<{ lo
   const dict = getDictionary(locale);
 
   const session = await getSession();
-  if (session) redirect(`/${locale}/espace-client`);
+  if (session) redirect(session.role==='admin'?`/${locale}/admin`:`/${locale}/espace-client`);
 
   return (
     <main className="grid min-h-screen lg:grid-cols-2">

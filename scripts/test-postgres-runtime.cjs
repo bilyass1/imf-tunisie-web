@@ -83,6 +83,7 @@ const {importData}=require('./postgres-common.cjs');
   await store.write(independentA);await publicInstance.write(independentB);
   assert.equal((await store.read()).users.find(user=>user.id==='admin').name,'Updated admin');
   assert.equal((await store.read()).projects[0].lots[1].progressPercent,27,'Unrelated snapshot edits must both succeed');
+  const oneLot=await store.readLotWorkspace('a-p','B');assert.equal(oneLot.projects.length,1);assert.equal(oneLot.projects[0].lots.length,1);assert.equal(oneLot.users.length,1);assert.equal(oneLot.users[0].messages.length,0);oneLot.projects[0].lots[0].progressPercent=28;await store.write(oneLot);assert.equal((await store.read()).projects[0].lots[1].progressPercent,28);
   await assert.rejects(()=>query("INSERT INTO imf_users(id,email,role,password_hash,data) VALUES('duplicate-secondary','duplicate@example.test','client','fixture',$1)",[{properties:[{projectSlug:'a-p',lotRef:'B'}]}]),/duplicate|unique/i);
   await assert.rejects(()=>query("INSERT INTO imf_users(id,email,role,password_hash,data) VALUES('invalid-role','invalid@example.test','owner','fixture','{}')"));
   let persisted=await store.read();

@@ -5,6 +5,7 @@ export interface PostgresStore {
   securityQuery(sql:string,params?:unknown[]):Promise<{rows:any[]}>;
   captureLead(input:Parameters<typeof import('./db').captureWebLead>[0]):ReturnType<typeof import('./db').captureWebLead>;
   postMessage(actorId:string,recipient:string,body:string):Promise<void>;
+  readLotWorkspace(projectSlug:string,ref:string):Promise<Database>;
   mediaSize(id:string):Promise<number|undefined>;
   readPaymentWorkspace(id:string):Promise<Database>;
   original(data:Database):Database|undefined;

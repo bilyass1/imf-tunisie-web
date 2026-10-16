@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import { revalidatePath } from 'next/cache';
 import { getSession, createSession } from './session';
-import { getAuthUserById, readPaymentWorkspace, readDb, writeCommercialDb as writeDb, isPersistent } from './db';
+import { getAuthUserByEmail, getAuthUserById, readPaymentWorkspace, readDb, writeCommercialDb as writeDb, isPersistent } from './db';
 import type { Database, Localized, User } from './types';
 import { projectPresentation } from './project-presentation';
 import { parseContactInput } from './contact-input';
@@ -142,7 +142,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       if(!user) throw new Error('Compte client introuvable.');
       user.passwordHash=passwordHash; user.authVersion=(user.authVersion??0)+1;
       (await writeDb(db));
-      if(operation==='password-self') await createSession({sub:user.id,email:user.email,name:user.name,role:user.role,mfa:session?.mfa});
+      if(operation==='password-self') await createSession({sub:user.id,email:user.email,name:user.name,role:user.role,mfa:session?.mfa,authVersion:user.authVersion??0});
     } else if (operation==='client') {
       const db=await readDb();
       await createClient(db,form,selectedClientLots(form),authorized);
@@ -216,7 +216,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       (db.uploads??=[]).push({id,mime,name:label+(kind==='contract'?'.pdf':'.webp'),clientId:recipient?.id,public:kind==='gallery'||kind==='panorama'});
       await writeDb(db,{id,bytes});
     } else {
-      const db=operation.startsWith('payment-')?await readPaymentWorkspace(value(form,'client')):await readDb();
+      const db=operation.startsWith('payment-')||operation==='client-edit'?await readPaymentWorkspace(value(form,'client')):await readDb();
       if(operation==='contact-save') {
         const input=parseContactInput(form,db.projects);
         const id=value(form,'contact');
@@ -234,7 +234,8 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         if(!client) throw new Error('Client introuvable.');
         const email=text(form,'email').toLowerCase();
         if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Adresse e-mail invalide.');
-        if(db.users.some(u=>u.id!==client.id && u.email.toLowerCase()===email)) throw new Error('Cette adresse possède déjà un compte.');
+        const duplicate=await getAuthUserByEmail(email);
+        if(duplicate && duplicate.id!==client.id) throw new Error('Cette adresse possède déjà un compte.');
         const phone=value(form,'phone'); if(phone.length>80) throw new Error('Téléphone trop long.');
         Object.assign(client,{name:text(form,'name'),email,phone});
       } else if(operation==='client-property-add' || operation==='client-property-remove' || operation==='client-property-primary') {

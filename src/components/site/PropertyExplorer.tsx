@@ -1,6 +1,6 @@
 'use client';
-import { useMemo, useState } from 'react';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Locale } from '@/i18n/config';
@@ -28,9 +28,14 @@ export function PropertyCard({ item, locale }: { item: PropertyListing; locale: 
   </article>;
 }
 
-export default function PropertyExplorer({ listings, locale, server }: { listings: PropertyListing[]; locale: Locale;server?:import('@/lib/property-repository.cjs').SearchResult }) {
+export default function PropertyExplorer({ listings, locale, server, initialQuery='' }: { listings: PropertyListing[]; locale: Locale;initialQuery?:string;server?:import('@/lib/property-repository.cjs').SearchResult }) {
   const router=useRouter();
-  const params = useSearchParams();
+  const refreshTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
+  useEffect(()=>()=>clearTimeout(refreshTimer.current),[]);
+  const [queryString,setQueryString]=useState(initialQuery);
+  useEffect(()=>setQueryString(initialQuery),[initialQuery]);
+  useEffect(()=>{const sync=()=>setQueryString(window.location.search.slice(1));window.addEventListener('popstate',sync);return()=>window.removeEventListener('popstate',sync);},[]);
+  const params=useMemo(()=>new URLSearchParams(queryString),[queryString]);
   const pathname = usePathname();
   const filters = useMemo(() => readFilters(new URLSearchParams(params.toString())), [params]);
   const c = propertyCopy[locale];
@@ -50,13 +55,14 @@ export default function PropertyExplorer({ listings, locale, server }: { listing
     en: { range: 'The minimum must not exceed the maximum.', contact: 'Get help finding a property', hint: 'Broaden your criteria or ask our team for help.' },
     ar: { range: 'يجب ألا يتجاوز الحد الأدنى الحد الأقصى.', contact: 'مساعدتي في البحث عن عقار', hint: 'وسّع معايير البحث أو اطلب المساعدة من فريقنا.' },
   }[locale];
-  function reset() { window.history.replaceState(null, '', pathname); if(server)router.refresh(); setLimit(12); }
+  function reset() { clearTimeout(refreshTimer.current);setQueryString('');window.history.replaceState(null, '', pathname); if(server)router.refresh(); setLimit(12); }
   function change(key: keyof PropertyFilters, value: string) {
     const next = { ...filters, [key]: value };
     const query = new URLSearchParams();
     for (const k of Object.keys(next) as (keyof PropertyFilters)[]) if (next[k] !== defaultFilters[k]) query.set(k,next[k]);
+    setQueryString(query.toString());
     window.history.replaceState(null,'',`${pathname}${query.size ? `?${query}` : ''}`);
-    if(server)router.refresh();
+    if(server){clearTimeout(refreshTimer.current);refreshTimer.current=setTimeout(()=>router.refresh(),200);}
     setLimit(12);
   }
   return <div className="space-y-8">
@@ -75,7 +81,7 @@ export default function PropertyExplorer({ listings, locale, server }: { listing
       <button className="btn-ghost self-end" type="button" onClick={reset}>{c.reset}</button>
       {invalidRange && <p role="alert" className="text-sm text-red-700 sm:col-span-2 lg:col-span-4">{help.range}</p>}
     </form>
-    <div className="flex flex-wrap items-center justify-between gap-4"><p aria-live="polite">{server?.total??results.length} {c.results}</p><button type="button" className="btn-ghost" aria-expanded={mapOpen} aria-controls="property-map" onClick={()=>setMapOpen(v=>!v)}>{c.map}</button></div>
+    <div className="flex flex-wrap items-center justify-between gap-4"><p role="status" aria-live="polite">{server?.total??results.length} {c.results}</p><button type="button" className="btn-ghost" aria-expanded={mapOpen} aria-controls="property-map" onClick={()=>setMapOpen(v=>!v)}>{c.map}</button></div>
     {mapOpen && <section id="property-map" className="rounded-2xl border border-ink/10 bg-white p-5">
       {mapped ? <>
         <label><span className="label">{c.mapSelect}</span><select className="field mb-4" value={mapped.project} onChange={e=>setMapProject(e.target.value)}>{mapProjects.map(p=><option key={p.project} value={p.project}>{p.projectName} · {results.filter(l=>l.project===p.project).length} {c.results}</option>)}</select></label>

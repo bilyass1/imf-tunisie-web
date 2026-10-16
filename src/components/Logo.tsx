@@ -45,7 +45,7 @@ export default function Logo({
   compact?: boolean;
 }) {
   return (
-    <Link href={`/${locale}`} className="group flex items-center gap-3" aria-label={`IMF ${SITE.legalName}`}>
+    <Link href={`/${locale}`} className="group flex items-center gap-3">
       <LogoMark className={compact ? 'h-8' : 'h-10'} light={light} />
       <span className="flex flex-col leading-none">
         <span

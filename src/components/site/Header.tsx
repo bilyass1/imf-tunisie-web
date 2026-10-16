@@ -54,12 +54,22 @@ export default function Header({
     const dialog = menuPanel.current;
     if (!dialog) return;
     dialog.showModal();
+    const trap=(event:KeyboardEvent)=>{
+      if(event.key!=='Tab')return;
+      const controls=Array.from(dialog.querySelectorAll<HTMLElement>('button:not(:disabled),a[href],input:not(:disabled),select:not(:disabled),[tabindex="0"]')).filter(element=>element.getClientRects().length>0);
+      const first=controls[0],last=controls.at(-1);
+      if(!dialog.contains(document.activeElement)){event.preventDefault();first?.focus();}
+      else if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+    };
+    dialog.addEventListener('keydown',trap);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const desktop = window.matchMedia('(min-width: 1280px)');
     const onDesktop = () => { if (desktop.matches) setOpen(false); };
     desktop.addEventListener('change', onDesktop);
     return () => {
+      dialog.removeEventListener('keydown',trap);
       dialog.close();
       document.body.style.overflow = previousOverflow;
       desktop.removeEventListener('change', onDesktop);
@@ -174,6 +184,7 @@ export default function Header({
             <Link
               key={link.href}
               href={link.href}
+              aria-current={pathname===link.href?'page':undefined}
               onClick={() => setOpen(false)}
               style={{ transitionDelay: `${80 + i * 55}ms` }}
               className={`border-b border-white/10 py-3 font-display text-2xl font-light text-white transition-all duration-500 ${

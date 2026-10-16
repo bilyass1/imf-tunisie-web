@@ -62,3 +62,17 @@ test('contact errors preserve values and success receives focus',async({page})=>
  await phone.fill('22123456');await submit.click();
  const success=page.locator('[role=status][tabindex="-1"]');await expect(success).toBeVisible();await expect(success).toBeFocused();
 });
+
+test('server property search updates its bounded result set',async({page})=>{
+ await page.goto('/fr/recherche');
+ const search=page.getByRole('searchbox',{name:'Ville, résidence ou référence'});
+ await search.fill("no-match ' OR 1=1 --");
+ await expect(page.getByRole('status').filter({hasText:'0 appartements'})).toBeVisible();
+ await expect(page.getByRole('link',{name:/Voir cet appartement/})).toHaveCount(0);
+ await expect(search).toHaveValue("no-match ' OR 1=1 --");
+});
+
+test('search results render before JavaScript hydration',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false});
+ try{const page=await context.newPage();await page.goto('/fr/recherche');await expect(page.getByText('Comparez les appartements à Tunis et Sfax selon votre budget, votre surface et vos envies.',{exact:true})).toBeVisible();await expect(page.getByRole('link',{name:'Voir cet appartement →'})).toHaveCount(24);}finally{await context.close();}
+});

@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { isLocale } from '@/i18n/config';
@@ -20,5 +19,5 @@ export default async function SearchPage({params,searchParams}:{params:Promise<{
   const filters=readFilters(paramsQuery),page=Math.min(400,Math.max(1,Math.floor(Number(paramsQuery.get('page'))||1)));
   const server=process.env.DATABASE_URL?await getStore().searchProperties(filters,locale,page):undefined;
   const listings=server?.items??propertyListings(await getProjects(),locale);
-  return <section className="bg-ivory pb-20 pt-32"><div className="container-lux"><h1 className="h-display mb-8 text-4xl sm:text-5xl">{propertyCopy[locale].title}</h1><Suspense fallback={<div className="min-h-screen animate-pulse bg-sand"/>}><PropertyExplorer server={server} listings={listings} locale={locale}/></Suspense></div></section>;
+  return <section className="bg-ivory pb-20 pt-32"><div className="container-lux"><h1 className="h-display mb-8 text-4xl sm:text-5xl">{propertyCopy[locale].title}</h1><PropertyExplorer initialQuery={paramsQuery.toString()} server={server} listings={listings} locale={locale}/></div></section>;
 }

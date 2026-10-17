@@ -2,9 +2,9 @@
   "name": "imf-tunisie-web",
   "version": "1.0.0",
   "private": true,
-  "description": "Site web + espace client IMF \u2014 Immobili\u00e8re Mseddi Fr\u00e8res",
+  "description": "Site web + espace client IMF — Immobilière Mseddi Frères",
   "scripts": {
-    "prebuild": "node scripts/prepare-public-assets.mjs && node scripts/prepare-web-documents.mjs",
+    "prebuild": "node scripts/prepare-gloire-availability.mjs && node scripts/prepare-public-assets.mjs && node scripts/prepare-web-documents.mjs",
     "assets:prepare": "node scripts/prepare-public-assets.mjs",
     "audit:property": "node scripts/audit-property-launch.cjs",
     "test:property": "node scripts/test-property-search.cjs && node scripts/test-visit-leads.cjs",
@@ -21,7 +21,7 @@
     "db:validate": "node scripts/postgres.cjs validate",
     "admin:create": "node scripts/create-admin.cjs",
     "assets:web-documents": "node scripts/prepare-web-documents.mjs",
-    "predev": "node scripts/prepare-public-assets.mjs && node scripts/prepare-web-documents.mjs"
+    "predev": "node scripts/prepare-gloire-availability.mjs && node scripts/prepare-public-assets.mjs && node scripts/prepare-web-documents.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -39,6 +39,9 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
     "@eslint/eslintrc": "^3.3.7",
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
     "@types/bcryptjs": "2.4.6",
     "@types/node": "22.10.7",
     "@types/pg": "^8.23.1",
@@ -46,8 +49,10 @@
     "@types/react-dom": "19.0.3",
     "@types/three": "^0.171.0",
     "autoprefixer": "10.4.20",
+    "draco3dgltf": "^1.5.7",
     "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.25",
+    "meshoptimizer": "^1.2.0",
     "postcss": "8.5.28",
     "tailwindcss": "3.4.17",
     "typescript": "5.7.3"

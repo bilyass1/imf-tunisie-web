@@ -1,5 +1,25 @@
 # Maquette 3D — comment elle est construite
 
+## Vue actuelle de La Gloire
+
+Les deux onglets utilisent maintenant le modèle de l'architecte : l'original
+dans « Modèle architecte », et une dérivée web dans « Disponibilités ».
+`scripts/prepare-gloire-availability.mjs` génère cette dérivée au démarrage et
+au build, sans écraser l'original : 4 314 946 → 401 096 triangles et
+13 842 440 → 2 611 872 octets. Les coordonnées et matériaux sont conservés ;
+les maillages denses sont simplifiés avec une erreur relative bornée.
+
+Les statuts commerciaux sont appliqués sur les surfaces du bâtiment, avec
+le recalage des emprises déjà utilisé par le modèle architecte. Les jardins et
+terrasses ne deviennent plus des volumes pleins. Les parties non affectées à
+un lot gardent leur matériau. Le clic et les couleurs partagent le même masque ;
+le choix d'étage coupe le modèle et ses lignes.
+
+Sur téléphone, les commandes et la légende sont séparées du canvas. Le plein
+écran suit la hauteur dynamique du navigateur et ses marges de sécurité.
+Les sections suivantes décrivent la reconstruction procédurale historique,
+toujours disponible pour les projets sans modèle d'architecte.
+
 Révision du rendu, contrôle du DWG et correction du pas d'étage à 3,25 m : voir
 [RENDU-ET-SOURCES.md](RENDU-ET-SOURCES.md). Les sections historiques ci-dessous
 documentent l'origine de la maquette.

@@ -19,3 +19,5 @@ tmp/
 .imf-source-assets/
 public/**/*.preview.webp
 public/**/*.web.pdf
+
+public/models/la-gloire/la-gloire-availability.glb*

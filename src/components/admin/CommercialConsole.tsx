@@ -14,6 +14,7 @@ import PasswordField from '@/components/auth/PasswordField';
 import Link from 'next/link';
 import Image from 'next/image';
 import AmenityEditor from './AmenityEditor';
+import ConstructionStepsEditor from './ConstructionStepsEditor';
 import { clientProperties } from '@/lib/client-properties';
 import CommercialPublicPreview, { showCommercialPublicPreview } from '@/components/admin/CommercialPublicPreview';
 import { useParams } from 'next/navigation';
@@ -34,10 +35,10 @@ function PropertyPicker({projects,requireLot=false,edit=false,panorama=false,ini
   return <>
     <label className="block text-sm">Résidence<select name="project" className="field mt-2" value={slug} onChange={e=>{setSlug(e.target.value);setRef('');showCommercialPublicPreview(`/projets/${e.target.value}`);}} required>{projects.map(p=><option key={p.slug} value={p.slug}>{p.name}</option>)}</select></label>
     <label className="block text-sm">Appartement<select name="lot" className="field mt-2" required={requireLot} value={ref} onChange={e=>{setRef(e.target.value);setRoomSelection('');showCommercialPublicPreview(e.target.value?`/projets/${slug}/appartements/${e.target.value}`:`/projets/${slug}`);}}><option value="">{requireLot?'Sélectionner un appartement':'Toute la résidence'}</option>{project?.lots.map(l=><option key={l.ref} value={l.ref}>{l.code}</option>)}</select></label>
-    {edit && <div key={`${slug}/${ref}/${lot?.progressPercent}/${project?.progressPercent}/${lot?.status}/${lot?.reservationNote}/${owner?.id}`} className="space-y-4">
+    {edit && <div key={JSON.stringify([slug,ref,lot?.progressPercent,project?.progressPercent,lot?.status,lot?.reservationNote,owner?.id,project?.progress])} className="space-y-4">
       <label className="block text-sm">Avancement (%)<input className="field mt-2" type="number" name="progress" min="0" max="100" step="1" required defaultValue={(lot??project)?.progressPercent??0}/></label>
       {lot && <LotStatusFields currentStatus={lot.status} note={lot.reservationNote} owner={owner} clients={clients}/>}
-      {!lot && !!project?.progress?.length && <div className="space-y-3 border-t border-ink/10 pt-4"><p className="text-sm font-semibold">Étapes du chantier visibles sur la fiche de résidence</p>{project.progress.map((step,index)=><label key={`${slug}/${index}/${step.percent}`} className="block text-sm">{step.label.fr} (%)<input className="field mt-2" type="number" name={`step-${index}`} min="0" max="100" step="1" required defaultValue={step.percent}/></label>)}</div>}
+      {!lot && project && <ConstructionStepsEditor steps={project.progress}/>}
     </div>}
     {attach && lot && <LotStatusFields key={`${slug}/${ref}/${lot.status}/${lot.reservationNote}`} currentStatus={lot.status} note={lot.reservationNote} limited/>}
     {panorama && lot && <div className="space-y-3 rounded-xl border border-ink/10 bg-sand/30 p-4"><label className="block text-sm">Pièce de l’appartement<select className="field mt-2" name="room" value={roomSelection} onChange={e=>setRoomSelection(e.target.value)} required><option value="">Sélectionner une pièce</option>{lot.rooms?.map(room=><option key={room.id} value={room.id}>{room.label.fr}</option>)}<option value="new">Ajouter une pièce validée par le plan</option></select></label>{roomSelection==='new' && <div className="grid gap-3 sm:grid-cols-3"><Field label="Nom français" name="roomFr"/><Field label="English name" name="roomEn"/><Field label="الاسم بالعربية" name="roomAr"/></div>}</div>}
@@ -70,7 +71,7 @@ function ProjectContentEditor({projects}: {projects:Property[]}) {
       <TranslatedFields prefix="delivery" label="Livraison annoncée (facultatif)" content={project.deliveryLabel??{fr:'',en:'',ar:''}} required={false}/>
       <div className="space-y-3 border-t border-ink/10 pt-5"><p className="text-sm font-semibold">Points forts — une ligne par point, dans le même ordre pour les trois langues</p><div className="grid gap-3 sm:grid-cols-3">{(['fr','en','ar'] as const).map(lang=><label key={lang} className="block text-sm">{lang.toUpperCase()}<textarea className="field mt-2 min-h-40" name={`highlights${lang[0].toUpperCase()}${lang.slice(1)}`} defaultValue={lines(lang)} rows={7}/></label>)}</div></div>
       <div className="space-y-3 border-t border-ink/10 pt-5"><p className="text-sm font-semibold">Fiche technique</p>{project.specs.map((spec,index)=><details key={`${slug}/${index}`} className="rounded-xl border border-ink/10 p-4"><summary className="cursor-pointer text-sm font-medium">{spec.label.fr} · {spec.value.fr}</summary><div className="mt-4 space-y-4"><TranslatedFields prefix={`specLabel${index}`} label="Libellé" content={spec.label}/><TranslatedFields prefix={`specValue${index}`} label="Valeur" content={spec.value}/></div></details>)}</div>
-      {!!project.progress?.length && <div className="space-y-3 border-t border-ink/10 pt-5"><p className="text-sm font-semibold">Avancement du chantier</p>{project.progress.map((step,index)=><details key={`${slug}/progress/${index}`} className="rounded-xl border border-ink/10 p-4" open><summary className="cursor-pointer text-sm font-medium">{step.label.fr}</summary><div className="mt-4 space-y-4"><TranslatedFields prefix={`progressLabel${index}`} label="Étape" content={step.label}/><label className="block max-w-40 text-sm">Pourcentage<input className="field mt-2" type="number" name={`step-${index}`} min="0" max="100" step="1" defaultValue={step.percent} required/></label></div></details>)}</div>}
+      <ConstructionStepsEditor steps={project.progress}/>
       <AmenityEditor selected={project.amenities} custom={project.customAmenities} />
       <p className="text-sm text-ink/55">Les modifications seront publiées pour les trois langues. Vérifiez les chiffres et la date de livraison avant l’enregistrement.</p>
     </Form>

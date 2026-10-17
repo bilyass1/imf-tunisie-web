@@ -17,6 +17,7 @@ import { verifyAdminPassword } from './sensitive-actions';
 import { attachClientLot, changeLotStatus, lotClient } from './lot-commercial';
 import { clientProperties, clientPaymentsForProperty, setClientProperties } from './client-properties';
 import { parseCustomAmenities, selectedAmenities } from './amenities';
+import { parseConstructionSteps } from './construction-progress';
 import { applyPaymentOperation } from './commercial-payments';
 import { formValue as value, requiredText as text, propertyTarget as target } from './commercial-input';
 
@@ -282,6 +283,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       } else if(operation==='property') {
         const {project,lot}=target(db,form); (lot??project).progressPercent=percent(form);
         if(lot && form.has('status')) await applyLotForm(db,form,authorized);
+        else if(!lot && form.has('progressSteps')) project.progress=parseConstructionSteps(value(form,'progressSteps'));
         else if(!lot && project.progress?.length && form.has('step-0')) project.progress=project.progress.map((step,index)=>{
           const next=percentValue(value(form,`step-${index}`));
           return {...step,percent:next,done:next===100};
@@ -308,7 +310,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         if(highlights.fr.length!==highlights.en.length || highlights.fr.length!==highlights.ar.length) throw new Error('Les points forts doivent avoir le même nombre de lignes dans les trois langues.');
         project.highlights=highlights.fr.map((fr,index)=>({fr,en:highlights.en[index],ar:highlights.ar[index]}));
         project.specs=project.specs.map((_,index)=>({label:translated(form,`specLabel${index}`,120),value:translated(form,`specValue${index}`,240)}));
-        project.progress=project.progress?.map((step,index)=>({label:translated(form,`progressLabel${index}`,120),percent:percentValue(value(form,`step-${index}`)),done:value(form,`step-${index}`)==='100'}));
+        project.progress=form.has('progressSteps') ? parseConstructionSteps(value(form,'progressSteps')) : project.progress?.map((step,index)=>({label:translated(form,`progressLabel${index}`,120),percent:percentValue(value(form,`step-${index}`)),done:value(form,`step-${index}`)==='100'}));
         project.customAmenities=form.has('customAmenities') ? parseCustomAmenities(value(form,'customAmenities')) : project.customAmenities??[];
         project.amenities=selectedAmenities(form.getAll('amenities').map(String),project.customAmenities);
         project.presentationEdited=true;

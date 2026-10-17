@@ -126,7 +126,7 @@ export default async function ClientDashboard({ params, searchParams }: { params
             </div>
 
             {/* ---- Avancement chantier ---- */}
-            {project.progress && (
+            {!!project.progress?.length && (
               <div className="rounded-2xl border border-ink/8 bg-white p-6">
                 <div className="flex items-baseline justify-between">
                   <h2 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink/50">

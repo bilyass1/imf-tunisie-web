@@ -20,7 +20,7 @@ const database = {canReadPrivateMedia:async(id,userId)=>{const saved=db.users.fi
 function load(relative) {
   const module = {exports:{}};
   const code = ts.transpileModule(fs.readFileSync(path.join(root,relative),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
-  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='server-only'?{}:id==='./commercial-payments'?load('src/lib/commercial-payments.ts'):id==='./commercial-input'?load('src/lib/commercial-input.ts'):id==='./sensitive-actions'?load('src/lib/sensitive-actions.ts'):id==='./audit'?load('src/lib/audit.ts'):id==='./pdf-validation'?load('src/lib/pdf-validation.ts'):id==='./contact-input'?load('src/lib/contact-input.ts'):id==='./gallery-filters'?load('src/lib/gallery-filters.ts'):id==='./lot-commercial'?load('src/lib/lot-commercial.ts'):id==='./client-deletion'?load('src/lib/client-deletion.ts'):id==='./payments'?load('src/lib/payments.ts'):id==='./amenities'?load('src/lib/amenities.ts'):id==='./rate-limit'?{allowRequest:(...args)=>{rateChecks.push(args);return true;}}:id==='./project-presentation'?{projectPresentation:project=>project}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
+  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='server-only'?{}:id==='./commercial-payments'?load('src/lib/commercial-payments.ts'):id==='./commercial-input'?load('src/lib/commercial-input.ts'):id==='./sensitive-actions'?load('src/lib/sensitive-actions.ts'):id==='./audit'?load('src/lib/audit.ts'):id==='./pdf-validation'?load('src/lib/pdf-validation.ts'):id==='./contact-input'?load('src/lib/contact-input.ts'):id==='./gallery-filters'?load('src/lib/gallery-filters.ts'):id==='./lot-commercial'?load('src/lib/lot-commercial.ts'):id==='./client-deletion'?load('src/lib/client-deletion.ts'):id==='./payments'?load('src/lib/payments.ts'):id==='./construction-progress'?load('src/lib/construction-progress.ts'):id==='./amenities'?load('src/lib/amenities.ts'):id==='./rate-limit'?{allowRequest:(...args)=>{rateChecks.push(args);return true;}}:id==='./project-presentation'?{projectPresentation:project=>project}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
   vm.runInNewContext(code,{module,exports:module.exports,require:localRequire,Buffer,setTimeout,clearTimeout,File,Response,Headers,FormData,structuredClone,Date,Intl,process:{cwd:()=>root,env:{}},console},{filename:relative});
   return module.exports;
 }
@@ -118,6 +118,40 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal(db.projects[0].customAmenities.length,0);
   assert.equal(db.projects[0].amenities.join(','),'garden');
   console.log('PASS: custom amenity publication, translation/icon rendering, edits, deselection, removal, fallback languages, limits, authorization and invalid-form rollback.');
+  const stages=[
+    {label:{fr:' Gros œuvre ',en:'Structure',ar:'الهيكل'},percent:100,done:false},
+    {label:{fr:'Électricité',en:'Electrical work',ar:'الكهرباء'},percent:35},
+    {label:{fr:'Livraison',en:'',ar:''},percent:0,done:true},
+  ];
+  const chantier={operation:'property',project:'residence',lot:'',progress:'60',progressSteps:JSON.stringify(stages)};
+  const previousChantier=JSON.stringify(db.projects[0].progress);
+  const chantierSnapshot=JSON.stringify(db);
+  session=null;assert.equal((await act(chantier)).ok,false);
+  session={sub:'staff'};
+  for(const invalid of ['{','null','[null]',JSON.stringify([{label:{fr:' '},percent:0}]),JSON.stringify([{label:{fr:'x'.repeat(121)},percent:0}]),JSON.stringify([{label:{fr:'x',en:42},percent:0}]),JSON.stringify([stages[0],stages[0]]),...[-1,101,1.5,'50',null].map(percent=>JSON.stringify([{label:{fr:'Test'},percent}])),JSON.stringify(Array.from({length:31},(_,i)=>({label:{fr:'Étape '+i},percent:0}))), '['+' '.repeat(64001)+']']) {
+    assert.equal((await act({...chantier,progressSteps:invalid})).ok,false,'Invalid construction steps are rejected');
+    assert.equal(JSON.stringify(db),chantierSnapshot,'No partial changes on invalid construction steps');
+  }
+  assert.equal((await act({...chantier,lot:'A1',status:'reserved',progress:'66'})).ok,true);
+  assert.equal(JSON.stringify(db.projects[0].progress),previousChantier,'Apartment progress must not change the residence stages');
+  assert.equal((await act(chantier)).ok,true);
+  assert.equal(db.projects[0].progress.length,3);
+  assert.equal(db.projects[0].progress[0].label.fr,'Gros œuvre');
+  assert.equal(db.projects[0].progress[0].done,true);
+  assert.equal(db.projects[0].progress[2].done,false);
+  assert.equal(db.projects[0].progress[2].label.ar,'Livraison','Missing translations fall back to French');
+  assert.equal(db.projects[1].progress,undefined,'Stages are scoped to the selected residence');
+  const reordered=[{...stages[2],label:progressLabel('Remise des clés'),percent:100},stages[1]];
+  assert.equal((await act({...content,progressSteps:JSON.stringify(reordered)})).ok,true,'Presentation form can add, rename, reorder and remove stages');
+  assert.equal(db.projects[0].progress[0].label.fr,'Remise des clés');
+  assert.equal(db.projects[0].progress[0].done,true);
+  assert.equal(db.projects[0].progress.length,2);
+  assert.equal((await act({...chantier,progressSteps:'[]'})).ok,true,'All stages can be removed');
+  assert.equal(db.projects[0].progress.length,0);
+  assert.equal((await act({...chantier,project:'second-residence'})).ok,true,'A residence without stages can start a new construction list');
+  assert.equal(db.projects[1].progress.length,3);
+  assert.equal((await act(chantier)).ok,true,'Stages can be re-added after clearing');
+  console.log('PASS: custom construction stage creation, rename, ordering, removal, translation fallback, derived completion, limits, admin-only writes, per-residence isolation and invalid-form rollback.');
   const sale={operation:'lot-status',project:'residence',lot:'A2',status:'sold'};
   let beforeSale=JSON.stringify(db);
   assert.equal((await act(sale)).ok,false,'A sale requires a linked client');assert.equal(JSON.stringify(db),beforeSale);

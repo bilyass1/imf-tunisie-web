@@ -262,7 +262,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
 
             <div id="avancement" className="scroll-mt-28">
               <ProgressMeter value={project.progressPercent} locale={locale}/>
-              {project.progress && (
+              {!!project.progress?.length && (
                 <div className="mt-6 overflow-hidden rounded-2xl border border-ink/8 bg-white p-6">
                   <h3 className="text-[12px] font-semibold uppercase tracking-[0.18em] text-ink/50">
                     {sectionLabel('progress', dict.project.progress)}

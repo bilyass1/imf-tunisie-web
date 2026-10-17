@@ -147,7 +147,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
           const mat = material as import('three').MeshStandardMaterial;
           // The exporter emits separate front/back triangles.
           // DoubleSide renders both coincident surfaces and causes z-fighting.
-          mat.side = availability ? THREE.DoubleSide : THREE.FrontSide;
+          mat.side = THREE.FrontSide;
           mat.needsUpdate = true;
           if (availability) mat.clippingPlanes = [floorClip];
           if ('envMapIntensity' in mat) mat.envMapIntensity = .55;

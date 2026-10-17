@@ -54,13 +54,18 @@
   .immersive .hint, .immersive .notice { display: none; }
 }
 @media (min-width: 600px) and (max-height: 500px) {
-  .immersive { display: grid; grid-template-columns: minmax(0, 1fr) 250px; grid-template-rows: auto auto auto auto minmax(48px, 1fr) auto; gap: 0 8px; }
+  .immersive { display: grid; grid-template-columns: minmax(0, 1fr) 250px; grid-template-rows: auto 50px auto 46px minmax(50px, 1fr) auto; gap: 0 8px; }
   .immersive .header { grid-area: 1 / 1 / 2 / 3; }
   .immersive .stage { display: contents; }
   .immersive .viewport { grid-area: 2 / 1 / 6 / 2; height: 100%; min-height: 120px; }
-  .immersive .topbar { grid-area: 2 / 2 / 3 / 3; padding: 4px; }
-  .immersive .legend { grid-area: 3 / 2 / 4 / 3; padding: 6px; gap: 6px; }
-  .immersive .floors { grid-area: 4 / 2 / 5 / 3; padding: 4px 0; }
-  .immersive .navigation { grid-area: 5 / 2 / 6 / 3; margin-block: 0; }
-  .immersive .footer { grid-area: 6 / 1 / 7 / 3; }
+  .immersive .topbar { grid-area: 2 / 2 / 3 / 3; padding: 0; }
+  .immersive .lighting { padding: 2px; }
+  .immersive .legend { grid-area: 3 / 2 / 4 / 3; padding: 4px; gap: 4px; }
+  .immersive .legendItem { font-size: 11px; }
+  .immersive .floors { grid-area: 4 / 2 / 5 / 3; padding: 0; }
+  .immersive .floorButtons { padding: 0; }
+  .immersive .navigation { grid-area: 5 / 2 / 6 / 3; margin-block: 0; width: 100%; max-width: 100%; padding: 2px; gap: 0; justify-content: space-evenly; }
+  .immersive .navigation button { padding-inline: 6px; min-width: 0; }
+  .immersive .navigation button:not([aria-label]) { flex: 1; font-size: 12px; }
+  .immersive .footer { grid-area: 6 / 1 / 7 / 3; padding: 4px 8px; }
 }

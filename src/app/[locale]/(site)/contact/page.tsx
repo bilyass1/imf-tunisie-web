@@ -25,7 +25,16 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
-  const projects = (await getProjects()).map((p) => ({ slug: p.slug, name: p.name }));
+  const projects = (await getProjects()).map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    lots: p.lots.map((lot) => ({
+      ref: lot.ref,
+      code: lot.code,
+      label: [lot.code || lot.ref, lot.typology, dict.availability.legend[lot.status]].filter(Boolean).join(' — '),
+      available: lot.status === 'available',
+    })),
+  }));
 
   const infos = [
     {

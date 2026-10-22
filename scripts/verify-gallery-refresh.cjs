@@ -7,7 +7,9 @@ function load(file) {
   const box = { exports: {} };
   const js = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText;
   const localRequire = name => name === './gallery-photo-refresh.json' ? mapping
-    : name === './marassim-presentation' ? load('src/lib/marassim-presentation.ts') : require(name);
+    : name === './marassim-presentation' ? load('src/lib/marassim-presentation.ts')
+    : name === './marassim-photos' ? load('src/lib/marassim-photos.ts')
+    : name === './marassim-photos-20261022.json' ? require('../src/lib/marassim-photos-20261022.json') : require(name);
   vm.runInNewContext(js, { module: box, exports: box.exports, require: localRequire });
   return box.exports;
 }
@@ -30,7 +32,7 @@ async function main() {
     const custom = { src: '/uploads/admin-photo.jpg', caption: { fr:'Admin', en:'Admin', ar:'Admin' } };
     const project = { slug, heroImage:`/media/${dir}/hero.jpg`, cover:'/uploads/custom-cover.jpg', gallery:[...entries.map(src => ({ src, caption:{fr:'Vue',en:'View',ar:'مشهد'} })),custom] };
     const result = projectPresentation(project);
-    assert.equal(result.gallery.length, count + 1);
+    assert.equal(result.gallery.length, count + 1 + (slug === 'complexe-marassim' ? 61 : 0));
     assert.equal(result.gallery.filter(r => r.src.endsWith('-20260922.webp')).length, count);
     assert.equal(JSON.stringify(result), JSON.stringify(projectPresentation(result)), 'Mapping must be idempotent');
     assert.equal(result.cover, project.cover);

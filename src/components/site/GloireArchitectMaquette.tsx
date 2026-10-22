@@ -6,14 +6,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { MaquetteLabels } from './Maquette3D';
 import { useImmersiveViewer } from './useImmersiveViewer';
 import type { Lot } from '@/lib/types';
-import { LA_GLOIRE_FOOTPRINTS, LA_GLOIRE_SITE } from '@/lib/la-gloire-footprints';
+import { LA_GLOIRE_SITE } from '@/lib/la-gloire-footprints';
 import ModelCompass, { updateModelCompass } from './ModelCompass';
 import { gloireFloorHeight, gloireModelPlan } from '@/lib/la-gloire-registration';
 import { createGloireAvailability, GLOIRE_STATUS_COLORS } from './gloire-availability';
+import { gloireSurfaceHit } from './gloire-raycast';
 import styles from './Maquette3D.module.css';
 
 const architectModelUrl = '/models/la-gloire/la-gloire-web.glb';
-const availabilityModelUrl = '/models/la-gloire/la-gloire-availability.glb';
+const availabilityModelUrl = '/models/la-gloire/la-gloire-availability.glb?v=topology-v2';
 
 const localCopy = {
   fr: { source: 'Modèle architecte fourni le 07/09/2026 · dimensions du fichier SketchUp · textures optimisées pour le web', aerial: 'Vue aérienne', street: 'Vue façade' },
@@ -54,12 +55,12 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
     let cleanup = () => {};
     setReady(false); setFailed(false); setProgress(0);
     (async () => {
-      const [THREE,[{ OrbitControls }, { GLTFLoader }, { DRACOLoader }, { RoomEnvironment }],bytes] = await Promise.all([import('three'),Promise.all([
+      const [THREE,[{ OrbitControls }, { GLTFLoader }, { DRACOLoader }, { RoomEnvironment }],bytes,{ MeshBVH, acceleratedRaycast, disposeBoundsTree }] = await Promise.all([import('three'),Promise.all([
         import('three/examples/jsm/controls/OrbitControls.js'),
         import('three/examples/jsm/loaders/GLTFLoader.js'),
         import('three/examples/jsm/loaders/DRACOLoader.js'),
         import('three/examples/jsm/environments/RoomEnvironment.js'),
-      ]),loadModelBytes(availability ? availabilityModelUrl : architectModelUrl,{signal:download.signal,onProgress:setProgress})]);
+      ]),loadModelBytes(availability ? availabilityModelUrl : architectModelUrl,{signal:download.signal,onProgress:setProgress}),import('three-mesh-bvh')]);
       if (cancelled) return;
       const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
       const restingPixelRatio = modelPixelRatio(host.clientWidth,host.clientHeight);
@@ -105,9 +106,10 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
       building.updateMatrixWorld(true);
       box = new THREE.Box3().setFromObject(building);
       const size = box.getSize(new THREE.Vector3());
-      const status = availability ? createGloireAvailability(THREE, lots, building.position.clone(), selectedRef) : null;
+      const status = createGloireAvailability(THREE, lots, building.matrixWorld, selectedRef);
       const floorClip = new THREE.Plane(new THREE.Vector3(0, -1, 0), 10000);
       const surfaces: import('three').Mesh[] = [];
+      const sourceMaterials = new Set<import('three').Material>();
 
       building.traverse(object => {
         if (availability && object instanceof THREE.Line) {
@@ -116,6 +118,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         }
         const mesh = object as import('three').Mesh;
         if (!mesh.isMesh) return;
+        (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).forEach(mat => sourceMaterials.add(mat));
         surfaces.push(mesh);
         mesh.frustumCulled = true;
         // The converter negates back-face normals but leaves index winding
@@ -139,7 +142,10 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
           indices.needsUpdate = true;
           geometry.userData.windingFixed = true;
         }
-        if (status) mesh.material = Array.isArray(mesh.material)
+        // Keep detailed facade geometry without testing millions of triangles on every move.
+        geometry.boundsTree ??= new MeshBVH(geometry, { strategy: 0, indirect: true, targetLeafSize: 12 });
+        mesh.raycast = acceleratedRaycast;
+        if (availability) mesh.material = Array.isArray(mesh.material)
           ? mesh.material.map(mat => status.material(mat as import('three').MeshStandardMaterial))
           : status.material(mesh.material as import('three').MeshStandardMaterial);
         const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
@@ -171,41 +177,28 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
       setView('aerial');
       api.current = { reset: () => setView('aerial'), view: setView, zoom: factor => { camera.position.sub(orbit.target).multiplyScalar(factor).add(orbit.target); orbit.update(); } };
 
-      // Sales-plan coordinates registered against the upper-storey outline
-      // extracted from the SKP (source XY, Z up). Only hit areas are transformed.
-      const pickGroup = new THREE.Group();
-      const pickMaterial = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide });
-      const pickMeshes: import('three').Mesh[] = [];
-      for (const lot of lots) {
-        const polygon = LA_GLOIRE_FOOTPRINTS[lot.ref];
-        if (!polygon) continue;
-        if (availability) continue;
-        const shape = new THREE.Shape(polygon.map(([x,y]) => new THREE.Vector2(...gloireModelPlan(x, y))));
-        const geometry = new THREE.ExtrudeGeometry(shape, { depth: LA_GLOIRE_SITE.floorHeight, bevelEnabled: false });
-        geometry.translate(0, 0, gloireFloorHeight(lot.floor));
-        const mesh = new THREE.Mesh(geometry, pickMaterial);
-        mesh.userData.lot = lot;
-        pickGroup.add(mesh); pickMeshes.push(mesh);
-      }
-      pickGroup.rotation.copy(building.rotation);
-      pickGroup.position.copy(building.position);
-      pickGroup.updateMatrixWorld(true);
+      // Raycast the surface actually visible in either tab. Invisible extruded
+      // volumes could intercept a neighbouring lot, courtyard or hidden storey.
       const raycaster = new THREE.Raycaster();
       const pointer = new THREE.Vector2();
       const pick = (event: PointerEvent): Lot | null => {
         const rect = renderer.domElement.getBoundingClientRect();
         pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
         raycaster.setFromCamera(pointer, camera);
-        if (status) {
-          const hit = raycaster.intersectObjects(surfaces, false).find(hit => floorClip.distanceToPoint(hit.point) >= -0.001);
-          return hit ? status.pick(hit.point) : null;
-        }
-        return raycaster.intersectObjects(pickMeshes, false)[0]?.object.userData.lot ?? null;
+        syncFloor();
+        const hit = gloireSurfaceHit(raycaster, surfaces, availability && floorRef.current !== 'all' ? floorClip : undefined);
+        return hit ? status.pick(hit.point) : null;
+      };
+      const syncFloor = () => {
+        const selected = availability ? floorRef.current : 'all';
+        status.setMaxFloor(selected);
+        floorClip.constant = selected === 'all' ? 10000 : new THREE.Vector3(0, 0, gloireFloorHeight(selected + 1)).applyMatrix4(building.matrixWorld).y;
       };
       const pointers = new Set<number>();
       let press: { x: number; y: number; moved: boolean; id: number } | null = null;
       let lastHover = 0;
       const pointerDown = (event: PointerEvent) => {
+        rotatingRef.current = false; setRotating(false);
         pointers.add(event.pointerId);
         if (pointers.size > 1) { if (press) press.moved = true; return; }
         if (event.button === 0) press = { x: event.clientX, y: event.clientY, moved: false, id: event.pointerId };
@@ -223,7 +216,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         pointers.delete(event.pointerId); press = null;
         if (clicked) { const lot = pick(event); if (lot) { setImmersive(false); selectRef.current(lot.ref); } }
       };
-      const pointerCancel = () => { pointers.clear(); press = null; setHovered(null); };
+      const pointerCancel = () => { pointers.clear(); press = null; setHovered(null); renderer.domElement.style.cursor = 'grab'; };
       renderer.domElement.addEventListener('pointerdown', pointerDown);
       renderer.domElement.addEventListener('pointermove', pointerMove);
       renderer.domElement.addEventListener('pointerup', pointerUp);
@@ -233,7 +226,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
       let dirty = true;
       let interacting = false;
       let visible = true;
-      const onChange = () => { dirty = true; };
+      const onChange = () => { dirty = true; setHovered(previous => previous ? null : previous); renderer.domElement.style.cursor = 'grab'; };
       const onStart = () => { interacting = true; dirty = true; };
       const onEnd = () => { interacting = false; dirty = true; };
       orbit.addEventListener('change', onChange);
@@ -257,7 +250,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         if (!visible || document.hidden) return;
         if (availability && appliedFloor !== floorRef.current) {
           appliedFloor = floorRef.current;
-          floorClip.constant = appliedFloor === 'all' ? 10000 : building.position.y + gloireFloorHeight(appliedFloor + 1);
+          syncFloor(); setHovered(null);
           dirty = true;
         }
         if (appliedLighting !== lightingRef.current) {
@@ -272,12 +265,12 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         if (renderer.getPixelRatio() !== ratio) { renderer.setPixelRatio(ratio); dirty = true; }
         if (dirty || changed || orbit.autoRotate) {
           // SKP x/y plan coordinates are rotated into world x/-z.
-          updateModelCompass(camera, [0, 1], compassRef.current);
+          updateModelCompass(camera, [0, -1], compassRef.current);
           renderer.render(scene, camera); dirty = false;
         }
       };
       draw(); setProgress(100); setReady(true);
-      const onLost = (event: Event) => { event.preventDefault(); setFailed(true); };
+      const onLost = (event: Event) => { event.preventDefault(); setFailed(true); setReady(false); };
       renderer.domElement.addEventListener('webglcontextlost', onLost);
       cleanup = () => {
         renderer.domElement.removeEventListener('pointerdown', pointerDown);
@@ -285,14 +278,13 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         renderer.domElement.removeEventListener('pointerup', pointerUp);
         renderer.domElement.removeEventListener('pointercancel', pointerCancel);
         renderer.domElement.removeEventListener('pointerleave', pointerCancel);
-        pickMeshes.forEach(mesh => mesh.geometry.dispose()); pickMaterial.dispose();
         cancelAnimationFrame(frame); resize.disconnect(); visibility.disconnect(); orbit.dispose(); draco.dispose(); api.current = null;
         renderer.domElement.removeEventListener('webglcontextlost', onLost);
-        const disposedMaterials = new Set<import('three').Material>();
-        scene.traverse(object => { const mesh = object as import('three').Mesh; mesh.geometry?.dispose(); const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]; mats.filter(Boolean).forEach(mat => disposedMaterials.add(mat)); });
+        const disposedMaterials = new Set<import('three').Material>(sourceMaterials);
+        scene.traverse(object => { const mesh = object as import('three').Mesh; if (mesh.geometry) { disposeBoundsTree.call(mesh.geometry); mesh.geometry.dispose(); } const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]; mats.filter(Boolean).forEach(mat => disposedMaterials.add(mat)); });
         const textures = new Set<import('three').Texture>();
         disposedMaterials.forEach(material => { Object.values(material).forEach(value => { if (value instanceof THREE.Texture) textures.add(value); }); material.dispose(); });
-        textures.forEach(texture => texture.dispose()); status?.dispose(); environment.dispose(); renderer.dispose(); renderer.domElement.remove();
+        textures.forEach(texture => texture.dispose()); status.dispose(); environment.dispose(); renderer.dispose(); renderer.domElement.remove();
       };
     })().catch(() => { cleanup(); if (!cancelled) setFailed(true); });
     return () => { cancelled = true; download.abort(); cleanup(); };

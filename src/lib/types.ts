@@ -107,6 +107,8 @@ export interface Project {
   presentationEdited?: boolean;
   /** Preserve the administrator's chosen gallery order and captions. */
   galleryEdited?: boolean;
+  /** Published photo batches already materialized, including administrator removals. */
+  galleryImports?: string[];
   galleryFilters?: GalleryFilter[];
   presentationLabels?: {
     overview: Localized;

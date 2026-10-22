@@ -1,6 +1,7 @@
 import type { Localized, Project } from './types';
 import { MARASSIM_PROJECT_CONTENT } from './marassim-presentation';
 import galleryPhotoRefresh from './gallery-photo-refresh.json';
+import { withMarassimPhotos } from './marassim-photos';
 
 const L = (fr: string, en: string, ar: string): Localized => ({ fr, en, ar });
 
@@ -130,7 +131,10 @@ export function projectPresentation(project: Project): Project {
   if (project.slug === 'residence-la-gloire') {
     project = { ...project, cover: '/media/la-gloire/facade-client-20261013.webp' };
   }
-  if (project.slug === 'complexe-marassim') return project.presentationEdited ? project : { ...project, ...MARASSIM_PROJECT_CONTENT };
+  if (project.slug === 'complexe-marassim') {
+    project = withMarassimPhotos(project);
+    return project.presentationEdited ? project : { ...project, ...MARASSIM_PROJECT_CONTENT };
+  }
   if (project.presentationEdited) return project;
   if (project.slug === 'residence-la-gloire') return {
     ...project,
@@ -154,4 +158,11 @@ export function projectPresentation(project: Project): Project {
       ? { ...item, value: L(YASSAMINE_PROGRAMME.blocks.join(' · '), YASSAMINE_PROGRAMME.blocks.join(' · '), YASSAMINE_PROGRAMME.blocks.join(' · ')) }
       : item),
   };
+}
+
+/** Persist the published gallery before any administrator edit or removal. */
+export function materializeProjectGallery(project: Project): void {
+  const presented = projectPresentation(project);
+  project.gallery = presented.gallery;
+  project.galleryImports = presented.galleryImports;
 }

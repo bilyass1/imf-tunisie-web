@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { getSession, createSession } from './session';
 import { readDb, writeCommercialDb as writeDb, isPersistent } from './db';
 import type { Database, Localized, User } from './types';
-import { projectPresentation } from './project-presentation';
+import { materializeProjectGallery } from './project-presentation';
 import { parseContactInput } from './contact-input';
 import { galleryPhotoCategory, parseGalleryFilters, projectGalleryFilters } from './gallery-filters';
 import { allowRequest } from './rate-limit';
@@ -206,7 +206,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
           }
           publicPath=`/projets/${project.slug}/appartements/${lot.ref}#visite-360`;
         } else if(kind==='gallery') {
-          if(!lot && !project.galleryEdited) project.gallery=projectPresentation(project).gallery;
+          if(!lot) materializeProjectGallery(project);
           const gallery=dest.gallery??=[];
           const position=value(form,'position') ? galleryPosition(form,gallery.length+1) : gallery.length;
           gallery.splice(position,0,{...photo,...(!lot ? {category:galleryCategory(form,project)} : {})});
@@ -320,13 +320,14 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
         if(lot) throw new Error('Sélectionnez une résidence.');
         const filters=parseGalleryFilters(value(form,'galleryFilters'));
         const previous=projectGalleryFilters(project);
-        project.gallery=projectPresentation(project).gallery.map(photo=>({...photo,category:filters.some(filter=>filter.id===galleryPhotoCategory(photo,previous))?galleryPhotoCategory(photo,previous):'general'}));
+        materializeProjectGallery(project);
+        project.gallery=project.gallery.map(photo=>({...photo,category:filters.some(filter=>filter.id===galleryPhotoCategory(photo,previous))?galleryPhotoCategory(photo,previous):'general'}));
         project.galleryFilters=filters;project.galleryEdited=true;
         publicPath=`/projets/${project.slug}#galerie`;
       } else if(operation==='gallery-edit' || operation==='gallery-remove') {
         const {project,lot}=target(db,form);
         if(lot) throw new Error('Sélectionnez une résidence.');
-        if(!project.galleryEdited) project.gallery=projectPresentation(project).gallery;
+        materializeProjectGallery(project);
         const index=project.gallery.findIndex(item=>item.src===value(form,'photo'));
         if(index<0) throw new Error('Photo introuvable dans cette résidence. Rechargez la page.');
         if(operation==='gallery-remove') {

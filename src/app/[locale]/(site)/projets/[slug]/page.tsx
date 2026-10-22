@@ -64,6 +64,12 @@ const zephyrVideo = {
   ar: { nav: 'فيديو', title: 'إقامة زفير بالفيديو', description: 'تعرّف على الإقامة في الفيديو الذي نشرته شركة IMF العقارية.' },
 };
 
+const marassimVideo = {
+  fr: { nav: 'Vidéo', title: 'Le Complexe Marassim en vidéo', description: 'Découvrez le Complexe Marassim et son cadre événementiel.', watch: 'Voir la vidéo sur YouTube' },
+  en: { nav: 'Video', title: 'Complexe Marassim on video', description: 'Discover Complexe Marassim and its event setting.', watch: 'Watch on YouTube' },
+  ar: { nav: 'فيديو', title: 'مركّب مراسيم بالفيديو', description: 'اكتشف مركّب مراسيم وفضاءاته للمناسبات.', watch: 'شاهد الفيديو على يوتيوب' },
+};
+
 export async function generateStaticParams() {
   const projects = await getProjects();
   return locales.flatMap((locale) => projects.map((p) => ({ locale, slug: p.slug })));
@@ -107,6 +113,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
     { id: 'programme', label: sectionLabel('overview', dict.project.overview) },
     ...(['diar-al-yassamine', 'residence-zephyr'].includes(project.slug) ? [{ id: 'video', label: project.slug === 'residence-zephyr' ? zephyrVideo[locale].nav : yassamineVideo[locale].nav }] : []),
     ...(project.slug === 'complexe-marassim' ? [{ id: 'espaces', label: t(MARASSIM_PRESENTATION.nav, locale) }] : []),
+    ...(project.slug === 'complexe-marassim' ? [{ id: 'video', label: marassimVideo[locale].nav }] : []),
     { id: 'galerie', label: sectionLabel('gallery', dict.project.gallery) },
     ...((project.slug === 'diar-al-yassamine' || (project.massing && project.lots.length)) ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
     ...(project.lots.length ? [{ id: 'disponibilite', label: dict.project.availability }] : []),
@@ -302,6 +309,20 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       </section>
 
       {project.slug === 'complexe-marassim' && <MarassimSpaces locale={locale} />}
+
+      {project.slug === 'complexe-marassim' && (
+        <section id="video" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">
+          <div className="container-lux">
+            <SectionHeading eyebrow={marassimVideo[locale].nav} title={marassimVideo[locale].title} subtitle={marassimVideo[locale].description} light />
+            <div className="mt-12 overflow-hidden rounded-2xl ring-1 ring-white/15">
+              <iframe className="aspect-video w-full bg-black" src="https://www.youtube-nocookie.com/embed/zQfEUoMYYYA" title={marassimVideo[locale].title}
+                loading="lazy" referrerPolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen />
+            </div>
+            <a className="mt-4 inline-flex min-h-11 items-center text-sm text-gold-200 underline underline-offset-4" href="https://youtu.be/zQfEUoMYYYA" target="_blank" rel="noopener noreferrer">{marassimVideo[locale].watch}</a>
+          </div>
+        </section>
+      )}
 
       {project.slug === 'diar-al-yassamine' && (
         <section id="video" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">

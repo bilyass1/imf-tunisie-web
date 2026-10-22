@@ -12,6 +12,12 @@ import ProjectsExplorer, { type ProjectSummary } from '@/components/site/Project
 
 export const dynamic = 'force-dynamic';
 
+const pinnedProjects = ['residence-la-gloire', 'diar-al-yassamine'];
+function projectRank(slug: string): number {
+  const index = pinnedProjects.indexOf(slug);
+  return index < 0 ? pinnedProjects.length : index;
+}
+
 export async function generateMetadata({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams:Promise<Record<string,string|string[]|undefined>> }): Promise<Metadata> {
   const { locale } = await params;
   const filtered=Object.values(await searchParams).some(Boolean);
@@ -40,7 +46,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
       available: stats.available,
       minArea: stats.minArea,
     };
-  });
+  }).sort((a, b) => projectRank(a.slug) - projectRank(b.slug));
 
   return (
     <>

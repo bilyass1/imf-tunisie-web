@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/i18n/getDictionary';
-import { SITE } from '@/lib/site';
 import { LogoMark } from '@/components/Logo';
 import { IconPin, IconPhone, IconMail, IconFacebook, IconInstagram, IconLinkedin } from '@/components/Icons';
 import { getProjects } from '@/lib/db';
@@ -125,12 +124,6 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
             © {year} {SITE.legalName}. {dict.footer.rights}
           </p>
           <p className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1">
-            <span>
-              {dict.footer.vat} : {SITE.legal.vat}
-            </span>
-            <span>
-              {dict.footer.rc} : {SITE.legal.rc}
-            </span>
             <a href={SITE.agency.url} target="_blank" rel="noreferrer noopener" className="transition hover:text-gold-300">
               {dict.footer.madeBy}
             </a>

@@ -71,12 +71,12 @@ export default function MaquetteSection({
       hideModeToggle={isLaGloire}
       onSelect={(ref) => router.push(`/${locale}/projets/${projectSlug}/appartements/${ref}`)}
     />}
-      {isLaGloire && view === 'architect' && <div className="flex flex-wrap items-end gap-4 rounded-b-2xl bg-ink p-5 text-ivory">
+      {isLaGloire && <div className="flex flex-wrap items-end gap-4 rounded-b-2xl bg-ink p-5 text-ivory">
         <label className="flex min-w-56 flex-col gap-2 text-sm">
           <span>{apartmentCopy.label}</span>
           <select className="rounded-lg border border-white/25 bg-ink px-3 py-3 text-ivory" value={apartmentRef} onChange={event => setApartmentRef(event.target.value)}>
             {Array.from(new Set(lots.map(lot => lot.block))).map(block => <optgroup key={block} label={`Bloc ${block}`}>
-              {lots.filter(lot => lot.block === block).map(lot => <option key={lot.ref} value={lot.ref}>{lot.code} · {lot.typology} · {lot.floor === 0 ? 'RDC' : `R+${lot.floor}`}</option>)}
+              {lots.filter(lot => lot.block === block).map(lot => <option key={lot.ref} value={lot.ref}>{lot.code} · {lot.typology} · {lot.floor === 0 ? 'RDC' : `R+${lot.floor}`} · {labels.legend[lot.status]}</option>)}
             </optgroup>)}
           </select>
         </label>

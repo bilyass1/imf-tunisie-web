@@ -108,12 +108,14 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
                 ))}
               </span>
             </li>
-            <li className="flex gap-3">
-              <IconMail className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
-              <a href={`mailto:${SITE.email}`} className="transition hover:text-gold-300">
-                {SITE.email}
-              </a>
-            </li>
+            {[...new Set([SITE.email, 'info@imf-immobiliere.tn'])].map((email) => (
+              <li key={email} className="flex gap-3">
+                <IconMail className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
+                <a href={`mailto:${email}`} dir="ltr" className="transition hover:text-gold-300">
+                  {email}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

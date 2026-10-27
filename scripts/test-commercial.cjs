@@ -20,7 +20,7 @@ const database = {canReadPrivateMedia:async(id,userId)=>{const saved=db.users.fi
 function load(relative) {
   const module = {exports:{}};
   const code = ts.transpileModule(fs.readFileSync(path.join(root,relative),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
-  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='server-only'?{}:id==='./commercial-payments'?load('src/lib/commercial-payments.ts'):id==='./commercial-input'?load('src/lib/commercial-input.ts'):id==='./sensitive-actions'?load('src/lib/sensitive-actions.ts'):id==='./audit'?load('src/lib/audit.ts'):id==='./pdf-validation'?load('src/lib/pdf-validation.ts'):id==='./contact-input'?load('src/lib/contact-input.ts'):id==='./gallery-filters'?load('src/lib/gallery-filters.ts'):id==='./lot-commercial'?load('src/lib/lot-commercial.ts'):id==='./client-deletion'?load('src/lib/client-deletion.ts'):id==='./payments'?load('src/lib/payments.ts'):id==='./construction-progress'?load('src/lib/construction-progress.ts'):id==='./amenities'?load('src/lib/amenities.ts'):id==='./rate-limit'?{allowRequest:(...args)=>{rateChecks.push(args);return true;}}:id==='./project-presentation'?{materializeProjectGallery:()=>{}}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
+  const localRequire = id => id==='./db'||id==='@/lib/db'?database:id==='./session'||id==='@/lib/session'?{getSession:async()=>session,createSession:async value=>{session=value;}}:id==='server-only'?{}:id==='./commercial-payments'?load('src/lib/commercial-payments.ts'):id==='./commercial-input'?load('src/lib/commercial-input.ts'):id==='./sensitive-actions'?load('src/lib/sensitive-actions.ts'):id==='./audit'?load('src/lib/audit.ts'):id==='./pdf-validation'?load('src/lib/pdf-validation.ts'):id==='./contact-input'?load('src/lib/contact-input.ts'):id==='./gallery-filters'?load('src/lib/gallery-filters.ts'):id==='./lot-commercial'?load('src/lib/lot-commercial.ts'):id==='./client-deletion'?load('src/lib/client-deletion.ts'):id==='./crm-deletion'?load('src/lib/crm-deletion.ts'):id==='./payments'?load('src/lib/payments.ts'):id==='./construction-progress'?load('src/lib/construction-progress.ts'):id==='./amenities'?load('src/lib/amenities.ts'):id==='./rate-limit'?{allowRequest:(...args)=>{rateChecks.push(args);return true;}}:id==='./project-presentation'?{materializeProjectGallery:()=>{}}:id==='./client-properties'||id==='@/lib/client-properties'?load('src/lib/client-properties.ts'):id==='next/cache'?{revalidatePath:()=>{}}:require(id);
   vm.runInNewContext(code,{module,exports:module.exports,require:localRequire,Buffer,setTimeout,clearTimeout,File,Response,Headers,FormData,structuredClone,Date,Intl,process:{cwd:()=>root,env:{}},console},{filename:relative});
   return module.exports;
 }
@@ -46,6 +46,35 @@ const media=id=>GET(new Request('http://localhost'),{params:Promise.resolve({id}
   assert.equal((await act({...newContact,lot:'B1'})).ok,false);assert.equal(db.contacts.length,0);
   assert.equal((await act(newContact)).ok,true);const contactId=db.contacts[0].id;assert.equal(db.contacts[0].notes,'Rappeler le client');assert.equal(db.contacts[0].tags.length,2);assert.equal(db.contacts[0].lotRef,'A1');
   assert.equal((await act({...newContact,contact:contactId,project:'second-residence',lot:'B2',notes:'Visite confirmée'})).ok,true);assert.equal(db.contacts.length,1);assert.equal(db.contacts[0].projectSlug,'second-residence');assert.equal(db.contacts[0].notes,'Visite confirmée');
+  const savedCrm={contacts:db.contacts,tasks:db.tasks,deals:db.deals,activities:db.activities,users:db.users};
+  db.users=[...db.users,{id:'crm-client',role:'client'}];
+  db.contacts=[{id:'remove-contact'},{id:'keep-contact'}];
+  db.deals=[{id:'remove-deal',contactId:'keep-contact'},{id:'contact-deal',contactId:'remove-contact'},{id:'keep-deal',contactId:'keep-contact'}];
+  db.tasks=[{id:'remove-task'},{id:'deal-task',dealId:'remove-deal',contactId:'keep-contact'},{id:'contact-task',contactId:'remove-contact'},{id:'linked-task',dealId:'contact-deal'},{id:'keep-task',contactId:'keep-contact'}];
+  db.activities=[{id:'deal-history',dealId:'remove-deal',contactId:'keep-contact'},{id:'contact-history',contactId:'remove-contact'},{id:'linked-history',contactId:'keep-contact',dealId:'contact-deal'},{id:'keep-history',contactId:'keep-contact'}];
+  const rowDeletes=[{operation:'task-delete',task:'remove-task'},{operation:'deal-delete',deal:'remove-deal'},{operation:'contact-delete',contact:'remove-contact'}];
+  for(const form of rowDeletes) {
+    const snapshot=JSON.stringify(db);
+    for(const identity of [null,{sub:'missing',role:'admin'},{sub:'crm-client',role:'admin'}]) {
+      session=identity;assert.equal((await act({...form,confirm:'yes'})).ok,false);assert.equal(JSON.stringify(db),snapshot);
+    }
+    session={sub:'staff'};
+    assert.equal((await act(form)).ok,false,'Each deletion requires explicit confirmation');assert.equal(JSON.stringify(db),snapshot);
+    const field=form.operation.split('-')[0];
+    assert.equal((await act({...form,[field]:'missing',confirm:'yes'})).ok,false);assert.equal(JSON.stringify(db),snapshot);
+  }
+  persistent=false;assert.equal((await act({...rowDeletes[0],confirm:'yes'})).ok,false);persistent=true;
+  const usersBefore=JSON.stringify(db.users),projectsBefore=JSON.stringify(db.projects);
+  assert.equal((await act({...rowDeletes[0],confirm:'yes'})).ok,true);assert(!db.tasks.some(row=>row.id==='remove-task'));
+  assert.equal((await act({...rowDeletes[1],confirm:'yes'})).ok,true);
+  assert(!db.deals.some(row=>row.id==='remove-deal'));assert(!db.tasks.find(row=>row.id==='deal-task').dealId);assert(!db.activities.find(row=>row.id==='deal-history').dealId);
+  assert.equal((await act({...rowDeletes[2],confirm:'yes'})).ok,true);
+  assert.equal(db.contacts.map(row=>row.id).join(','),'keep-contact');assert.equal(db.deals.map(row=>row.id).join(','),'keep-deal');
+  assert.equal(db.tasks.map(row=>row.id).join(','),'deal-task,keep-task');assert.equal(db.activities.map(row=>row.id).join(','),'deal-history,keep-history');
+  assert.equal(JSON.stringify(db.users),usersBefore);assert.equal(JSON.stringify(db.projects),projectsBefore);
+  for(const form of rowDeletes)assert.equal((await act({...form,confirm:'yes'})).ok,false,'Repeated deletion must report a missing row');
+  Object.assign(db,savedCrm);
+  console.log('PASS: per-row CRM deletion, admin authorization, confirmation, durable-storage checks, missing/repeated IDs, contact cascade, preserved deal follow-ups and untouched client accounts/apartments.');
   const {parseGalleryFilters,projectGalleryFilters,galleryPhotoCategory}=load('src/lib/gallery-filters.ts');
   const filters=Array.from({length:7},(_,i)=>({id:'filter-'+i,label:{fr:'Rubrique '+i,en:'',ar:''}}));
   const filterForm={operation:'gallery-filters',project:'residence',galleryFilters:JSON.stringify(filters)};

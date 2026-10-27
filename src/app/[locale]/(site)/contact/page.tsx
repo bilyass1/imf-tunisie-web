@@ -4,7 +4,6 @@ import type { Metadata } from 'next';
 import { isLocale, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/getDictionary';
 import { getProjects } from '@/lib/db';
-import { SITE } from '@/lib/site';
 import { getCompanySite } from '@/lib/company';
 import { alternates } from '@/lib/seo';
 import Reveal from '@/components/Reveal';
@@ -25,7 +24,17 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
   const dict = getDictionary(locale);
-  const projects = (await getProjects()).map((p) => ({ slug: p.slug, name: p.name }));
+  const projects = (await getProjects()).map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    lots: p.lots.map((lot) => ({
+      ref: lot.ref,
+      code: lot.code,
+      label: [lot.code || lot.ref, lot.typology, dict.availability.legend[lot.status]].filter(Boolean).join(' — '),
+      available: lot.status === 'available',
+    })),
+  }));
+  const emails = Array.from(new Map([SITE.email, SITE.infoEmail].map(email => [email.toLowerCase(), email])).values());
 
   const infos = [
     {
@@ -53,8 +62,8 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     {
       Icon: IconMail,
       label: dict.contact.info.email,
-      lines: [SITE.email],
-      hrefs: [`mailto:${SITE.email}`],
+      lines: emails,
+      hrefs: emails.map(email => `mailto:${email}`),
     },
     {
       Icon: IconClock,

@@ -9,6 +9,7 @@ import ContactEditor from '@/components/admin/ContactEditor';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
 import { IconArrow } from '@/components/Icons';
+import DeleteAdminRow from '@/components/admin/DeleteAdminRow';
 
 export default async function ContactsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
@@ -102,6 +103,7 @@ export default async function ContactsPage({ params }: { params: Promise<{ local
                           {dict.crm.openContact}
                           <IconArrow className="h-3.5 w-3.5 rtl:rotate-180" />
                         </Link>
+                        <DeleteAdminRow kind="contact" id={c.id} name={c.name} locale={locale} />
                       </td>
                     </tr>
                   );

@@ -33,7 +33,7 @@ export default function ContactForm({
   locale = 'fr',
 }: {
   labels: ContactFormLabels;
-  projects: { slug: string; name: string }[];
+  projects: { slug: string; name: string; lots: { ref: string; code: string; label: string; available: boolean }[] }[];
   compact?: boolean;
   locale?: Locale;
 }) {
@@ -43,6 +43,13 @@ export default function ContactForm({
   const [lot, setLot] = useState('');
   const [dateBounds, setDateBounds] = useState<{ min: string; max: string }>();
   const visiting = params.get('intent') === 'visit';
+  const selectedProject = projects.find((item) => item.slug === project);
+  const apartments = selectedProject?.lots.filter((item) => !visiting || item.available) ?? [];
+  const apartmentLabels = {
+    fr: { project: 'Choisissez d’abord un projet', empty: 'Aucun appartement proposé pour ce projet' },
+    en: { project: 'Choose a project first', empty: 'No apartments offered for this project' },
+    ar: { project: 'اختر مشروعاً أولاً', empty: 'لا توجد شقق معروضة لهذا المشروع' },
+  }[locale];
   const visitLabels = {
     fr: { date:'Date souhaitée', time:'Heure souhaitée (Tunis)', mode:'Type de visite', onsite:'Sur place', video:'Visioconférence', note:'Ce créneau est une demande. Notre équipe vous contactera pour confirmer le rendez-vous.', consent:'J’accepte d’être contacté pour organiser cette visite.', message:'Je souhaite visiter cet appartement.', error:'Choisissez une date future dans les six prochains mois et acceptez le contact.', unavailable:'Cet appartement n’est plus disponible pour une visite. Choisissez un autre bien ou contactez notre équipe.' },
     en: { date:'Preferred date', time:'Preferred time (Tunis)', mode:'Visit type', onsite:'On site', video:'Video call', note:'This is a requested time. Our team will contact you to confirm the appointment.', consent:'I agree to be contacted to arrange this visit.', message:'I would like to visit this apartment.', error:'Choose a future date within six months and agree to be contacted.', unavailable:'This apartment is no longer available for a visit. Choose another property or contact our team.' },
@@ -51,9 +58,12 @@ export default function ContactForm({
 
   useEffect(() => {
     setDateBounds(visitDateBounds());
-    setProject(params.get('project') ?? '');
-    setLot(params.get('lot') ?? '');
-  }, [params]);
+    const requestedProject = projects.find((item) => item.slug === params.get('project'));
+    const requestedLot = requestedProject?.lots.find((item) =>
+      (item.ref === params.get('lot') || item.code === params.get('lot')) && (!visiting || item.available));
+    setProject(requestedProject?.slug ?? '');
+    setLot(requestedLot?.ref ?? '');
+  }, [params, projects, visiting]);
 
   if (state.done) {
     return (
@@ -123,14 +133,20 @@ export default function ContactForm({
         <label className="label" htmlFor="cf-lot">
           {labels.lot}
         </label>
-        <input
+        <select
           id="cf-lot"
           name="lot"
           value={lot}
           onChange={(e) => setLot(e.target.value)}
           className="field"
-          placeholder="A 1-1"
-        />
+          disabled={!selectedProject || apartments.length === 0}
+          required={visiting}
+        >
+          <option value="">{!selectedProject ? apartmentLabels.project : apartments.length === 0 ? apartmentLabels.empty : labels.choose}</option>
+          {apartments.map((apartment) => (
+            <option key={apartment.ref} value={apartment.ref}>{apartment.label}</option>
+          ))}
+        </select>
       </div>
 
       <div className="sm:col-span-2">

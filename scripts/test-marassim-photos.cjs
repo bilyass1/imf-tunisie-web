@@ -27,7 +27,9 @@ async function main() {
   assert.equal(original.gallery.length, 1, 'Reading must not mutate persisted records');
   assert.equal(presented.gallery.length, 62);
   assert.equal(presented.gallery[0], original.gallery[0], 'Existing admin order and captions survive');
-  assert.equal(presented.cover, original.cover);
+  assert.equal(presented.cover, '/media/marassim/facade-client-20261027.webp', 'The newly supplied facade is displayed on project cards');
+  assert.equal(presented.heroImage, presented.cover, 'The project page displays the same facade');
+  assert.equal(original.cover, '/custom/cover.webp', 'The presentation override does not rewrite stored data');
   assert.equal(JSON.stringify(projectPresentation(presented)), JSON.stringify(presented));
   assert.equal(new Set(photos.map(p => p.src)).size, 61, 'Same original filename must not overwrite another entry');
   materializeProjectGallery(original);

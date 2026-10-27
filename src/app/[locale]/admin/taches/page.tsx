@@ -9,6 +9,7 @@ import { addTaskAction, toggleTaskAction } from '@/lib/actions';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
 import { IconCheck } from '@/components/Icons';
+import DeleteAdminRow from '@/components/admin/DeleteAdminRow';
 
 export default async function TasksPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
@@ -89,6 +90,7 @@ export default async function TasksPage({ params }: { params: Promise<{ locale: 
                     </div>
 
                     <span className="shrink-0 text-[12px] text-ink/40">{formatDate(task.dueDate, locale)}</span>
+                    <DeleteAdminRow kind="task" id={task.id} name={task.title} locale={locale} />
                   </li>
                 ))}
               </ul>

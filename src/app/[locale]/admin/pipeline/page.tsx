@@ -9,6 +9,7 @@ import { DEAL_STAGES, PIPELINE_STAGES, type DealStage } from '@/lib/types';
 import { setDealStageAction } from '@/lib/actions';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
+import DeleteAdminRow from '@/components/admin/DeleteAdminRow';
 
 const STAGE_TONE: Record<DealStage, string> = {
   new: 'border-t-ink/25',
@@ -121,6 +122,7 @@ export default async function PipelinePage({ params }: { params: Promise<{ local
                           {dict.crm.moveTo}
                         </button>
                       </form>
+                      <DeleteAdminRow kind="deal" id={deal.id} name={deal.title} locale={locale} />
                     </article>
                   );
                 })}

@@ -11,16 +11,16 @@ import ModelCompass, { updateModelCompass } from './ModelCompass';
 import { gloireFloorHeight, gloireModelPlan } from '@/lib/la-gloire-registration';
 import { createGloireAvailability, GLOIRE_STATUS_COLORS } from './gloire-availability';
 import styles from './Maquette3D.module.css';
-import PlanViewer from './PlanViewer';
 import { LA_GLOIRE_FLOOR_PLANS } from '@/lib/la-gloire-documents';
+import { gloireFloorGeometry, type GloireFloorPlans } from '@/lib/gloire-floor-plans';
 
 const architectModelUrl = '/models/la-gloire/la-gloire-web.glb';
 const availabilityModelUrl = '/models/la-gloire/la-gloire-availability.glb';
 
 const localCopy = {
-  fr: { source: 'Modèle architecte fourni le 07/09/2026 · dimensions du fichier SketchUp · textures optimisées pour le web', aerial: 'Vue aérienne', street: 'Vue façade', model: 'Maquette 3D', plan: 'Plan de l’étage', planHint: 'Zoomez pour lire les détails du plan.', download: 'Télécharger le plan', missingTitle: 'Aperçu indisponible', missingBody: 'Ouvrez la page du plan pour consulter le document.', openPlan: 'Ouvrir le plan' },
-  en: { source: 'Architect model supplied on 07/09/2026 · SketchUp file dimensions · web-optimised textures', aerial: 'Aerial view', street: 'Street view', model: '3D model', plan: 'Floor plan', planHint: 'Zoom in to read the plan details.', download: 'Download plan', missingTitle: 'Preview unavailable', missingBody: 'Open the plan page to view the document.', openPlan: 'Open floor plan' },
-  ar: { source: 'نموذج المهندس بتاريخ 07/09/2026 · أبعاد ملف SketchUp · خامات محسنة للويب', aerial: 'منظر جوي', street: 'منظر الواجهة', model: 'المجسم ثلاثي الأبعاد', plan: 'مخطط الطابق', planHint: 'كبّر الصورة لقراءة تفاصيل المخطط.', download: 'تنزيل المخطط', missingTitle: 'المعاينة غير متاحة', missingBody: 'افتح صفحة المخطط للاطلاع على المستند.', openPlan: 'فتح المخطط' },
+  fr: { source: 'Modèle architecte fourni le 07/09/2026 · dimensions du fichier SketchUp · textures optimisées pour le web', aerial: 'Vue aérienne', street: 'Vue façade', model: 'Maquette', top: 'Plan 3D', planLoading: 'Chargement du plan de l’étage…', planError: 'Le plan de cet étage n’a pas pu être chargé.', openPlan: 'Ouvrir le plan original' },
+  en: { source: 'Architect model supplied on 07/09/2026 · SketchUp file dimensions · web-optimised textures', aerial: 'Aerial view', street: 'Street view', model: 'Model', top: '3D plan', planLoading: 'Loading the floor plan…', planError: 'The floor plan could not be loaded.', openPlan: 'Open original floor plan' },
+  ar: { source: 'نموذج المهندس بتاريخ 07/09/2026 · أبعاد ملف SketchUp · خامات محسنة للويب', aerial: 'منظر جوي', street: 'منظر الواجهة', model: 'المجسم', top: 'مخطط ثلاثي الأبعاد', planLoading: 'تحميل مخطط الطابق…', planError: 'تعذر تحميل مخطط الطابق.', openPlan: 'فتح المخطط الأصلي' },
 };
 
 export default function GloireArchitectMaquette({ locale, labels, lots, onSelect, availability = false, selectedRef }: { locale: string; labels: MaquetteLabels; lots: Lot[]; onSelect: (ref: string) => void; availability?: boolean; selectedRef?: string }) {
@@ -31,7 +31,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
   const root = useRef<HTMLDivElement>(null);
   const mount = useRef<HTMLDivElement>(null);
   const compassRef = useRef<HTMLDivElement>(null);
-  const api = useRef<{ reset: () => void; view: (name: 'aerial' | 'street') => void; zoom: (factor: number) => void } | null>(null);
+  const api = useRef<{ reset: () => void; view: (name: 'aerial' | 'street' | 'top') => void; zoom: (factor: number) => void } | null>(null);
   const rotatingRef = useRef(false);
   const [rotating, setRotating] = useState(false);
   const [ready, setReady] = useState(false);
@@ -44,10 +44,11 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
   const [lighting, setLighting] = useState<'day' | 'evening'>('day');
   const lightingRef = useRef(lighting); lightingRef.current = lighting;
   const [viewMode, setViewMode] = useState<'model' | 'plan'>('model');
+  const viewModeRef = useRef(viewMode); viewModeRef.current = viewMode;
+  const [planLoading, setPlanLoading] = useState(false);
+  const [planFailed, setPlanFailed] = useState(false);
   const floorPlan = LA_GLOIRE_FLOOR_PLANS.find(plan => plan.floor === maxFloor);
   const planLocale = locale === 'ar' || locale === 'en' ? locale : 'fr';
-  const showPlan = viewMode === 'plan' && !!floorPlan;
-  const showPlanRef = useRef(showPlan); showPlanRef.current = showPlan;
   rotatingRef.current = rotating;
   const close = useCallback(() => setImmersive(false), []);
   useImmersiveViewer(immersive, close, root);
@@ -58,15 +59,16 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
     let cancelled = false;
     const download=new AbortController();
     let cleanup = () => {};
-    setReady(false); setFailed(false); setProgress(0);
+    setReady(false); setFailed(false); setProgress(0); setPlanLoading(false); setPlanFailed(false);
     (async () => {
-      const [THREE,[{ OrbitControls }, { GLTFLoader }, { DRACOLoader }, { RoomEnvironment }],bytes] = await Promise.all([import('three'),Promise.all([
+      const [THREE,[{ OrbitControls }, { GLTFLoader }, { DRACOLoader }, { RoomEnvironment }],bytes,planBytes] = await Promise.all([import('three'),Promise.all([
         import('three/examples/jsm/controls/OrbitControls.js'),
         import('three/examples/jsm/loaders/GLTFLoader.js'),
         import('three/examples/jsm/loaders/DRACOLoader.js'),
         import('three/examples/jsm/environments/RoomEnvironment.js'),
-      ]),loadModelBytes(availability ? availabilityModelUrl : architectModelUrl,{signal:download.signal,onProgress:setProgress})]);
+      ]),loadModelBytes(availability ? availabilityModelUrl : architectModelUrl,{signal:download.signal,onProgress:setProgress}),loadModelBytes('/models/la-gloire/floor-plans.json',{signal:download.signal,maximumBytes:2*1024*1024})]);
       if (cancelled) return;
+      const floorPlans: GloireFloorPlans = JSON.parse(new TextDecoder().decode(planBytes));
       const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
       const restingPixelRatio = modelPixelRatio(host.clientWidth,host.clientHeight);
       renderer.setPixelRatio(restingPixelRatio);
@@ -160,21 +162,55 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         });
       });
 
+      // Caps retain the architect's exact slab triangles and courtyard holes.
+      // They share the model transform; only their UVs come from the sale sheets.
+      const capGroup = new THREE.Group();
+      capGroup.rotation.copy(building.rotation); capGroup.position.copy(building.position);
+      scene.add(capGroup);
+      const floorPlanes = floorPlans.floors.map(plan => {
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+        const mesh = new THREE.Mesh(gloireFloorGeometry(THREE, plan, floorPlans.bounds), material);
+        mesh.visible = false; capGroup.add(mesh);
+        return { plan, mesh, material, loading: false };
+      });
+      const textureLoader = new THREE.TextureLoader();
+      const loadFloorPlan = (entry: typeof floorPlanes[number]) => {
+        if (entry.material.map) return;
+        setPlanLoading(true);
+        if (entry.loading) return;
+        entry.loading = true;
+        textureLoader.load(publicAssetUrl(entry.plan.texture), texture => {
+          if (cancelled) { texture.dispose(); return; }
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+          entry.material.map = texture; entry.material.needsUpdate = true; entry.loading = false;
+          if (floorRef.current === entry.plan.floor) { setPlanLoading(false); setPlanFailed(false); }
+          dirty = true;
+        }, undefined, () => {
+          if (cancelled) return;
+          entry.loading = false;
+          if (floorRef.current === entry.plan.floor) { setPlanLoading(false); setPlanFailed(true); }
+        });
+      };
+
       const [sourceX, sourceY] = gloireModelPlan((LA_GLOIRE_SITE.bounds.minX + LA_GLOIRE_SITE.bounds.maxX) / 2, (LA_GLOIRE_SITE.bounds.minY + LA_GLOIRE_SITE.bounds.maxY) / 2);
       // Both tabs frame the residence, rather than the much larger road context.
       const focus = new THREE.Vector3(sourceX + building.position.x, size.y * .4, -sourceY + building.position.z);
       const focusSpan = 56;
-      let currentView: 'aerial' | 'street' = 'aerial';
-      const setView = (name: 'aerial' | 'street') => {
+      let currentView: 'aerial' | 'street' | 'top' = 'aerial';
+      const setView = (name: 'aerial' | 'street' | 'top') => {
         currentView = name;
-        orbit.target.set(focus.x, size.y * .3, focus.z);
-        const direction = name === 'street' ? new THREE.Vector3(.48, .18, .62) : new THREE.Vector3(.72, .56, .82);
+        orbit.enableRotate = name !== 'top';
+        const active = floorPlans.floors.find(plan => plan.floor === floorRef.current);
+        orbit.target.set(focus.x, active ? building.position.y + active.capZ : size.y * .3, focus.z);
+        camera.up.set(0, name === 'top' ? 0 : 1, name === 'top' ? -1 : 0);
+        const direction = name === 'top' ? new THREE.Vector3(0, 1, .001) : name === 'street' ? new THREE.Vector3(.48, .18, .62) : new THREE.Vector3(.72, .56, .82);
         const halfFov = Math.min(THREE.MathUtils.degToRad(camera.fov) / 2, Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * camera.aspect));
         const distance = focusSpan * .66 / Math.sin(halfFov);
         camera.position.copy(orbit.target).addScaledVector(direction.normalize(), distance);
         orbit.minDistance = Math.max(6, focusSpan * .12); orbit.maxDistance = focusSpan * 6; orbit.update();
       };
-      setView('aerial');
+      setView(viewModeRef.current === 'plan' ? 'top' : 'aerial');
       api.current = { reset: () => setView('aerial'), view: setView, zoom: factor => { camera.position.sub(orbit.target).multiplyScalar(factor).add(orbit.target); orbit.update(); } };
 
       // Sales-plan coordinates registered against the upper-storey outline
@@ -202,6 +238,11 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         const rect = renderer.domElement.getBoundingClientRect();
         pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
         raycaster.setFromCamera(pointer, camera);
+        const capHit = raycaster.intersectObjects(floorPlanes.filter(entry => entry.mesh.visible).map(entry => entry.mesh), false)[0];
+        if (capHit) {
+          if (status) return status.pick(capHit.point);
+          return raycaster.intersectObjects(pickMeshes, false).find(hit => hit.object.userData.lot.floor === floorRef.current)?.object.userData.lot ?? null;
+        }
         if (status) {
           const hit = raycaster.intersectObjects(surfaces, false).find(hit => floorClip.distanceToPoint(hit.point) >= -0.001);
           return hit ? status.pick(hit.point) : null;
@@ -260,10 +301,15 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
       let appliedLighting = 'day';
       const draw = () => {
         frame = requestAnimationFrame(draw);
-        if (!visible || document.hidden || showPlanRef.current) return;
+        if (!visible || document.hidden) return;
         if (appliedFloor !== floorRef.current) {
           appliedFloor = floorRef.current;
-          floorClip.constant = appliedFloor === 'all' ? 10000 : building.position.y + gloireFloorHeight(appliedFloor + 1);
+          const active = floorPlanes.find(entry => entry.plan.floor === appliedFloor);
+          floorClip.constant = active ? building.position.y + active.plan.capZ : 10000;
+          for (const entry of floorPlanes) entry.mesh.visible = entry === active;
+          setPlanLoading(false); setPlanFailed(false);
+          if (active) loadFloorPlan(active);
+          if (currentView === 'top') setView('top');
           dirty = true;
         }
         if (appliedLighting !== lightingRef.current) {
@@ -272,7 +318,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
           sun.color.setHex(evening ? 0xffbf83 : 0xfff1db); sun.intensity = evening ? 1.6 : 3.3;
           renderer.toneMappingExposure = evening ? .85 : 1.12; dirty = true;
         }
-        orbit.autoRotate = rotatingRef.current;
+        orbit.autoRotate = rotatingRef.current && currentView !== 'top';
         const changed = orbit.update();
         const ratio = interacting || orbit.autoRotate || changed ? Math.min(restingPixelRatio, .85) : restingPixelRatio;
         if (renderer.getPixelRatio() !== ratio) { renderer.setPixelRatio(ratio); dirty = true; }
@@ -307,47 +353,49 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
   const button = 'viewer-control';
   return <div ref={root} role={immersive ? 'dialog' : undefined} aria-modal={immersive || undefined} aria-label={labels.title} className={`${styles.viewer} ${immersive ? `${styles.immersive} fixed inset-0 z-[120] flex flex-col bg-ink` : 'viewer-shell overflow-hidden rounded-2xl bg-ink'}`}>
     <div className={`${styles.header} flex items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-5`}>
-      <span aria-live="polite" className="min-w-0 px-2 text-xs uppercase tracking-[.18em] text-gold-300">{showPlan ? `${c.plan} · ${floorPlan.label[planLocale]}` : availability ? labels.commercial : labels.realistic}</span>
+      <span aria-live="polite" className="min-w-0 px-2 text-xs uppercase tracking-[.18em] text-gold-300">{availability ? labels.commercial : labels.realistic}{floorPlan ? ` · ${floorPlan.label[planLocale]}` : ''}</span>
       <button type="button" className={button} aria-label={immersive ? labels.exit : labels.fullscreen} onClick={() => setImmersive(v => !v)}><span aria-hidden="true" className="text-xl">{immersive ? '×' : '⛶'}</span> <span className="hidden sm:inline">{immersive ? labels.exit : labels.fullscreen}</span></button>
     </div>
     <div className={`${styles.stage} ${styles.gloireStage}`}>
-      {!showPlan && <div className={styles.topbar}>
+      <div className={styles.topbar}>
         <div className={`viewer-glass ${styles.lighting}`}>
           {(['day', 'evening'] as const).map(value => <button key={value} type="button" className={button} aria-pressed={lighting === value} onClick={() => setLighting(value)}>{labels[value]}</button>)}
         </div>
         <ModelCompass locale={locale} needleRef={compassRef} className={styles.compass} />
-      </div>}
-      {availability && !showPlan && <div className={`viewer-glass ${styles.legend}`}>
+      </div>
+      {availability && <div className={`viewer-glass ${styles.legend}`}>
         {(['available', 'reserved', 'sold', 'unconfirmed'] as const).map(value => <span key={value} className={styles.legendItem}><span className={styles.swatch} style={{background:GLOIRE_STATUS_COLORS[value]}} />{labels.legend[value]}</span>)}
       </div>}
       <div className={styles.viewport}>
-        <div ref={mount} className={`${styles.mount} ${showPlan ? 'invisible' : ''}`} aria-hidden={showPlan || undefined} />
-        {showPlan && <div className={styles.floorPlan}>
-          <PlanViewer key={floorPlan.file} allowFullscreen={!immersive} image={`/plans/la-gloire/ensemble/presentation/${floorPlan.file}.webp`} alt={`La Gloire · ${floorPlan.label[planLocale]}`} labels={{ ...labels, title: c.plan, hint: c.planHint, download: c.download, missingTitle: c.missingTitle, missingBody: c.missingBody }} />
+        <div ref={mount} className={styles.mount} />
+        {ready && hovered && <div className={`${styles.tooltip} viewer-glass rounded-xl px-4 py-3 text-ivory`}><strong>{hovered.code}</strong><p className="text-sm">{hovered.typology} · {hovered.floor === 0 ? 'RDC' : `R+${hovered.floor}`}</p></div>}
+        {!ready && <div className="absolute inset-0 grid place-items-center bg-ink"><div className="max-w-sm px-5 text-center"><p className="text-white/70">{failed ? labels.error : `${labels.loading} ${progress ? `${progress}%` : ''}`}</p>{failed && <button type="button" className="btn-gold mt-5" onClick={() => setAttempt(v => v + 1)}>{labels.retry}</button>}</div></div>}
+        {ready && (planLoading || planFailed) && <div role="status" className={`${styles.tooltip} viewer-glass rounded-xl px-4 py-3 text-sm text-ivory`}>
+          <p>{planFailed ? c.planError : c.planLoading}</p>
+          {planFailed && <button type="button" className="mt-2 underline" onClick={() => setAttempt(value => value + 1)}>{labels.retry}</button>}
         </div>}
-        {!showPlan && ready && hovered && <div className={`${styles.tooltip} viewer-glass rounded-xl px-4 py-3 text-ivory`}><strong>{hovered.code}</strong><p className="text-sm">{hovered.typology} · {hovered.floor === 0 ? 'RDC' : `R+${hovered.floor}`}</p></div>}
-        {!showPlan && !ready && <div className="absolute inset-0 grid place-items-center bg-ink"><div className="max-w-sm px-5 text-center"><p className="text-white/70">{failed ? labels.error : `${labels.loading} ${progress ? `${progress}%` : ''}`}</p>{failed && <button type="button" className="btn-gold mt-5" onClick={() => setAttempt(v => v + 1)}>{labels.retry}</button>}</div></div>}
       </div>
       <div className={`${styles.floors} ${styles.gloireFloors}`}>
         <div className={`viewer-glass ${styles.floorButtons}`} role="group" aria-label={labels.floor}>
-          <button type="button" className={button} aria-pressed={maxFloor === 'all'} onClick={() => { setMaxFloor('all'); setViewMode('model'); }}>{labels.allFloors}</button>
-          {LA_GLOIRE_FLOOR_PLANS.map(({ floor, label }) => <button key={floor} type="button" className={button} aria-pressed={maxFloor === floor} aria-label={label[planLocale]} onClick={() => { setMaxFloor(floor); setViewMode('plan'); setRotating(false); setHovered(null); }}>{floor === 0 ? 'RDC' : `R+${floor}`}</button>)}
+          <button type="button" className={button} aria-pressed={maxFloor === 'all'} onClick={() => { setMaxFloor('all'); setViewMode('model'); api.current?.reset(); }}>{labels.allFloors}</button>
+          {LA_GLOIRE_FLOOR_PLANS.map(({ floor, label }) => <button key={floor} type="button" className={button} aria-pressed={maxFloor === floor} aria-label={label[planLocale]} onClick={() => { setMaxFloor(floor); setRotating(false); setHovered(null); }}>{floor === 0 ? 'RDC' : `R+${floor}`}</button>)}
         </div>
       </div>
-      {!showPlan && <div className={`viewer-glass ${styles.navigation}`} dir="ltr">
+      <div className={`viewer-glass ${styles.navigation}`} dir="ltr">
         <button type="button" className={`${button} w-11 text-xl`} aria-label={labels.zoomOut} onClick={() => api.current?.zoom(1.18)}>−</button>
         <button type="button" className={`${button} w-11 text-xl`} aria-label={labels.zoomIn} onClick={() => api.current?.zoom(.82)}>+</button>
         <span className={styles.divider} />
-        <button type="button" className={button} onClick={() => {setMaxFloor('all'); api.current?.reset();}}>{labels.reset}</button>
-        <button type="button" className={`${button} w-11`} aria-label={rotating ? labels.pause : labels.rotate} aria-pressed={rotating} onClick={() => setRotating(value => !value)}>{rotating ? 'Ⅱ' : '▷'}</button>
-      </div>}
+        <button type="button" className={button} onClick={() => {setMaxFloor('all'); setViewMode('model'); api.current?.reset();}}>{labels.reset}</button>
+        <button type="button" className={`${button} w-11`} aria-label={rotating ? labels.pause : labels.rotate} aria-pressed={rotating} onClick={() => { if (viewMode === 'plan') { setViewMode('model'); api.current?.view('aerial'); } setRotating(value => !value); }}>{rotating ? 'Ⅱ' : '▷'}</button>
+      </div>
     </div>
     <div className={`${styles.footer} flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-4 py-3 sm:px-5`}>
-      <div className="flex flex-wrap gap-2">{floorPlan && <>
-        <button type="button" className={button} aria-pressed={!showPlan} onClick={() => setViewMode('model')}>{c.model}</button>
-        <button type="button" className={button} aria-pressed={showPlan} onClick={() => setViewMode('plan')}>{c.plan}</button>
-      </>}{!showPlan && <><button type="button" className={`${button} border border-white/15`} onClick={() => api.current?.view('aerial')}>{c.aerial}</button><button type="button" className={`${button} border border-white/15`} onClick={() => api.current?.view('street')}>{c.street}</button></>}{showPlan && <a className={button} href={`/${locale}/projets/residence-la-gloire/plans/${floorPlan.file}`}>{c.openPlan} ↗</a>}</div>
-      <p className={`${styles.hint} max-w-md text-xs leading-relaxed text-white/55`}>{showPlan ? c.planHint : labels.hint}</p>
+      <div className="flex flex-wrap gap-2">
+        <button type="button" className={button} aria-pressed={viewMode === 'model'} onClick={() => { setViewMode('model'); api.current?.view('aerial'); }}>{c.model}</button>
+        <button type="button" className={button} aria-pressed={viewMode === 'plan'} onClick={() => { setViewMode('plan'); setRotating(false); if (maxFloor === 'all') setMaxFloor(0); api.current?.view('top'); }}>{c.top}</button>
+        {floorPlan && <a className={button} href={`/${locale}/projets/residence-la-gloire/plans/${floorPlan.file}`}>{c.openPlan} ↗</a>}
+        <button type="button" className={`${button} border border-white/15`} onClick={() => { setViewMode('model'); api.current?.view('aerial'); }}>{c.aerial}</button><button type="button" className={`${button} border border-white/15`} onClick={() => { setViewMode('model'); api.current?.view('street'); }}>{c.street}</button></div>
+      <p className={`${styles.hint} max-w-md text-xs leading-relaxed text-white/55`}>{labels.hint}</p>
     </div>
     <p className={`${styles.notice} border-t border-white/5 px-5 py-2 text-xs text-white/40`}>{c.source}</p>
   </div>;

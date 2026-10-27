@@ -2,7 +2,7 @@
 
 import { loadModelBytes, modelPixelRatio } from './model-runtime';
 import { publicAssetUrl } from '@/lib/public-asset-url';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MaquetteLabels } from './Maquette3D';
 import { useImmersiveViewer } from './useImmersiveViewer';
 import type { Lot } from '@/lib/types';
@@ -11,14 +11,16 @@ import ModelCompass, { updateModelCompass } from './ModelCompass';
 import { gloireFloorHeight, gloireModelPlan } from '@/lib/la-gloire-registration';
 import { createGloireAvailability, GLOIRE_STATUS_COLORS } from './gloire-availability';
 import styles from './Maquette3D.module.css';
+import PlanViewer from './PlanViewer';
+import { LA_GLOIRE_FLOOR_PLANS } from '@/lib/la-gloire-documents';
 
 const architectModelUrl = '/models/la-gloire/la-gloire-web.glb';
 const availabilityModelUrl = '/models/la-gloire/la-gloire-availability.glb';
 
 const localCopy = {
-  fr: { source: 'Modèle architecte fourni le 07/09/2026 · dimensions du fichier SketchUp · textures optimisées pour le web', aerial: 'Vue aérienne', street: 'Vue façade' },
-  en: { source: 'Architect model supplied on 07/09/2026 · SketchUp file dimensions · web-optimised textures', aerial: 'Aerial view', street: 'Street view' },
-  ar: { source: 'نموذج المهندس بتاريخ 07/09/2026 · أبعاد ملف SketchUp · خامات محسنة للويب', aerial: 'منظر جوي', street: 'منظر الواجهة' },
+  fr: { source: 'Modèle architecte fourni le 07/09/2026 · dimensions du fichier SketchUp · textures optimisées pour le web', aerial: 'Vue aérienne', street: 'Vue façade', model: 'Maquette 3D', plan: 'Plan de l’étage', planHint: 'Zoomez pour lire les détails du plan.', download: 'Télécharger le plan', missingTitle: 'Aperçu indisponible', missingBody: 'Ouvrez la page du plan pour consulter le document.', openPlan: 'Ouvrir le plan' },
+  en: { source: 'Architect model supplied on 07/09/2026 · SketchUp file dimensions · web-optimised textures', aerial: 'Aerial view', street: 'Street view', model: '3D model', plan: 'Floor plan', planHint: 'Zoom in to read the plan details.', download: 'Download plan', missingTitle: 'Preview unavailable', missingBody: 'Open the plan page to view the document.', openPlan: 'Open floor plan' },
+  ar: { source: 'نموذج المهندس بتاريخ 07/09/2026 · أبعاد ملف SketchUp · خامات محسنة للويب', aerial: 'منظر جوي', street: 'منظر الواجهة', model: 'المجسم ثلاثي الأبعاد', plan: 'مخطط الطابق', planHint: 'كبّر الصورة لقراءة تفاصيل المخطط.', download: 'تنزيل المخطط', missingTitle: 'المعاينة غير متاحة', missingBody: 'افتح صفحة المخطط للاطلاع على المستند.', openPlan: 'فتح المخطط' },
 };
 
 export default function GloireArchitectMaquette({ locale, labels, lots, onSelect, availability = false, selectedRef }: { locale: string; labels: MaquetteLabels; lots: Lot[]; onSelect: (ref: string) => void; availability?: boolean; selectedRef?: string }) {
@@ -41,7 +43,11 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
   const floorRef = useRef<number | 'all'>('all'); floorRef.current = maxFloor;
   const [lighting, setLighting] = useState<'day' | 'evening'>('day');
   const lightingRef = useRef(lighting); lightingRef.current = lighting;
-  const floors = useMemo(() => Array.from(new Set(lots.map(lot => lot.floor))).sort((a, b) => b - a), [lots]);
+  const [viewMode, setViewMode] = useState<'model' | 'plan'>('model');
+  const floorPlan = LA_GLOIRE_FLOOR_PLANS.find(plan => plan.floor === maxFloor);
+  const planLocale = locale === 'ar' || locale === 'en' ? locale : 'fr';
+  const showPlan = viewMode === 'plan' && !!floorPlan;
+  const showPlanRef = useRef(showPlan); showPlanRef.current = showPlan;
   rotatingRef.current = rotating;
   const close = useCallback(() => setImmersive(false), []);
   useImmersiveViewer(immersive, close, root);
@@ -69,7 +75,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.12;
       renderer.setClearColor(0xdcd8cf);
-      renderer.localClippingEnabled = availability;
+      renderer.localClippingEnabled = true;
       host.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
@@ -110,7 +116,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
       const surfaces: import('three').Mesh[] = [];
 
       building.traverse(object => {
-        if (availability && object instanceof THREE.Line) {
+        if (object instanceof THREE.Line) {
           const materials = Array.isArray(object.material) ? object.material : [object.material];
           materials.forEach(mat => { mat.clippingPlanes = [floorClip]; mat.needsUpdate = true; });
         }
@@ -149,7 +155,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
           // DoubleSide renders both coincident surfaces and causes z-fighting.
           mat.side = THREE.FrontSide;
           mat.needsUpdate = true;
-          if (availability) mat.clippingPlanes = [floorClip];
+          mat.clippingPlanes = [floorClip];
           if ('envMapIntensity' in mat) mat.envMapIntensity = .55;
         });
       });
@@ -200,7 +206,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
           const hit = raycaster.intersectObjects(surfaces, false).find(hit => floorClip.distanceToPoint(hit.point) >= -0.001);
           return hit ? status.pick(hit.point) : null;
         }
-        return raycaster.intersectObjects(pickMeshes, false)[0]?.object.userData.lot ?? null;
+        return raycaster.intersectObjects(pickMeshes, false).find(hit => floorClip.distanceToPoint(hit.point) >= -0.001)?.object.userData.lot ?? null;
       };
       const pointers = new Set<number>();
       let press: { x: number; y: number; moved: boolean; id: number } | null = null;
@@ -254,8 +260,8 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
       let appliedLighting = 'day';
       const draw = () => {
         frame = requestAnimationFrame(draw);
-        if (!visible || document.hidden) return;
-        if (availability && appliedFloor !== floorRef.current) {
+        if (!visible || document.hidden || showPlanRef.current) return;
+        if (appliedFloor !== floorRef.current) {
           appliedFloor = floorRef.current;
           floorClip.constant = appliedFloor === 'all' ? 10000 : building.position.y + gloireFloorHeight(appliedFloor + 1);
           dirty = true;
@@ -301,41 +307,47 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
   const button = 'viewer-control';
   return <div ref={root} role={immersive ? 'dialog' : undefined} aria-modal={immersive || undefined} aria-label={labels.title} className={`${styles.viewer} ${immersive ? `${styles.immersive} fixed inset-0 z-[120] flex flex-col bg-ink` : 'viewer-shell overflow-hidden rounded-2xl bg-ink'}`}>
     <div className={`${styles.header} flex items-center justify-between gap-2 border-b border-white/10 px-3 py-2 sm:px-5`}>
-      <span className="min-w-0 px-2 text-xs uppercase tracking-[.18em] text-gold-300">{availability ? labels.commercial : labels.realistic}</span>
+      <span aria-live="polite" className="min-w-0 px-2 text-xs uppercase tracking-[.18em] text-gold-300">{showPlan ? `${c.plan} · ${floorPlan.label[planLocale]}` : availability ? labels.commercial : labels.realistic}</span>
       <button type="button" className={button} aria-label={immersive ? labels.exit : labels.fullscreen} onClick={() => setImmersive(v => !v)}><span aria-hidden="true" className="text-xl">{immersive ? '×' : '⛶'}</span> <span className="hidden sm:inline">{immersive ? labels.exit : labels.fullscreen}</span></button>
     </div>
-    <div className={styles.stage}>
-      <div className={styles.topbar}>
+    <div className={`${styles.stage} ${styles.gloireStage}`}>
+      {!showPlan && <div className={styles.topbar}>
         <div className={`viewer-glass ${styles.lighting}`}>
           {(['day', 'evening'] as const).map(value => <button key={value} type="button" className={button} aria-pressed={lighting === value} onClick={() => setLighting(value)}>{labels[value]}</button>)}
         </div>
         <ModelCompass locale={locale} needleRef={compassRef} className={styles.compass} />
-      </div>
-      {availability && <div className={`viewer-glass ${styles.legend}`}>
+      </div>}
+      {availability && !showPlan && <div className={`viewer-glass ${styles.legend}`}>
         {(['available', 'reserved', 'sold', 'unconfirmed'] as const).map(value => <span key={value} className={styles.legendItem}><span className={styles.swatch} style={{background:GLOIRE_STATUS_COLORS[value]}} />{labels.legend[value]}</span>)}
       </div>}
       <div className={styles.viewport}>
-        <div ref={mount} className={styles.mount} />
-        {ready && hovered && <div className={`${styles.tooltip} viewer-glass rounded-xl px-4 py-3 text-ivory`}><strong>{hovered.code}</strong><p className="text-sm">{hovered.typology} · {hovered.floor === 0 ? 'RDC' : `R+${hovered.floor}`}</p></div>}
-        {!ready && <div className="absolute inset-0 grid place-items-center bg-ink"><div className="max-w-sm px-5 text-center"><p className="text-white/70">{failed ? labels.error : `${labels.loading} ${progress ? `${progress}%` : ''}`}</p>{failed && <button type="button" className="btn-gold mt-5" onClick={() => setAttempt(v => v + 1)}>{labels.retry}</button>}</div></div>}
+        <div ref={mount} className={`${styles.mount} ${showPlan ? 'invisible' : ''}`} aria-hidden={showPlan || undefined} />
+        {showPlan && <div className={styles.floorPlan}>
+          <PlanViewer key={floorPlan.file} allowFullscreen={!immersive} image={`/plans/la-gloire/ensemble/presentation/${floorPlan.file}.webp`} alt={`La Gloire · ${floorPlan.label[planLocale]}`} labels={{ ...labels, title: c.plan, hint: c.planHint, download: c.download, missingTitle: c.missingTitle, missingBody: c.missingBody }} />
+        </div>}
+        {!showPlan && ready && hovered && <div className={`${styles.tooltip} viewer-glass rounded-xl px-4 py-3 text-ivory`}><strong>{hovered.code}</strong><p className="text-sm">{hovered.typology} · {hovered.floor === 0 ? 'RDC' : `R+${hovered.floor}`}</p></div>}
+        {!showPlan && !ready && <div className="absolute inset-0 grid place-items-center bg-ink"><div className="max-w-sm px-5 text-center"><p className="text-white/70">{failed ? labels.error : `${labels.loading} ${progress ? `${progress}%` : ''}`}</p>{failed && <button type="button" className="btn-gold mt-5" onClick={() => setAttempt(v => v + 1)}>{labels.retry}</button>}</div></div>}
       </div>
-      {availability && <div className={styles.floors}>
+      <div className={`${styles.floors} ${styles.gloireFloors}`}>
         <div className={`viewer-glass ${styles.floorButtons}`} role="group" aria-label={labels.floor}>
-          <button type="button" className={button} aria-pressed={maxFloor === 'all'} onClick={() => setMaxFloor('all')}>{labels.allFloors}</button>
-          {floors.map(floor => <button key={floor} type="button" className={button} aria-pressed={maxFloor === floor} aria-label={`${labels.floor} ${floor}`} onClick={() => setMaxFloor(floor)}>{floor === 0 ? 'R' : floor}</button>)}
+          <button type="button" className={button} aria-pressed={maxFloor === 'all'} onClick={() => { setMaxFloor('all'); setViewMode('model'); }}>{labels.allFloors}</button>
+          {LA_GLOIRE_FLOOR_PLANS.map(({ floor, label }) => <button key={floor} type="button" className={button} aria-pressed={maxFloor === floor} aria-label={label[planLocale]} onClick={() => { setMaxFloor(floor); setViewMode('plan'); setRotating(false); setHovered(null); }}>{floor === 0 ? 'RDC' : `R+${floor}`}</button>)}
         </div>
-      </div>}
-      <div className={`viewer-glass ${styles.navigation}`} dir="ltr">
+      </div>
+      {!showPlan && <div className={`viewer-glass ${styles.navigation}`} dir="ltr">
         <button type="button" className={`${button} w-11 text-xl`} aria-label={labels.zoomOut} onClick={() => api.current?.zoom(1.18)}>−</button>
         <button type="button" className={`${button} w-11 text-xl`} aria-label={labels.zoomIn} onClick={() => api.current?.zoom(.82)}>+</button>
         <span className={styles.divider} />
         <button type="button" className={button} onClick={() => {setMaxFloor('all'); api.current?.reset();}}>{labels.reset}</button>
         <button type="button" className={`${button} w-11`} aria-label={rotating ? labels.pause : labels.rotate} aria-pressed={rotating} onClick={() => setRotating(value => !value)}>{rotating ? 'Ⅱ' : '▷'}</button>
-      </div>
+      </div>}
     </div>
     <div className={`${styles.footer} flex flex-wrap items-center justify-between gap-3 border-t border-white/10 px-4 py-3 sm:px-5`}>
-      <div className="flex flex-wrap gap-2"><button type="button" className={`${button} border border-white/15`} onClick={() => api.current?.view('aerial')}>{c.aerial}</button><button type="button" className={`${button} border border-white/15`} onClick={() => api.current?.view('street')}>{c.street}</button></div>
-      <p className={`${styles.hint} max-w-md text-xs leading-relaxed text-white/55`}>{labels.hint}</p>
+      <div className="flex flex-wrap gap-2">{floorPlan && <>
+        <button type="button" className={button} aria-pressed={!showPlan} onClick={() => setViewMode('model')}>{c.model}</button>
+        <button type="button" className={button} aria-pressed={showPlan} onClick={() => setViewMode('plan')}>{c.plan}</button>
+      </>}{!showPlan && <><button type="button" className={`${button} border border-white/15`} onClick={() => api.current?.view('aerial')}>{c.aerial}</button><button type="button" className={`${button} border border-white/15`} onClick={() => api.current?.view('street')}>{c.street}</button></>}{showPlan && <a className={button} href={`/${locale}/projets/residence-la-gloire/plans/${floorPlan.file}`}>{c.openPlan} ↗</a>}</div>
+      <p className={`${styles.hint} max-w-md text-xs leading-relaxed text-white/55`}>{showPlan ? c.planHint : labels.hint}</p>
     </div>
     <p className={`${styles.notice} border-t border-white/5 px-5 py-2 text-xs text-white/40`}>{c.source}</p>
   </div>;

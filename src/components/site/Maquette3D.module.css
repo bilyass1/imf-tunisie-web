@@ -12,6 +12,8 @@
 .viewport { position: relative; height: 520px; }
 .immersive .viewport { height: 100%; }
 .mount { width: 100%; height: 100%; }
+.floorPlan { position: absolute; inset: 0; background: white; }
+.floorPlan > div, .floorPlan > div > [role="presentation"] { height: 100%; aspect-ratio: auto; border-radius: 0; }
 .topbar { position: absolute; z-index: 10; inset: 12px 12px auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; pointer-events: none; }
 .topbar > * { pointer-events: auto; }
 .lighting { display: flex; border-radius: 999px; padding: 4px; }
@@ -21,6 +23,12 @@
 .swatch { width: 10px; height: 10px; flex-shrink: 0; border-radius: 2px; }
 .floors { position: absolute; z-index: 10; inset-inline-end: 12px; top: 100px; bottom: 96px; overflow-y: auto; }
 .floorButtons { display: flex; flex-direction: column; gap: 4px; border-radius: 16px; padding: 4px; }
+.gloireFloors { position: static; padding: 8px 12px; background: #141416; }
+.gloireFloors .floorButtons { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; width: 100%; border-radius: 12px; }
+.gloireStage { display: flex; flex-direction: column; }
+.gloireStage .viewport { flex-shrink: 0; }
+.gloireStage .navigation { position: relative; left: auto; bottom: auto; transform: none; margin: 8px auto; }
+.immersive .gloireStage .viewport { flex: 1; height: auto; min-height: 120px; }
 .navigation { position: absolute; z-index: 10; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; width: max-content; max-width: calc(100% - 24px); border-radius: 999px; padding: 4px; }
 .navigation button { flex-shrink: 0; }
 .divider { height: 20px; width: 1px; background: rgb(255 255 255 / .2); }
@@ -64,6 +72,7 @@
   .immersive .legendItem { font-size: 11px; }
   .immersive .floors { grid-area: 4 / 2 / 5 / 3; padding: 0; }
   .immersive .floorButtons { padding: 0; }
+  .immersive .gloireFloors .floorButtons { flex-wrap: nowrap; width: max-content; }
   .immersive .navigation { grid-area: 5 / 2 / 6 / 3; margin-block: 0; width: 100%; max-width: 100%; padding: 2px; gap: 0; justify-content: space-evenly; }
   .immersive .navigation button { padding-inline: 6px; min-width: 0; }
   .immersive .navigation button:not([aria-label]) { flex: 1; font-size: 12px; }

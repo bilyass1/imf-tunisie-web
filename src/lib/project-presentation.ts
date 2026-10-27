@@ -130,7 +130,10 @@ export function projectPresentation(project: Project): Project {
   if (project.slug === 'residence-la-gloire') {
     project = { ...project, cover: '/media/la-gloire/facade-client-20261013.webp' };
   }
-  if (project.slug === 'complexe-marassim') return project.presentationEdited ? project : { ...project, ...MARASSIM_PROJECT_CONTENT };
+  if (project.slug === 'complexe-marassim') {
+    project = { ...project, cover: '/media/marassim/facade-client-20261027.webp', heroImage: '/media/marassim/facade-client-20261027.webp' };
+    return project.presentationEdited ? project : { ...project, ...MARASSIM_PROJECT_CONTENT };
+  }
   if (project.presentationEdited) return project;
   if (project.slug === 'residence-la-gloire') return {
     ...project,

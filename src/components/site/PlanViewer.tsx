@@ -37,6 +37,7 @@ export default function PlanViewer({
   exists,
   brand,
   rotation,
+  allowFullscreen = true,
 }: {
   image?: string;
   pdf?: string;
@@ -47,6 +48,8 @@ export default function PlanViewer({
   brand?: PlanBrandDetails;
   /** Rotation of the supplied image, not a reconstruction of a 3D model. */
   rotation?: RotationLabels;
+  /** Disable a nested full-screen dialog when hosted in an immersive viewer. */
+  allowFullscreen?: boolean;
 }) {
   const [previewFailed,setPreviewFailed]=useState(false);
   const preview=image?.includes('/presentation/')?image.replace(/\.webp(?:\?.*)?$/,'.preview.webp'):image;
@@ -242,7 +245,7 @@ export default function PlanViewer({
         >
           {labels.reset}
         </button>
-        <button
+        {allowFullscreen && <button
           type="button"
           aria-label={full ? labels.exit : labels.fullscreen}
           onClick={() => {
@@ -252,7 +255,7 @@ export default function PlanViewer({
           className="rounded-lg border border-ink/12 bg-white/90 px-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink/60 backdrop-blur transition hover:border-gold-400 hover:text-gold-600"
         >
           {full ? <IconClose className="h-4 w-4" /> : '⤢'}
-        </button>
+        </button>}
       </div>
 
       <p className="pointer-events-none absolute inset-x-0 bottom-3 text-center text-[11px] uppercase tracking-[0.16em] text-ink/30">

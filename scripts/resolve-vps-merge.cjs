@@ -9,6 +9,7 @@ const [candidate, repair] = process.argv.slice(2);
 assert(candidate && /^[a-f0-9]{40}$/.test(repair), 'Usage: node resolve-vps-merge.cjs CANDIDATE REPAIR_SHA');
 const root = fs.realpathSync(candidate);
 const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
+const gitBytes = (...args) => execFileSync('git', ['-C', root, ...args], { maxBuffer: 16 * 1024 * 1024 });
 const incoming = 'a2ed78e1c27494edc77840cfef529a4fcfd3cff0';
 assert.equal(git('rev-parse', 'MERGE_HEAD').trim(), incoming, 'Unexpected pending merge; no files changed');
 const expected = {
@@ -22,6 +23,9 @@ const additional = {
   'scripts/test-gloire-floor-plans.cjs': 'e320829edee8d84344d75bec0c6e558f7c39a54c',
   'src/app/[locale]/(site)/projets/[slug]/page.tsx': 'c131506ef4e9806951c922b5e241d3c4d6eb0710',
   'src/components/site/LaGloirePlanLibrary.tsx': '29bc7ce7893ed1bbaae907f64cdc72a965f52577',
+  'src/components/site/YassamineFinancing.tsx': 'b4ea846c19cce3db45cbda5f55e07f5cebf3960d',
+  'src/lib/public-document-sources.json': 'f4bb8f798e4016af2cac701650794e14840dda2a',
+  'src/lib/public-documents.json': '244a914543ee75e1c077c2b2f4b88f4d4c6c0176',
 };
 const contact = 'src/app/[locale]/(site)/contact/page.tsx';
 const assets = 'src/lib/public-assets.json';
@@ -43,9 +47,16 @@ for (const [file, sha] of Object.entries(additional)) {
 }
 assert(!fs.existsSync(path.join(root, newComponent)), 'New component already exists; no files changed');
 writes.set(newComponent, git('show', `${repair}:${newComponent}`));
+for (const name of ['decision-prix-2025-03-03', 'liste-projets-2025-12-18']) {
+  for (const file of [`source-assets/documents/diar-al-yassamine/${name}.pdf`, `public/documents/diar-al-yassamine/${name}.web.pdf`]) {
+    assert(!fs.existsSync(path.join(root, file)), `Document already exists: ${file}; no files changed`);
+    writes.set(file, gitBytes('show', `${repair}:${file}`));
+  }
+}
 
 // Keep the server's generated asset catalogue, including private local additions.
 const assetLists = [2, 3].map(stage => JSON.parse(git('show', `:${stage}:${assets}`)));
+assetLists.push(JSON.parse(git('show', `${repair}:${assets}`)));
 assert(assetLists.every(list => Array.isArray(list) && list.every(item => typeof item === 'string')), 'Unexpected assets format');
 writes.set(assets, JSON.stringify([...new Set(assetLists.flat())].sort()) + '\n');
 
@@ -67,7 +78,9 @@ assert.equal((ours.match(/  const infos = \[/g) || []).length, 1, 'Contact infos
 updatedContact = updatedContact.replace('  const infos = [',
   `  const vpsContactEmails = Array.from(new Map([${lines[1]}, SITE.infoEmail].map(email => [email.toLowerCase(), email])).values());\n\n  const infos = [`);
 writes.set(contact, updatedContact);
-for (const [file, contents] of writes) assert(!/^(<<<<<<<|=======|>>>>>>>)/m.test(contents), `Unresolved markers in ${file}`);
+for (const [file, contents] of writes) {
+  if (typeof contents === 'string') assert(!/^(<<<<<<<|=======|>>>>>>>)/m.test(contents), `Unresolved markers in ${file}`);
+}
 
 const backup = path.join(root, 'tmp', `vps-merge-backup-${Date.now()}`);
 fs.mkdirSync(backup, { recursive: true, mode: 0o700 });
@@ -79,9 +92,13 @@ for (const file of writes.keys()) {
   fs.copyFileSync(path.join(root, file), dest);
 }
 fs.writeFileSync(path.join(backup, 'contact-before.tsx'), ours, { mode: 0o600 });
-for (const [file, contents] of writes) fs.writeFileSync(path.join(root, file), contents);
-git('add', '--', ...writes.keys());
+for (const [file, contents] of writes) {
+  fs.mkdirSync(path.dirname(path.join(root, file)), { recursive: true });
+  fs.writeFileSync(path.join(root, file), contents);
+}
+git('add', '--', ...[...writes.keys()].filter(file => !file.endsWith('.web.pdf')));
+git('add', '-f', '--', ...[...writes.keys()].filter(file => file.endsWith('.web.pdf')));
 assert.equal(git('diff', '--name-only', '--diff-filter=U').trim(), '', 'Remaining conflicts');
 git('diff', '--cached', '--check');
-console.log(`Conflits resolus et plans d'ensemble places sous la maquette. Sauvegarde: ${backup}`);
+console.log(`Conflits resolus, plans sous la maquette et PDF Yassamine relies. Sauvegarde: ${backup}`);
 console.log('Aucun service redemarre. Le candidat est pret a etre compile.');

@@ -85,6 +85,10 @@ systemd-run --unit="imf-pr4-build-$stamp" --collect --wait --pipe \
   --property=EnvironmentFile=/etc/imf/validation.env \
   /usr/bin/env "IMF_BUILD_DIR=$dist" /usr/bin/npm run build
 test -s "$app/$dist/BUILD_ID"
+for document in decision-prix-2025-03-03 liste-projets-2025-12-18; do
+  cmp "$app/source-assets/documents/diar-al-yassamine/$document.pdf" \
+    "$app/public/documents/diar-al-yassamine/$document.web.pdf"
+done
 
 cat > "$backup/check-page.py" <<'PY'
 from html.parser import HTMLParser
@@ -135,6 +139,21 @@ PY
   curl --fail --silent --show-error --max-time 20 "$@" \
     "$origin/fr/projets/complexe-marassim" --output "$backup/project.html"
   grep -q 'facade-client-20261027.webp' "$backup/project.html"
+  curl --fail --silent --show-error --max-time 20 "$@" \
+    "$origin/fr/projets/residence-la-gloire" --output "$backup/gloire.html"
+  python3 - "$backup/gloire.html" <<'PY'
+from pathlib import Path
+import sys
+html=Path(sys.argv[1]).read_text()
+assert 'id="plans-ensemble"' in html
+for document in ['PLANCHERDC',*[f'PLANCHE{i}ETAGE' for i in range(1,6)],'PLANCHESOUS-SOL']:
+    assert '/fr/projets/residence-la-gloire/plans/'+document in html
+PY
+  for document in decision-prix-2025-03-03 liste-projets-2025-12-18; do
+    curl --fail --silent --show-error --max-time 30 "$@" \
+      "$origin/documents/diar-al-yassamine/$document.web.pdf" --output "$backup/$document.pdf"
+    cmp "$backup/$document.pdf" "$app/source-assets/documents/diar-al-yassamine/$document.pdf"
+  done
 }
 
 cutover=1
@@ -149,7 +168,7 @@ systemctl daemon-reload
 systemctl restart imf-validation
 for locale in fr en ar; do wait_contact "http://127.0.0.1:3001/$locale/contact"; done
 check_assets http://127.0.0.1:3001
-echo 'LOCAL_OK — trois langues, footer, appartements, six plans et photo Marassim.'
+echo 'LOCAL_OK — footer, appartements, plans 3D, sept plans d’ensemble, PDF complets et photo Marassim.'
 python3 - "$nginx_file" <<'PY'
 from pathlib import Path
 import re,sys

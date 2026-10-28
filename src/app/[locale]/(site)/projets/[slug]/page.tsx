@@ -3,6 +3,7 @@ import { displayedAmenities } from '@/lib/amenities';
 import MarassimSpaces from '@/components/site/MarassimSpaces';
 import { MARASSIM_PRESENTATION } from '@/lib/marassim-presentation';
 import LaGloirePlanLibrary from '@/components/site/LaGloirePlanLibrary';
+import LaGloireOverviewPlans from '@/components/site/LaGloireOverviewPlans';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { isLocale, locales, type Locale } from '@/i18n/config';
@@ -116,6 +117,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
     ...(project.slug === 'complexe-marassim' ? [{ id: 'video', label: marassimVideo[locale].nav }] : []),
     { id: 'galerie', label: sectionLabel('gallery', dict.project.gallery) },
     ...((project.slug === 'diar-al-yassamine' || (project.massing && project.lots.length)) ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
+    ...(project.slug === 'residence-la-gloire' ? [{ id: 'plans-ensemble', label: locale === 'ar' ? 'المخططات العامة' : locale === 'en' ? 'Building plans' : 'Plans d’ensemble' }] : []),
     ...(project.lots.length ? [{ id: 'disponibilite', label: dict.project.availability }] : []),
     ...(project.slug === 'residence-la-gloire' ? [{ id: 'plans', label: dict.apartment.plan }] : []),
     ...(project.slug === 'diar-al-yassamine' ? [{ id: 'plans-rdc', label: dict.apartment.plan }] : []),
@@ -435,6 +437,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
           </div>
         </section>
       )}
+
+      {project.slug === 'residence-la-gloire' && <LaGloireOverviewPlans locale={locale} />}
 
       {/* ---- Disponibilité ---- */}
       {project.slug === 'diar-al-yassamine' && <YassaminePlanLibrary locale={locale} lots={project.lots} labels={dict.plan} statuses={dict.availability.legend} planContact={{ phone: SITE.office.phones[0], email: SITE.email, website: SITE.url }} />}

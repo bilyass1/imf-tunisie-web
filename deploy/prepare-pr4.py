@@ -13,6 +13,8 @@ import subprocess
 import tempfile
 
 COMPATIBLE_REFS = (
+    '428fd036bbeea9964b6eb4b71ece721686c07169',  # previous reviewed VPS integration
+    'c28cb584f28379c2aa14955030401abaf6ab6aae',  # updated PR4: overview plans and PDFs
     '8db48edc87e70071d1057c70742368fc30095c48',  # deployed apartment dropdown
     '9e55d2b8b1a278efa23864e6c08a82f54747e038',  # deployed footer
     'a2ed78e1c27494edc77840cfef529a4fcfd3cff0',  # requested PR4
@@ -70,7 +72,7 @@ def prepare(app, workspace, base, revision):
     for name in filter(None, names):
         if name.startswith('deploy/'):
             continue
-        if name != 'package.json' and not name.startswith(('src/', 'scripts/', 'public/')):
+        if name != 'package.json' and not name.startswith(('src/', 'scripts/', 'public/', 'source-assets/documents/')):
             raise RuntimeError('Modification non prévue : ' + name)
         target = safe_path(app, name)
         incoming_result = git(app, 'show', revision + ':' + name, check=False)

@@ -209,7 +209,9 @@
     "/plans/la-gloire/presentation/D51.web.pdf",
     "/plans/la-gloire/presentation/D52.web.pdf",
     "/plans/la-gloire/presentation/D53.web.pdf",
-    "/plans/la-gloire/presentation/D54.web.pdf"
+    "/plans/la-gloire/presentation/D54.web.pdf",
+    "/documents/diar-al-yassamine/decision-prix-2025-03-03.web.pdf",
+    "/documents/diar-al-yassamine/liste-projets-2025-12-18.web.pdf"
   ],
   "redirects": {
     "/models/yassamine/presentation/A5a-0.pdf": "/models/yassamine/presentation/A5a-0.web.pdf",
@@ -631,6 +633,8 @@
     "/plans/la-gloire/presentation/D53.pdf": "/plans/la-gloire/presentation/D53.web.pdf",
     "/plans/la-gloire/D53.pdf": "/plans/la-gloire/presentation/D53.web.pdf",
     "/plans/la-gloire/presentation/D54.pdf": "/plans/la-gloire/presentation/D54.web.pdf",
-    "/plans/la-gloire/D54.pdf": "/plans/la-gloire/presentation/D54.web.pdf"
+    "/plans/la-gloire/D54.pdf": "/plans/la-gloire/presentation/D54.web.pdf",
+    "/documents/diar-al-yassamine/decision-prix-2025-03-03.pdf": "/documents/diar-al-yassamine/decision-prix-2025-03-03.web.pdf",
+    "/documents/diar-al-yassamine/liste-projets-2025-12-18.pdf": "/documents/diar-al-yassamine/liste-projets-2025-12-18.web.pdf"
   }
 }

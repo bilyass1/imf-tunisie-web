@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from 'react';
 
 /**
- * N'insère ses enfants qu'à l'approche du viewport.
+ * Insère ses enfants à l'approche du viewport, ou immédiatement avec eager.
  *
  * Les modules WebGL (maquette 3D, visite 360°) pèsent chacun plusieurs
  * centaines de kilo-octets : les charger au
@@ -16,19 +16,22 @@ export default function LazyMount({
   desktopMinHeight = minHeight,
   rootMargin = '200px',
   loadingLabel,
+  eager = false,
 }: {
   children: ReactNode;
   minHeight?: number;
   desktopMinHeight?: number;
   rootMargin?: string;
   loadingLabel?: string;
+  eager?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
+  const [shown, setShown] = useState(eager);
+  const mounted = eager || shown;
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || shown) return;
+    if (!el || mounted) return;
     if (typeof IntersectionObserver === 'undefined') {
       setShown(true);
       return;
@@ -55,11 +58,11 @@ export default function LazyMount({
     );
     io.observe(el);
     return () => { io.disconnect(); cancelPending(); };
-  }, [shown, rootMargin]);
+  }, [mounted, rootMargin]);
 
   return (
-    <div ref={ref} className="min-h-[var(--viewer-height)] sm:min-h-[var(--viewer-desktop-height)]" style={{ '--viewer-height': `${minHeight}px`, '--viewer-desktop-height': `${desktopMinHeight}px` } as CSSProperties} data-viewer-mounted={shown}>
-      {shown ? children : <div role="status" className="grid min-h-[var(--viewer-height)] place-content-center gap-4 rounded-2xl bg-ink/5 p-8 text-center text-ink/60 sm:min-h-[var(--viewer-desktop-height)]">
+    <div ref={ref} className="min-h-[var(--viewer-height)] sm:min-h-[var(--viewer-desktop-height)]" style={{ '--viewer-height': `${minHeight}px`, '--viewer-desktop-height': `${desktopMinHeight}px` } as CSSProperties} data-viewer-mounted={mounted}>
+      {mounted ? children : <div role="status" className="grid min-h-[var(--viewer-height)] place-content-center gap-4 rounded-2xl bg-ink/5 p-8 text-center text-ink/60 sm:min-h-[var(--viewer-desktop-height)]">
         <span aria-hidden="true" className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-gold-300/30 border-t-gold-400 motion-reduce:animate-none" />
         {loadingLabel && <p className="text-sm">{loadingLabel}</p>}
         <button type="button" className="btn-gold mx-auto" onClick={()=>setShown(true)}>{loadingLabel && /[\u0600-\u06ff]/.test(loadingLabel)?'فتح العرض':loadingLabel?.startsWith('Loading')?'Open interactive view':'Ouvrir la vue interactive'}</button>

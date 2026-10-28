@@ -1,8 +1,11 @@
 import Link from 'next/link';
+import { preload } from 'react-dom';
+import { publicAssetUrl } from '@/lib/public-asset-url';
 import { displayedAmenities } from '@/lib/amenities';
 import MarassimSpaces from '@/components/site/MarassimSpaces';
 import { MARASSIM_PRESENTATION } from '@/lib/marassim-presentation';
 import LaGloirePlanLibrary from '@/components/site/LaGloirePlanLibrary';
+import LaGloireOverviewPlans from '@/components/site/LaGloireOverviewPlans';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { isLocale, locales, type Locale } from '@/i18n/config';
@@ -94,6 +97,17 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   const SITE = (await getCompanySite());
   const project = (await getProject(slug));
   if (!project) notFound();
+  if (project.slug === 'residence-la-gloire' && project.massing && project.lots.length > 0) {
+    // Start model/decoder downloads with the HTML, before scrolling or hydration.
+    for (const path of [
+      '/models/la-gloire/la-gloire-web.glb',
+      '/models/la-gloire/floor-plans.json',
+      '/draco/draco_wasm_wrapper.js',
+      '/draco/draco_decoder.wasm',
+    ]) {
+      preload(publicAssetUrl(path), { as: 'fetch', crossOrigin: 'anonymous', fetchPriority: path.endsWith('.glb') ? 'high' : 'auto' });
+    }
+  }
   const sectionLabel = (key: keyof NonNullable<typeof project.presentationLabels>, fallback: string) =>
     project.presentationLabels ? t(project.presentationLabels[key], locale) : fallback;
 
@@ -109,6 +123,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
     ...(project.slug === 'complexe-marassim' ? [{ id: 'espaces', label: t(MARASSIM_PRESENTATION.nav, locale) }] : []),
     { id: 'galerie', label: sectionLabel('gallery', dict.project.gallery) },
     ...((project.slug === 'diar-al-yassamine' || (project.massing && project.lots.length)) ? [{ id: 'maquette', label: dict.apartment.maquette }] : []),
+    ...(project.slug === 'residence-la-gloire' ? [{ id: 'plans-ensemble', label: locale === 'ar' ? 'المخططات العامة' : locale === 'en' ? 'Building plans' : 'Plans d’ensemble' }] : []),
     ...(project.lots.length ? [{ id: 'disponibilite', label: dict.project.availability }] : []),
     ...(project.slug === 'residence-la-gloire' ? [{ id: 'plans', label: dict.apartment.plan }] : []),
     ...(project.slug === 'diar-al-yassamine' ? [{ id: 'plans-rdc', label: dict.apartment.plan }] : []),
@@ -389,7 +404,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               light
             />
             <div className="mt-12 overflow-hidden rounded-2xl ring-1 ring-white/10">
-              <LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
+              <LazyMount key={project.slug} eager={project.slug === 'residence-la-gloire'} minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
               <MaquetteSection
                 locale={locale}
                 projectSlug={project.slug}
@@ -414,6 +429,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
           </div>
         </section>
       )}
+
+      {project.slug === 'residence-la-gloire' && <LaGloireOverviewPlans locale={locale} />}
 
       {/* ---- Disponibilité ---- */}
       {project.slug === 'diar-al-yassamine' && <YassaminePlanLibrary locale={locale} lots={project.lots} labels={dict.plan} statuses={dict.availability.legend} planContact={{ phone: SITE.office.phones[0], email: SITE.email, website: SITE.url }} />}

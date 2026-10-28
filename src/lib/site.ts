@@ -9,6 +9,7 @@ export const SITE = {
   arabicName: 'عقارية مسعدي اخوان',
   url: 'https://imf-immobiliere.tn',
   email: 'contact@imf-immobiliere.tn',
+  infoEmail: 'Info@imf-immobiliere.tn',
 
   /** Siège commercial actuel (documents commerciaux 2026) */
   office: {

@@ -133,6 +133,12 @@ export function projectPresentation(project: Project): Project {
   }
   if (project.slug === 'complexe-marassim') {
     project = withMarassimPhotos(project);
+    const clientPhoto = '/media/marassim/facade-client-20261027.webp';
+    const defaults = new Set(['/media/marassim/hero.jpg', '/media/marassim/ext-2.jpg', '/media/marassim/facade-photo-20260922.webp']);
+    project = { ...project,
+      cover: defaults.has(project.cover.split('?')[0]) ? clientPhoto : project.cover,
+      heroImage: defaults.has(project.heroImage.split('?')[0]) ? clientPhoto : project.heroImage,
+    };
     return project.presentationEdited ? project : { ...project, ...MARASSIM_PROJECT_CONTENT };
   }
   if (project.presentationEdited) return project;

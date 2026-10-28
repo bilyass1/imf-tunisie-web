@@ -11,6 +11,7 @@ import { parseContactInput } from './contact-input';
 import { galleryPhotoCategory, parseGalleryFilters, projectGalleryFilters } from './gallery-filters';
 import { allowRequest } from './rate-limit';
 import { deleteClientDossier } from './client-deletion';
+import { deleteCrmRow } from './crm-deletion';
 import { validateContractPdf } from './pdf-validation';
 import { withAudit } from './audit';
 import { verifyAdminPassword } from './sensitive-actions';
@@ -227,6 +228,10 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
           if(!contact) throw new Error('Contact introuvable.');
           Object.assign(contact,input);
         } else db.contacts.unshift({...input,id:randomUUID(),createdAt:new Date().toISOString().slice(0,10)});
+      } else if(operation==='task-delete' || operation==='contact-delete' || operation==='deal-delete') {
+        if(value(form,'confirm')!=='yes') throw new Error('Confirmez la suppression de cette ligne.');
+        const kind = operation === 'task-delete' ? 'task' : operation === 'contact-delete' ? 'contact' : 'deal';
+        deleteCrmRow(db,kind,value(form,kind));
       } else if(operation==='client-delete') {
         if(value(form,'confirm')!=='yes') throw new Error('Confirmez la suppression définitive du dossier client.');
         if(!authorized) throw new Error('Mot de passe administrateur requis ou incorrect.');
@@ -362,7 +367,7 @@ export async function commercialAction(_: CommercialState, form: FormData): Prom
       }
     }
     revalidatePath('/','layout');
-    return {ok:true,publicPath,paymentSnapshot,message:operation==='client-delete'?'Compte client et dossier supprimés définitivement.':operation==='client'?'Compte créé. Communiquez les identifiants au client par votre canal habituel.':operation==='upload' && publicPath?.endsWith('#visite-360')?'Panorama ajouté à la visite 360° de cet appartement.':operation==='upload' && publicPath?'Photo WebP ajoutée à la galerie publique.':operation==='upload'?'Publication enregistrée. Le destinataire peut la consulter dans son espace.':'Modifications enregistrées.'};
+    return {ok:true,publicPath,paymentSnapshot,message:operation==='client-delete'?'Compte client et dossier supprimés définitivement.':operation.endsWith('-delete')?'Suppression effectuée.':operation==='client'?'Compte créé. Communiquez les identifiants au client par votre canal habituel.':operation==='upload' && publicPath?.endsWith('#visite-360')?'Panorama ajouté à la visite 360° de cet appartement.':operation==='upload' && publicPath?'Photo WebP ajoutée à la galerie publique.':operation==='upload'?'Publication enregistrée. Le destinataire peut la consulter dans son espace.':'Modifications enregistrées.'};
     });
   } catch(error) {
 

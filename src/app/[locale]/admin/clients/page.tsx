@@ -9,6 +9,7 @@ import { clientProperties } from '@/lib/client-properties';
 import { formatMoney } from '@/lib/format';
 import PortalShell from '@/components/portal/PortalShell';
 import { adminNav } from '@/components/portal/clientNav';
+import DeleteAdminRow from '@/components/admin/DeleteAdminRow';
 
 export default async function AdminClientsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
@@ -69,7 +70,7 @@ export default async function AdminClientsPage({ params }: { params: Promise<{ l
                       <td className="px-6 py-4 font-semibold text-ink">{clientProperties(c).map(item=>item.lotRef).join(' · ') || '—'}</td>
                       <td className="px-6 py-4 text-end text-emerald-600">{formatMoney(paid, locale, 3)}</td>
                       <td className="px-6 py-4 text-end text-gold-600">{formatMoney(remaining, locale, 3)}</td>
-                      <td className="px-6 py-4"><Link href={`/${locale}/admin/gestion?client=${encodeURIComponent(c.id)}#client-${c.id}`} className="text-sm font-semibold text-gold-700 underline underline-offset-4">{dict.admin.manageSchedule}</Link></td>
+                      <td className="px-6 py-4"><div className="flex flex-wrap items-center gap-2"><Link href={`/${locale}/admin/gestion?client=${encodeURIComponent(c.id)}#client-${c.id}`} className="text-sm font-semibold text-gold-700 underline underline-offset-4">{dict.admin.manageSchedule}</Link><DeleteAdminRow kind="client" id={c.id} name={c.name} locale={locale} /></div></td>
                     </tr>
                   );
                 })}

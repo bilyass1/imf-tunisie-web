@@ -29,8 +29,8 @@ export default function YassamineFinancing({ locale }: { locale: Locale }) {
       <p className="mt-4 max-w-4xl text-sm leading-relaxed text-ink/55">{c.note}</p>
       <div className="mt-9 rounded-2xl bg-white border border-ink/10 p-6"><h3 className="font-serif text-2xl">{c.awal}</h3><p className="mt-3 max-w-3xl text-sm leading-relaxed text-ink/65">{c.awalBody}</p><a className="mt-3 inline-block text-gold-600 underline" href="https://www.bhbank.tn/le-credit-masken-awal" target="_blank" rel="noreferrer">{c.bank}</a></div>
       <div className="mt-4 flex flex-wrap gap-4 text-sm underline text-gold-600">
-        <span className="text-ink/55 no-underline">{c.decision}</span>
-        <span className="text-ink/55 no-underline">{c.list}</span>
+        <a href="/documents/diar-al-yassamine/decision-prix-2025-03-03.web.pdf" target="_blank" rel="noopener noreferrer" type="application/pdf">{c.decision} <span className="text-xs">(PDF)</span></a>
+        <a href="/documents/diar-al-yassamine/liste-projets-2025-12-18.web.pdf" target="_blank" rel="noopener noreferrer" type="application/pdf">{c.list} <span className="text-xs">(PDF)</span></a>
         <a href="https://www.bhbank.tn/le-credit-foprolos" target="_blank" rel="noreferrer">{c.bank}</a>
       </div>
     </div>

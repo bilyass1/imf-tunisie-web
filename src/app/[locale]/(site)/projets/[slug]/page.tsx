@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { preload } from 'react-dom';
+import { publicAssetUrl } from '@/lib/public-asset-url';
 import { displayedAmenities } from '@/lib/amenities';
 import MarassimSpaces from '@/components/site/MarassimSpaces';
 import { MARASSIM_PRESENTATION } from '@/lib/marassim-presentation';
@@ -101,6 +103,17 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   const SITE = (await getCompanySite());
   const project = (await getProject(slug));
   if (!project) notFound();
+  if (project.slug === 'residence-la-gloire' && project.massing && project.lots.length > 0) {
+    // Start model/decoder downloads with the HTML, before scrolling or hydration.
+    for (const path of [
+      '/models/la-gloire/la-gloire-web.glb',
+      '/models/la-gloire/floor-plans.json',
+      '/draco/draco_wasm_wrapper.js',
+      '/draco/draco_decoder.wasm',
+    ]) {
+      preload(publicAssetUrl(path), { as: 'fetch', crossOrigin: 'anonymous', fetchPriority: path.endsWith('.glb') ? 'high' : 'auto' });
+    }
+  }
   const sectionLabel = (key: keyof NonNullable<typeof project.presentationLabels>, fallback: string) =>
     project.presentationLabels ? t(project.presentationLabels[key], locale) : fallback;
 
@@ -412,7 +425,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               light
             />
             <div className="mt-12 overflow-hidden rounded-2xl ring-1 ring-white/10">
-              <LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
+              <LazyMount key={project.slug} eager={project.slug === 'residence-la-gloire'} minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
               <MaquetteSection
                 locale={locale}
                 projectSlug={project.slug}

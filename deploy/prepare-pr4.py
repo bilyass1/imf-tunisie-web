@@ -13,6 +13,8 @@ import subprocess
 import tempfile
 
 COMPATIBLE_REFS = (
+    'b7d38d3df68b7b5b031123932defd0e2dac1550c',  # previous reviewed VPS integration
+    '2631182797e797a2ebaee7bad3c53dcb17db5ee5',  # automatic La Gloire startup
     '428fd036bbeea9964b6eb4b71ece721686c07169',  # previous reviewed VPS integration
     'c28cb584f28379c2aa14955030401abaf6ab6aae',  # updated PR4: overview plans and PDFs
     '8db48edc87e70071d1057c70742368fc30095c48',  # deployed apartment dropdown

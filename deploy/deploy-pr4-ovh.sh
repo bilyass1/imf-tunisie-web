@@ -146,6 +146,8 @@ from pathlib import Path
 import sys
 html=Path(sys.argv[1]).read_text()
 assert 'id="plans-ensemble"' in html
+assert 'data-viewer-mounted="true"' in html, 'La Gloire must mount without waiting for a click or scrolling'
+assert '/models/la-gloire/la-gloire-web.glb' in html, 'Model preload must be present in the initial page'
 for document in ['PLANCHERDC',*[f'PLANCHE{i}ETAGE' for i in range(1,6)],'PLANCHESOUS-SOL']:
     assert '/fr/projets/residence-la-gloire/plans/'+document in html
 PY

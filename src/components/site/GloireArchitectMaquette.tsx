@@ -66,7 +66,7 @@ export default function GloireArchitectMaquette({ locale, labels, lots, onSelect
         import('three/examples/jsm/loaders/GLTFLoader.js'),
         import('three/examples/jsm/loaders/DRACOLoader.js'),
         import('three/examples/jsm/environments/RoomEnvironment.js'),
-      ]),loadModelBytes(availability ? availabilityModelUrl : architectModelUrl,{signal:download.signal,onProgress:setProgress}),loadModelBytes('/models/la-gloire/floor-plans.json',{signal:download.signal,maximumBytes:2*1024*1024})]);
+      ]),loadModelBytes(availability ? availabilityModelUrl : architectModelUrl,{signal:download.signal,onProgress:setProgress,timeoutMs:120000}),loadModelBytes('/models/la-gloire/floor-plans.json',{signal:download.signal,maximumBytes:2*1024*1024})]);
       if (cancelled) return;
       const floorPlans: GloireFloorPlans = JSON.parse(new TextDecoder().decode(planBytes));
       const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });

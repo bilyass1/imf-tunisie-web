@@ -13,6 +13,8 @@ import subprocess
 import tempfile
 
 COMPATIBLE_REFS = (
+    '7a8a67e202cc4f4a6e94c1ef027d3de519038967',  # public-page background model transfer
+    'ec85ab0d947f3b14ed9a0e27c4ca25ce736c84b5',  # automatic startup deployment
     'b7d38d3df68b7b5b031123932defd0e2dac1550c',  # previous reviewed VPS integration
     '2631182797e797a2ebaee7bad3c53dcb17db5ee5',  # automatic La Gloire startup
     '428fd036bbeea9964b6eb4b71ece721686c07169',  # previous reviewed VPS integration

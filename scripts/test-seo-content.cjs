@@ -19,3 +19,18 @@ assert(full.includes('/appartements/A1') && !full.includes('/appartements/A2'));
 assert(full.includes('BH Bank') && full.includes('###'));
 assert(!llmsText([{...project,lots:[]}],true).includes('234567'));
 console.log('PASS: textes IA multilingues, lots disponibles, prix connus et données privées absentes.');
+
+(async () => {
+  const {GET}=load('src/app/robots.txt/route.ts');
+  const response=GET();
+  assert.equal(response.status,200);
+  assert(response.headers.get('content-type').startsWith('text/plain'));
+  const robots=await response.text();
+  assert(robots.includes('Content-Signal: search=yes, ai-input=yes, ai-train=yes'));
+  assert(robots.includes('Sitemap: '+SITE.url+'/sitemap.xml'));
+  for(const group of robots.trim().split(/\n\n/).slice(0,2)) {
+    for(const restricted of ['/api/','/*/admin','/*/espace-client','/*/connexion','/*/inscription']) assert(group.includes('Disallow: '+restricted));
+  }
+  for(const bot of ['Googlebot','Bingbot','GPTBot','OAI-SearchBot','ChatGPT-User','ClaudeBot','Claude-SearchBot','Claude-User','PerplexityBot','Perplexity-User','Google-Extended','Applebot-Extended']) assert(robots.includes('User-agent: '+bot));
+  console.log('PASS: règles des robots et exclusions privées dans chaque groupe.');
+})().catch(error=>{console.error(error);process.exitCode=1;});

@@ -1,6 +1,6 @@
 # Search launch — imf-immobiliere.tn
 
-The owner confirmed https://imf-immobiliere.tn and contact@imf-immobiliere.tn on 22 September 2026. The code uses this exact domain spelling as its canonical origin. Configure the domain in Vercel and DNS, enable HTTPS, and redirect www to this origin. Redirect any owned former site domain permanently to the matching new URL. Mailbox hosting and delivery are separate from the public contact address and have not been tested in this change.
+Le domaine officiel est https://imf-immobiliere.tn ; le contact public configuré est contact@imf-immobiliere.tn. The code uses this exact domain spelling as its canonical origin. Configure the domain in Vercel and DNS, enable HTTPS, and redirect www to this origin. Redirect any owned former site domain permanently to the matching new URL. Mailbox hosting and delivery are separate from the public contact address and have not been tested in this change.
 
 After deployment, check /robots.txt, /sitemap.xml and /llms.txt without authentication. Public pages permit crawling; account/admin pages carry noindex. Robots rules do not replace authentication.
 
@@ -63,3 +63,19 @@ Objectifs : LCP < 2,5 s, CLS < 0,1. Contrôler aussi le réseau avant/après dé
 Les tests parsant le JSON-LD serveur vérifient Organization/RealEstateAgent, ApartmentComplex, Apartment, BreadcrumbList et les offres. `Apartment` et les résidences commercialisées avec offre portent aussi le type `Product`, qui fournit le domaine schema.org de la propriété `offers`. Les quantités de logements utilisent `QuantitativeValue`. Aucun prix, avis, GPS, horaire, date de création ou slogan n'est inventé.
 
 La compatibilité de structure ne garantit pas un résultat enrichi Google : `Apartment`/`ApartmentComplex` n'ont pas de résultat enrichi immobilier dédié. Après déploiement, soumettre les URL au https://validator.schema.org/ et au https://search.google.com/test/rich-results . Le contrôle interactif de ces services n'a pas été exécuté dans ce conteneur ; les tests locaux ne sont pas présentés comme une certification par ces services.
+
+## Markdown négocié
+
+Les pages publiques d'accueil, projets, résidences, appartements, guides, contact et pages locales peuvent répondre à `Accept: text/markdown`. Une liste blanche partagée protège à la fois le rewrite et le gestionnaire `/api/markdown` : aucune route admin, client ou d'authentification n'est acceptée. Le contenu provient de `getProjects()`, des dictionnaires et des guides ; aucun HTML n'est scrapé. Les requêtes RSC et les préférences HTML restent en HTML. Les deux représentations annoncent `Vary: Accept`, la CSP et les liens de découverte sont conservés. Les URL avec paramètres gardent `noindex, follow` dans la représentation Markdown.
+
+Le contrôle final a aussi confirmé les six pages locales et les routes Markdown en français, arabe et anglais. Pour extraire les attributs hreflang avec curl, utiliser `grep -io 'hreflang="[a-z-]*"'` : React écrit `hrefLang` dans le HTML, ce qui est valide car les noms d'attributs HTML sont insensibles à la casse.
+
+L'envoi d'un échantillon JSON-LD au validateur externe a été rejeté par le contrôle automatique : un contenu dérivé du dépôt pourrait inclure des détails commerciaux non publics. Aucun contournement n'a été tenté. La validation externe par envoi de données reste à autoriser ; les contrôles de structure et le parsing HTTP locaux sont réussis.
+
+## Actions du propriétaire après fusion et déploiement
+
+- Configurer le domaine principal sans www, les redirections 308 des domaines possédés et la boîte mail. Soumettre le sitemap à Google Search Console (propriété Domaine, DNS) puis demander l'indexation des trois accueils et projets.
+- Importer la propriété dans Bing Webmaster Tools ; examiner la configuration IndexNow dans ce compte. Aucun jeton fictif n'est publié.
+- Valider les fiches Google Business Profile de Sfax et Tunis Ennasr avec des coordonnées cohérentes, photos et avis authentiques.
+- Vérifier le WAF et les accès réels comme décrit plus haut. Le compte Vercel connecté ici ne permet pas leur inspection.
+- Fournir les informations de `CONTENU-A-VALIDER.md`, compléter les vraies pages sociales et les liens externes ; contrôler les citations et l'indexation dans 4 à 8 semaines.

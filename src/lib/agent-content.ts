@@ -4,7 +4,12 @@ import { propertyGuides } from './property-guides';
 import { locales, type Locale } from '@/i18n/config';
 import { floorLabel } from './format';
 
-export const agentCautions = 'Les disponibilités, prix et modalités doivent être confirmés avec IMF avant réservation. Les rendus et visualisations sont illustratifs et ne remplacent pas les plans contractuels. L’éligibilité FOPROLOS doit être confirmée avec IMF et BH Bank.';
+export const agentCautionsByLocale = {
+  fr:'Les disponibilités, prix et modalités doivent être confirmés avec IMF avant réservation. Les rendus et visualisations sont illustratifs et ne remplacent pas les plans contractuels. L’éligibilité FOPROLOS doit être confirmée avec IMF et BH Bank.',
+  en:'Confirm availability, prices and terms with IMF before reserving. Renderings and visualizations are illustrative and do not replace contractual plans. Confirm FOPROLOS eligibility with IMF and BH Bank.',
+  ar:'أكد التوفر والثمن والشروط مع IMF قبل الحجز. الصور والعروض ثلاثية الأبعاد توضيحية ولا تعوّض المخططات التعاقدية. تحقق من أهلية فوبرولوس مع IMF وبنك الإسكان.',
+};
+export const agentCautions = agentCautionsByLocale.fr;
 const statusLabels = { ongoing: 'En cours', delivered: 'Livré', upcoming: 'À venir' };
 export const projectPath = (project: Project, locale: Locale) => `/${locale}/projets/${project.slug}`;
 export const lotPath = (project: Project, ref: string, locale: Locale) => `${projectPath(project, locale)}/appartements/${encodeURIComponent(ref)}`;

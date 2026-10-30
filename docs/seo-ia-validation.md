@@ -19,6 +19,7 @@
 
 - `npm run lint` : réussi.
 - `npm run typecheck` : réussi.
+- `npm audit --omit=dev --audit-level=high` : réussi, aucune vulnérabilité signalée après verrouillage de la dépendance indirecte Zod à 4.6.6.
 - `npm test` : réussi, 18 scripts, dont régressions commerciales, sécurité et nouveaux contrôles SEO/Markdown.
 - `npm run build` : réussi avec le preload système de test décrit dans `search-launch.md` ; ce preload est extérieur au code livré.
 - `node scripts/verify-search-http.cjs http://127.0.0.1:3000` : réussi sur la compilation de production finale.
@@ -30,6 +31,8 @@
 - Formats texte IA et Markdown : types MIME, cache, Vary et contenus vérifiés ; chemins privés refusés.
 - Projet inexistant, DWG, SKP et PDF non approuvé : 404. Espaces privés : noindex conservé. Recherche filtrée : noindex conservé.
 - Recherche du mauvais domaine dans src/public/scripts : seul l'ancien email de la liste noire subsiste.
+
+La CI existante exécutait aussi un audit de sécurité. Le verrouillage de Zod à 4.1.11 via `@vercel/functions → @vercel/oidc → @vercel/cli-config` signalait quatre alertes élevées (GHSA-mrhx-c7xc-m3w5). Un override limité à `@vercel/cli-config` utilise Zod 4.6.6, version corrigée dans la même majeure. Aucun SDK Vercel n’a été rétrogradé ; le chargement de `attachDatabasePool` et la validation de configuration restent fonctionnels. Source : https://github.com/advisories/GHSA-mrhx-c7xc-m3w5 .
 
 ## Limites à ne pas confondre avec une réussite
 

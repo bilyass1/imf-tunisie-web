@@ -1,5 +1,9 @@
 const fs = require('node:fs');
 const assert = require('node:assert/strict');
+const ts = require('typescript');
+const box = {exports:{}};
+require('node:vm').runInNewContext(ts.transpileModule(fs.readFileSync('src/lib/site.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText,{exports:box.exports,module:box});
+const {SITE}=box.exports;
 const origin = process.argv[2] || 'http://127.0.0.1:3108';
 async function main() {
   const results = [];
@@ -11,7 +15,7 @@ async function main() {
       assert.equal(response.status, 200, path);
       assert(!html.includes('Application error:'), path);
       const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
-      if (route !== '/selection') assert.equal(canonical, `https://imf-immobilere.tn${path}`, path);
+      if (route !== '/selection') assert.equal(canonical, `${SITE.url}${path}`, path);
       const description = html.match(/<meta name="description" content="([^"]*)"/)?.[1];
       if (route.endsWith('/B02')) assert(description.includes('360°'), path);
       if (route.endsWith('/A43')) assert(!description.includes('360°'), path);

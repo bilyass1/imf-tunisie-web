@@ -4,7 +4,7 @@ Sources : les deux photos WhatsApp fournies, complétées par les réponses du p
 
 ## Intégré localement
 
-- Domaine confirmé : `imf-immobilere.tn` (orthographe exacte), adresse `contact@imf-immobilere.tn`. Canonical, hreflang, sitemap, robots et données structurées dépendent de SITE.url ; llms.txt et exemple de configuration actualisés.
+- Domaine confirmé : `imf-immobiliere.tn` (orthographe exacte), adresse `contact@imf-immobiliere.tn`. Canonical, hreflang, sitemap, robots et données structurées dépendent de SITE.url ; llms.txt et exemple de configuration actualisés.
 - Service technique : +216 58 420 088.
 - Deux bureaux visibles : Sfax et Immeuble El Kods, Cité Ennasr, Tunis. L’étage et le numéro restent à préciser.
 - Livraison La Gloire : prévue en 2028, confirmation explicite du propriétaire. Date affichée également sur la carte du projet de l’accueil.

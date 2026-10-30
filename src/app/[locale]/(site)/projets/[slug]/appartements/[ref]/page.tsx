@@ -18,7 +18,7 @@ import ApartmentInterior from '@/components/site/ApartmentInterior';
 import YassamineFinancing from '@/components/site/YassamineFinancing';
 import ProgressMeter from '@/components/site/ProgressMeter';
 import Gallery from '@/components/site/Gallery';
-import { alternates, jsonLd } from '@/lib/seo';
+import { alternates, jsonLd, apartmentSchema, projectBreadcrumbs } from '@/lib/seo';
 import LazyMount from '@/components/site/LazyMount';
 import CreditSimulator from '@/components/site/CreditSimulator';
 import { IconArrow, IconArrowLeft, IconCheck, IconPhone, IconPin } from '@/components/Icons';
@@ -173,14 +173,9 @@ export default async function ApartmentPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd({
-        '@context': 'https://schema.org', '@type': 'Apartment', name: `${lot.code} · ${project.name}`,
-        url: `${SITE.url}/${locale}/projets/${project.slug}/appartements/${lot.ref}`,
-        image: `${SITE.url}${project.cover}`, numberOfBedrooms: Number(lot.typology.replace(/\D/g, '')) || undefined,
-        floorSize: lot.sellableArea ? { '@type': 'QuantitativeValue', value: lot.sellableArea, unitCode: 'MTK' } : undefined,
-        address: { '@type': 'PostalAddress', streetAddress: t(project.address, locale), addressLocality: project.city, addressCountry: 'TN' },
-        offers: lot.price && lot.status === 'available' ? { '@type': 'Offer', price: lot.price, priceCurrency: 'TND', url: `${SITE.url}/${locale}/projets/${project.slug}/appartements/${lot.ref}` } : undefined,
-      }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd({
+        '@context':'https://schema.org','@graph':[apartmentSchema(project,lot,locale),projectBreadcrumbs(project,locale,lot)],
+      })}} />
       {/* ---- En-tête ---- */}
       <section className="relative isolate overflow-hidden bg-ink pb-16 pt-36 lg:pb-20 lg:pt-44">
         <div className="absolute inset-0">

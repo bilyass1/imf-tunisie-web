@@ -24,7 +24,7 @@ import AvailabilityPlan from '@/components/site/AvailabilityPlan';
 import CreditSimulator from '@/components/site/CreditSimulator';
 import YassamineFinancing from '@/components/site/YassamineFinancing';
 import ProgressMeter from '@/components/site/ProgressMeter';
-import { alternates } from '@/lib/seo';
+import { alternates, jsonLd, projectSchema } from '@/lib/seo';
 import { AMENITY_ICONS, IconArrow, IconCheck, IconPin, IconPlay } from '@/components/Icons';
 
 // Gallery photos and construction progress are edited in the commercial panel.
@@ -118,6 +118,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd(projectSchema(project,locale))}} />
       <PageHero
         eyebrow={t(project.subtitle, locale)}
         title={project.slug === 'complexe-marassim' ? 'COMPLEXE MARASSIM' : project.name}

@@ -62,7 +62,7 @@ export default async function LocaleLayout({
   if (!isLocale(locale)) notFound();
   const meta = localeMeta[locale as Locale];
   const company = (await getCompanySite());
-  const companySchema = {...organization, name:company.legalName, email:company.email, telephone:company.office.phones[0], address:{...organization.address,streetAddress:company.office.line1,addressLocality:company.office.line2}, contactPoint:{...organization.contactPoint,telephone:company.office.phones[0]}};
+  const companySchema = {...organization, name:company.legalName, email:company.email, telephone:company.office.phones[0], address:{...organization.address,streetAddress:company.office.line1}, contactPoint:{...organization.contactPoint,telephone:company.office.phones[0]}};
   const knowledgeGraph = {
     '@context':'https://schema.org',
     '@graph':[

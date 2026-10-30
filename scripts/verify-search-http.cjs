@@ -24,6 +24,8 @@ async function main() {
     assert(body.includes(`rel="canonical" href="${SITE.url}/${locale}"`));
     assert.equal((body.match(/<h1\b/g)||[]).length,1);
     assert(response.headers.get('content-security-policy').includes("'nonce-"));
+    assert(response.headers.get('link')?.includes('</llms.txt>; rel="describedby"'));
+    assert(response.headers.get('link')?.includes('</sitemap.xml>; rel="sitemap"'));
     console.log(`PASS: /${locale}, ${scripts.length} scripts JSON-LD, canonical et quatre hreflang dans le HTML serveur.`);
   }
   for(const path of ['/llms.txt','/llms-full.txt','/robots.txt','/sitemap.xml']) {

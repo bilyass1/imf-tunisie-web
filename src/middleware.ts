@@ -47,6 +47,7 @@ export function middleware(request: NextRequest) {
     const policy=`default-src 'self'; script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'wasm-unsafe-eval' ${dev?"'unsafe-eval'":''}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' blob: https: ${dev?'ws:':''}; worker-src 'self' blob:; frame-src 'self' https://www.google.com https://maps.google.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self';`;
     const requestHeaders=new Headers(request.headers);requestHeaders.set('x-nonce',nonce);requestHeaders.set('Content-Security-Policy',policy);
     const response = NextResponse.next({request:{headers:requestHeaders}});response.headers.set('Content-Security-Policy',policy);
+    response.headers.append('Link', '</llms.txt>; rel="describedby"; type="text/plain", </sitemap.xml>; rel="sitemap"; type="application/xml"');
     if (/^\/(fr|en|ar)\/(admin(?:\/|$|-)|espace-client|connexion|inscription)/.test(pathname)) response.headers.set('X-Robots-Tag', 'noindex, nofollow');
     return response;
   }

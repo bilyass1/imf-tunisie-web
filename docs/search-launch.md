@@ -31,3 +31,35 @@ Références Vercel : https://vercel.com/docs/bot-management et https://vercel.c
 ## Décision : aucune fausse API pour les agents
 
 Ne pas publier `/.well-known/poppy.json`, `/.well-known/openid-configuration`, `/.well-known/oauth-authorization-server`, `/.well-known/oauth-protected-resource`, `/auth.md`, `/.well-known/api-catalog`, `/.well-known/ai-catalog.json`, `/.well-known/agent-skills/index.json`, ni DNS-AID. IMF n'expose aucune API publique pour les agents et l'espace client est privé. Ces métadonnées décriraient des services inexistants, augmenteraient la surface exposée et n'apporteraient pas de bénéfice démontré au référencement.
+
+## Vérifications de production locale
+
+`npm run lint`, `npm run typecheck` et `npm test` vérifient les schémas, les règles des robots et les pages locales. Après `npm run build` et `npm start`, exécuter :
+
+```sh
+node scripts/verify-search-http.cjs http://localhost:3000
+node scripts/test-jsonld.cjs http://localhost:3000
+```
+
+Les contrôles HTTP ont confirmé : bots GPTBot/ClaudeBot/PerplexityBot en 200, JSON-LD et quatre hreflang dans le HTML brut FR/AR/EN, canonical officiel, Link de découverte, caches des textes IA, sitemap de 660 URL, 404 projet absent/CAD/PDF interdit et noindex des espaces privés. Les 660 URL incluent les lots vendus ; le total évoluera avec les projets et articles.
+
+Environnement de validation : le conteneur ne fournit pas `/proc` et refuse certaines inspections système. Un preload local au processus de test remplace uniquement les lectures de mémoire/interfaces indisponibles ; il ne fait pas partie du dépôt ou du code déployé. La compilation de production a réussi dans ces conditions. Aucun secret ou accès à la base de production n'a été utilisé ; les données commerciales en production doivent être contrôlées après déploiement.
+
+### Performance et images
+
+Les vues 3D gardent leurs imports `dynamic(..., {ssr:false})` et leur montage à la visibilité ou au clic, avec une image statique et un espace réservé. Les images des cartes, du footer/logo et des sections sous le hero ne sont plus préchargées en priorité. Les textes alternatifs publics sont renseignés dans la langue affichée, avec `sizes` adaptés.
+
+Lighthouse mobile a été tenté sur `/fr`, mais Chrome ne démarre pas dans cet environnement (échec du port de débogage, puis signal `Trace/breakpoint trap` même sans sandbox). **Aucune valeur LCP/CLS ni réussite des objectifs n'est affirmée.** La fiche projet n'a pas pu être mesurée pour la même raison. À refaire sur une machine disposant de Chrome :
+
+```sh
+npx lighthouse http://localhost:3000/fr --only-categories=performance --output=html --output-path=./lighthouse-home.html
+npx lighthouse http://localhost:3000/fr/projets/residence-la-gloire --only-categories=performance --output=html --output-path=./lighthouse-project.html
+```
+
+Objectifs : LCP < 2,5 s, CLS < 0,1. Contrôler aussi le réseau avant/après défilement : aucun GLB, Draco ou module Three.js ne doit être chargé avant l'approche ou l'ouverture de la vue interactive. Confirmer sur le domaine de production avec ses images et sa base réelles.
+
+### Validation des données structurées
+
+Les tests parsant le JSON-LD serveur vérifient Organization/RealEstateAgent, ApartmentComplex, Apartment, BreadcrumbList et les offres. `Apartment` et les résidences commercialisées avec offre portent aussi le type `Product`, qui fournit le domaine schema.org de la propriété `offers`. Les quantités de logements utilisent `QuantitativeValue`. Aucun prix, avis, GPS, horaire, date de création ou slogan n'est inventé.
+
+La compatibilité de structure ne garantit pas un résultat enrichi Google : `Apartment`/`ApartmentComplex` n'ont pas de résultat enrichi immobilier dédié. Après déploiement, soumettre les URL au https://validator.schema.org/ et au https://search.google.com/test/rich-results . Le contrôle interactif de ces services n'a pas été exécuté dans ce conteneur ; les tests locaux ne sont pas présentés comme une certification par ces services.

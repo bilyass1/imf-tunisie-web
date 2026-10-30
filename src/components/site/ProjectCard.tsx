@@ -12,12 +12,10 @@ export default function ProjectCard({
   project,
   locale,
   dict,
-  priority = false,
 }: {
   project: Project;
   locale: Locale;
   dict: Dictionary;
-  priority?: boolean;
 }) {
   const stats = lotStats(project.lots);
   const isOngoing = project.status === 'ongoing';
@@ -31,10 +29,9 @@ export default function ProjectCard({
       <div className="relative aspect-[4/3] overflow-hidden">
         <Image
           src={project.cover}
-          alt={project.name}
+          alt={locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-          priority={priority}
           quality={90}
           className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.07]"
         />

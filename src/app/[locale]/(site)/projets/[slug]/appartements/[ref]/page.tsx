@@ -180,7 +180,7 @@ export default async function ApartmentPage({
       <section className="relative isolate overflow-hidden bg-ink pb-16 pt-36 lg:pb-20 lg:pt-44">
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image src={project.heroImage} alt="" fill priority sizes="100vw" quality={75} className="object-cover opacity-30" />
+          <Image src={project.heroImage} alt={locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`} fill priority sizes="100vw" quality={75} className="object-cover opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/85 to-ink/60" />
         </div>
 
@@ -270,7 +270,7 @@ export default async function ApartmentPage({
               subtitle={project.slug === 'residence-la-gloire' ? architectModelSubtitle[locale] : dict.maquette.subtitle}
             />
             <div className="mt-10">
-              <LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
+              <LazyMount placeholder={{src:project.cover,alt:locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`}} minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
               <MaquetteSection
                 locale={locale}
                 projectSlug={project.slug}
@@ -386,7 +386,7 @@ export default async function ApartmentPage({
               </p>
             )}
             <div className="mt-10">
-              <LazyMount minHeight={720} desktopMinHeight={850} loadingLabel={dict.pano.loading}>
+              <LazyMount placeholder={{src:project.cover,alt:locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`}} minHeight={720} desktopMinHeight={850} loadingLabel={dict.pano.loading}>
                 <Panorama360
                   poster={project.gallery[0]?.src}
                   rooms={tourRooms}

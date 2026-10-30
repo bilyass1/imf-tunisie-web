@@ -159,7 +159,7 @@ export default function ProjectsExplorer({
         <p className="py-24 text-center text-[15px] text-ink/45">{labels.noResult}</p>
       ) : (
         <div className="grid gap-8 py-14 lg:gap-10">
-          {filtered.map((p, i) => (
+          {filtered.map((p) => (
             <Link
               key={p.slug}
               href={`/${locale}/projets/${p.slug}`}
@@ -168,10 +168,9 @@ export default function ProjectsExplorer({
               <div className="relative aspect-[16/10] overflow-hidden md:aspect-auto md:min-h-[340px]">
                 <Image
                   src={p.cover}
-                  alt={p.name}
+                  alt={locale==='ar'?`مشهد من ${p.name}`:locale==='en'?`View of ${p.name}`:`Vue de ${p.name}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 55vw"
-                  priority={i === 0}
                   className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]"
                 />
                 <div className="absolute start-4 top-4 flex flex-wrap gap-2">

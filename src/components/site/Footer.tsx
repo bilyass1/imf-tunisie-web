@@ -51,6 +51,7 @@ export default async function Footer({ locale, dict }: { locale: Locale; dict: D
               { label: dict.nav.home, href: `/${locale}` },
               { label: dict.nav.group, href: `/${locale}/groupe` },
               { label: dict.nav.projects, href: `/${locale}/projets` },
+              ...(['sfax','tunis'] as const).map(city=>({label:locale==='ar'?`شقق للبيع في ${city==='sfax'?'صفاقس':'تونس'}`:locale==='en'?`Apartments in ${city==='sfax'?'Sfax':'Tunis'}`:`Appartements à ${city==='sfax'?'Sfax':'Tunis'}`,href:`/${locale}/appartements-${city}`})),
               { label: locale === 'ar' ? 'البحث عن شقة' : locale === 'en' ? 'Find an apartment' : 'Trouver un appartement', href: `/${locale}/recherche` },
               { label: locale === 'ar' ? 'اختياراتي' : locale === 'en' ? 'My selection' : 'Ma sélection', href: `/${locale}/selection` },
               { label: locale === 'ar' ? 'أدلة عقارية' : locale === 'en' ? 'Property guides' : 'Guides immobiliers', href: `/${locale}/guides` },

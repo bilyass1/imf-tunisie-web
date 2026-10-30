@@ -18,7 +18,9 @@ export function llmsText(projects: Project[], full = false) {
     ...locales.map(locale => `- [Accueil ${locale.toUpperCase()}](${SITE.url}/${locale})`),
     `- [Sitemap multilingue](${SITE.url}/sitemap.xml)`,
     `- [Contenu détaillé](${SITE.url}/llms-full.txt)`, '',
-    agentCautions, '', '## Projets', '',
+    agentCautions, '', '## Appartements par ville', '',
+    ...(['sfax','tunis'] as const).flatMap(city=>locales.map(locale=>`- [Appartements ${city} — ${locale.toUpperCase()}](${SITE.url}/${locale}/appartements-${city})`)),
+    '', '## Projets', '',
   ];
   for (const project of projects) {
     for (const locale of locales) lines.push(`- [${project.name} — ${locale.toUpperCase()}](${SITE.url}${projectPath(project, locale)}): ${project.city}, ${statusLabels[project.status]}. ${project.address[locale]}`);

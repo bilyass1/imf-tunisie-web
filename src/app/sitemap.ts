@@ -5,7 +5,7 @@ import { getProjects, getNews } from '@/lib/db';
 import { LA_GLOIRE_DOCUMENTS } from '@/lib/la-gloire-documents';
 import { propertyGuides } from '@/lib/property-guides';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const paths = ['', '/groupe', '/contact', '/projets', '/actualites', '/recherche', '/guides'];
+  const paths = ['', '/groupe', '/contact', '/projets', '/actualites', '/recherche', '/guides', '/appartements-sfax', '/appartements-tunis'];
   for (const guide of propertyGuides) paths.push(`/guides/${guide.slug}`);
   for (const article of (await getNews())) paths.push(`/actualites/${article.slug}`);
   for (const project of (await getProjects())) {

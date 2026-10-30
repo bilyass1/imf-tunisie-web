@@ -140,6 +140,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
           )}
         </div>
       </PageHero>
+      <nav className="container-lux py-4 text-sm" aria-label={locale==='ar'?'شقق حسب المدينة':locale==='en'?'Apartments by city':'Appartements par ville'}>
+        <Link className="underline underline-offset-4" href={`/${locale}/appartements-${project.city.toLowerCase()==='tunis'?'tunis':'sfax'}`}>{locale==='ar'?`شقق للبيع في ${project.city==='Tunis'?'تونس':'صفاقس'}`:locale==='en'?`Apartments for sale in ${project.city}`:`Appartements à vendre à ${project.city}`}</Link>
+      </nav>
+
 
       {/* ---- Sous-navigation ---- */}
       <div className="sticky top-[76px] z-30 border-b border-ink/8 bg-ivory/95 backdrop-blur-lg lg:top-[84px]">

@@ -24,7 +24,7 @@ import AvailabilityPlan from '@/components/site/AvailabilityPlan';
 import CreditSimulator from '@/components/site/CreditSimulator';
 import YassamineFinancing from '@/components/site/YassamineFinancing';
 import ProgressMeter from '@/components/site/ProgressMeter';
-import { alternates } from '@/lib/seo';
+import { alternates, jsonLd, projectSchema } from '@/lib/seo';
 import { AMENITY_ICONS, IconArrow, IconCheck, IconPin, IconPlay } from '@/components/Icons';
 
 // Gallery photos and construction progress are edited in the commercial panel.
@@ -118,11 +118,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd(projectSchema(project,locale))}} />
       <PageHero
         eyebrow={t(project.subtitle, locale)}
         title={project.slug === 'complexe-marassim' ? 'COMPLEXE MARASSIM' : project.name}
         subtitle={t(project.address, locale)}
         image={project.heroImage}
+        imageAlt={locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`}
         breadcrumb={[
           { label: dict.nav.home, href: `/${locale}` },
           { label: dict.nav.projects, href: `/${locale}/projets` },
@@ -139,6 +141,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
           )}
         </div>
       </PageHero>
+      <nav className="container-lux py-4 text-sm" aria-label={locale==='ar'?'شقق حسب المدينة':locale==='en'?'Apartments by city':'Appartements par ville'}>
+        <Link className="underline underline-offset-4" href={`/${locale}/appartements-${project.city.toLowerCase()==='tunis'?'tunis':'sfax'}`}>{locale==='ar'?`شقق للبيع في ${project.city==='Tunis'?'تونس':'صفاقس'}`:locale==='en'?`Apartments for sale in ${project.city}`:`Appartements à vendre à ${project.city}`}</Link>
+      </nav>
+
 
       {/* ---- Sous-navigation ---- */}
       <div className="sticky top-[76px] z-30 border-b border-ink/8 bg-ivory/95 backdrop-blur-lg lg:top-[84px]">
@@ -378,7 +384,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
       </section>
 
       {/* ---- Maquette 3D interactive ---- */}
-      {project.slug === 'diar-al-yassamine' && <div id="maquette" className="container-lux scroll-mt-[170px] py-12"><LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}><YassamineMaquette locale={locale} lots={project.lots.map(({ ref, code, block, floor }) => ({ ref, code, block, floor }))} planContact={{ phone: SITE.office.phones[0], email: SITE.email, website: SITE.url }} /></LazyMount></div>}
+      {project.slug === 'diar-al-yassamine' && <div id="maquette" className="container-lux scroll-mt-[170px] py-12"><LazyMount placeholder={{src:project.cover,alt:locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`}} minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}><YassamineMaquette locale={locale} lots={project.lots.map(({ ref, code, block, floor }) => ({ ref, code, block, floor }))} planContact={{ phone: SITE.office.phones[0], email: SITE.email, website: SITE.url }} /></LazyMount></div>}
       {project.slug !== 'diar-al-yassamine' && project.massing && project.lots.length > 0 && (
         <section id="maquette" className="scroll-mt-[170px] bg-ink py-24 lg:py-28">
           <div className="container-lux">
@@ -389,7 +395,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
               light
             />
             <div className="mt-12 overflow-hidden rounded-2xl ring-1 ring-white/10">
-              <LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
+              <LazyMount placeholder={{src:project.cover,alt:locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`}} minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
               <MaquetteSection
                 locale={locale}
                 projectSlug={project.slug}

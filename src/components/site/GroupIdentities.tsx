@@ -35,7 +35,7 @@ export default function GroupIdentities({ locale }: { locale: Locale }) {
           {identities.map(identity => {
             const contents = <>
               <div className="relative aspect-[3/2] overflow-hidden border-b border-ink/5" style={{ backgroundColor: identity.background }}>
-                <Image src={`/brands/${identity.id}.webp`} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" className={`object-contain ${identity.id === 'la-gloire' ? 'scale-150' : identity.id === 'sma' || identity.id === 'sms' ? '' : 'p-6'}`} />
+                <Image src={`/brands/${identity.id}.webp`} alt={locale==='ar'?`شعار ${identity.name}`:`Logo ${identity.name}`} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw" className={`object-contain ${identity.id === 'la-gloire' ? 'scale-150' : identity.id === 'sma' || identity.id === 'sms' ? '' : 'p-6'}`} />
               </div>
               <div className="p-6"><h3 className="font-display text-2xl" dir="auto">{identity.name}</h3>
                 {identity.id === 'sms' && <p className="mt-3 text-sm leading-relaxed text-ink/65">{smsDescription[locale]}</p>}

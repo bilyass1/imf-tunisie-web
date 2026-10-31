@@ -18,7 +18,7 @@ import ApartmentInterior from '@/components/site/ApartmentInterior';
 import YassamineFinancing from '@/components/site/YassamineFinancing';
 import ProgressMeter from '@/components/site/ProgressMeter';
 import Gallery from '@/components/site/Gallery';
-import { alternates, jsonLd } from '@/lib/seo';
+import { alternates, jsonLd, apartmentSchema, projectBreadcrumbs } from '@/lib/seo';
 import LazyMount from '@/components/site/LazyMount';
 import CreditSimulator from '@/components/site/CreditSimulator';
 import { IconArrow, IconArrowLeft, IconCheck, IconPhone, IconPin } from '@/components/Icons';
@@ -173,19 +173,14 @@ export default async function ApartmentPage({
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd({
-        '@context': 'https://schema.org', '@type': 'Apartment', name: `${lot.code} · ${project.name}`,
-        url: `${SITE.url}/${locale}/projets/${project.slug}/appartements/${lot.ref}`,
-        image: `${SITE.url}${project.cover}`, numberOfBedrooms: Number(lot.typology.replace(/\D/g, '')) || undefined,
-        floorSize: lot.sellableArea ? { '@type': 'QuantitativeValue', value: lot.sellableArea, unitCode: 'MTK' } : undefined,
-        address: { '@type': 'PostalAddress', streetAddress: t(project.address, locale), addressLocality: project.city, addressCountry: 'TN' },
-        offers: lot.price && lot.status === 'available' ? { '@type': 'Offer', price: lot.price, priceCurrency: 'TND', url: `${SITE.url}/${locale}/projets/${project.slug}/appartements/${lot.ref}` } : undefined,
-      }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd({
+        '@context':'https://schema.org','@graph':[apartmentSchema(project,lot,locale),projectBreadcrumbs(project,locale,lot)],
+      })}} />
       {/* ---- En-tête ---- */}
       <section className="relative isolate overflow-hidden bg-ink pb-16 pt-36 lg:pb-20 lg:pt-44">
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image src={project.heroImage} alt="" fill priority sizes="100vw" quality={75} className="object-cover opacity-30" />
+          <Image src={project.heroImage} alt={locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`} fill priority sizes="100vw" quality={75} className="object-cover opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/85 to-ink/60" />
         </div>
 
@@ -275,7 +270,7 @@ export default async function ApartmentPage({
               subtitle={project.slug === 'residence-la-gloire' ? architectModelSubtitle[locale] : dict.maquette.subtitle}
             />
             <div className="mt-10">
-              <LazyMount minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
+              <LazyMount placeholder={{src:project.cover,alt:locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`}} minHeight={920} desktopMinHeight={960} loadingLabel={locale === 'ar' ? 'تحميل المجسم…' : locale === 'en' ? 'Loading the 3D model…' : 'Chargement de la maquette 3D…'}>
               <MaquetteSection
                 locale={locale}
                 projectSlug={project.slug}
@@ -391,7 +386,7 @@ export default async function ApartmentPage({
               </p>
             )}
             <div className="mt-10">
-              <LazyMount minHeight={720} desktopMinHeight={850} loadingLabel={dict.pano.loading}>
+              <LazyMount placeholder={{src:project.cover,alt:locale==='ar'?`مشهد من ${project.name}`:locale==='en'?`View of ${project.name}`:`Vue de ${project.name}`}} minHeight={720} desktopMinHeight={850} loadingLabel={dict.pano.loading}>
                 <Panorama360
                   poster={project.gallery[0]?.src}
                   rooms={tourRooms}

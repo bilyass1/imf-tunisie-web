@@ -16,7 +16,7 @@
 - `npm test` : réussi, dont comptes commerciaux, messages, documents, demandes de visite, PWA et aller-retour PostgreSQL sur base de test isolée.
 - `npm audit --omit=dev --audit-level=high` : aucune vulnérabilité signalée dans les dépendances de production à cette date. Cela ne constitue pas un audit de sécurité exhaustif.
 - `npm run build` : réussi dans `.next-quality-20260923`, avec vérification TypeScript et génération des 153 pages prévues par la compilation.
-- `node scripts/verify-site-quality.cjs` : 27 URL de production locale répondent HTTP 200 ; canonical du domaine `imf-immobilere.tn`, noindex des recherches filtrées et de la sélection, mentions 360° adaptées aux panoramas présents. Résultats dans `docs/site-quality-check-20260923.json`.
+- `node scripts/verify-site-quality.cjs` : 27 URL de production locale répondent HTTP 200 ; canonical du domaine `imf-immobiliere.tn`, noindex des recherches filtrées et de la sélection, mentions 360° adaptées aux panoramas présents. Résultats dans `docs/site-quality-check-20260923.json`.
 - Navigateur : intervalle de budget inversé puis réinitialisé, retour à 12 cartes, fermeture du menu mobile sur la route courante, changement de résidence effaçant le lot, limites de calendrier, galerie suivante avec la bonne image, absence de débordement sur les écrans contrôlés à 390 px ; recherche arabe RTL à 768 px.
 - Le geste tactile a été implémenté ; le balayage sur un véritable téléphone reste à vérifier. Aucun score Lighthouse ou PageSpeed public n’a été mesuré pendant cette étape.
 

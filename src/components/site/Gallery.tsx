@@ -131,7 +131,6 @@ export default function Gallery({
                 onLoad={() => { setLoadedSrc(items[index].src); setFailedSrc(''); }}
                 onError={() => setFailedSrc(items[index].src)}
                 className={`object-contain transition-opacity motion-reduce:transition-none ${loadedSrc === items[index].src && failedSrc !== items[index].src ? 'opacity-100' : 'opacity-0'}`}
-                priority
               />
             </div>
 

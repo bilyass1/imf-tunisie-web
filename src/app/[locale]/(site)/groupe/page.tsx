@@ -69,10 +69,10 @@ export default async function GroupPage({ params }: { params: Promise<{ locale: 
 
           <Reveal delay={90} className="grid grid-cols-2 gap-4">
             <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
-              <Image src="/media/diar-al-andalous-1/facade-1.jpg" alt="" fill sizes="25vw" className="object-cover" />
+              <Image src="/media/diar-al-andalous-1/facade-1.jpg" alt={locale==='ar'?'واجهة ديار الأندلس، صفاقس':locale==='en'?'Diar Al Andalous facade, Sfax':'Façade de Diar Al Andalous, Sfax'} fill sizes="25vw" className="object-cover" />
             </div>
             <div className="relative mt-10 aspect-[3/4] overflow-hidden rounded-2xl">
-              <Image src="/media/marassim/hall-1.jpg" alt="" fill sizes="25vw" className="object-cover" />
+              <Image src="/media/marassim/hall-1.jpg" alt={locale==='ar'?'بهو مركب مراسم، صفاقس':locale==='en'?'Marassim complex hall, Sfax':'Hall du complexe Marassim, Sfax'} fill sizes="25vw" className="object-cover" />
             </div>
           </Reveal>
         </div>

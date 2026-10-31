@@ -8,6 +8,7 @@ export default function PageHero({
   title,
   subtitle,
   image,
+  imageAlt,
   breadcrumb,
   children,
   compact = false,
@@ -17,6 +18,7 @@ export default function PageHero({
   title: string;
   subtitle?: string;
   image: string;
+  imageAlt?: string;
   breadcrumb?: { label: string; href: string }[];
   children?: ReactNode;
   compact?: boolean;
@@ -26,7 +28,7 @@ export default function PageHero({
     <section className={`relative isolate overflow-hidden bg-ink ${compact ? 'min-h-[58vh]' : 'min-h-[70vh]'}`}>
       <div className={brandArtwork ? 'absolute inset-x-0 top-20 h-64 lg:inset-0 lg:h-auto' : 'absolute inset-0'}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <Image src={image} alt="" fill priority quality={75} sizes="100vw" className={brandArtwork ? 'object-cover object-right' : 'object-cover'} />
+        <Image src={image} alt={imageAlt ?? title} fill priority quality={75} sizes="100vw" className={brandArtwork ? 'object-cover object-right' : 'object-cover'} />
         <div className={brandArtwork ? 'absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent lg:from-ink/60' : 'absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/45 to-ink/20'} />
       </div>
 

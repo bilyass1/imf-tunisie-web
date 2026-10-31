@@ -116,7 +116,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
               <Image
                 src="/media/imf/siege.jpg"
-                alt="Siège IMF — Immobilière Mseddi Frères"
+                alt={locale==='ar'?'مقر شركة IMF العقارية في صفاقس':locale==='en'?'IMF property developer office in Sfax':'Siège IMF — Immobilière Mseddi Frères à Sfax'}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
@@ -169,7 +169,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {featuredProjects.map((project, i) => (
               <Reveal key={project.slug} delay={i * 110}>
                 <div dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-                  <ProjectCard project={project} locale={locale} dict={dict} priority={i === 0} />
+                  <ProjectCard project={project} locale={locale} dict={dict} />
                 </div>
               </Reveal>
             ))}
@@ -181,7 +181,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="relative isolate overflow-hidden bg-ink py-24 lg:py-32">
         <div className="absolute inset-0 opacity-[0.14]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image src="/media/la-gloire/facade-nuit-1.jpg" alt="" fill priority sizes="100vw" quality={72} className="object-cover" />
+          <Image src="/media/la-gloire/facade-nuit-1.jpg" alt={locale==='ar'?'واجهة إقامة لاغلوار ليلا، تونس':locale==='en'?'Residence La Gloire facade at night, Tunis':'Façade de la Résidence La Gloire de nuit, Tunis'} fill sizes="100vw" quality={72} className="object-cover" />
         </div>
         <div className="container-lux relative">
           <SectionHeading
@@ -239,7 +239,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="relative isolate overflow-hidden bg-ink">
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image src="/media/la-gloire/patio-jour-1.jpg" alt="" fill sizes="100vw" quality={60} className="object-cover opacity-25" />
+          <Image src="/media/la-gloire/patio-jour-1.jpg" alt={locale==='ar'?'الفناء الداخلي لإقامة لاغلوار، تونس':locale==='en'?'Residence La Gloire courtyard, Tunis':'Patio de la Résidence La Gloire, Tunis'} fill sizes="100vw" quality={60} className="object-cover opacity-25" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/55" />
         </div>
         <div className="container-lux relative flex flex-col items-start gap-8 py-20 lg:flex-row lg:items-center lg:justify-between lg:py-24">

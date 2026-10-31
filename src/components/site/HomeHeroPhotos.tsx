@@ -67,12 +67,13 @@ export default function HomeHeroPhotos({ initialImage, additionalImages, locale 
     return () => window.clearTimeout(timer);
   }, [activeIndex, firstLoaded, loadedImages, images, paused, reducedMotion, pageVisible]);
 
+  const imageAlt = locale==='ar'?'إقامات IMF العقارية في تونس وصفاقس':locale==='en'?'IMF residences in Tunis and Sfax':'Résidences IMF à Tunis et Sfax';
   return (
     <>
-      <Image src={initialImage} alt="" fill priority quality={80} sizes="100vw"
+      <Image src={initialImage} alt={imageAlt} fill priority quality={80} sizes="100vw"
         className="object-cover object-[60%_center]" onLoad={() => { firstPaintAt.current ??= Date.now(); setFirstLoaded(true); }} />
       {firstLoaded && !reducedMotion && images.slice(1, requestedCount + 1).map((src, index) => (
-        <Image key={src} src={src} alt="" fill quality={80} sizes="100vw" loading="eager" fetchPriority="low"
+        <Image key={src} src={src} alt={imageAlt} fill quality={80} sizes="100vw" loading="eager" fetchPriority="low"
           onLoad={() => setLoadedImages(current => current.includes(src) ? current : [...current, src])}
           onError={() => setFailedImages(current => current.includes(src) ? current : [...current, src])}
           className={`object-cover object-[60%_center] transition-opacity duration-[1800ms] ease-in-out motion-reduce:transition-none ${activeIndex === index + 1 && loadedImages.includes(src) ? 'opacity-100' : 'opacity-0'}`} />

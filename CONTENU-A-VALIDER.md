@@ -146,3 +146,15 @@ DOM prêt **0,76 s**, 0 requête `HEAD`.
 ⚠️ Rappel : le site tourne encore en mode développement (`npm run dev`), qui recompile chaque page
 au premier accès — c'est ce qu'on voit dans les journaux (`Compiling /[locale]/projets…`). Pour juger
 de la vitesse réelle, lancer `npm run build` puis `npm start`.
+
+
+## Référencement et données structurées — informations manquantes
+
+- Liens officiels des pages Facebook, Instagram et LinkedIn : **à fournir par IMF**. Les racines génériques des plateformes ne sont jamais émises dans `sameAs`.
+- Coordonnées GPS précises de Sfax et Tunis Ennasr : **à fournir par IMF** ; aucun point approximatif n'est publié.
+- Horaires d'ouverture des deux implantations : **à fournir par IMF**.
+- Date de création documentée : **à fournir par IMF** ; aucune date n'est déduite du registre de commerce ou du nombre d'années affiché.
+- Slogan explicitement validé : **à fournir par IMF**.
+- Nombre total d'appartements des programmes autres que La Gloire (102 plans) et Diar Al Yassamine (177, présentation validée) : **à fournir par IMF**. Le nombre de fiches en ligne ne remplace pas le total d'un programme.
+- Surfaces manquantes et prix écrits des lots sans tarif public : **à fournir par IMF**. Les champs absents ne reçoivent aucune estimation ; les lots vendus sans prix publié gardent uniquement leur statut SoldOut.
+- Adresse et quartier des projets : confirmer les libellés déjà publiés ; l'API ne fournit pas de champ de quartier séparé, l'adresse documentée est conservée telle quelle.

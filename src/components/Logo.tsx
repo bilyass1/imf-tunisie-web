@@ -13,10 +13,10 @@ export function LogoMark({ className = '', light = false }: { className?: string
   return (
     <Image
       src={light ? '/media/brand/logo-mark-blanc.png' : '/media/brand/logo-mark.png'}
-      alt=""
+      alt={SITE.legalName}
+      sizes="80px"
       width={80}
       height={104}
-      priority
       className={`w-auto object-contain ${className}`}
       aria-hidden="true"
     />
@@ -29,6 +29,7 @@ export function LogoLockup({ className = '', light = false }: { className?: stri
     <Image
       src={light ? '/media/brand/logo-imf-blanc.png' : '/media/brand/logo-imf.png'}
       alt={SITE.legalName}
+      sizes="(max-width: 768px) 50vw, 400px"
       width={1400}
       height={721}
       className={`w-auto object-contain ${className}`}

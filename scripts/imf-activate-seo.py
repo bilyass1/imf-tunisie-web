@@ -28,8 +28,10 @@ DROPIN = Path('/etc/systemd/system/imf-validation.service.d/zz-seo-candidate-645
 UNIT = 'imf-validation'
 DOMAIN = 'imf-immobiliere.tn'
 CONFIG = ('[Service]\nWorkingDirectory=' + str(CANDIDATE) + '\nExecStart=\n'
-          'ExecStart=/usr/bin/env IMF_BUILD_DIR=.next-seo /usr/bin/node ' + str(CANDIDATE) +
-          '/node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 3001\n')
+          # NextURL normalizes 127.0.0.1 to localhost. Matching its internal
+          # hostname keeps Markdown rewrites internal behind a TLS proxy.
+          'ExecStart=/usr/bin/env IMF_BUILD_DIR=.next-seo /usr/bin/node --dns-result-order=ipv4first ' + str(CANDIDATE) +
+          '/node_modules/next/dist/bin/next start --hostname localhost --port 3001\n')
 
 
 def require(condition, message):

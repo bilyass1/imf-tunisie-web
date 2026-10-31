@@ -236,9 +236,9 @@ def validate():
         probe.bind(('127.0.0.1', 3100))
     logfile = ROOTSTATE / 'seo-server.log'
     with logfile.open('w') as output:
-        server = subprocess.Popen(['/usr/sbin/runuser', '-u', 'imf', '--', '/usr/bin/node',
+        server = subprocess.Popen(['/usr/sbin/runuser', '-u', 'imf', '--', '/usr/bin/node', '--dns-result-order=ipv4first',
                                    str(CANDIDATE / 'node_modules/next/dist/bin/next'),
-                                   'start', '--hostname', '127.0.0.1', '--port', '3100'],
+                                   'start', '--hostname', 'localhost', '--port', '3100'],
                                   cwd=CANDIDATE, env=clean_environment(), stdout=output,
                                   stderr=subprocess.STDOUT, start_new_session=True)
         try:

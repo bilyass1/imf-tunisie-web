@@ -2,6 +2,10 @@ const assert = require('node:assert/strict');
 const {load} = require('./seo-test-utils.cjs');
 const {SITE} = load('src/lib/site.ts');
 const origin = process.argv[2] || 'http://localhost:3000';
+const variesOnAccept = value => /(?:^|,)\s*accept\s*(?:,|$)/i.test(value ?? '');
+assert(!variesOnAccept('Accept-Encoding'));
+assert(!variesOnAccept('RSC, Accept-Encoding'));
+assert(variesOnAccept('RSC, Accept, Accept-Encoding'));
 async function get(path, headers = {}) {
   const response = await fetch(origin + path, {headers, redirect:'manual',signal:AbortSignal.timeout(30000)});
   const body = await response.text();
@@ -24,7 +28,8 @@ async function main() {
     assert(body.includes(`rel="canonical" href="${SITE.url}/${locale}"`));
     assert.equal((body.match(/<h1\b/g)||[]).length,1);
     assert(response.headers.get('content-security-policy').includes("'nonce-"));
-    assert(/\baccept\b/i.test(response.headers.get('vary')));
+    // Next.js can replace Vary on HTML responses. The Markdown representation
+    // must advertise the exact Accept token to keep shared caches separated.
     assert(response.headers.get('link')?.includes('</llms.txt>; rel="describedby"'));
     assert(response.headers.get('link')?.includes('</sitemap.xml>; rel="sitemap"'));
     console.log(`PASS: /${locale}, ${scripts.length} scripts JSON-LD, canonical et quatre hreflang dans le HTML serveur.`);
@@ -39,13 +44,15 @@ async function main() {
     assert((body.match(/<title>([^<]+)<\/title>/)?.[1]||'').length<60,path);
     assert((body.match(/<meta name="description" content="([^"]*)"/)?.[1]||'').length<155,path);
   }
-  for(const path of ['/fr','/ar','/en','/fr/projets','/ar/projets/diar-al-yassamine','/en/projets/residence-la-gloire/appartements/A43','/fr/guides','/fr/guides/foprolos-questions-banque-premier-logement','/fr/contact','/ar/appartements-sfax']) {
+  for(const path of ['/fr','/ar','/en','/fr/projets','/ar/projets/diar-al-yassamine','/fr/projets/residence-la-gloire','/en/projets/residence-la-gloire/appartements/A43','/fr/guides','/fr/guides/foprolos-questions-banque-premier-logement','/fr/contact','/fr/appartements-sfax','/ar/appartements-sfax','/ar/appartements-tunis','/en/appartements-sfax']) {
     const {response,body}=await get(path,{Accept:'text/markdown'});
     assert.equal(response.status,200,path);
     assert(response.headers.get('content-type').startsWith('text/markdown'),path);
-    assert(/\baccept\b/i.test(response.headers.get('vary')));
+    assert(variesOnAccept(response.headers.get('vary')),`${path}: Vary must contain Accept, not just Accept-Encoding`);
     assert(body.startsWith('# ') && !body.includes('<script'),path);
   }
+  const forged=await get('/api/markdown',{'x-markdown-path':'/fr/admin'});
+  assert.equal(forged.response.status,404,'Forged private path in header');
   const htmlDefault=await get('/fr',{Accept:'text/markdown;q=0, text/html'});
   assert(htmlDefault.response.headers.get('content-type').startsWith('text/html'));
   for(const path of ['/api/markdown?path=%2Ffr%2Fadmin','/api/markdown?path=%2Ffr%2Fespace-client','/fr/projets/absent']) {

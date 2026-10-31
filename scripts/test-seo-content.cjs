@@ -28,7 +28,10 @@ console.log('PASS: textes IA multilingues, lots disponibles, prix connus et donn
   const robots=await response.text();
   assert(robots.includes('Content-Signal: search=yes, ai-input=yes, ai-train=yes'));
   assert(robots.includes('Sitemap: '+SITE.url+'/sitemap.xml'));
-  for(const group of robots.trim().split(/\n\n/).slice(0,2)) {
+  const groups=robots.trim().split(/\n\s*\n/).filter(group=>/^User-agent:/m.test(group));
+  assert.equal(groups.length,2);
+  for(const group of groups) {
+    assert(group.includes('Content-Signal: search=yes, ai-input=yes, ai-train=yes'));
     for(const restricted of ['/api/','/*/admin','/*/espace-client','/*/connexion','/*/inscription']) assert(group.includes('Disallow: '+restricted));
   }
   for(const bot of ['Googlebot','Bingbot','GPTBot','OAI-SearchBot','ChatGPT-User','ClaudeBot','Claude-SearchBot','Claude-User','PerplexityBot','Perplexity-User','Google-Extended','Applebot-Extended']) assert(robots.includes('User-agent: '+bot));

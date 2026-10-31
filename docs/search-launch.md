@@ -1,6 +1,6 @@
 # Search launch — imf-immobiliere.tn
 
-Le domaine officiel est https://imf-immobiliere.tn ; le contact public configuré est contact@imf-immobiliere.tn. The code uses this exact domain spelling as its canonical origin. Configure the domain in Vercel and DNS, enable HTTPS, and redirect www to this origin. Redirect any owned former site domain permanently to the matching new URL. Mailbox hosting and delivery are separate from the public contact address and have not been tested in this change.
+Le domaine officiel est https://imf-immobiliere.tn ; le contact public configuré est contact@imf-immobiliere.tn. The code uses this exact domain spelling as its canonical origin. Configurer le domaine et les DNS sur l’hébergeur qui sert effectivement la production, activer HTTPS et rediriger www vers cette origine. La procédure VPS/OVH identifiée est décrite ci-dessous. Redirect any owned former site domain permanently to the matching new URL. Mailbox hosting and delivery are separate from the public contact address and have not been tested in this change.
 
 After deployment, check /robots.txt, /sitemap.xml and /llms.txt without authentication. Public pages permit crawling; account/admin pages carry noindex. Robots rules do not replace authentication.
 
@@ -18,7 +18,7 @@ Audit du dépôt : aucun `vercel.json`, aucune règle WAF ni filtre de User-Agen
 
 Le test HTTP de la production existante avec `GPTBot/1.1` sur `/fr` a renvoyé 200 avec du HTML, quatre scripts JSON-LD et les alternatives `fr`, `ar`, `en`, `x-default`. Cela ne prouve pas le passage de tous les robots depuis leurs réseaux réels. Le refus précédemment signalé n'a pas été reproduit et sa cause n'est pas établie. Le compte Vercel connecté ne trouve pas ce projet et ne dispose d'aucune équipe accessible : la configuration du tableau de bord n'a donc pas pu être inspectée.
 
-Si un refus persiste après déploiement :
+Si un refus persiste après déploiement, identifier d’abord l’hébergement réellement servi. Pour le VPS/OVH documenté, examiner les accès et erreurs Nginx, le service `imf-validation` et les protections éventuellement placées en amont. Les étapes Vercel ci-dessous ne concernent qu’un déploiement effectivement servi par Vercel, par exemple une prévisualisation :
 
 1. Ouvrir le projet IMF dans Vercel, **Security → Firewall → Traffic**, filtrer l'URL, l'heure du refus et le robot ; relever la règle/action responsable et l'identifiant de requête. Un User-Agent envoyé avec curl n'authentifie pas le robot.
 2. Dans **Security → Firewall → Rules → Bot Management → AI Bots**, ouvrir les réglages et choisir **Log** pour **AI crawlers** et **AI assistants**, puis **Review Changes → Publish**. Cela permet le passage tout en conservant la journalisation. Ne pas laisser ces catégories en **Deny** si l'objectif est leur accès public.
@@ -60,13 +60,13 @@ Objectifs : LCP < 2,5 s, CLS < 0,1. Contrôler aussi le réseau avant/après dé
 
 ### Validation des données structurées
 
-Les tests parsant le JSON-LD serveur vérifient Organization/RealEstateAgent, ApartmentComplex, Apartment, BreadcrumbList et les offres. `Apartment` et les résidences commercialisées avec offre portent aussi le type `Product`, qui fournit le domaine schema.org de la propriété `offers`. Les quantités de logements utilisent `QuantitativeValue`. Aucun prix, avis, GPS, horaire, date de création ou slogan n'est inventé.
+Les tests parsant le JSON-LD serveur vérifient Organization/RealEstateAgent, ApartmentComplex, Apartment, BreadcrumbList et les offres. Seuls les appartements disponibles avec un prix documenté portent aussi `Product`. Les lots vendus restent `Apartment` avec `SoldOut`. Une résidence ne porte `Product` que si son `AggregateOffer` contient une fourchette issue de prix documentés. Les quantités de logements utilisent `QuantitativeValue`. Aucun prix, avis, GPS, horaire, date de création ou slogan n'est inventé.
 
 La compatibilité de structure ne garantit pas un résultat enrichi Google : `Apartment`/`ApartmentComplex` n'ont pas de résultat enrichi immobilier dédié. Après déploiement, soumettre les URL au https://validator.schema.org/ et au https://search.google.com/test/rich-results . Le contrôle interactif de ces services n'a pas été exécuté dans ce conteneur ; les tests locaux ne sont pas présentés comme une certification par ces services.
 
 ## Markdown négocié
 
-Les pages publiques d'accueil, projets, résidences, appartements, guides, contact et pages locales peuvent répondre à `Accept: text/markdown`. Une liste blanche partagée protège à la fois le rewrite et le gestionnaire `/api/markdown` : aucune route admin, client ou d'authentification n'est acceptée. Le contenu provient de `getProjects()`, des dictionnaires et des guides ; aucun HTML n'est scrapé. Les requêtes RSC et les préférences HTML restent en HTML. Les deux représentations annoncent `Vary: Accept`, la CSP et les liens de découverte sont conservés. Les URL avec paramètres gardent `noindex, follow` dans la représentation Markdown.
+Les pages publiques d'accueil, projets, résidences, appartements, guides, contact et pages locales peuvent répondre à `Accept: text/markdown`. Une liste blanche partagée protège à la fois le rewrite et le gestionnaire `/api/markdown` : aucune route admin, client ou d'authentification n'est acceptée. Le contenu provient de `getProjects()`, des dictionnaires et des guides ; aucun HTML n'est scrapé. Les requêtes RSC et les préférences HTML restent en HTML. La réponse Markdown annonce explicitement `Vary: Accept` ; Next.js peut remplacer cet en-tête sur le HTML, qui ne fait donc pas l’objet d’une garantie équivalente. La CSP et les liens de découverte sont conservés. Les URL avec paramètres gardent `noindex, follow` dans la représentation Markdown.
 
 Le contrôle final a aussi confirmé les six pages locales et les routes Markdown en français, arabe et anglais. Pour extraire les attributs hreflang avec curl, utiliser `grep -io 'hreflang="[a-z-]*"'` : React écrit `hrefLang` dans le HTML, ce qui est valide car les noms d'attributs HTML sont insensibles à la casse.
 
@@ -79,3 +79,48 @@ L'envoi d'un échantillon JSON-LD au validateur externe a été rejeté par le c
 - Valider les fiches Google Business Profile de Sfax et Tunis Ennasr avec des coordonnées cohérentes, photos et avis authentiques.
 - Vérifier le WAF et les accès réels comme décrit plus haut. Le compte Vercel connecté ici ne permet pas leur inspection.
 - Fournir les informations de `CONTENU-A-VALIDER.md`, compléter les vraies pages sociales et les liens externes ; contrôler les citations et l'indexation dans 4 à 8 semaines.
+
+
+## Méthode de déploiement identifiée avant fusion
+
+Le dépôt documente une procédure **VPS/OVH avec Next.js derrière Nginx et systemd**. Il ne faut pas déduire l’hébergement de production des seules prévisualisations Vercel. Preuves consultées :
+
+- `README.md`, section déploiement : serveur Node/VPS avec `npm run build` puis `npm start` derrière Nginx.
+- Branche `deploy/pr4-ovh`, révision `67a6a0574b1d4ef0f89e8cecdb9aa804873bd022`, fichier `deploy/deploy-pr4-ovh.sh` : application `/srv/imf/app`, service `imf-validation`, configuration Nginx `imf-tn`, builds séparés, sauvegarde/restauration, Next lié à `127.0.0.1:3001`, bascule du proxy et contrôles HTTPS du domaine officiel.
+- Dans cette branche, `deploy/prepare-pr4.py` applique une intégration ciblée en préservant les changements locaux ; sa liste de fichiers ne couvre pas à elle seule toute cette PR SEO (notamment le verrou de dépendances et la documentation).
+- Branche `deploy/vps-resolution-20261028`, révision `3c8eb156af13caec09d2f866c1e8f07320274cbf`, fichier `scripts/resolve-vps-merge.cjs` : réparation ponctuelle d’une intégration PR4 dans le checkout VPS avec sauvegarde et vérifications des conflits.
+
+Aucun accès au VPS ni aucune commande de déploiement n’a été exécuté pendant cette revue. L’opérateur doit confirmer la révision active et intégrer les corrections approuvées en préservant les changements spécifiques du serveur. Ne pas lancer les scripts PR4 tels quels pour cette PR : ils sont ciblés sur une ancienne intégration, des listes de fichiers et des contrôles de ressources/préchargement spécifiques. Adapter et revoir la procédure, inclure `package.json` **et** `package-lock.json`, faire les sauvegardes, reconstruire et tester avant la bascule. Aucun merge automatique vers `main` n’est effectué.
+
+## Checklist post-déploiement sur le domaine officiel
+
+À exécuter **après** le déploiement de la révision approuvée. Ces commandes ne constituent pas une preuve que cette version est déjà en production.
+
+```sh
+B=https://imf-immobiliere.tn
+for p in /fr /ar /en /fr/contact /fr/projets /fr/guides /fr/appartements-sfax /ar/appartements-tunis /en/appartements-sfax /fr/projets/residence-la-gloire; do
+  printf '%s ' "$p"
+  curl -s -o /dev/null -w '%{http_code} %{content_type}\n' -H 'Accept: text/markdown' "$B$p"
+done
+# Attendu : 200 et text/markdown sur chaque URL.
+curl -s -o /dev/null -w '%{http_code}\n' -H 'x-markdown-path: /fr/admin' "$B/api/markdown"
+# Attendu : 404.
+curl -s -o /dev/null -w '%{content_type}\n' "$B/fr"
+# Attendu : text/html.
+curl -s "$B/robots.txt" | grep -c 'Content-Signal'
+# Attendu : 2, une directive dans chaque groupe.
+curl -s -D- -o /dev/null -H 'Accept: text/markdown' "$B/fr" | grep -i '^vary'
+# Attendu : le jeton Accept exact (Accept-Encoding seul ne suffit pas).
+node scripts/verify-search-http.cjs "$B"
+node scripts/test-jsonld.cjs "$B"
+curl -s -o /dev/null -w '%{http_code}\n' -A 'GPTBot/1.1' "$B/fr"
+# Attendu : 200 ; sinon examiner le firewall/anti-bot de l’hébergement réellement servi.
+curl -sI https://www.imf-immobiliere.tn
+# Attendu : 301/308 et Location vers https://imf-immobiliere.tn (sans www).
+curl -sI http://imf-immobiliere.tn/fr
+# Attendu : redirection vers https://imf-immobiliere.tn/fr.
+```
+
+Vérifier aussi les canonicals, les quatre hreflang dans le HTML brut, les protections CAD/PDF et le noindex des espaces privés. Pour compter les produits, parser les scripts JSON-LD : chaque **appartement** Product doit avoir `offers.price` et TND. Un simple grep global peut compter également la résidence Product avec son `AggregateOffer` ; celle-ci possède `lowPrice`/`highPrice`, sans prix fictif pour l’ensemble du bâtiment. La structure `AggregateOffer` est documentée par Google : https://developers.google.com/search/docs/appearance/structured-data/product-snippet .
+
+Rejouer Lighthouse mobile sur `/fr` et une fiche projet depuis une machine avec Chrome : relever LCP, CLS et score SEO, objectifs respectifs < 2,5 s, < 0,1 et ≥ 95. Les fichiers `lh-*.json` sont des sorties de contrôle, à conserver hors commits. Soumettre ensuite le sitemap et les URL dans Search Console et Bing Webmaster Tools ; vérifier les fiches Google Business Profile de Sfax/Tunis et compléter `CONTENU-A-VALIDER.md`.

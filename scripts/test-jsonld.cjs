@@ -10,6 +10,8 @@ const project={slug:'test',name:'Résidence test',city:'Sfax',address:localized,
 ]};
 const apartment=JSON.parse(jsonLd(apartmentSchema(project,lot,'fr')));
 assert(apartment['@type'].includes('Apartment'));
+assert(apartment['@type'].includes('Product'));
+assert.equal(apartment.offers.price,200000);
 assert.equal(apartment.floorLevel,'0');
 assert.equal(apartment.numberOfRooms,3);
 assert.equal(apartment.numberOfBedrooms,2);
@@ -17,14 +19,37 @@ assert.deepEqual(apartment.floorSize,{'@type':'QuantitativeValue',value:90,unitC
 assert.equal(apartment.offers.availability,'https://schema.org/InStock');
 assert.equal(apartment.offers.priceCurrency,'TND');
 const sold=apartmentSchema(project,{...lot,status:'sold',price:undefined},'fr');
+assert.equal(sold['@type'],'Apartment');
 assert.equal(sold.offers.availability,'https://schema.org/SoldOut');
 assert.equal(sold.offers.price,undefined);
+assert.equal(apartmentSchema(project,{...lot,status:'sold'},'fr')['@type'],'Apartment');
+assert.equal(apartmentSchema(project,{...lot,price:undefined},'fr')['@type'],'Apartment');
+assert.equal(apartmentSchema(project,{...lot,status:'reserved'},'fr')['@type'],'Apartment');
 const unknown=apartmentSchema(project,{...lot,status:'unconfirmed',price:undefined,sellableArea:undefined,typology:'Non documenté'},'fr');
 assert.equal(unknown.offers,undefined);assert.equal(unknown.floorSize,undefined);assert.equal(unknown.numberOfRooms,undefined);
-for(const price of [undefined,NaN,Infinity,-1,0]) assert.equal(apartmentSchema(project,{...lot,price},'fr').offers,undefined);
+for(const price of [undefined,NaN,Infinity,-1,0]) {
+  const unpriced=apartmentSchema(project,{...lot,price},'fr');
+  assert.equal(unpriced.offers,undefined);
+  assert.equal(unpriced['@type'],'Apartment');
+}
+function checkProducts(graph) {
+  for(const node of graph.filter(node=>[].concat(node['@type']).includes('Product'))) {
+    assert.equal(node.offers?.priceCurrency,'TND');
+    if(node.offers['@type']==='AggregateOffer') {
+      // Residences retain their documented aggregate range, as required by
+      // Google's AggregateOffer shape; never invent a price for the whole block.
+      assert(node.offers.lowPrice>0 && node.offers.highPrice>=node.offers.lowPrice);
+    } else {
+      assert(Number.isFinite(node.offers.price) && node.offers.price>0);
+      assert.equal(node.offers.availability,'https://schema.org/InStock');
+    }
+  }
+}
 for(const locale of ['fr','ar','en']) {
   const graph=JSON.parse(jsonLd(projectSchema(project,locale)))['@graph'];
   const residence=graph[0];
+  checkProducts(graph);
+  assert.equal(graph.filter(node=>[].concat(node['@type']).includes('Apartment') && [].concat(node['@type']).includes('Product')).length,2);
   assert.equal(residence.offers.lowPrice,200000);
   assert.equal(residence.offers.highPrice,300000);
   assert.equal(residence.offers.offerCount,3);
@@ -33,7 +58,9 @@ for(const locale of ['fr','ar','en']) {
   for(const ref of residence.containsPlace) assert(graph.some(node=>node['@id']===ref['@id']));
   assert.equal(projectBreadcrumbs(project,locale,lot).itemListElement.length,4);
 }
-assert.equal(projectSchema({...project,lots:[{...lot,price:undefined}]},'fr')['@graph'][0].offers,undefined);
+const unpricedResidence=projectSchema({...project,lots:[{...lot,price:undefined}]},'fr')['@graph'][0];
+assert.equal(unpricedResidence.offers,undefined);
+assert.equal(unpricedResidence['@type'],'ApartmentComplex');
 assert.equal(projectSchema({...project,slug:'diar-al-yassamine'},'fr')['@graph'][0].numberOfAccommodationUnits.value,177);
 assert.equal(organization.department.length,2);
 assert.equal(organization.image,`${SITE.url}/media/imf/siege.jpg`);
@@ -50,6 +77,7 @@ async function checkHtml(origin) {
     const graph=[...html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)].flatMap(match=>{
       const data=JSON.parse(match[1]);return data['@graph']||[data];
     });
+    checkProducts(graph);
     assert(graph.some(node=>node['@type']==='RealEstateAgent'),path);
     if(path.includes('/projets/')) {
       assert(graph.some(node=>node['@type']==='BreadcrumbList'),path);

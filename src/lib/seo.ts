@@ -56,8 +56,9 @@ export function apartmentSchema(project: Project, lot: Lot, locale: Locale) {
   const bedrooms = /^S\+(\d+)$/i.exec(lot.typology)?.[1];
   const priceKnown = documentedPrice(lot.price);
   return {
-    // Product supplies the schema.org domain of offers for a marketed property.
-    '@type':['Apartment','Product'], '@id':`${url}#apartment`, url,
+    // Only publish a Product snippet for an available, explicitly priced lot.
+    // Sold/unpriced apartments remain identifiable without incomplete Products.
+    '@type':lot.status==='available' && priceKnown ? ['Apartment','Product'] : 'Apartment', '@id':`${url}#apartment`, url,
     name:`${lot.code} · ${project.name}`, description:project.description[locale],
     image:new URL(project.cover,SITE.url).href,
     numberOfBedrooms:bedrooms === undefined ? undefined : Number(bedrooms),

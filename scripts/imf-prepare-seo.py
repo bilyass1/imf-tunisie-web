@@ -40,7 +40,7 @@ def require(condition, message):
 
 
 def git(*args, data=None, index=None, check=True):
-    command = ['runuser', '-u', 'imf', '--']
+    command = ['/usr/sbin/runuser', '-u', 'imf', '--']
     if index is not None:
         command += ['env', 'GIT_INDEX_FILE=' + str(index)]
     command += ['git', '-c', 'core.hooksPath=/dev/null', '-C', str(APP), *args]
@@ -201,7 +201,7 @@ def check_command(name, command):
     print('\nContrôle : ' + ' '.join(command), flush=True)
     print('Journal : ' + str(logfile), flush=True)
     with logfile.open('w') as output:
-        process = subprocess.Popen(['runuser', '-u', 'imf', '--', *command], cwd=CANDIDATE,
+        process = subprocess.Popen(['/usr/sbin/runuser', '-u', 'imf', '--', *command], cwd=CANDIDATE,
                                    env=clean_environment(), stdout=output,
                                    stderr=subprocess.STDOUT, start_new_session=True)
         try:
@@ -236,7 +236,7 @@ def validate():
         probe.bind(('127.0.0.1', 3100))
     logfile = ROOTSTATE / 'seo-server.log'
     with logfile.open('w') as output:
-        server = subprocess.Popen(['runuser', '-u', 'imf', '--', '/usr/bin/node',
+        server = subprocess.Popen(['/usr/sbin/runuser', '-u', 'imf', '--', '/usr/bin/node',
                                    str(CANDIDATE / 'node_modules/next/dist/bin/next'),
                                    'start', '--hostname', '127.0.0.1', '--port', '3100'],
                                   cwd=CANDIDATE, env=clean_environment(), stdout=output,

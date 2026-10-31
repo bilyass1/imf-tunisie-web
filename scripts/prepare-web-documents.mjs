@@ -9,6 +9,7 @@ const approved=[],redirects={},report=[];
 for(const source of policy) {
   const original=path.join(root,source),image=original.replace(/\.pdf$/,'.webp'),target=original.replace(/\.pdf$/,'.web.pdf');
   const input=await fs.readFile(original).catch(()=>fs.readFile(path.join(archive,source)));
+  await fs.mkdir(path.dirname(target),{recursive:true});
   const pdf=await PDFDocument.load(input);
   const fresh=await fs.stat(target).then(async target=>target.mtimeMs>=(await fs.stat(image)).mtimeMs).catch(()=>false);
   if(fresh) { /* Reuse deterministic build derivatives. */ }

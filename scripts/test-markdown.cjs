@@ -47,3 +47,32 @@ assert.equal(rsc.headers.get('x-middleware-rewrite'),null);
 const filtered=middleware(new NextRequest('https://example.test/fr/contact?project=test',{headers:{accept:'text/markdown'}}));
 assert.equal(filtered.headers.get('x-robots-tag'),'noindex, follow');
 console.log('PASS: négociation Markdown, contenu public, chemins privés refusés, CSP, Vary et RSC préservés.');
+
+(async()=>{
+  const {GET}=load('src/app/api/markdown/route.ts',{'@/lib/db':{getProjects:async()=>[project]}});
+  // Emulate the production boundary: the handler still sees the original URL,
+  // without the query parameters added by the rewrite.
+  const request=new NextRequest('https://example.test/fr/appartements-sfax',{
+    headers:{accept:'text/markdown','x-markdown-path':'/fr/admin'},
+  });
+  const rewrite=middleware(request);
+  const forwarded=new Headers(request.headers);
+  for(const name of rewrite.headers.get('x-middleware-override-headers').split(',')) {
+    const value=rewrite.headers.get(`x-middleware-request-${name}`);
+    if(value===null) forwarded.delete(name); else forwarded.set(name,value);
+  }
+  assert.equal(forwarded.get('x-markdown-path'),'/fr/appartements-sfax');
+  const response=await GET(new Request(request.url,{headers:forwarded}));
+  assert.equal(response.status,200);
+  assert(response.headers.get('content-type').startsWith('text/markdown'));
+  assert((await response.text()).startsWith('# '));
+  const html=middleware(new NextRequest('https://example.test/fr',{
+    headers:{'x-markdown-path':'/fr/appartements-tunis'},
+  }));
+  assert.equal(html.headers.get('x-middleware-request-x-markdown-path'),null);
+  assert.equal((await GET(new Request('https://example.test/api/markdown?path=/fr/contact'))).status,200);
+  assert.equal((await GET(new Request('https://example.test/api/markdown?path=/fr/contact',{
+    headers:{'x-markdown-path':'/fr/admin'},
+  }))).status,404,'A forged private path must never fall back to a public query');
+  console.log('PASS: chemin Markdown transmis au handler avec URL originale et en-tête forgé refusé.');
+})().catch(error=>{console.error(error);process.exitCode=1;});

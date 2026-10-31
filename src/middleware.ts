@@ -47,10 +47,14 @@ export function middleware(request: NextRequest) {
     const dev=process.env.NODE_ENV==='development';
     const policy=`default-src 'self'; script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'wasm-unsafe-eval' ${dev?"'unsafe-eval'":''}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' blob: https: ${dev?'ws:':''}; worker-src 'self' blob:; frame-src 'self' https://www.google.com https://maps.google.com; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; form-action 'self';`;
     const requestHeaders=new Headers(request.headers);requestHeaders.set('x-nonce',nonce);requestHeaders.set('Content-Security-Policy',policy);
+    requestHeaders.delete('x-markdown-path');
     const markdown = (request.method==='GET' || request.method==='HEAD') && !request.headers.has('rsc')
       && acceptsMarkdown(request.headers.get('accept')??'') && publicMarkdownPath(pathname);
     const target=request.nextUrl.clone();
     target.pathname='/api/markdown';target.search='';target.searchParams.set('path',pathname);
+    // A rewrite can preserve the original request.url in production. Forward
+    // the validated public path explicitly, replacing any client-supplied value.
+    if(markdown) requestHeaders.set('x-markdown-path',pathname);
     const response = markdown ? NextResponse.rewrite(target,{request:{headers:requestHeaders}}) : NextResponse.next({request:{headers:requestHeaders}});
     response.headers.set('Content-Security-Policy',policy);
     response.headers.append('Vary','Accept');

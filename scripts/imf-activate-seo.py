@@ -39,7 +39,11 @@ def require(condition, message):
 
 def command(args, timeout=90):
     result = subprocess.run(args, capture_output=True, text=True, timeout=timeout)
-    require(result.returncode == 0, 'Commande échouée : ' + ' '.join(args[:4]))
+    if result.returncode:
+        detail = {'command': args, 'exit_code': result.returncode, 'stderr': result.stderr}
+        (CONTROL / 'last-command-error.json').write_text(json.dumps(detail, indent=2) + '\n')
+        raise RuntimeError('Commande échouée (code ' + str(result.returncode) + ') : '
+                           + ' '.join(args) + '\n' + result.stderr.strip()[:1500])
     return result.stdout.strip()
 
 
@@ -79,6 +83,27 @@ def wait_ready():
             time.sleep(1)
 
 
+def https_arguments(path):
+    return ['/usr/bin/curl', '--fail', '--silent', '--show-error', '--noproxy', '*',
+            '--max-time', '30', '--resolve', DOMAIN + ':443:127.0.0.1',
+            '--output', '/dev/null', 'https://' + DOMAIN + path]
+
+
+def diagnose_https():
+    print('DIAGNOSTIC_HTTPS — service et configuration conservés.', flush=True)
+    for path in ('/fr', '/robots.txt', '/llms.txt', '/sitemap.xml', '/fr/projets/residence-la-gloire'):
+        args = [item for item in https_arguments(path) if item != '--fail']
+        args += ['--write-out', 'HTTP=%{http_code} IP=%{remote_ip} TLS=%{ssl_verify_result}']
+        result = subprocess.run(args, capture_output=True, text=True, timeout=40)
+        print(path + ' : ' + result.stdout.strip() + ' CURL=' + str(result.returncode), flush=True)
+        if result.stderr.strip():
+            print(result.stderr.strip()[:1500], flush=True)
+    print('Directives du site Nginx :', flush=True)
+    for line in Path('/etc/nginx/sites-enabled/imf-tn').read_text().splitlines():
+        if re.match(r'\s*(?:listen|server_name|location|proxy_pass|try_files|return|alias|root|ssl_certificate)\b', line):
+            print(line.strip(), flush=True)
+
+
 def preflight():
     validation = json.loads(VALIDATION.read_text())
     require(validation.get('validated') is True and validation['candidate'] == str(CANDIDATE),
@@ -105,6 +130,8 @@ def preflight():
             'Proxy Nginx différent de celui attendu')
     command(['/usr/sbin/nginx', '-t'])
     wait_ready()
+    # Catch an existing TLS/proxy problem before restarting the working service.
+    command(https_arguments('/fr'), timeout=40)
     (CONTROL / 'service.before.txt').write_text(systemctl('cat', UNIT, '--no-pager') + '\n')
     return {'status': 'prepared', 'candidate': str(CANDIDATE), 'original_directory': str(APP),
             'build_id': validation['build_id'], 'previous': current}
@@ -158,9 +185,7 @@ def smoke():
                         os.killpg(process.pid, signal.SIGKILL)
                         process.wait(timeout=5)
     for path in ('/robots.txt', '/llms.txt', '/sitemap.xml', '/fr', '/fr/projets/residence-la-gloire'):
-        command(['/usr/bin/curl', '--fail', '--silent', '--show-error', '--noproxy', '*',
-                 '--max-time', '30', '--resolve', DOMAIN + ':443:127.0.0.1',
-                 '--output', '/dev/null', 'https://' + DOMAIN + path], timeout=40)
+        command(https_arguments(path), timeout=40)
     markdown = command(['/usr/bin/curl', '--fail', '--silent', '--show-error', '--noproxy', '*',
                         '--max-time', '30', '--resolve', DOMAIN + ':443:127.0.0.1',
                         '-H', 'Accept: text/markdown', '-D', '-', 'https://' + DOMAIN + '/fr'], timeout=40)
@@ -231,7 +256,9 @@ def activate():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--rollback', action='store_true')
+    actions = parser.add_mutually_exclusive_group()
+    actions.add_argument('--rollback', action='store_true')
+    actions.add_argument('--https-check', action='store_true', help='Diagnostic HTTPS sans bascule ni redémarrage')
     options = parser.parse_args()
     require(os.geteuid() == 0, 'Exécuter avec sudo python3')
     require(CONTROL.is_dir() and not CONTROL.is_symlink() and CONTROL.stat().st_uid == 0
@@ -246,7 +273,9 @@ def main():
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             raise RuntimeError('Un autre déploiement utilise déjà le verrou')
-        if options.rollback:
+        if options.https_check:
+            diagnose_https()
+        elif options.rollback:
             rollback(json.loads(TRANSACTION.read_text()))
         else:
             activate()
